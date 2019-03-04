@@ -1,0 +1,16 @@
+version: '3.0' # specify docker-compose version
+ 
+# Define the services/ containers to be run
+services:
+
+ mshare-node: 
+  build: Backend\NodeJS Server # specify the directory of the Dockerfile
+  ports:
+  - "8081:8081" #specify ports mapping
+  links:
+  - database # link this service to the database service
+ 
+ database: # name of the third service
+  image: mongo # specify image to build container from
+  ports:
+  - "27017:27017" # specify port forwarding
