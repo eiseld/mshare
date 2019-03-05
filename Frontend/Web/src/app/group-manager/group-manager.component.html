@@ -1,0 +1,21 @@
+<div class="createGroupDiv">
+  <button class="createGroupButton" *ngIf="!createGroupAttempt" (click)="startCreateGroup()">Create Group</button>
+  <input class="groupNameInput" *ngIf="createGroupAttempt" [(ngModel)]="newGroup.name" placeholder="name">
+  <button class="createGroupCancel" *ngIf="createGroupAttempt" (click)="stopCreateGroup()">Cancel</button>
+  <button class="createGroupOK" *ngIf="createGroupAttempt" (click)="createGroup()">OK</button>
+</div>
+  <ul class="groupList">
+    <li class="groupElement" *ngFor="let group of groups">
+      <a (click)=selectGroup(group)>
+      {{group.name}}
+      <p>Created by {{group.creator}}</p>
+      <p *ngIf="group.balance<0">Balance: You owe {{0-group.balance | currency}}</p>
+      <p *ngIf="group.balance==0">Balance: Settled up</p>
+      <p *ngIf="group.balance>0">Balance: You are owed {{group.balance | currency}}</p>
+      <p>Members: {{group.members.length}}</p>
+     </a>
+    </li>
+  </ul>
+  
+  
+<app-group-detail class="groupDetail" [group]="selectedGroup"></app-group-detail>
