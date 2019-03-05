@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MoneyShare</string>
     <string name="login">Login</string>
+    <string name="forgotten_password">Forgotten password</string>
 </resources>

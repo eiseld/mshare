@@ -1,7 +1,8 @@
-package elte.moneyshare
+package elte.moneyshare.view
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import elte.moneyshare.R
 
 class MainActivity : AppCompatActivity() {
 
