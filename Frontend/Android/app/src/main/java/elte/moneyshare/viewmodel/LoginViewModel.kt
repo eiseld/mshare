@@ -1,4 +1,8 @@
 package elte.moneyshare.viewmodel
 
-class LoginViewModel {
+import android.arch.lifecycle.ViewModel
+
+class LoginViewModel : ViewModel() {
+
+    //TODO LOGIN LOGIC
 }
