@@ -1,13 +1,14 @@
-version: '3.0' # specify docker-compose version
- 
-# Define the services/ containers to be run
+version: '3.0'
+
 services:
 
  mongo_db_restore: 
   image: mongo
   ports:
-    - "27017:27017" # specify port forwarding
+    - "27017:27017"
   volumes:
-    - ./Backend/Database/TestBackup:/backup
+  - //Backend/Database/TestBackup:/backup
+  # If using docker with hyper-V change // to ./
+  # - ./Backend/Database/TestBackup:/backup
   command: |
     mongorestore --drop --host database /backup/

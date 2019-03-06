@@ -1,13 +1,14 @@
-version: '3.0' # specify docker-compose version
+version: '3.0'
  
-# Define the services/ containers to be run
 services:
 
  mongo_db_backup: 
   image: mongo
   ports:
-    - "27017:27017" # specify port forwarding
+    - "27017:27017"
   volumes:
-    - ./Backend/Database/TestBackup:/backup
+  - //Backend/Database/TestBackup:/backup
+  # If using docker with hyper-V change // to ./
+  # - ./Backend/Database/TestBackup:/backup
   command: |
     mongodump --host database --out /backup/
