@@ -1,0 +1,47 @@
+{
+    $jsonSchema: {
+        bsonType: "object",
+        required: [ "_id", "email", "password", "displayname", "state" ],
+        additionalProperties: false,
+        properties: {
+        _id: {
+           bsonType: "objectId",
+           description: "Auto generated highly likely to be unique ObjectIds"
+        },
+        email: {
+           bsonType: "string",
+           pattern : "^.+\@.+$",
+           description: "Must be a valid email string"
+        },
+        password: {
+           bsonType: "string",
+           maxLength: 40,
+           minLength: 40,
+           description: "must be an integer in [ 2017, 3017 ] and is required"
+        },
+        displayname: {
+           bsonType: "string",
+           maxLength: 32,
+           description: "display name given by the user"
+        },
+        groups: {
+            type: "array",
+            additionalItems: false,
+            uniqueItems: true,
+            items: {
+                    bsonType: "objectId"
+            }
+        },
+        state: {
+           enum: [ "Unapproved", "Approved", "Locked" ],
+           description: "state of the user account"
+        },
+        token: {
+           bsonType: "string",
+           maxLength: 40,
+           minLength: 40,
+           description: "multi-use token used for registration, forgotten password and session key"
+        }
+        }
+    }
+}
