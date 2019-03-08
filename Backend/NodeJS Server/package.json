@@ -16,6 +16,7 @@
     "typescript": "3.3.3333",
     "@types/express": "4.16.1",
     "ts-node-dev": "1.0.0-pre.32",
-    "@types/mongodb": "3.1.20"
+    "@types/mongodb": "3.1.20",
+    "autoloader-ts": "2.2.1"
   }
 }
