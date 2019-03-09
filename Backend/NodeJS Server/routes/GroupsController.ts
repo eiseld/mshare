@@ -1,21 +1,47 @@
 import {BaseController} from "../core/BaseController";
+import {StatusCodes} from "../core/StatusCodes";
+import {ObjectId} from "bson";
+import {GroupResponse} from "../core/Responses/GroupResponse";
 
 export class GroupsController extends BaseController{
     public registerRoutes() {
         super.registerRoutes();
 
-        this.router.get('/list', async (req, res) => {
-            // TODO: get token from session
-            const userId = this.authenticator.check('TODOTOKEN');
-            if(userId == null){
-                this.sendUnauthWarn(res);
+        this.router.get('/:group', async (req, res) => {
+
+            if(!ObjectId.isValid(req.params.group)){
+                res.status(StatusCodes.BadRequest).send();
                 return;
             }
 
-            let docs = await this.getDb().collection("groups").find().toArray();
+            // TODO: get token from session
+            const userId : ObjectId = this.authenticator.check('TODOTOKEN');
+            const groupId : ObjectId = new ObjectId(req.params.group);
 
-            console.log(docs);
-            res.send(docs);
+            if(userId == null) {
+                res.status(StatusCodes.Forbidden).send();
+                return;
+            }
+
+            await this.getDb().collection("groups").findOne(
+                { _id: groupId, members: userId },
+                {fields:{_id:false}},
+                async (error, result) => {
+                    if(error) {
+                        res.status(StatusCodes.InternalError).send(error);
+                        return;
+                    }
+
+                    if(result){
+                        res.status(StatusCodes.OK).send(new GroupResponse(result.name,result.creator,result.members));
+                    }
+                    else{
+                        res.status(StatusCodes.InternalError).send(result);
+                    }
+                }
+            );
         });
+
+
     }
 }
