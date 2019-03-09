@@ -1,23 +1,39 @@
 import {BaseController} from "../core/BaseController";
 import {LoginResponse, LoginState} from "../core/LoginResponse";
+const hasher = require('../core/Hasher');
 
 export class UsersController extends BaseController {
     public registerRoutes() {
         super.registerRoutes();
 
         this.router.route('/login/:email/:password')
-            .get(function(req, res){
+            .post(async (req, res) => {
                 const email: string = req.params.email;
-                const password: string = req.params.email;
-                // TODO: hash passwork with SHA-1
+                const hashedPassword: string = hasher(req.params.password);
 
-                // TODO: check email, password validity with database
-
-                // TODO: respond with JWT token
-                res.send(new LoginResponse(
-                    LoginState.OK,
-                    'jaudiem1l3928421najxkfpdnwnejrud82k3xa94')
-                );
+                this.getDb().collection('users').findOne(
+                    { $and: [
+                            {email: email},
+                            {password: hashedPassword}
+                        ] },function(err, user) {
+                    // In case the user not found
+                    if(err) {
+                        res.status(500).send(err);
+                        return;
+                    }
+                    if (user){
+                        // TODO: respond with JWT token
+                        res.status(200).send(new LoginResponse(
+                            LoginState.OK,
+                            'jaudiem1l3928421najxkfpdnwnejrud82k3xa94')
+                        );
+                    } else {
+                        res.status(401).send(new LoginResponse(
+                            LoginState.BadAuth,
+                            '')
+                        );
+                    }
+                });
             });
 
         // TODO: remove from production, only use this for testing!
