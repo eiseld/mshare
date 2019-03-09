@@ -13,11 +13,11 @@ export class UsersController extends BaseController {
                 const email: string = req.params.email;
                 const hashedPassword: string = hasher(req.params.password);
 
-                this.getDb().collection('users').findOne(
+                await this.getDb().collection('users').findOne(
                     { $and: [
                             {email: email},
                             {password: hashedPassword}
-                        ] },function(err, user) {
+                        ] },async (err, user) => {
                     // In case the user not found
                     if(err) {
                         res.status(StatusCodes.InternalError).send(err);
@@ -38,32 +38,60 @@ export class UsersController extends BaseController {
                 });
             });
 
-        this.router.get('/listgroups', async (req, res) => {
-                // TODO: get token from session
-                const userId = this.authenticator.check('TODOTOKEN');
+        this.router.route('/validateemail/:token')
+            .post(async (req, res) =>{
+                const token: string = req.params.token;
 
-                if(userId == null) {
-                    res.status(StatusCodes.Forbidden).send("");
-                    return;
-                }
-
-                this.getDb().collection("users").findOne(
-                    {_id:userId},
-                    {fields:{_id:false,groups:true}},
-                    function (error, result) {
-                        if(error) {
-                            res.status(StatusCodes.InternalError).send(error);
+                await this.getDb().collection('users').updateOne(
+                    {$and: [
+                            {token: token},
+                            {state: 'Unapproved'}
+                        ]},
+                    {
+                            $unset: { token: '' },
+                            $set: {state: 'Approved'}
+                        },
+                    async (err, user) =>{
+                        // In case the user not found
+                        if(err) {
+                            res.status(StatusCodes.InternalError).send(err);
                             return;
                         }
-
-                        if(result){
-                            res.status(StatusCodes.OK).send(result);
-                        }
-                        else{
-                            res.status(StatusCodes.InternalError).send(result);
+                        if (user && user.modifiedCount === 1){
+                            res.status(StatusCodes.OK).send();
+                        } else {
+                            res.status(StatusCodes.Forbidden).send();
                         }
                     }
                 );
+            });
+
+        this.router.get('/listgroups', async (req, res) => {
+            // TODO: get token from session
+            const userId = this.authenticator.check('TODOTOKEN');
+
+            if(userId == null) {
+                res.status(StatusCodes.Forbidden).send("");
+                return;
+            }
+
+            await this.getDb().collection("users").findOne(
+                {_id:userId},
+                {fields:{_id:false,groups:true}},
+                async (error, result) => {
+                    if(error) {
+                        res.status(StatusCodes.InternalError).send(error);
+                        return;
+                    }
+
+                    if(result){
+                        res.status(StatusCodes.OK).send(result);
+                    }
+                    else{
+                        res.status(StatusCodes.InternalError).send(result);
+                    }
+                }
+            );
         });
 
         this.router.put('/addgroup', async (req, res) => {
