@@ -42,6 +42,37 @@ export class GroupsController extends BaseController{
             );
         });
 
+        this.router.post('/newgroup/:name', async (req, res) => {
+
+            // TODO: get token from session
+            const userId : ObjectId = this.authenticator.check('TODOTOKEN');
+            const name : string = req.params.name;
+
+            if(userId == null) {
+                res.status(StatusCodes.Forbidden).send();
+                return;
+            }
+
+            await this.getDb().collection("groups").updateOne(
+                {name:name,creator:userId},
+                { $setOnInsert: { members:[userId]} },
+                { upsert: true },
+                async (error, result) => {
+                    if(error) {
+                        res.status(StatusCodes.InternalError).send(error);
+                        return;
+                    }
+
+                    if(result && result.matchedCount  === 0){
+                        res.status(StatusCodes.OKCreated).send(result);
+                    }
+                    else{
+                        res.status(StatusCodes.InternalError).send(result);
+                        return;
+                    }
+                }
+            );
+        });
 
     }
 }
