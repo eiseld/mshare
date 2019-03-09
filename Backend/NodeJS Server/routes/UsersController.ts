@@ -85,7 +85,10 @@ export class UsersController extends BaseController {
                     }
 
                     if(result){
-                        res.status(StatusCodes.OK).send(result);
+                        if(result.groups != null)
+                            res.status(StatusCodes.OK).send(result.groups);
+                        else
+                            res.status(StatusCodes.OK).send(new Array<ObjectId>());
                     }
                     else{
                         res.status(StatusCodes.InternalError).send(result);
