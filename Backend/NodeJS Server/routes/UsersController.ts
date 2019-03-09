@@ -1,5 +1,5 @@
 import {BaseController} from "../core/BaseController";
-import {LoginResponse, LoginState} from "../core/LoginResponse";
+import {LoginResponse, LoginState} from "../core/Responses/LoginResponse";
 import {ObjectId} from "bson";
 import {StatusCodes} from "../core/StatusCodes";
 const hasher = require('../core/Hasher');
