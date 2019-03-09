@@ -97,20 +97,41 @@ export class UsersController extends BaseController {
             );
         });
 
-        this.router.put('/addgroup', async (req, res) => {
-            const userId: ObjectId = new ObjectId(req.query.userid);
-            const groupId: ObjectId = new ObjectId(req.query.groupid);
+        this.router.post('/updategroups', async (req, res) => {
+            // TODO: get token from session
+            const userId = this.authenticator.check('TODOTOKEN');
 
-            console.log(userId);
-            console.log(groupId);
+            if(userId == null) {
+                res.status(StatusCodes.Forbidden).send("");
+                return;
+            }
 
-            let docs = await this.getDb().collection("users").updateOne(
+            let documents = await this.getDb().collection("groups").find(
+                {creator:userId},
+                {fields:{_id:true}}
+                ).toArray();
+
+            let groupIds: Array<ObjectId> = documents.map(function (document):ObjectId {
+                return document._id;
+            });
+
+            await this.getDb().collection("users").updateOne(
                 {_id:userId},
-                {$addToSet:{groups:groupId}}
+                {$set: {groups:groupIds}},
+                async (error, result) => {
+                    if(error) {
+                        res.status(StatusCodes.InternalError).send(error);
+                        return;
+                    }
 
+                    if(result){
+                        res.status(StatusCodes.OK).send(result);
+                    }
+                    else{
+                        res.status(StatusCodes.InternalError).send(result);
+                    }
+                }
             );
-
-            console.log(docs);
         });
 
     }
