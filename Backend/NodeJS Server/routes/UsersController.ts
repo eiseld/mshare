@@ -38,6 +38,33 @@ export class UsersController extends BaseController {
                 });
             });
 
+        this.router.route('/validateemail/:token')
+            .post(async (req, res) =>{
+                const token: string = req.params.token;
+
+                await this.getDb().collection('users').updateOne(
+                    {$and: [
+                            {token: token},
+                            {state: 'Unapproved'}
+                        ]},
+                    {
+                            $unset: { token: '' },
+                            $set: {state: 'Approved'}
+                        },
+                    async (err, user) =>{
+                        // In case the user not found
+                        if(err) {
+                            res.status(StatusCodes.InternalError).send(err);
+                            return;
+                        }
+                        if (user && user.modifiedCount === 1){
+                            res.status(StatusCodes.OK).send();
+                        } else {
+                            res.status(StatusCodes.Forbidden).send();
+                        }
+                    }
+                );
+            });
 
         this.router.get('/listgroups', async (req, res) => {
             // TODO: get token from session
