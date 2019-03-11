@@ -9,10 +9,17 @@ export class UsersController extends BaseController {
     public registerRoutes() {
         super.registerRoutes();
 
-        this.router.route('/login/:email/:password')
+        this.router.route('/login')
             .post(async (req, res) => {
-                const email: string = req.params.email;
-                const hashedPassword: string = hasher(req.params.password);
+                console.log(req.get('Authorization'));
+                const email: string = req.get('email');
+                const password: string = req.get('password');
+                if(email == null || password == null){
+                    res.status(StatusCodes.InternalError).send();
+                    return;
+                }
+
+                const hashedPassword: string = hasher(password);
 
                 await this.getDb().collection('users').findOne(
                     { $and: [
