@@ -3,6 +3,7 @@ import {LoginResponse, LoginState} from "../core/Responses/LoginResponse";
 import {ObjectId} from "bson";
 import {StatusCodes} from "../core/StatusCodes";
 const hasher = require('../core/Hasher');
+const jwt = require('jsonwebtoken');
 
 export class UsersController extends BaseController {
     public registerRoutes() {
@@ -24,10 +25,11 @@ export class UsersController extends BaseController {
                         return;
                     }
                     if (user){
-                        // TODO: respond with JWT token
+                        // TODO: move secret to config file
+                        const token: string = jwt.sign({userId: user._id}, 'shhhhhhhhhhhhhh');
                         res.status(StatusCodes.OK).send(new LoginResponse(
                             LoginState.OK,
-                            'jaudiem1l3928421najxkfpdnwnejrud82k3xa94')
+                            token)
                         );
                     } else {
                         res.status(StatusCodes.Unauthorized).send(new LoginResponse(
@@ -67,8 +69,7 @@ export class UsersController extends BaseController {
             });
 
         this.router.get('/listgroups', async (req, res) => {
-            // TODO: get token from session
-            const userId = this.authenticator.check('TODOTOKEN');
+            const userId: ObjectId = await this.authenticator.check(req.get('Authorization'));
 
             if(userId == null) {
                 res.status(StatusCodes.Forbidden).send("");
@@ -98,8 +99,7 @@ export class UsersController extends BaseController {
         });
 
         this.router.post('/updategroups', async (req, res) => {
-            // TODO: get token from session
-            const userId = this.authenticator.check('TODOTOKEN');
+            const userId = await this.authenticator.check(req.get('Authorization'));
 
             if(userId == null) {
                 res.status(StatusCodes.Forbidden).send("");

@@ -14,8 +14,7 @@ export class GroupsController extends BaseController{
                 return;
             }
 
-            // TODO: get token from session
-            const userId : ObjectId = this.authenticator.check('TODOTOKEN');
+            const userId : ObjectId = await this.authenticator.check(req.get('Authorization'));
             const groupId : ObjectId = new ObjectId(req.params.group);
 
             if(userId == null) {
@@ -43,9 +42,7 @@ export class GroupsController extends BaseController{
         });
 
         this.router.post('/newgroup/:name', async (req, res) => {
-
-            // TODO: get token from session
-            const userId : ObjectId = this.authenticator.check('TODOTOKEN');
+            const userId : ObjectId = await this.authenticator.check(req.get('Authorization'));
             const name : string = req.params.name;
 
             if(userId == null) {

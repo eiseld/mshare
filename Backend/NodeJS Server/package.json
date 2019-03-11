@@ -18,6 +18,9 @@
     "ts-node-dev": "1.0.0-pre.32",
     "@types/mongodb": "3.1.20",
     "autoloader-ts": "2.2.1",
-    "node-sha1": "1.0.1"
+    "node-sha1": "1.0.1",
+    "ts-promise": "2.1.0",
+    "jsonwebtoken": "8.5.0",
+    "@types/jsonwebtoken": "8.3.2"
   }
 }

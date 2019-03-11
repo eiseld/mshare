@@ -1,5 +1,5 @@
 import {ObjectId} from "bson";
 
 export interface IAuthenticator{
-    check(token: string): ObjectId;
+    check(token: string) : Promise<ObjectId>;
 }
