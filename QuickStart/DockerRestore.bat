@@ -1,0 +1,1 @@
+cmd /k "cd ../ & docker-compose -f docker-compose-restore.yml run mongo_db_restore" 

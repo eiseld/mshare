@@ -1,0 +1,1 @@
+cmd /k "cd ../ & docker-compose up"

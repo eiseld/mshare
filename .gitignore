@@ -9,3 +9,4 @@ node_modules/
 
 # Generated files
 **/.idea/**/contentModel.xml
+**/NodeJS Server/**/package-lock.json

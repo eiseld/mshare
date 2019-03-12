@@ -1,16 +1,19 @@
-version: '3.0' # specify docker-compose version
+version: '3.0'
  
-# Define the services/ containers to be run
 services:
 
  mshare-node: 
-  build: Backend\NodeJS Server # specify the directory of the Dockerfile
+  build: Backend\NodeJS Server
   ports:
-  - "8081:8081" #specify ports mapping
+  - "8081:8081"
   links:
-  - database # link this service to the database service
+  - database
  
- database: # name of the third service
-  image: mongo # specify image to build container from
+ database:
+  image: mongo
   ports:
-  - "27017:27017" # specify port forwarding
+  - "27017:27017"
+  volumes:
+  - //Backend/Database/TestBackup:/backup
+  # If using docker with hyper-V change // to ./
+  # - ./Backend/Database/TestBackup:/backup
