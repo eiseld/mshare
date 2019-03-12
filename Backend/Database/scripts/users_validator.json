@@ -1,7 +1,7 @@
 {
     $jsonSchema: {
         bsonType: "object",
-        required: [ "_id", "email", "password", "displayname", "state" ],
+        required: [ "_id", "email", "password", "displayname", "state", "groups" ],
         additionalProperties: false,
         properties: {
         _id: {
