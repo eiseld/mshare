@@ -9,11 +9,7 @@ import retrofit2.Response
 
 class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface {
 
-    override fun postLoginUser(
-        email: String,
-        password: String,
-        completion: (response: String?, error: String?) -> Unit
-    ) {
+    override fun postLoginUser(email: String, password: String, completion: (response: String?, error: String?) -> Unit) {
         apiDefinition.postLoginUser(email, password).enqueue(object : Callback<LoginData> {
             override fun onResponse(call: Call<LoginData>, response: Response<LoginData>) {
                 when (response?.code()) {
