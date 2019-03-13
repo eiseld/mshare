@@ -3,7 +3,7 @@
     <h2>Bejelentkezés</h2>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
-            <label for="username">Felhasználó</label>
+            <label for="username">Email</label>
             <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && loginForm.controls.username.errors }" />
             <div *ngIf="submitted && loginForm.controls.username.errors" class="invalid-feedback">
                 <div *ngIf="loginForm.controls.username.errors.required">A felhasználónév megadása kötelező</div>

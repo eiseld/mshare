@@ -1,4 +1,9 @@
 package elte.moneyshare.entity
 
-class LoginData {
-}
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class LoginData(
+    val accessToken: String
+) : Parcelable
