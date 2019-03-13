@@ -6,21 +6,21 @@
     "start": "ts-node-dev --respawn --transpileOnly server.ts"
   },
   "dependencies": {
+    "@types/express": "4.16.1",
+    "@types/jsonwebtoken": "8.3.2",
+    "@types/mongodb": "3.1.20",
+    "autoloader-ts": "2.2.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
-    "morgan": "~1.9.0",
-    "pug": "2.0.0-beta11",
-    "mongodb": "3.1.13",
-    "typescript": "3.3.3333",
-    "@types/express": "4.16.1",
-    "ts-node-dev": "1.0.0-pre.32",
-    "@types/mongodb": "3.1.20",
-    "autoloader-ts": "2.2.1",
-    "node-sha1": "1.0.1",
-    "ts-promise": "2.1.0",
     "jsonwebtoken": "8.5.0",
-    "@types/jsonwebtoken": "8.3.2"
+    "mongodb": "^3.1.13",
+    "morgan": "~1.9.0",
+    "node-sha1": "1.0.1",
+    "pug": "2.0.0-beta11",
+    "ts-node-dev": "1.0.0-pre.32",
+    "ts-promise": "2.1.0",
+    "typescript": "3.3.3333"
   }
 }
