@@ -6,6 +6,8 @@ import {Autoloader} from "autoloader-ts";
 import {BaseController} from "./core/BaseController";
 const cookieParser = require('cookie-parser');
 import {TokenAuthenticator} from "./core/TokenAuthenticator";
+import {forEachChild} from "typescript";
+import {breakStatement} from "babel-types";
 
 export class App {
   private _database : Db;
@@ -30,25 +32,6 @@ export class App {
     });
 
     await this.loadControllers('routes');
-
-    this.exprApp.get('/users', async (req, res) => {
-      let docs = await this._database.collection("users").find().toArray();
-
-      console.log(docs);
-      res.send(docs);
-    });
-
-    this.exprApp.post('/createUser', async (req, res) => {
-
-      let docs = await this._database.collection('users').insertOne(req.body, function(err, result){
-        if(err) {
-          res.send("Error!" + err);
-        } else {
-          res.send('Success!');
-        }
-        console.log(docs);
-      })
-    })
 
   }
 

@@ -141,5 +141,38 @@ export class UsersController extends BaseController {
             );
         });
 
+        this.router.get('/listUsers', async (req, res) => {
+            let docs = await this.getDb().collection("users").find().toArray();
+
+            console.log(docs);
+            res.send(docs);
+        });
+
+        this.router.post('/createUser', async (req, res) => {
+
+            var userExists = false;
+
+            let users = await this.getDb().collection("users").find().toArray();
+            users.forEach(function(item) {
+                if(item.email == req.body.email) {
+                    userExists = true;
+                }
+            });
+
+            if(userExists) {
+                res.status(409).send("User already exists!");
+                return;
+            }
+
+            await this.getDb().collection('users').insertOne(req.body, function(err, result){
+                if(err) {
+                    res.status(409).send(result);
+                } else {
+                    res.status(201).send(result);
+                }
+            })
+        })
+
+
     }
 }
