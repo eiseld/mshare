@@ -21,7 +21,7 @@ services:
  apache:
   network_mode: host
   build:
-   dockerfile: Dockerfile-prod
+   dockerfile: Dockerfile
    context: ./Frontend/Web
   ports:
    - "80:80"

@@ -31,8 +31,6 @@ FROM httpd:2.4
 
 # Copy settings
 COPY ./config/httpd.conf.prod /usr/local/apache2/conf/httpd.conf
-#COPY ./config/httpd-vhosts.conf.prod /usr/local/apache2/conf/extra/httpd-vhosts.conf
-#COPY ./config/config/proxy-html.conf.prod /usr/local/apache2/conf/extra/proxy-html.conf
 # copy artifact build from the 'build environment'
 COPY --from=builder /usr/src/app/dist/mshare /usr/local/apache2/htdocs
 
