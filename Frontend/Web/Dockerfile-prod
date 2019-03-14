@@ -1,0 +1,41 @@
+#########################
+### build environment ###
+#########################
+
+# base image
+FROM node:10.15.1 as builder
+
+# set working directory
+RUN mkdir /usr/src/app
+WORKDIR /usr/src/app
+
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+
+# install and cache app dependencies
+COPY package.json /usr/src/app/package.json
+RUN npm install
+RUN npm install -g @angular/cli@1.7.1 --unsafe
+
+# add app
+COPY . /usr/src/app
+
+# generate build
+RUN npm run build --prod
+
+##################
+### production ###
+##################
+
+# base image
+FROM httpd:2.4
+
+# Copy settings
+COPY ./config/httpd.conf.prod /usr/local/apache2/conf/httpd.conf
+#COPY ./config/httpd-vhosts.conf.prod /usr/local/apache2/conf/extra/httpd-vhosts.conf
+#COPY ./config/config/proxy-html.conf.prod /usr/local/apache2/conf/extra/proxy-html.conf
+# copy artifact build from the 'build environment'
+COPY --from=builder /usr/src/app/dist/mshare /usr/local/apache2/htdocs
+
+# expose port 80
+EXPOSE 80
+

@@ -3,7 +3,7 @@ version: '3.0'
 services:
 
  mshare-node: 
-  build: Backend\NodeJS Server
+  build: Backend/NodeJS Server
   ports:
   - "8081:8081"
   links:
@@ -17,3 +17,11 @@ services:
   - //Backend/Database/TestBackup:/backup
   # If using docker with hyper-V change // to ./
   # - ./Backend/Database/TestBackup:/backup
+
+ apache:
+  network_mode: host
+  build:
+   dockerfile: Dockerfile-prod
+   context: ./Frontend/Web
+  ports:
+   - "80:80"
