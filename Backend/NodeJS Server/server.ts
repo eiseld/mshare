@@ -8,18 +8,24 @@ const cookieParser = require('cookie-parser');
 import {TokenAuthenticator} from "./core/TokenAuthenticator";
 import {forEachChild} from "typescript";
 import {breakStatement} from "babel-types";
+import Email = require
 
 export class App {
   private _database : Db;
+  private _email: Email;
 
   get database(): Db {
     return this._database;
   }
 
+  get email(): Email {
+    return this._email;
+  }
+
   public exprApp : Application;
   public async start() {
     this._database = await DbClient.connect();
-
+    this._email = require("./utils/Email");
     console.log("Starting application...");
 
     this.exprApp = express();

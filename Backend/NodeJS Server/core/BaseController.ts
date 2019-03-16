@@ -30,9 +30,14 @@ export class BaseController{
         return this.constructor["name"].toLowerCase().slice(0, -10);
     }
 
+    public getEmail(){
+        return this._application.email;
+    }
+
     public getDb(){
         return this._application.database;
     }
+
     public sendUnauthWarn(res){
         res.send('You do not have permission to access this functionality!');
     }
