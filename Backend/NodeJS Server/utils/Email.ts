@@ -1,11 +1,14 @@
 const nodemailer = require("nodemailer");
-class Email {
+export class Email {
 
     private transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
             user: 'noreply.mshare@gmail.com',
             pass: 'ilovescrum'
+        },
+        tls:{
+            rejectUnauthorized: false
         }
     });
 
@@ -27,7 +30,7 @@ class Email {
             }
         });*/
 
-        let info = await this.transporter.sendMail(mailOptions)
+        let info = await this.transporter.sendMail(mailOptions);
 
         console.log("Message sent: %s", info.messageId);
         // Preview only available when sending through an Ethereal account
@@ -52,13 +55,10 @@ class Email {
             }
         });*/
 
-        let info = await this.transporter.sendMail(mailOptions)
+        let info = await this.transporter.sendMail(mailOptions);
 
         console.log("Message sent: %s", info.messageId);
         // Preview only available when sending through an Ethereal account
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     }
 }
-
-export = new Email();
-

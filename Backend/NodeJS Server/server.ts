@@ -6,9 +6,7 @@ import {Autoloader} from "autoloader-ts";
 import {BaseController} from "./core/BaseController";
 const cookieParser = require('cookie-parser');
 import {TokenAuthenticator} from "./core/TokenAuthenticator";
-import {forEachChild} from "typescript";
-import {breakStatement} from "babel-types";
-import Email = require
+import {Email} from "./utils/Email";
 
 export class App {
   private _database : Db;
@@ -25,7 +23,7 @@ export class App {
   public exprApp : Application;
   public async start() {
     this._database = await DbClient.connect();
-    this._email = require("./utils/Email");
+    this._email = new Email();
     console.log("Starting application...");
 
     this.exprApp = express();
