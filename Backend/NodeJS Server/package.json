@@ -9,6 +9,7 @@
     "@types/express": "4.16.1",
     "@types/jsonwebtoken": "8.3.2",
     "@types/mongodb": "3.1.20",
+    "@types/nodemailer": "4.6.6",
     "autoloader-ts": "2.2.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
@@ -18,11 +19,11 @@
     "mongodb": "^3.1.13",
     "morgan": "~1.9.0",
     "node-sha1": "1.0.1",
+    "nodemailer": "5.1.1",
     "pug": "2.0.0-beta11",
+    "randomstring": "^1.1.5",
     "ts-node-dev": "1.0.0-pre.32",
     "ts-promise": "2.1.0",
-    "typescript": "3.3.3333",
-    "nodemailer": "5.1.1",
-    "@types/nodemailer": "4.6.6"
+    "typescript": "3.3.3333"
   }
 }
