@@ -6,7 +6,7 @@
     <p *ngIf="group.balance<0">Balance: You owe {{0-group.balance | currency}}</p>
     <p *ngIf="group.balance==0">Balance: Settled up</p>
     <p *ngIf="group.balance>0">Balance: You are owed {{group.balance | currency}}</p>
-    <p>Members ({{group.members.length}}):</p>
+    <p>Members ({{group.memberCount}}):</p>
     <ul>
       <li *ngFor="let member of group.members">
           {{member}}

@@ -1,4 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { GroupedObservable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment'
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-group-manager',
@@ -7,41 +12,66 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class GroupManagerComponent implements OnInit {
 
-  constructor() { }
+  constructor( private http: HttpClient, private authenticationService: AuthService) {}
 
-  @Input() newGroup: Group;
+  @Input() newGroup: string ="";
   createGroupAttempt=false;
   
-  //TODO get groups list from server
-  id =14
-  groups: Group[] = [
-    { id: 11, name: 'MockupGroup1', creator: 'MockupUser', balance: 100, members:["1", "2","3","4","5"]},
-    { id: 12, name: 'MockupGroup2', creator: 'MockupUser', balance: -500, members: ["1", "2","3","4"]},
-    { id: 13, name: 'MockupGroup3', creator: 'MockupUser', balance: 0, members: ["1", "2"]}
-  ];
+  groupIds : string[]=[];
+  groups: Group[]=[];
+  error : string="";
 
   ngOnInit() {
+    this.getGroups();
+  }
+
+  getGroups() {
+    let currentUser = this.authenticationService.currentUserValue;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `${currentUser.token}`
+      })
+    };
+    if( this.groupIds!=null){
+      delete this.groupIds;
+      this.groupIds=[];
+    }
+    if(this.groups!=null){
+      delete this.groups;
+      this.groups=[];
+    }
+
+    this.http.get<string[]>(`${environment.API_URL}/users/listgroups`, httpOptions)
+    .subscribe(data => {this.groupIds= data as string[];
+      for (let groupId of this.groupIds) {
+        this.http.get<Group>(`${environment.API_URL}/groups/${groupId}`, httpOptions)
+        .subscribe(data => {this.groups.push(data as Group)});
+      }
+    },error => {this.error = this.error+"Failed to load groups!" as string});
   }
 
   startCreateGroup(){
     this.createGroupAttempt=true;
-    this.newGroup=new Group;
-    this.newGroup.name="";
-    this.newGroup.creator="thisUser";
-    this.newGroup.members=["thisUser"];
-    this.newGroup.balance=0;
-    this.newGroup.id=this.id;
-    this.id++;
+    this.newGroup="";
   }
-  selectedGroup:Group;
+  selectedGroup:Group=null;
   stopCreateGroup(){
-    delete this.newGroup;
     this.createGroupAttempt=false;
   }
 
   createGroup(){
-    //TODO check and create group on server
-    this.groups.push(this.newGroup);
+    let currentUser = this.authenticationService.currentUserValue;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `${currentUser.token}`,
+      })
+    };
+    this.http.post<any>(`${environment.API_URL}/groups/newgroup/${this.newGroup}`, {}, httpOptions)
+    .subscribe(data => {this.http.post<any>(`${environment.API_URL}/users/updategroups/`, {}, httpOptions)
+                              .subscribe( data => {this.getGroups()})}
+    );
     this.createGroupAttempt=false;
   }
 
@@ -54,6 +84,7 @@ export class Group {
   id: number;
   name: string;
   creator: string;
-  balance: number;
   members: string[];
+  memberCount: number;
+  balance: number;
 }
