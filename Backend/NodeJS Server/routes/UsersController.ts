@@ -2,9 +2,7 @@ import {BaseController} from "../core/BaseController";
 import {LoginResponse, LoginState} from "../core/Responses/LoginResponse";
 import {ObjectId} from "bson";
 import {StatusCodes} from "../core/StatusCodes";
-import {Email} from "../utils/Email";
 const hasher = require('../core/Hasher');
-const emailer = require('../utils/Email');
 const jwt = require('jsonwebtoken');
 const randomstring = require('randomstring');
 
@@ -177,8 +175,8 @@ export class UsersController extends BaseController {
 
                     if(result && result.matchedCount  === 0){
                         res.status(StatusCodes.OKCreated).send(result);
-                        var email = new emailer.Email();
-                        email.sendMailHtml(req.body.email, "Activate your registration", "To activate your registration please click <a href='http://192.168.99.100:8081/account/confirm/" + token + "'>HERE</a>");
+
+                        this.getEmail().sendMailHtml(req.body.email, "Activate your registration", "To activate your registration please click <a href='http://192.168.99.100:8081/account/confirm/" + token + "'>HERE</a>");
                     }
                     else{
                         res.status(StatusCodes.InternalError).send(result);
