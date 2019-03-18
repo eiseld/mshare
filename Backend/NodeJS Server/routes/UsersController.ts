@@ -4,6 +4,7 @@ import {ObjectId} from "bson";
 import {StatusCodes} from "../core/StatusCodes";
 const hasher = require('../core/Hasher');
 const jwt = require('jsonwebtoken');
+const randomstring = require('randomstring');
 
 export class UsersController extends BaseController {
     public registerRoutes() {
@@ -150,27 +151,39 @@ export class UsersController extends BaseController {
 
         this.router.post('/createUser', async (req, res) => {
 
-            var userExists = false;
+            var password = req.body.password;
+            var token = hasher( req.body.email + new Date().getTime() + randomstring.generate());
+            const hashedPassword: string = hasher(password);
 
-            let users = await this.getDb().collection("users").find().toArray();
-            users.forEach(function(item) {
-                if(item.email == req.body.email) {
-                    userExists = true;
+            await this.getDb().collection("users").updateOne(
+                {email : req.body.email},
+                { $setOnInsert: {
+                        email: req.body.email,
+                        password: hashedPassword,
+                        displayname: req.body.displayname,
+                        state: "Unapproved",
+                        groups: [],
+                        token: token
+                    }
+                },
+                {upsert : true},
+                async (error, result) => {
+                    if(error) {
+                        res.status(StatusCodes.InternalError).send(error);
+                        return;
+                    }
+
+                    if(result && result.matchedCount  === 0){
+                        res.status(StatusCodes.OKCreated).send(result);
+
+                        this.getEmail().sendMailHtml(req.body.email, "Activate your registration", "To activate your registration please click <a href='http://192.168.99.100:8081/account/confirm/" + token + "'>HERE</a>");
+                    }
+                    else{
+                        res.status(StatusCodes.InternalError).send(result);
+                        return;
+                    }
                 }
-            });
-
-            if(userExists) {
-                res.status(409).send("User already exists!");
-                return;
-            }
-
-            await this.getDb().collection('users').insertOne(req.body, function(err, result){
-                if(err) {
-                    res.status(409).send(result);
-                } else {
-                    res.status(201).send(result);
-                }
-            })
+            );
         })
 
 
