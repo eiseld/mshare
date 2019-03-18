@@ -20,13 +20,9 @@ export class ForgottenpwService {
         'email': email
       })
     };
-    return this.http.post<any>(`${environment.API_URL}/fpwd`, {}, httpOptions)
-      .pipe(map(user => {
-        if (user && user.token) {
-         // this.currentUserSubject.next(user);
-        }
-
-        return user;
+    return this.http.post<any>(`${environment.API_URL}forgotpass`, {}, httpOptions)
+      .pipe(map(email => {
+        return email;
       }));
   }
 

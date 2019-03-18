@@ -5,12 +5,14 @@ import { AboutComponent } from './components/about/about.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import {ForgottenpwComponent} from "./components/forgottenpw/forgottenpw.component";
+import {ResetpasswordComponent} from "./components/resetpassword/resetpassword.component";
 
 const routes: Routes = [
   { path: '', component: HomepageComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'about', component: AboutComponent },
   { path: 'fpwd', component: ForgottenpwComponent},
+  { path: 'reset', component: ResetpasswordComponent},
   { path: '**', redirectTo: '' }
 ];
 

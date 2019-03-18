@@ -11,7 +11,6 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 })
 export class ForgottenpwComponent implements OnInit {
 
-  //constructor(private forgottenService: ForgottenpwService) { }
   email: string;
   private _success = new Subject<string>();
   staticAlertClosed = false;
@@ -30,7 +29,7 @@ export class ForgottenpwComponent implements OnInit {
 
   psResetForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private forgottenService: ForgottenpwService, private fb: FormBuilder) {
     this.psResetForm = fb.group({
       'email': [null, Validators.compose([Validators.required, Validators.email])]
     });
@@ -40,26 +39,17 @@ export class ForgottenpwComponent implements OnInit {
     if (valid) {
       this._success.next(`Amennyiben a megadott e-mail cím regisztrálva van nálunk, arra hamarosan megérkezik a jelszó-emlékeztető..`);
       this.type='success';
+      this.forgottenService.sendForgottenPwMail(formData.email)
+        .pipe(first())
+        .subscribe(
+          data => {
+          },
+          error => {
+          });
     }else {
       this._success.next(`A megadtt email formátuma nem megfelelő!`);
       this.type='danger';
     }
-    // this.submitted = true;
-    // if (this.loginForm.invalid) {
-    //   return;
-    // }
-    //
-    // this.forgottenService.sendForgottenPwMail(t)
-    // this.authService.login(this.loginForm.controls.username.value, this.loginForm.controls.password.value)
-    //   .pipe(first())
-    //   .subscribe(
-    //     data => {
-    //       this.router.navigate([this.returnUrl]);
-    //     },
-    //     error => {
-    //       this.error = "Helytelen felhasználónév vagy jelszó";
-    //       this.loading = false;
-    //     });
   }
 
 }
