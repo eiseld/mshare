@@ -35,36 +35,6 @@ export class UsersController extends BaseController {
 
         });
 
-
-/*
-        this.getDb().collection('users').deleteMany(
-            {
-                _id: id.generationTime > new Date().getTime() - 5 * 60 * 1000,
-                interval: '* 0/5 * * * *'
-            },
-            {},
-            async (err, user) => {
-                // In case the user not found
-                if (err) {
-                    res.status(StatusCodes.InternalError).send(err);
-                    return;
-                }
-                if (user) {
-                    // TODO: move secret to config file
-                    const token: string = jwt.sign({userId: user._id}, 'shhhhhhhhhhhhhh');
-                    res.status(StatusCodes.OK).send(new LoginResponse(
-                        LoginState.OK,
-                        token)
-                    );
-                } else {
-                    res.status(StatusCodes.Unauthorized).send(new LoginResponse(
-                        LoginState.BadAuth,
-                        '')
-                    );
-                }
-            }
-        );*/
-
         this.router.route('/login')
             .post(async (req, res) => {
                 console.log(req.get('Authorization'));
