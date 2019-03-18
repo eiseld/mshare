@@ -2,13 +2,68 @@ import {BaseController} from "../core/BaseController";
 import {LoginResponse, LoginState} from "../core/Responses/LoginResponse";
 import {ObjectId} from "bson";
 import {StatusCodes} from "../core/StatusCodes";
+import {userInfo} from "os";
+import {identifier} from "babel-types";
 const hasher = require('../core/Hasher');
 const jwt = require('jsonwebtoken');
 const randomstring = require('randomstring');
+const schedule = require('node-schedule');
 
 export class UsersController extends BaseController {
     public registerRoutes() {
         super.registerRoutes();
+
+        var that = this;
+        var sch = schedule.scheduleJob('0 * * ? * *', function () {
+
+            that.getDb().collection('users').find({state: "Unapproved"}).toArray(function (err, result) {
+
+                if(err) {
+                    console.log('Error while trying to clear database from "Unapproved" registration(s)!');
+                    return;
+                }
+
+                console.log('Checking for deletable, "Unapproved" registration(s).');
+
+                result.forEach(function (element) {
+                    if(element._id.generationTime < Math.floor(new Date().getTime() / 1000) - 3 * 60) {
+                        console.log('Deleting user with the following id: ', element._id);
+                        that.getDb().collection('users').deleteOne({_id: element._id});
+                    }
+                });
+            });
+
+        });
+
+
+/*
+        this.getDb().collection('users').deleteMany(
+            {
+                _id: id.generationTime > new Date().getTime() - 5 * 60 * 1000,
+                interval: '* 0/5 * * * *'
+            },
+            {},
+            async (err, user) => {
+                // In case the user not found
+                if (err) {
+                    res.status(StatusCodes.InternalError).send(err);
+                    return;
+                }
+                if (user) {
+                    // TODO: move secret to config file
+                    const token: string = jwt.sign({userId: user._id}, 'shhhhhhhhhhhhhh');
+                    res.status(StatusCodes.OK).send(new LoginResponse(
+                        LoginState.OK,
+                        token)
+                    );
+                } else {
+                    res.status(StatusCodes.Unauthorized).send(new LoginResponse(
+                        LoginState.BadAuth,
+                        '')
+                    );
+                }
+            }
+        );*/
 
         this.router.route('/login')
             .post(async (req, res) => {
