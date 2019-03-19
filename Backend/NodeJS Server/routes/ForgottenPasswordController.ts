@@ -21,7 +21,7 @@ export class ForgottenPasswordController extends BaseController{
                 }
                 if (email){
                     async (error, result) => {
-                        this.emailSender.sendMailText(email,"Forgotten Password", getEmailContent());
+                        this.emailSender.sendMailText(email,"Forgotten Password", this.getEmailContent());
                         if(error) {
                             res.status(StatusCodes.InternalError).send(new ForgottenPasswordResponse('0'));
                             return;
@@ -34,19 +34,39 @@ export class ForgottenPasswordController extends BaseController{
                 }
             });
 
-        // this.router.route('/resetpass')
-        //     .post(async (req, res) => {
-        //         const email: string = req.get('email');
-        //         const oldPass: string = req.get('oldpass');
-        //         const newPass: string = req.get('newpass');
-        //         const token: string = req.get('token');
-        //         if(email == null || oldPass == null || newPass == null || token == null){
-        //             res.status(StatusCodes.InternalError).send();
-        //             return;
-        //         }
-        //
-        //         //check token valid
-        //         //vagyis van egy modellunk email + token + valid-e + datum
+        this.router.route('/resetpass')
+            .post(async (req, res) => {
+                const email: string = req.get('email');
+                const password: string = req.get('newpassword');
+                const token: string = req.get('token');
+                if(email == null || password == null || token == null){
+                    res.status(StatusCodes.InternalError).send();
+                    return;
+                }
+                const hashedPassword: string = hasher(password);
+
+                await this.getDb().collection('users').updateOne(
+                    {$and: [
+                            {email: email}
+                        ]},
+                    {
+                        $set: {password: hashedPassword}
+                    },
+                    async (err, user) =>{
+                        if(err) {
+                            res.status(StatusCodes.InternalError).send(err);
+                            return;
+                        }
+                        if (user){
+                            res.status(StatusCodes.OK).send();
+                        } else {
+                            res.status(StatusCodes.Forbidden).send();
+                        }
+                    }
+                );
+        });
+               //check token valid
+        //         vagyis van egy modellunk email + token + valid-e + datum
         //         await this.getDb().collection('resetedmails').findOne(
         //             { $and: [
         //                     {email: email},
@@ -54,7 +74,6 @@ export class ForgottenPasswordController extends BaseController{
         //                     {valid: 1},
         //                     {created: '2019-01-01'}//datumot
         //                 ] },async (err, resetedmail) => {
-        //                 // In case the user not found
         //                 if(err) {
         //                     res.status(StatusCodes.InternalError).send(err);
         //                     return;
@@ -103,31 +122,6 @@ export class ForgottenPasswordController extends BaseController{
     }
 
     private getEmailContent() : string {
-        return 'Az alábbi linkre kattintva módosíthatja jelszavát: ' + 'htp://localhost:4200/resetpass?token='+this.makeString();
+        return 'Az alábbi linkre kattintva módosíthatja jelszavát: ' + 'http://192.168.99.100/resetpass?token='+this.makeString();
     }
-
-    // transporter = nodemailer.createTransport({
-    //     service: 'gmail',
-    //     auth: {
-    //         user: 'youremail@gmail.com',
-    //         pass: 'yourpassword'
-    //     }
-    // });
-    //
-    // mailOptions = {
-    //     from: 'youremail@gmail.com',
-    //     to: 'myfriend@yahoo.com',
-    //     subject: 'Sending Email using Node.js',
-    //     text: 'That was easy!'
-    // };
-    //
-    // public sendMail(param) {
-    //     this.transporter.sendMail(this.mailOptions, function (error, info) {
-    //         if (error) {
-    //             console.log(error);
-    //         } else {
-    //             console.log('Email sent: ' + info.response);
-    //         }
-    //     });
-    // }
 }

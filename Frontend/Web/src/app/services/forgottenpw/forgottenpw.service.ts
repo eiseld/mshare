@@ -20,7 +20,7 @@ export class ForgottenpwService {
         'email': email
       })
     };
-    return this.http.post<any>(`${environment.API_URL}forgotpass`, {}, httpOptions)
+    return this.http.post<any>(`${environment.API_URL}/forgotpass`, {}, httpOptions)
       .pipe(map(email => {
         return email;
       }));
