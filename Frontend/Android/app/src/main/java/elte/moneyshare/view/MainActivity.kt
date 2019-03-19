@@ -10,8 +10,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.frame_container, LoginFragment()).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container, LoginFragment()).commit()
     }
 
 }

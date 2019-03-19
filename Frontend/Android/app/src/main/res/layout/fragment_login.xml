@@ -54,11 +54,23 @@
             android:layout_marginRight="12dp"/>
 
     <Button
+            android:id="@+id/registrationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/registration"
+            app:layout_constraintTop_toBottomOf="@+id/loginButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"/>
+
+    <Button
             android:id="@+id/forgottenPasswordButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/forgotten_password"
-            app:layout_constraintTop_toBottomOf="@+id/loginButton"
+            app:layout_constraintTop_toBottomOf="@+id/registrationButton"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginTop="12dp"
