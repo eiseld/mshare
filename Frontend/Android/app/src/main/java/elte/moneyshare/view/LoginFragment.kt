@@ -32,7 +32,7 @@ class LoginFragment : Fragment() {
 
         loginButton.setOnClickListener {
             viewModel.postLoginUser(emailEditText.text.toString(), passwordEditText.text.toString()) { response, error ->
-                if(error != null) {
+                if(error == null) {
                     Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
@@ -43,7 +43,6 @@ class LoginFragment : Fragment() {
                 Log.d("LoginFragment:", "users: $users")
             }
         }
-
 
     }
 

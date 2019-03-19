@@ -12,4 +12,5 @@
     <string name="create_group">Create group</string>
     <string name="group_name">Group name</string>
     <string name="access_token_key">access_token</string>
+    <string name="registration">Registration</string>
 </resources>

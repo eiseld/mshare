@@ -20,7 +20,7 @@ class NewGroupFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false)
+        return inflater.inflate(R.layout.fragment_groupcreation, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -30,14 +30,12 @@ class NewGroupFragment : Fragment() {
 
         createButton.setOnClickListener {
             viewModel.postNewGroup(groupNameEditText.text.toString()) { response, error ->
-                if(error != null) {
+                if(error == null) {
                     Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                 }
             }
         }
-
-
     }
 }

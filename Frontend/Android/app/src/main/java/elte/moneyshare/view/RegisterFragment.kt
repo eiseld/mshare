@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 
 import elte.moneyshare.R
-import elte.moneyshare.entity.RegisterData
+import elte.moneyshare.entity.RegistrationData
 import elte.moneyshare.viewmodel.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
 
@@ -30,8 +30,8 @@ class RegisterFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
 
         registerButton.setOnClickListener {
-            viewModel.postRegisterUser(body= RegisterData(emailEditText.text.toString(), passwordEditText.text.toString(), userEditText.toString())) { response, error ->
-                if(error != null) {
+            viewModel.postRegisterUser(registrationData= RegistrationData(emailEditText.text.toString(), passwordEditText.text.toString(), userEditText.toString())) { response, error ->
+                if(error == null) {
                     Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
