@@ -2,7 +2,7 @@
     <string name="app_name">MoneyShare</string>
     <string name="login">Login</string>
     <string name="forgotten_password">Forgotten password</string>
-    <string name="base_url_value">http://192.168.99.100:8081/</string>
+    <string name="base_url_value">http://192.168.99.100:8081</string>
     <string name="register">Register</string>
     <string name="username">Username</string>
     <string name="password">Password</string>

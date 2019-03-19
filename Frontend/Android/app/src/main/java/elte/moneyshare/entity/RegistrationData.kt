@@ -1,4 +1,7 @@
 package elte.moneyshare.entity
 
-class RegistrationData {
-}
+data class RegistrationData (
+    var displayname: String,
+    var email: String,
+    var password: String
+)

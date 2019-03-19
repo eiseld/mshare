@@ -1,6 +1,5 @@
 package elte.moneyshare.view
 
-
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
