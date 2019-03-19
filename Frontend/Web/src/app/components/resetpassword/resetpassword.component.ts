@@ -25,7 +25,7 @@ export class ResetpasswordComponent implements OnInit {
 
   }
 
-  private resetpassword(){
+  resetPassword(){
     this.resetPasswordService.resetPassword(this.email, this.password, this.token);
   }
 
