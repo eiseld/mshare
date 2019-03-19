@@ -1,27 +1,24 @@
-version: '3.0'
+version: '3.6'
  
 services:
-
- mshare-node: 
-  build: Backend/NodeJS Server
+ aspnet:
+  build: Backend\MShare_ASP
   ports:
   - "8081:8081"
-  links:
-  - database
- 
- database:
-  image: mongo
-  ports:
-  - "27017:27017"
-  volumes:
-  - //Backend/Database/TestBackup:/backup
-  # If using docker with hyper-V change // to ./
-  # - ./Backend/Database/TestBackup:/backup
+  depends_on:
+  - mysql
 
+ mysql:
+  image: mysql:8.0.15
+  environment:
+   MYSQL_ROOT_PASSWORD: ilovescrum
+   MYSQL_DATABASE: mshare
+   MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+  restart: unless-stopped
+  ports:
+  - "3306:3306"
+ 
  apache:
-  network_mode: host
-  build:
-   dockerfile: Dockerfile
-   context: ./Frontend/Web
+  build: Frontend/Web
   ports:
    - "80:80"
