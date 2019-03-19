@@ -17,6 +17,8 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
 import { PageFooterComponent } from './components/page-footer/page-footer.component';
 import { GroupManagerComponent } from './components/group-manager/group-manager.component';
 import { GroupDetailComponent } from './components/group-detail/group-detail.component';
+import { ForgottenpwComponent } from './components/forgottenpw/forgottenpw.component';
+import { ResetpasswordComponent } from './components/resetpassword/resetpassword.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { GroupDetailComponent } from './components/group-detail/group-detail.com
     PageHeaderComponent,
     PageFooterComponent,
     GroupManagerComponent,
-    GroupDetailComponent
+    GroupDetailComponent,
+    ForgottenpwComponent,
+    ResetpasswordComponent
   ],
   imports: [
     NgbModule,
