@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,28 @@ export class AuthService {
 
         return user;
       }));
+  }
+
+  register(email: string, displayname: string, password: string): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+         'Content-Type': 'application/json',
+      })
+    };
+    return this.http.post<any>(`${environment.API_URL}/users/createUser`, {
+      'email': email,
+      'displayname': displayname,
+      'password': password
+    }, httpOptions)
+       .pipe(map(user => {
+         if (user && user.token) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+         }
+
+         console.log(user);
+         return user;
+       }));
   }
 
   logout() {
