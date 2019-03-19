@@ -20,7 +20,7 @@
 
 
     <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/userEditText"
+            android:id="@+id/displayNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/registerTextView"
@@ -36,7 +36,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
-            app:layout_constraintTop_toBottomOf="@+id/userEditText"
+            android:inputType="textEmailAddress"
+            app:layout_constraintTop_toBottomOf="@+id/displayNameEditText"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginTop="12dp"
@@ -48,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
+            android:inputType="textPassword"
             app:layout_constraintTop_toBottomOf="@+id/emailEditText"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -56,10 +58,11 @@
             android:layout_marginRight="12dp"/>
 
     <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/password_againEditText"
+            android:id="@+id/passwordAgainEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password_again"
+            android:inputType="textPassword"
             app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -72,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/register"
-            app:layout_constraintTop_toBottomOf="@+id/password_againEditText"
+            app:layout_constraintTop_toBottomOf="@+id/passwordAgainEditText"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginTop="12dp"

@@ -65,10 +65,13 @@ object APIClient {
     private val accessTokenHeaders: Headers
         get() = Headers.Builder()
             .add(accessTokenKey, SharedPreferences.accessToken)
+            .add("Content-Type", "application/json")
             .build()
 
     private val apiSecretHeaders: Headers
-        get() = Headers.Builder().build()
+        get() = Headers.Builder()
+            .add("Content-Type", "application/json")
+            .build()
 
     private fun createHeadersInterceptor(): Interceptor {
         return Interceptor { chain ->

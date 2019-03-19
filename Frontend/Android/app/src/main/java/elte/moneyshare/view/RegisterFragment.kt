@@ -30,8 +30,14 @@ class RegisterFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
 
         registerButton.setOnClickListener {
-            viewModel.postRegisterUser(registrationData= RegistrationData(emailEditText.text.toString(), passwordEditText.text.toString(), userEditText.toString())) { response, error ->
-                if(error == null) {
+            viewModel.postRegisterUser(
+                registrationData = RegistrationData(
+                    emailEditText.text.toString(),
+                    passwordEditText.text.toString(),
+                    displayNameEditText.text.toString()
+                )
+            ) { response, error ->
+                if (error == null) {
                     Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
