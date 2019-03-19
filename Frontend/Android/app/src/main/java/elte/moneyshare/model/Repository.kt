@@ -18,7 +18,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                 when (response?.code()) {
                     in (200..300) -> {
                         SharedPreferences.isUserLoggedIn = true
-                        SharedPreferences.accessToken = response?.body()?.accessToken ?: ""
+                        SharedPreferences.accessToken = response?.body()?.token ?: ""
                         completion(response.code().toString(), null)
                     }
                     else -> {
