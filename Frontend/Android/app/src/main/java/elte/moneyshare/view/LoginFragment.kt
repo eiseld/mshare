@@ -44,6 +44,10 @@ class LoginFragment : Fragment() {
             }
         }
 
+        registrationButton.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, RegisterFragment())?.addToBackStack(null)?.commit()
+        }
+
     }
 
 
