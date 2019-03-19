@@ -19,8 +19,10 @@
         <div class="form-group">
             <button [disabled]="loading" class="btn btn-primary">Bejelentkezés</button>
             <span *ngIf="loading" class="fas fa-spinner"></span>
+            <a [routerLink]="['/register']" class="btn btn-link">Regisztráció</a>
         </div>
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
     </form>
+    <a href="/fpwd"><button class="btn btn-danger">Elfelejtett jelszó</button></a>
   </div>
 </div>
