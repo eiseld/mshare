@@ -4,8 +4,6 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class RegisterData (
-    val email : String,
-    val password : String,
-    val displayname : String
+data class NewGroupData (
+    val name : String
 ) : Parcelable
