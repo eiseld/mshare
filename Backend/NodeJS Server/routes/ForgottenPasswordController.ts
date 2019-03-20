@@ -122,6 +122,6 @@ export class ForgottenPasswordController extends BaseController{
     }
 
     private getEmailContent() : string {
-        return 'Az alábbi linkre kattintva módosíthatja jelszavát: ' + 'http://192.168.99.100/resetpass?token='+this.makeString();
+        return 'Az alábbi linkre kattintva módosíthatja jelszavát: ' + this.config.site_url_for_user + 'resetpass?token='+this.makeString();
     }
 }

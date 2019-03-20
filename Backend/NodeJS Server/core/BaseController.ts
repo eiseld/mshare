@@ -2,6 +2,7 @@ import express = require('express');
 import {App} from "../server";
 import {Router} from "express-serve-static-core";
 import {IAuthenticator} from "./IAuthenticator";
+import {MConfig} from "../utils/MConfig";
 
 
 export class BaseController{
@@ -15,11 +16,17 @@ export class BaseController{
         return this._router;
     }
 
+    private readonly _config : MConfig;
+    get config(): MConfig{
+        return this._config;
+    }
+
     private _application : App;
 
-    constructor(app : App, auth : IAuthenticator) {
+    constructor(app : App, auth : IAuthenticator, config : MConfig) {
         this._application = app;
         this._authenticator = auth;
+        this._config = config;
     }
 
     public registerRoutes() {

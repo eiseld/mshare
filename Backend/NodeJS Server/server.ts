@@ -7,6 +7,10 @@ import {BaseController} from "./core/BaseController";
 const cookieParser = require('cookie-parser');
 import {TokenAuthenticator} from "./core/TokenAuthenticator";
 import {Email} from "./utils/Email";
+import {MConfig} from "./utils/MConfig";
+const config : MConfig = require('./config.json');
+
+console.log(config);
 
 export class App {
   private _database : Db;
@@ -46,7 +50,7 @@ export class App {
     await loader.fromDirectories(`${__dirname}/${folder}`);
     for(const exported of loader.getResult().exports){
       try {
-        const a: BaseController = new exported(this, tokenAuthenticator);
+        const a: BaseController = new exported(this, tokenAuthenticator, config);
         a.registerRoutes();
         console.log("Binding " + a.getName() + " ...");
         this.exprApp.use('/' + a.getName(), a.router);
