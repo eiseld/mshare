@@ -3,12 +3,12 @@ import {ObjectId} from "bson";
 export class GroupResponse{
 
     public name: string;
-    public creator: ObjectId;
-    public members: Array<ObjectId>;
+    public creator: string;
+    public members: Array<string>;
     public memberCount: number;
     public balance: number;
 
-    constructor(name: string, creator: ObjectId, members: Array<ObjectId>){
+    constructor(name: string, creator: string, members: Array<string>){
         this.name = name;
         this.creator = creator;
         this.members = members;
