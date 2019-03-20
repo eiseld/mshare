@@ -2,8 +2,8 @@ version: '3.6'
  
 services:
  mysql:
-  container_name: mshare_mysql_container
   image: mysql:8.0.15
+  container_name: mshare_mysql_container
   environment:
    MYSQL_ROOT_PASSWORD: ilovescrum
    MYSQL_DATABASE: mshare
@@ -15,32 +15,27 @@ services:
 
  aspnet:
   container_name: mshare_aspnet_container
-  build: 
-   context: ./backend/aspnet
-   dockerfile: dockerfile-aspnet
+  build: backend/aspnet
   ports:
   - "8081:8081"
   depends_on:
   - mysql
  
  angular:
-  container_name: mshare_angular_container 
   build:
-   context: ./frontend/web
-   dockerfile: dockerfile-angular
+   dockerfile: Dockerfile-angular
+   context: ./Frontend/Web
   depends_on:
   - aspnet
   ports:
    - "4200:4200"
   volumes:
-    - ./frontend/web:/usr/src/app
+    - ./Frontend/Web:/usr/src/app
  
  apache:
-  image: httpd:2.4
   container_name: mshare_apache_container
+  build: Frontend/Web
   depends_on:
   - angular
   ports:
    - "80:80"   
-  volumes:
-  - ./frontend/web/config/httpd.conf.dev /usr/local/apache2/conf/httpd.conf

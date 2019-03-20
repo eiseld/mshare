@@ -20,7 +20,7 @@ RUN npm install -g @angular/cli@1.7.1 --unsafe
 COPY . /usr/src/app
 
 # generate build
-RUN npm run build --prod
+RUN npm run buildprod
 
 ##################
 ### production ###

@@ -1,0 +1,1 @@
+cmd /c "docker exec -i mshare_mysql_container mysql --user=root --password=ilovescrum mshare < data.sql"
