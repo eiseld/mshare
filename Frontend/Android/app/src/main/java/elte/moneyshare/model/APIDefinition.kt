@@ -24,4 +24,7 @@ interface APIDefinition {
 
     @GET("/users/listUsers")
     fun getUsers(): Call<ArrayList<User>>
+
+    /*@GET("/group")
+    fun*/
 }
