@@ -3,7 +3,9 @@ version: '3.0'
 services:
 
  mshare-node: 
-  build: Backend/NodeJS Server
+  build:
+    dockerfile: Dockerfile
+    context: ./Backend/NodeJS Server
   ports:
   - "8081:8081"
   links:

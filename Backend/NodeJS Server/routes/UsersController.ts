@@ -50,7 +50,8 @@ export class UsersController extends BaseController {
                 await this.getDb().collection('users').findOne(
                     { $and: [
                             {email: email},
-                            {password: hashedPassword}
+                            {password: hashedPassword},
+                            {state: "Approved"}
                         ] },async (err, user) => {
                     // In case the user not found
                     if(err) {
@@ -201,7 +202,7 @@ export class UsersController extends BaseController {
                     if(result && result.matchedCount  === 0){
                         res.status(StatusCodes.OKCreated).send(result);
 
-                        this.getEmail().sendMailHtml(req.body.email, "Activate your registration", "To activate your registration please click <a href='http://192.168.99.100:8081/account/confirm/" + token + "'>HERE</a>");
+                        this.getEmail().sendMailHtml(req.body.email, "Activate your registration", "To activate your registration please click <a href='" + this.config.site_url_for_user + "account/confirm/" + token + "'>HERE</a>");
                     }
                     else{
                         res.status(StatusCodes.InternalError).send(result);

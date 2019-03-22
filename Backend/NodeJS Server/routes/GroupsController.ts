@@ -32,7 +32,24 @@ export class GroupsController extends BaseController{
                     }
 
                     if(result){
-                        res.status(StatusCodes.OK).send(new GroupResponse(result.name,result.creator,result.members));
+                        let arr = await this.getDb()
+                            .collection("users")
+                            .find({ _id: { $in: result.members } })
+                            .toArray();
+
+                        let list = arr.map(function (document) {
+                                return [document._id.toHexString(), document.displayname];
+                            });
+
+                        let creator: string = "";
+                        list.forEach(([x,y]) => {
+                            if(creator === "" && x === result.creator.toHexString())
+                                creator = y;
+                        });
+
+                        let members = list.map(([,y]) => y);
+
+                        res.status(StatusCodes.OK).send(new GroupResponse(result.name, creator, members));
                     }
                     else{
                         res.status(StatusCodes.InternalError).send(result);
