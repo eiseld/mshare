@@ -1,20 +1,18 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+FROM microsoft/dotnet:2.2-sdk
 
-FROM microsoft/dotnet:2.1-sdk AS build
+# Set a working dir at least 2 deep. The output and intermediate output folders will be /code/obj and /code/bin
 WORKDIR /src
-COPY ["MShare_ASP/MShare_ASP.csproj", "MShare_ASP/"]
-RUN dotnet restore "MShare_ASP/MShare_ASP.csproj"
-COPY . .
-WORKDIR "/src/MShare_ASP"
-RUN dotnet build "MShare_ASP.csproj" -c Release -o /app
 
-FROM build AS publish
-RUN dotnet publish "MShare_ASP.csproj" -c Release -o /app
+# By copying these into the image when building it, we don't have to re-run restore everytime we launch a new container
+COPY mshare_asp/MShare_ASP.csproj MShare_ASP.csproj
+RUN dotnet restore
+COPY mshare_asp/ .
 
-FROM base AS final
+WORKDIR /src
+
+RUN dotnet build "MShare_ASP.csproj" -c Debug -o ../app
+
 WORKDIR /app
-COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "MShare_ASP.dll"]
+
+COPY mshare_asp/appsettings.json appsettings.json
+ENTRYPOINT dotnet MShare_ASP.dll 

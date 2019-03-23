@@ -7,5 +7,7 @@ using System.Threading.Tasks;
 namespace MShare_ASP.Services {
     public interface IMshareService {
         IEnumerable<Test> Test { get; }
+        IEnumerable<DaoUser> Users { get; }
+        DaoUser GetUser(long id);
     }
 }

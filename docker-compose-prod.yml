@@ -1,11 +1,20 @@
-version: '3.0'
+version: '3.6'
  
 services:
 
  apache:
-  network_mode: host
   build:
    dockerfile: Dockerfile-prod
    context: ./Frontend/Web
   ports:
    - "80:80"
+   
+ aspnet:
+  container_name: mshare_aspnet_container
+  build: 
+   context: ./backend/aspnet
+   dockerfile: dockerfile-aspnet-prod
+  ports:
+  - "8081:8081"
+  depends_on:
+  - mysql
