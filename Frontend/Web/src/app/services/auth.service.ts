@@ -64,7 +64,12 @@ export class AuthService {
   }
 
   confirm(token: string) {
-    this.http.post<any>(`${environment.API_URL}/users/validateemail/`+token,{});
+    const httpOptions = {
+      headers: new HttpHeaders({
+         'Content-Type': 'application/json',
+      })
+    };
+    return this.http.post<any>(`${environment.API_URL}/users/validateemail/`+token,{}, httpOptions);
   }
 
   logout() {
