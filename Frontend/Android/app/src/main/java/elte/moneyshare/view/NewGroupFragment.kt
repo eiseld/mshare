@@ -33,8 +33,16 @@ class NewGroupFragment : Fragment() {
 
         createButton.setOnClickListener {
             viewModel.postNewGroup(groupNameEditText.text.toString()) { response, error ->
-                if(error == null) {
-                    Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
+                if (error == null) {
+                    if(response == "201") {
+                        Toast.makeText(context, "Group successfully created!", Toast.LENGTH_SHORT).show()
+                        activity?.supportFragmentManager?.beginTransaction()
+                            ?.replace(R.id.frame_container, GroupsFragment())?.commit()
+                    }
+                    else
+                    {
+                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                 }
