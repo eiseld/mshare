@@ -8,6 +8,7 @@ const hasher = require('../core/Hasher');
 const jwt = require('jsonwebtoken');
 const randomstring = require('randomstring');
 const schedule = require('node-schedule');
+const { check, validationResult } = require('express-validator/check');
 
 export class UsersController extends BaseController {
     public registerRoutes() {
@@ -175,11 +176,21 @@ export class UsersController extends BaseController {
             res.send(docs);
         });
 
-        this.router.post('/createUser', async (req, res) => {
+        this.router.post('/createUser',[
+            check('email').isEmail(),
+            check('password').matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i")
+        ], async (req, res) => {
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(422).json({ errors: errors.array() });
+            }
 
             var password = req.body.password;
             var token = hasher( req.body.email + new Date().getTime() + randomstring.generate());
             const hashedPassword: string = hasher(password);
+
+            var validationPassword = check(password).matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i");
 
             await this.getDb().collection("users").updateOne(
                 {email : req.body.email},

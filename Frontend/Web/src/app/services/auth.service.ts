@@ -63,6 +63,10 @@ export class AuthService {
        }));
   }
 
+  confirm(token: string) {
+    this.http.post<any>(`${environment.API_URL}/users/validateemail/`+token,{});
+  }
+
   logout() {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
