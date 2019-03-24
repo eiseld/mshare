@@ -2,10 +2,7 @@ package elte.moneyshare.model
 
 
 import elte.moneyshare.SharedPreferences
-import elte.moneyshare.entity.LoginData
-import elte.moneyshare.entity.RegistrationData
-import elte.moneyshare.entity.User
-import elte.moneyshare.entity.NewGroupData
+import elte.moneyshare.entity.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -87,6 +84,46 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
 
             override fun onFailure(call: Call<ArrayList<User>>, t: Throwable) {
                 completion(null, "get users error")
+            }
+        })
+    }
+
+    override fun getGroupIds(completion: (response: ArrayList<String>?, error: String?) -> Unit) {
+        apiDefinition.getGroupIds().enqueue(object : Callback<ArrayList<String>> {
+            override fun onResponse(call: Call<ArrayList<String>>, response: Response<ArrayList<String>>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val groupIds = response.body()
+                        completion(groupIds, null)
+                    }
+                    else -> {
+                        completion(null, "get groupIds error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<String>>, t: Throwable) {
+                completion(null, "get groupIds error")
+            }
+        })
+    }
+
+    override fun getGroup(groupId: String, completion: (response: Group?, error: String?) -> Unit) {
+        apiDefinition.getGroup(groupId).enqueue(object : Callback<Group> {
+            override fun onResponse(call: Call<Group>, response: Response<Group>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val group = response.body()
+                        completion(group, null)
+                    }
+                    else -> {
+                        completion(null, "get group error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Group>, t: Throwable) {
+                completion(null, "get group error")
             }
         })
     }

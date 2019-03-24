@@ -183,14 +183,12 @@ export class UsersController extends BaseController {
 
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-                return res.status(422).json({ errors: errors.array() });
+                return res.status(StatusCodes.Unprocessable).json({ errors: errors.array() });
             }
 
             var password = req.body.password;
             var token = hasher( req.body.email + new Date().getTime() + randomstring.generate());
             const hashedPassword: string = hasher(password);
-
-            var validationPassword = check(password).matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i");
 
             await this.getDb().collection("users").updateOne(
                 {email : req.body.email},
@@ -205,6 +203,12 @@ export class UsersController extends BaseController {
                 },
                 {upsert : true},
                 async (error, result) => {
+
+                    if(result.matchedCount /= 0) {
+                        res.status(StatusCodes.Conflict).send("Duplicated registration.");
+                        return;
+                    }
+
                     if(error) {
                         res.status(StatusCodes.InternalError).send(error);
                         return;
