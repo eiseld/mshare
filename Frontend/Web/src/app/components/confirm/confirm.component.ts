@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Directive, Input, AfterViewInit } from '@
 import { FormGroup, FormBuilder, Validators, ControlValueAccessor, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-confirm',
@@ -35,7 +36,12 @@ export class ConfirmComponent implements OnInit {
 
   ngOnInit() {
     let token = this.route.snapshot.params['token'];
-    this.authService.confirm(token);
+    this.authService.confirm(token)
+      .pipe(first())
+      .subscribe(
+        data => {console.log("KOLBÁSZ!!!")},
+        error => {});
+	
   }
 
   onSubmit() {
