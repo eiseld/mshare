@@ -1,0 +1,11 @@
+version: '3.6'
+services:
+
+ angular:
+  container_name: mshare-angular-dev
+  image: node:11.12.0 
+  volumes:
+  - ./frontend/web:/usr/src/app
+  command: sh -c "cd /usr/src/app && npm i && npm run startdev"
+  ports:
+   - "4200:4200"

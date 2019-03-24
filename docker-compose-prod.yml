@@ -1,0 +1,28 @@
+version: '3.6'
+services:
+
+ mysql:
+  container_name: mshare-mysql-prod
+  image: mysql:8.0.15
+  environment:
+   MYSQL_DATABASE: 'mshare'
+   MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+   MYSQL_ROOT_PASSWORD: 'ilovescrum'
+  security_opt:
+  - seccomp:unconfined
+  ports:
+  - '3306:3306'
+
+ aspnet:
+  container_name: mshare-aspnet-prod
+  build: './backend/aspnet'
+  ports:
+  - '8081:8081'
+
+ apache:
+  container_name: mshare-apache-prod
+  build: 
+   context: './frontend/web'
+   target: apache-prod
+  ports:
+   - '80:80'

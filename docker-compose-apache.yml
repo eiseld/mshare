@@ -1,0 +1,10 @@
+version: '3.6'
+services:
+
+ apache:
+  container_name: mshare-apache-dev
+  build: 
+    context: './frontend/web'
+    target: apache-dev
+  ports:
+   - '80:80'
