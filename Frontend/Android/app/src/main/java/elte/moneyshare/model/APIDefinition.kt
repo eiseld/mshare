@@ -1,15 +1,9 @@
 package elte.moneyshare.model
 
 
-import elte.moneyshare.entity.LoginData
-import elte.moneyshare.entity.RegistrationData
-import elte.moneyshare.entity.User
-import elte.moneyshare.entity.NewGroupData
+import elte.moneyshare.entity.*
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface APIDefinition {
 
@@ -20,11 +14,15 @@ interface APIDefinition {
     fun postRegisterUser(@Body registrationData: RegistrationData): Call<RegistrationData>
 
     @POST("groups/newgroup")
-    fun postNewGroup(@Header("name") name : String) : Call<NewGroupData>
+    fun postNewGroup(@Query("name") name : String) : Call<NewGroupData>
 
     @GET("/users/listUsers")
     fun getUsers(): Call<ArrayList<User>>
 
-    /*@GET("/group")
-    fun*/
+    @GET("/users/listUsers")
+    fun getGroupIds(): Call<ArrayList<String>>
+
+    @GET("/groups/{groupId}")
+    fun getGroup(@Path("groupId") groupId: String): Call<Group>
+
 }
