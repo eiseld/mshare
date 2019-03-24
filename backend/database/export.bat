@@ -1,1 +1,0 @@
-cmd /c "docker exec -i mshare-mysql mysqldump --user=root --password=ilovescrum mshare > data.sql"
