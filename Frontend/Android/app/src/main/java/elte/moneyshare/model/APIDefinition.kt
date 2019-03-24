@@ -19,7 +19,7 @@ interface APIDefinition {
     @GET("/users/listUsers")
     fun getUsers(): Call<ArrayList<User>>
 
-    @GET("/users/listUsers")
+    @GET("/users/listgroups")
     fun getGroupIds(): Call<ArrayList<String>>
 
     @GET("/groups/{groupId}")
