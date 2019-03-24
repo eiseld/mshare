@@ -13,8 +13,8 @@ interface APIDefinition {
     @POST("/users/createUser")
     fun postRegisterUser(@Body registrationData: RegistrationData): Call<RegistrationData>
 
-    @POST("groups/newgroup")
-    fun postNewGroup(@Query("name") name : String) : Call<NewGroupData>
+    @POST("groups/newgroup/{groupName}")
+    fun postNewGroup(@Path("groupName") groupName : String) : Call<NewGroupData>
 
     @GET("/users/listUsers")
     fun getUsers(): Call<ArrayList<User>>
