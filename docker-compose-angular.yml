@@ -3,9 +3,11 @@ services:
 
  angular:
   container_name: mshare-angular-dev
-  image: node:11.12.0 
+  build: 
+   context: './frontend/web'
+   dockerfile: Dockerfile-angular  
   volumes:
   - ./frontend/web:/usr/src/app
-  command: sh -c "cd /usr/src/app && npm i && npm run startdev"
+  - /usr/src/app/node_modules/
   ports:
    - "4200:4200"

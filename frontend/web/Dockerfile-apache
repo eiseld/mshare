@@ -1,13 +1,13 @@
-FROM node:11.12.0 as builder
+FROM node:11.12.0-alpine as builder
 
 WORKDIR /usr/src/app
 
 COPY package.json .
-RUN npm i
+RUN npm install
 
 COPY . .
 
-RUN npm run buildprod
+RUN ["npm","run","buildprod"]
 
 FROM httpd:2.4 as apache-prod
 

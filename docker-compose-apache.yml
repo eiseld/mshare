@@ -5,6 +5,7 @@ services:
   container_name: mshare-apache-dev
   build: 
     context: './frontend/web'
+    dockerfile: Dockerfile-apache
     target: apache-dev
   ports:
    - '80:80'
