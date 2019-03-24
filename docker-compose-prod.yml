@@ -1,20 +1,28 @@
 version: '3.6'
- 
 services:
 
- apache:
-  build:
-   dockerfile: Dockerfile-prod
-   context: ./Frontend/Web
+ mysql:
+  container_name: mshare-mysql-prod
+  image: mysql:8.0.15
+  environment:
+   MYSQL_DATABASE: 'mshare'
+   MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+   MYSQL_ROOT_PASSWORD: 'ilovescrum'
+  security_opt:
+  - seccomp:unconfined
   ports:
-   - "80:80"
-   
+  - '3306:3306'
+
  aspnet:
-  container_name: mshare_aspnet_container
-  build: 
-   context: ./backend/aspnet
-   dockerfile: dockerfile-aspnet-prod
+  container_name: mshare-aspnet-prod
+  build: './backend/aspnet'
   ports:
-  - "8081:8081"
-  depends_on:
-  - mysql
+  - '8081:8081'
+
+ apache:
+  container_name: mshare-apache-prod
+  build: 
+   context: './frontend/web'
+   target: apache-prod
+  ports:
+   - '80:80'

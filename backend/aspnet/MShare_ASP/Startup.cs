@@ -96,8 +96,8 @@ namespace MShare_ASP {
             app.UseSwagger();
 
             app.UseSwaggerUI(c => {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My api v1");
-                c.RoutePrefix = "help";
+                c.SwaggerEndpoint("swagger/v1/swagger.json", "My api v1");
+                c.RoutePrefix = "";
             });
 
             app.UseHttpsRedirection();
