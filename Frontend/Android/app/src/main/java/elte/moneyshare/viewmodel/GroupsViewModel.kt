@@ -29,9 +29,9 @@ class GroupsViewModel :ViewModel(){
                         } else {
                             Log.d("GroupsViewModel/getGroups", "getGroup error")
                         }
-                    }
-                    if (groups.size == ids.size) {
-                        completion(groups, null)
+                        if (groups.size == ids.size) {
+                            completion(groups, null)
+                        }
                     }
                 }
             } else {

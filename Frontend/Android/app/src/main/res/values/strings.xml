@@ -11,9 +11,8 @@
     <string name="back">Go back</string>
     <string name="create_group">Create group</string>
     <string name="group_name">Group name</string>
-    <string name="access_token_key">access_token</string>
+    <string name="access_token_key">Authorization</string>
     <string name="registration">Registration</string>
-
     <string name="group_members">(%1$d)</string>
     <string name="group_owe">Your are owe is \n %1$d</string>
     <string name="group_owned">Your are owned is \n %1$d</string>
