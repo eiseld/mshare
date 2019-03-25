@@ -40,7 +40,7 @@ export class ForgottenPasswordController extends BaseController{
 
                 await this.getDb().collection('users').updateOne(
                     {$and: [
-                            {email: email}
+                            {email: email, token: token}
                         ]},
                     {
                         $unset: { token: '' },
@@ -59,49 +59,6 @@ export class ForgottenPasswordController extends BaseController{
                     }
                 );
         });
-               //check token valid
-        //         vagyis van egy modellunk email + token + valid-e + datum
-        //         await this.getDb().collection('resetedmails').findOne(
-        //             { $and: [
-        //                     {email: email},
-        //                     {token: token},
-        //                     {valid: 1},
-        //                     {created: '2019-01-01'}//datumot
-        //                 ] },async (err, resetedmail) => {
-        //                 if(err) {
-        //                     res.status(StatusCodes.InternalError).send(err);
-        //                     return;
-        //                 }
-        //                 if (resetedmail){
-        //                     //itt kell a modositast a resetedben
-        //
-        //                     res.status(StatusCodes.OK).send()
-        //                     );
-        //                 } else {
-        //                     //Itt kell az updatet letolni
-        //                     res.status(StatusCodes.BadRequest).send()
-        //                     );
-        //                 }
-        //             });
-        //         //menteni a user passwordot
-        //
-        //         //ha minden ok akkor return ok
-        //
-        //
-        //         if (email){
-        //             async (error, result) => {
-        //                 this.emailSender.sendMailText(email,"Forgotten Password", "Test");
-        //                 if(error) {
-        //                     res.status(StatusCodes.InternalError).send(error);
-        //                     return;
-        //                 }
-        //
-        //                 if(result){
-        //                     res.status(StatusCodes.OK).send(result);
-        //                 }
-        //             }
-        //         }
-        //     });
     }
 
     private makeString() : string {
