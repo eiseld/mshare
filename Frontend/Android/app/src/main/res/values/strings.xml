@@ -14,6 +14,7 @@
     <string name="access_token_key">Authorization</string>
     <string name="registration">Registration</string>
     <string name="group_members">(%1$d)</string>
-    <string name="group_owe">Your are owe is \n %1$d</string>
-    <string name="group_owned">Your are owned is \n %1$d</string>
+    <string name="group_owe">You owe \n %1$d</string>
+    <string name="group_owned">You are owed \n %1$d</string>
+    <string name="group_settled">Settled up \n %1$d</string>
 </resources>
