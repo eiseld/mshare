@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.util.Patterns
 
 import elte.moneyshare.R
 import elte.moneyshare.entity.RegistrationData
@@ -91,23 +92,18 @@ class RegisterFragment : Fragment() {
                 val txt = passwordEditText.text.toString()
                 val txtAgain = passwordAgainEditText.text.toString()
                 val pwdError = passwordValidator(txt)
-                if(pwdError.length>1)
-                {
+                if (pwdError.length > 1) {
                     passwordEditText.error = pwdError
                     registerButton.isClickable = false
-                }
-                else if(txt != txtAgain)
-                {
+                } else if (txt != txtAgain) {
                     passwordEditText.error = "Passwords not matching"
                     registerButton.isClickable = false
-                }
-                else {
+                } else {
                     passwordEditText.error = null
                     passwordAgainEditText.error = null
                     registerButton.isClickable = true
                 }
             }
-
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
@@ -143,7 +139,62 @@ class RegisterFragment : Fragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         })
+        emailEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                val email = emailEditText.text.toString()
+                val emailAgain = emailAgainEditText.text.toString()
+                var emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
+                if(!emailValid)
+                {
+                    emailEditText.error = "Email format is not correct"
+                    registerButton.isClickable = false
+                }
+                else if(email != emailAgain)
+                {
+                    emailEditText.error = "Emails not matching"
+                    registerButton.isClickable = false
+                }
+                else {
+                    emailEditText.error = null
+                    emailAgainEditText.error = null
+                    registerButton.isClickable = true
+                }
+            }
 
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+        emailAgainEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                val email = emailEditText.text.toString()
+                val emailAgain = emailAgainEditText.text.toString()
+                var emailValid = Patterns.EMAIL_ADDRESS.matcher(emailAgain).matches()
+                if(!emailValid)
+                {
+                    emailAgainEditText.error = "Email format is not correct"
+                    registerButton.isClickable = false
+                }
+                else if(email != emailAgain)
+                {
+                    emailAgainEditText.error = "Emails not matching"
+                    registerButton.isClickable = false
+                }
+                else {
+                    emailEditText.error = null
+                    emailAgainEditText.error = null
+                    registerButton.isClickable = true
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
 
     }
 }
