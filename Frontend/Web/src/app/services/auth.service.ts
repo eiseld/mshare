@@ -22,6 +22,10 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  public get isLoggedIn(): Boolean {
+    return true;
+  }
+
   login(email: string, password: string) {
     const httpOptions = {
       headers: new HttpHeaders({
