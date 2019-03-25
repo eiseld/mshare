@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class PageHeaderComponent implements OnInit {
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
   ) { }
