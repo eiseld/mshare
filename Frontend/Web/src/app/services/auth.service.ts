@@ -23,8 +23,6 @@ export class AuthService {
   }
 
   isLoggedIn(): Boolean {
-    console.log(this.currentUserSubject);
-    console.log(this.currentUserSubject.value);
     return (this.currentUserSubject.value != null);
   }
 
