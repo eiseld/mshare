@@ -8,6 +8,7 @@ const hasher = require('../core/Hasher');
 const jwt = require('jsonwebtoken');
 const randomstring = require('randomstring');
 const schedule = require('node-schedule');
+const { check, validationResult } = require('express-validator/check');
 
 export class UsersController extends BaseController {
     public registerRoutes() {
@@ -175,7 +176,15 @@ export class UsersController extends BaseController {
             res.send(docs);
         });
 
-        this.router.post('/createUser', async (req, res) => {
+        this.router.post('/createUser',[
+            check('email').isEmail(),
+            check('password').matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i")
+        ], async (req, res) => {
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(StatusCodes.Unprocessable).json({ errors: errors.array() });
+            }
 
             var password = req.body.password;
             var token = hasher( req.body.email + new Date().getTime() + randomstring.generate());
@@ -194,6 +203,12 @@ export class UsersController extends BaseController {
                 },
                 {upsert : true},
                 async (error, result) => {
+
+                    if(result.matchedCount !== 0) {
+                        res.status(StatusCodes.Conflict).send("Duplicated registration.");
+                        return;
+                    }
+
                     if(error) {
                         res.status(StatusCodes.InternalError).send(error);
                         return;

@@ -34,7 +34,7 @@ class LoginFragment : Fragment() {
             viewModel.postLoginUser(emailEditText.text.toString(), passwordEditText.text.toString()) { response, error ->
                 if(error == null) {
                     Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
-                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, NewGroupFragment())?.commit()
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                 }
@@ -50,6 +50,4 @@ class LoginFragment : Fragment() {
         }
 
     }
-
-
 }

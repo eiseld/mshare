@@ -22,6 +22,10 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  isLoggedIn(): Boolean {
+    return (this.currentUserSubject.value != null);
+  }
+
   login(email: string, password: string) {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -61,6 +65,15 @@ export class AuthService {
          console.log(user);
          return user;
        }));
+  }
+
+  confirm(token: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+         'Content-Type': 'application/json',
+      })
+    };
+    return this.http.post<any>(`${environment.API_URL}/users/validateemail/`+token,{}, httpOptions);
   }
 
   logout() {

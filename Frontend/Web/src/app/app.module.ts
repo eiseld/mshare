@@ -19,12 +19,14 @@ import { GroupManagerComponent } from './components/group-manager/group-manager.
 import { GroupDetailComponent } from './components/group-detail/group-detail.component';
 import { ForgottenpwComponent } from './components/forgottenpw/forgottenpw.component';
 import { ResetpasswordComponent } from './components/resetpassword/resetpassword.component';
+import { ConfirmComponent } from './components/confirm/confirm.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
+    ConfirmComponent,
     HomepageComponent,
     AboutComponent,
     PageHeaderComponent,

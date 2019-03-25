@@ -9,11 +9,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 
 import elte.moneyshare.R
-import elte.moneyshare.viewmodel.NewGroupViewModel
+import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_groupcreation.*
 
 class NewGroupFragment : Fragment() {
-    private lateinit var viewModel: NewGroupViewModel
+
+    private lateinit var viewModel: GroupsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,12 +27,22 @@ class NewGroupFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this).get(NewGroupViewModel::class.java)
+        activity?.let {
+            viewModel = ViewModelProviders.of(it).get(GroupsViewModel::class.java)
+        }
 
         createButton.setOnClickListener {
             viewModel.postNewGroup(groupNameEditText.text.toString()) { response, error ->
-                if(error == null) {
-                    Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
+                if (error == null) {
+                    if(response == "201") {
+                        Toast.makeText(context, "Group successfully created!", Toast.LENGTH_SHORT).show()
+                        activity?.supportFragmentManager?.beginTransaction()
+                            ?.replace(R.id.frame_container, GroupsFragment())?.commit()
+                    }
+                    else
+                    {
+                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                 }
