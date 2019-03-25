@@ -1,12 +1,12 @@
 <div class="groupDetails" *ngIf="group">
  
-  <h2>{{group.name}} Details</h2>
+  <h2>{{group.name}}</h2>
   <div>
-    <p>Created by {{group.creator}}</p>
-    <p *ngIf="group.balance<0">Balance: You owe {{0-group.balance | currency}}</p>
-    <p *ngIf="group.balance==0">Balance: Settled up</p>
-    <p *ngIf="group.balance>0">Balance: You are owed {{group.balance | currency}}</p>
-    <p>Members ({{group.memberCount}}):</p>
+    <p>Létrehozta: {{group.creator}}</p>
+    <p *ngIf="group.balance<0">Egyenleg: tartozol {{0-group.balance | currency}}-ral</p>
+    <p *ngIf="group.balance==0">Egyenleg: rendezett</p>
+    <p *ngIf="group.balance>0">Egyenleg: tartoznak neked {{group.balance | currency}}-ral</p>
+    <p>Tagok ({{group.memberCount}}):</p>
     <ul>
       <li *ngFor="let member of group.members">
           {{member}}
