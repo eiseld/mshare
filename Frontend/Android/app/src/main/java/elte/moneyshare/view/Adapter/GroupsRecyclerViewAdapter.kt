@@ -25,6 +25,6 @@ class GroupsRecyclerViewAdapter(private val context: Context, private val groups
         holder.groupOwnerTextView.text = group.creator
         holder.groupMemberCountTextView.text = String.format(context.getString(R.string.group_members), group.memberCount)
         //TODO OWN LOGIC
-        holder.groupBalanceTextView.text = String.format(context.getString(R.string.group_owe), group.balance)
+        holder.groupBalanceTextView.text = String.format(context.getString(R.string.group_settled), group.balance)
     }
 }
