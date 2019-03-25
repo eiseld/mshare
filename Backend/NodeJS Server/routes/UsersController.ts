@@ -204,7 +204,7 @@ export class UsersController extends BaseController {
                 {upsert : true},
                 async (error, result) => {
 
-                    if(result.matchedCount /= 0) {
+                    if(result.matchedCount !== 0) {
                         res.status(StatusCodes.Conflict).send("Duplicated registration.");
                         return;
                     }
