@@ -7,38 +7,31 @@ const nodemailer = require('nodemailer');
 
 export class ForgottenPasswordController extends BaseController{
 
-    emailSender : Email;
-
     public registerRoutes() {
         super.registerRoutes();
 
         this.router.route('/forgotpass')
             .post(async (req, res) => {
-                const email: string = req.get('email');
+                console.log('forgot pass called:' +  req.body.email);
+                const email: string =  req.body.email;;
                 if(email == null){
                     res.status(StatusCodes.InternalError).send();
                     return;
                 }
-                if (email){
-                    async (error, result) => {
-                        this.emailSender.sendMailText(email,"Forgotten Password", this.getEmailContent());
-                        if(error) {
-                            res.status(StatusCodes.InternalError).send(new ForgottenPasswordResponse('0'));
-                            return;
-                        }
-
-                        if(result){
-                            res.status(StatusCodes.OK).send(new ForgottenPasswordResponse('1'));
-                        }
-                    }
+                if (email) {
+                    console.log('sendMail: ' + this.getEmailContent());
+                    console.log('inside result');
+                    this.getEmail().sendMailHtml(req.body.email, "Forgotten Password", this.getEmailContent());
+                    res.status(StatusCodes.OK).send(new ForgottenPasswordResponse('1'));
+                    return;
                 }
             });
 
         this.router.route('/resetpass')
             .post(async (req, res) => {
-                const email: string = req.get('email');
-                const password: string = req.get('newpassword');
-                const token: string = req.get('token');
+                const email: string = req.body.email;
+                const password: string =  req.body.password;
+                const token: string =  req.body.token;
                 if(email == null || password == null || token == null){
                     res.status(StatusCodes.InternalError).send();
                     return;
@@ -50,6 +43,7 @@ export class ForgottenPasswordController extends BaseController{
                             {email: email}
                         ]},
                     {
+                        $unset: { token: '' },
                         $set: {password: hashedPassword}
                     },
                     async (err, user) =>{
@@ -122,6 +116,8 @@ export class ForgottenPasswordController extends BaseController{
     }
 
     private getEmailContent() : string {
-        return 'Az alábbi linkre kattintva módosíthatja jelszavát: ' + this.config.site_url_for_user + 'resetpass?token='+this.makeString();
+        console.log('email');
+        return "Az alábbi linkre kattintva módosíthatja jelszavát:<a href='"
+            + this.config.site_url_for_user + 'resetpass?token=' + this.makeString() + "'>Confirm</a>";
     }
 }

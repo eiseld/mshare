@@ -37,7 +37,7 @@ export class ForgottenpwComponent implements OnInit {
 
   makeRequestToResetLink(formData, valid: boolean) {
     if (valid) {
-      this._success.next(`Amennyiben a megadott e-mail cím regisztrálva van nálunk, arra hamarosan megérkezik a jelszó-emlékeztető..`);
+      this._success.next(`A jelszó változtatása sikeresen megtörtént`);
       this.type='success';
       this.forgottenService.sendForgottenPwMail(formData.email)
         .pipe(first())

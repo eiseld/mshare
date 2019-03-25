@@ -20,10 +20,13 @@ resetPassword(email: string, token: string, password: string) {
       'password' : password
     })
   };
-  return this.http.post<any>(`${environment.API_URL}/resetpassword`, {}, httpOptions)
+  return this.http.post<any>(`${environment.API_URL}/forgottenpassword/resetpass`, {}, httpOptions)
     .pipe(map(response => {
       if (response) {
         return response;
+      }
+      else{
+        return 'Probléma történt a jelszó megváltoztatásakor!';
       }
     }));
 }
