@@ -10,20 +10,23 @@ export class ResetpasswordService {
 
   constructor(private http: HttpClient){}
 
-resetPassword(email: string, token: string, password: string) {
+resetPassword(email: string, password: string, token: string) {
 
   const httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'email': email,
-      'token' : token,
-      'password' : password
+      'Content-Type': 'application/json'
     })
   };
-  return this.http.post<any>(`${environment.API_URL}/resetpassword`, {}, httpOptions)
+  return this.http.post<any>(`${environment.API_URL}/forgottenpassword/resetpass`, {
+    'email': email,
+    'token' : token,
+    'password' : password}, httpOptions)
     .pipe(map(response => {
       if (response) {
         return response;
+      }
+      else{
+        return 'Probléma történt a jelszó megváltoztatásakor!';
       }
     }));
 }

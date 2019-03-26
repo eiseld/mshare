@@ -217,7 +217,7 @@ export class UsersController extends BaseController {
                     if(result && result.matchedCount  === 0){
                         res.status(StatusCodes.OKCreated).send(result);
 
-                        this.getEmail().sendMailHtml(req.body.email, "Activate your registration", "To activate your registration please click <a href='" + this.config.site_url_for_user + "account/confirm/" + token + "'>HERE</a>");
+                        this.getEmail().sendMailHtml(req.body.email, "Regisztráció megerősítése", "A megerősítéshez kattintson <a href='" + this.config.site_url_for_user + "account/confirm/" + token + "'>IDE</a>");
                     }
                     else{
                         res.status(StatusCodes.InternalError).send(result);
