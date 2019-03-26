@@ -13,7 +13,7 @@ import { first } from 'rxjs/operators';
 export class ConfirmComponent implements OnInit {
   confirmForm: FormGroup;
   returnUrl: String;
-  error: String = "";
+  message: String = "";
   loading: Boolean = false;
   submitted: Boolean = false;
 
@@ -39,8 +39,12 @@ export class ConfirmComponent implements OnInit {
     this.authService.confirm(token)
       .pipe(first())
       .subscribe(
-        data => {console.log("KOLBÁSZ!!!")},
-        error => {});
+        data => {
+          this.message = "Sikeres regisztráció!";
+        },
+        error => {
+          this.message = "Sikertelen regisztráció, hiba történt. Valószínűleg lejárt a konfirmációs ablak, próbáljon regisztrálni újra.";
+        });
 	
   }
 

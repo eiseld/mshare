@@ -3,7 +3,7 @@ import { User } from '../models/user';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { map } from 'rxjs/operators';
+import { map, observeOn, tap } from 'rxjs/operators';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
 
 @Injectable({
@@ -32,7 +32,7 @@ export class AuthService {
         'Content-Type': 'application/json',
         'email': email,
         'password': password
-      })
+      }),
     };
     return this.http.post<any>(`${environment.API_URL}/users/login`, {}, httpOptions)
       .pipe(map(user => {

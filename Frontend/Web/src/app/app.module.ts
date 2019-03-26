@@ -20,6 +20,7 @@ import { GroupDetailComponent } from './components/group-detail/group-detail.com
 import { ForgottenpwComponent } from './components/forgottenpw/forgottenpw.component';
 import { ResetpasswordComponent } from './components/resetpassword/resetpassword.component';
 import { ConfirmComponent } from './components/confirm/confirm.component';
+import { SucregComponent } from './components/sucreg/sucreg.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { ConfirmComponent } from './components/confirm/confirm.component';
     LoginComponent,
     RegisterComponent,
     ConfirmComponent,
+    SucregComponent,
     HomepageComponent,
     AboutComponent,
     PageHeaderComponent,
