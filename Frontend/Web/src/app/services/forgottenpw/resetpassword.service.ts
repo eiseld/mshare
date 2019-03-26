@@ -10,7 +10,7 @@ export class ResetpasswordService {
 
   constructor(private http: HttpClient){}
 
-resetPassword(email: string, token: string, password: string) {
+resetPassword(email: string, password: string, token: string) {
 
   const httpOptions = {
     headers: new HttpHeaders({

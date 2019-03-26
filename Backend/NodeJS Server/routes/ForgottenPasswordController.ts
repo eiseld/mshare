@@ -20,18 +20,20 @@ export class ForgottenPasswordController extends BaseController{
                 }
                 if (email) {
                     await this.getDb().collection('users').updateOne(
-                        {$and: [
-                                {email: email}
+                        {
+                            $and: [
+                                {email: email},
+                                {state: "Approved"}
                             ]},
                         {
                             $set: {token: token}
                         },
-                        async (err, user) =>{
+                        async (err, result) =>{
                             if(err) {
                                 res.status(StatusCodes.InternalError).send(err);
                                 return;
                             }
-                            if (user){
+                            if (result && result.matchedCount === 1){
                                 this.getEmail().sendMailHtml(req.body.email, "Elfelejtett jelszó", this.getEmailContent(token));
                                 res.status(StatusCodes.OK).send(new ForgottenPasswordResponse('1'));
                                 return;
@@ -57,18 +59,19 @@ export class ForgottenPasswordController extends BaseController{
 
                 await this.getDb().collection('users').updateOne(
                     {$and: [
-                            {email: email, token: token}
+                            {email: email},
+                            {token: token}
                         ]},
                     {
                         $unset: { token: '' },
                         $set: {password: hashedPassword}
                     },
-                    async (err, user) =>{
+                    async (err, result) =>{
                         if(err) {
                             res.status(StatusCodes.InternalError).send(err);
                             return;
                         }
-                        if (user){
+                        if (result && result.matchedCount === 1){
                             res.status(StatusCodes.OK).send(new ForgottenPasswordResponse('1'));
                             this.getEmail().sendMailHtml(req.body.email, "Jelszó változtatás", this.getPasswordEmailContent());
                         } else {
@@ -83,7 +86,7 @@ export class ForgottenPasswordController extends BaseController{
         let outString: string = '';
         let inOptions: string = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 40; i++) {
 
             outString += inOptions.charAt(Math.floor(Math.random() * inOptions.length));
         }
@@ -92,7 +95,7 @@ export class ForgottenPasswordController extends BaseController{
 
     private getEmailContent(token: string) : string {
         return "Az alábbi linkre kattintva módosíthatja jelszavát:<a href='"
-            + this.config.site_url_for_user + 'reset?token=' + token + "'>Confirm</a>";
+            + this.config.site_url_for_user + 'reset?token=' + token + "'> Megerősítés</a>";
     }
 
     private getPasswordEmailContent() : string {
