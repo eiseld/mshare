@@ -10,8 +10,10 @@ using System.Web.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace MShare_ASP {
     public class Startup {
@@ -38,7 +40,9 @@ namespace MShare_ASP {
                     Version = "v1",
                     Description = "API for use from Web and Android"
                 });
-
+				
+				c.DocumentFilter<APIPrefixFilter>();
+				
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
                     {"Bearer", new string[] { }},
@@ -82,6 +86,8 @@ namespace MShare_ASP {
                 JWTSecret = Configuration.GetSection("MShareSettings")["JWTSecret"],
                 UrlForUsers = Configuration.GetSection("MShareSettings")["UrlForUsers"]
             });
+			System.Console.WriteLine(Configuration.GetSection("MShareSettings")["UrlForUsers"]);
+			
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,6 +109,13 @@ namespace MShare_ASP {
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseAuthentication();
+        }
+    }
+	
+	public class APIPrefixFilter : IDocumentFilter {
+        public void Apply(SwaggerDocument swaggerDoc, DocumentFilterContext context) {
+            if (System.Environment.GetEnvironmentVariable("MSHARE_RUNNING_BEHIND_PROXY") == "true")
+                swaggerDoc.BasePath = "/api";
         }
     }
 }

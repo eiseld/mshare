@@ -1,5 +1,22 @@
 FROM microsoft/dotnet:2.2-sdk AS builder
 
+WORKDIR /app
+
+COPY MShare_ASP.csproj .
+
+COPY . .
+
+RUN ["dotnet","publish","-c","Release","-o","publish"]
+
+FROM microsoft/dotnet:2.2-aspnetcore-runtime
+
+WORKDIR /app
+
+COPY --from=builder /app/publish .
+
+CMD ["dotnet", "MShare_ASP.dll"]
+
+
 WORKDIR /src
 
 COPY MShare_ASP/MShare_ASP.csproj MShare_ASP/

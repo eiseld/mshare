@@ -2,7 +2,7 @@ version: '3.6'
 services:
 
  mysql:
-  container_name: mshare-mysql-prod
+  container_name: mshare-mysql
   image: mysql:8.0.15
   environment:
    MYSQL_DATABASE: 'mshare'
@@ -11,18 +11,23 @@ services:
   security_opt:
   - seccomp:unconfined
   ports:
-  - '3306:3306'
+  - '3306'
 
  aspnet:
-  container_name: mshare-aspnet-prod
-  build: './backend/aspnet'
+  container_name: mshare-aspnet
+  build: 
+   context: './backend/aspnet/MShare_ASP'
+   dockerfile: Dockerfile-aspnet-prod
+  environment:
+  - ASPNETCORE_ENVIRONMENT=Production
+  - MSHARE_RUNNING_BEHIND_PROXY=true
   ports:
-  - '8081:8081'
+  - '8081'
 
  apache:
-  container_name: mshare-apache-prod
+  container_name: mshare-apache
   build: 
    context: './frontend/web'
-   target: apache-prod
+   dockerfile: Dockerfile-apache-prod
   ports:
    - '80:80'
