@@ -3,7 +3,7 @@ import {BaseController} from "../core/BaseController";
 import {Email} from "../utils/Email";
 import {ForgottenPasswordResponse} from "../core/Responses/ForgottenPasswordResponse";
 
-const nodemailer = require('nodemailer');
+const hasher = require('../core/Hasher');
 
 export class ForgottenPasswordController extends BaseController{
 
@@ -12,18 +12,35 @@ export class ForgottenPasswordController extends BaseController{
 
         this.router.route('/forgotpass')
             .post(async (req, res) => {
-                console.log('forgot pass called:' +  req.body.email);
-                const email: string =  req.body.email;;
+                const email: string =  req.body.email;
+                const token: string = this.makeString();
                 if(email == null){
                     res.status(StatusCodes.InternalError).send();
                     return;
                 }
                 if (email) {
-                    console.log('sendMail: ' + this.getEmailContent());
-                    console.log('inside result');
-                    this.getEmail().sendMailHtml(req.body.email, "Forgotten Password", this.getEmailContent());
-                    res.status(StatusCodes.OK).send(new ForgottenPasswordResponse('1'));
-                    return;
+                    await this.getDb().collection('users').updateOne(
+                        {$and: [
+                                {email: email}
+                            ]},
+                        {
+                            $set: {token: token}
+                        },
+                        async (err, user) =>{
+                            if(err) {
+                                res.status(StatusCodes.InternalError).send(err);
+                                return;
+                            }
+                            if (user){
+                                this.getEmail().sendMailHtml(req.body.email, "Elfelejtett jelszó", this.getEmailContent(token));
+                                res.status(StatusCodes.OK).send(new ForgottenPasswordResponse('1'));
+                                return;
+                            } else {
+                                res.status(StatusCodes.Forbidden).send(new ForgottenPasswordResponse('0'));
+                                return;
+                            }
+                        }
+                    );
                 }
             });
 
@@ -52,9 +69,10 @@ export class ForgottenPasswordController extends BaseController{
                             return;
                         }
                         if (user){
-                            res.status(StatusCodes.OK).send();
+                            res.status(StatusCodes.OK).send(new ForgottenPasswordResponse('1'));
+                            this.getEmail().sendMailHtml(req.body.email, "Jelszó változtatás", this.getPasswordEmailContent());
                         } else {
-                            res.status(StatusCodes.Forbidden).send();
+                            res.status(StatusCodes.Forbidden).send(new ForgottenPasswordResponse('0'));
                         }
                     }
                 );
@@ -72,9 +90,12 @@ export class ForgottenPasswordController extends BaseController{
         return outString;
     }
 
-    private getEmailContent() : string {
-        console.log('email');
+    private getEmailContent(token: string) : string {
         return "Az alábbi linkre kattintva módosíthatja jelszavát:<a href='"
-            + this.config.site_url_for_user + 'resetpass?token=' + this.makeString() + "'>Confirm</a>";
+            + this.config.site_url_for_user + 'reset?token=' + token + "'>Confirm</a>";
+    }
+
+    private getPasswordEmailContent() : string {
+        return 'Jelszava a mai napon módosításra került!';
     }
 }

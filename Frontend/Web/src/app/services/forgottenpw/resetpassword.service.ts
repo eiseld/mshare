@@ -14,13 +14,13 @@ resetPassword(email: string, token: string, password: string) {
 
   const httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'email': email,
-      'token' : token,
-      'password' : password
+      'Content-Type': 'application/json'
     })
   };
-  return this.http.post<any>(`${environment.API_URL}/forgottenpassword/resetpass`, {}, httpOptions)
+  return this.http.post<any>(`${environment.API_URL}/forgottenpassword/resetpass`, {
+    'email': email,
+    'token' : token,
+    'password' : password}, httpOptions)
     .pipe(map(response => {
       if (response) {
         return response;

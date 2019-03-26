@@ -70,7 +70,7 @@ export class ResetpasswordComponent implements OnInit {
            this.type='success';
          },
          error => {
-           this._success.next('Probléma történt a jeleszó változtatásakor!');
+           this._success.next('Probléma történt a jelszó változtatásakor!');
            this.type='danger';
          });
   }
