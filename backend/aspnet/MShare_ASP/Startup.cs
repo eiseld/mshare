@@ -14,6 +14,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Conf = MShare_ASP.Configurations;
 
 namespace MShare_ASP {
     public class Startup {
@@ -25,6 +26,8 @@ namespace MShare_ASP {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
+
+
             services
                 .AddMvcCore(options => {
                     options.ReturnHttpNotAcceptable = false;
@@ -59,6 +62,10 @@ namespace MShare_ASP {
                 c.IncludeXmlComments(filePath);
             });
 
+            services.AddSingleton<Conf.IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<Conf.EmailConfiguration>());
+            services.AddSingleton<Conf.IJWTConfiguration>(Configuration.GetSection("JWTConfiguration").Get<Conf.JWTConfiguration>());
+            services.AddSingleton<Conf.IURIConfiguration>(Configuration.GetSection("URIConfiguration").Get<Conf.URIConfiguration>());
+
             services.AddDbContext<MshareDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("MySqlSrvConnection"))
             );
@@ -66,7 +73,7 @@ namespace MShare_ASP {
             services.AddTransient<IMshareService, MshareService>();
             services.AddTransient<IAuthService, AuthService>();
 
-            var key = Encoding.ASCII.GetBytes(Configuration.GetSection("MShareSettings")["JWTSecret"]);
+            var key = Encoding.ASCII.GetBytes(Configuration.GetSection("MShareSettings")["SecretKey"]);
             services.AddAuthentication(x => {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -81,13 +88,8 @@ namespace MShare_ASP {
                     ValidateAudience = false
                 };
             });
+            System.Console.WriteLine(Configuration.GetSection("MShareSettings")["UrlForUsers"]);
 
-            services.AddSingleton(new Settings() {
-                JWTSecret = Configuration.GetSection("MShareSettings")["JWTSecret"],
-                UrlForUsers = Configuration.GetSection("MShareSettings")["UrlForUsers"]
-            });
-			System.Console.WriteLine(Configuration.GetSection("MShareSettings")["UrlForUsers"]);
-			
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
