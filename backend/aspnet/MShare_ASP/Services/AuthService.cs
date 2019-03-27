@@ -15,12 +15,16 @@ namespace MShare_ASP.Services {
     internal class AuthService : IAuthService {
         const string CHAR_SET = "0123456789qwertzuioplkjhgfdsayxcvbnm-_QWERTZUIOPLKJHGFDSAYXCVBNM";
 
-        private Settings _settings;
+        private Configurations.IJWTConfiguration _jwtConf;
+        private Configurations.IURIConfiguration _uriConf;
+        private IEmailService _emailService;
         private MshareDbContext _context;
 
-        public AuthService(MshareDbContext context, Settings settings) {
+        public AuthService(MshareDbContext context, IEmailService emailService, Configurations.IJWTConfiguration jwtConf, Configurations.IURIConfiguration uriConf) {
+            _emailService = emailService;
             _context = context;
-            _settings = settings;
+            _jwtConf = jwtConf;
+            _uriConf = uriConf;
         }
 
         public string Login(LoginCredentials credentials) {
@@ -32,7 +36,7 @@ namespace MShare_ASP.Services {
                 return null;
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_settings.JWTSecret);
+            var key = Encoding.ASCII.GetBytes(_jwtConf.SecretKey);
             var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
@@ -52,22 +56,30 @@ namespace MShare_ASP.Services {
             if (existingUser != null)
                 return false;
 
+            var emailToken = new DaoEmailToken() {
+                token_type = DaoEmailToken.Type.Validation,
+                expiration_date = DateTime.Now.AddDays(1),
+                token = GenerateRandomString(40)
+            };
+
             var userToBeInserted = new DaoUser() {
                 display_name = newUser.DisplayName,
                 email = newUser.Email,
                 password = Hasher.GetHash(newUser.Password),
                 email_tokens = new DaoEmailToken[] {
-                    new DaoEmailToken() {
-                        token_type = DaoEmailToken.Type.Validation,
-                        expiration_date = DateTime.Now.AddDays(1),
-                        token = GenerateRandomString(40)
-                    }
+                    emailToken
                 }
             };
 
             await _context.users.AddAsync(userToBeInserted);
 
-            return await _context.SaveChangesAsync() == 2;
+            int modifiedCount = await _context.SaveChangesAsync();
+            if (modifiedCount != 2) {
+                return false;
+            } else {
+                await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newUser.DisplayName, newUser.Email, "MShare Registration", $"Your registration was successful, please proceed to the activation link... {emailToken.token}");
+                return true;
+            }
         }
 
         public async Task<bool> Validate(string token) {

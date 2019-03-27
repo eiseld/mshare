@@ -41,11 +41,11 @@ namespace MShare_ASP {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info {
                     Title = "MShare API",
                     Version = "v1",
-                    Description = "API for use from Web and Android"
+                    Description = "API for use from Web and Android",
                 });
-				
-				c.DocumentFilter<APIPrefixFilter>();
-				
+
+                c.DocumentFilter<APIPrefixFilter>();
+
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
                     {"Bearer", new string[] { }},
@@ -54,7 +54,8 @@ namespace MShare_ASP {
                     In = "header",
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
-                    Type = "apiKey" }
+                    Type = "apiKey"
+                }
                 );
 
                 c.AddSecurityRequirement(security);
@@ -72,6 +73,7 @@ namespace MShare_ASP {
 
             services.AddTransient<IMshareService, MshareService>();
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IEmailService, EmailService>();
 
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("MShareSettings")["SecretKey"]);
             services.AddAuthentication(x => {
@@ -113,8 +115,8 @@ namespace MShare_ASP {
             app.UseAuthentication();
         }
     }
-	
-	public class APIPrefixFilter : IDocumentFilter {
+
+    public class APIPrefixFilter : IDocumentFilter {
         public void Apply(SwaggerDocument swaggerDoc, DocumentFilterContext context) {
             if (System.Environment.GetEnvironmentVariable("MSHARE_RUNNING_BEHIND_PROXY") == "true")
                 swaggerDoc.BasePath = "/api";
