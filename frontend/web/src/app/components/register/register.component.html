@@ -9,6 +9,15 @@
                 <div *ngIf="registerForm.controls.username.errors.required">A felhasználónév megadása kötelező</div>
             </div>
         </div>
+        <div *ngIf="emailInvalid" class="alert alert-danger">{{emailInvalid}}</div>        
+        <div class="form-group">
+            <label for="usernameDupli">Email újra</label>
+            <input type="text" formControlName="usernameDupli" class="form-control" [ngClass]="{ 'is-invalid': submitted && registerForm.controls.usernameDupli.errors }" />
+            <div *ngIf="submitted && registerForm.controls.usernameDupli.errors" class="invalid-feedback">
+                <div *ngIf="registerForm.controls.usernameDupli.errors.required">A felhasználónév megadása kötelező</div>
+            </div>
+        </div>
+        <div *ngIf="usernameNotDupli" class="alert alert-danger">{{usernameNotDupli}}</div> 
         <div class="form-group">
             <label for="displayname">Megjelenített név</label>
             <input type="text" formControlName="displayname" class="form-control" [ngClass]="{ 'is-invalid': submitted && registerForm.controls.displayname.errors }" />
@@ -23,6 +32,15 @@
                 <div *ngIf="registerForm.controls.password.errors.required">A jelszó megadása kötelező</div>
             </div>
         </div>
+        <div *ngIf="passwordInvalid" class="alert alert-danger">{{passwordInvalid}}</div> 
+        <div class="form-group">
+            <label for="passwordDupli">Jelszó újra</label>
+            <input type="password" formControlName="passwordDupli" class="form-control" [ngClass]="{ 'is-invalid': submitted && registerForm.controls.passwordDupli.errors }" />
+            <div *ngIf="submitted && registerForm.controls.password.errors" class="invalid-feedback">
+                <div *ngIf="registerForm.controls.passwordDupli.errors.required">A jelszó ismét megadása kötelező</div>
+            </div>
+        </div>
+        <div *ngIf="passwordNotDupli" class="alert alert-danger">{{passwordNotDupli}}</div> 
         <div class="form-group">
             <recaptcha [formControl]="myRecaptcha" (scriptLoad)="onScriptLoad()" (scriptError)="onScriptError()"></recaptcha>
         </div>

@@ -11,95 +11,19 @@ import { CaptchaComponent } from 'angular-captcha';
   styleUrls: ['./register.component.css']
 })
 
-
-/*
-export interface ReCaptchaConfig {
-  theme? : 'dark' | 'light';
-  type? : 'audio' | 'image';
-  size? : 'compact' | 'normal';
-  tabindex?: number,
-}
-
-@Directive({
-  selector: '[nbRecaptcha]'
-})
-
-export class RecaptchaDirective implements OnInit, AfterViewInit, ControlValueAccessor {
-  @Input() key: string;
-  @Input() config: ReCaptchaConfig = {};
-  @Input() lang: string;
-
-  private widgetId: number;
-  private onChange: (value: string) => void;
-  private onTouched: (value: string) => void;
-
-  constructor(private element: ElementRef) {}
-
-  ngOnInit() {
-    this.registerReCaptchaCallback();
-    this.addScript();
-  }
-
-  writeValue(obj: any): void {}
-
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
-  }
-
-  registerReCaptchaCallback() {
-    window.reCaptchaLoad = () => {
-      const config = {
-        ...this.config,
-        'sitekey': this.key,
-        'callback': this.onSuccess.bind(this),
-        'expired-callback': this.onExpired.bind(this)
-      };
-      this.widgetId = this.render(this.element.nativeElement, config);
-    }
-  }
-
-  private render(element: HTMLElement, config): number {
-    return grecaptcha.render(element, config);
-  }
-
-  addScript() {
-    let script = document.createElement('script');
-    const lang = this.lang ? '&hl=' + this.lang: '';
-    script.src = `https://www.google.com/recaptcha/api.js?onload=reCaptchaLoad&render=explicit${lang}`;
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
-  }
-
-  onExpired() {
-    this.ngZone.run(() => {
-    });
-  }
-}
-
-declare const grecaptcha: any;
-
-declare global {
-  interface Window {
-    grecaptcha: any;
-    reCaptchaLoad: () => void;
-  }
-} */
-
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   returnUrl: String;
   error: String = "";
+  emailInvalid: String = "";
+  passwordInvalid: String = "";
+  passwordNotDupli: String = "";
+  usernameNotDupli: String = "";
   loading: Boolean = false;
   submitted: Boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService
   ) { }
@@ -117,15 +41,40 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
       username: ['', Validators.required],
+      usernameDupli: ['', Validators.required],
       displayname: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      passwordDupli: ['', Validators.required],
     });
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = '/sucreg';
   }
 
   onSubmit() {
+    this.error = this.emailInvalid = this.passwordInvalid = this.usernameNotDupli = this.passwordNotDupli = "";
 
     this.submitted = true;
+    var flag = false;
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!(re.test(String(this.registerForm.controls.username.value).toLowerCase()))){
+      this.emailInvalid = "Helytelen formátumú emailt adott meg!";
+      flag = true;
+    };
+    var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+    if (!(re.test(String(this.registerForm.controls.password.value)))) {
+      this.passwordInvalid = "Jelszóban szükséges legalább 8 karakter, köztük legalább egy-egy kis- és nagybetű, valamint szám";
+      flag = true;
+    }
+    if (this.registerForm.controls.username.value != this.registerForm.controls.usernameDupli.value) {
+      this.usernameNotDupli = "Nem eggyezik meg a két megadott email!";
+      flag = true;
+    }
+    if (this.registerForm.controls.password.value != this.registerForm.controls.passwordDupli.value) {
+      this.passwordNotDupli = "Nem eggyezik meg a két megadott jelszó!";
+      flag = true;
+    }
+    if (flag) {
+      return;
+    }
     if (this.registerForm.invalid) {
       return;
     }
@@ -136,8 +85,17 @@ export class RegisterComponent implements OnInit {
           this.router.navigate([this.returnUrl]);
         },
         error => {
-          this.error = "Helytelen felhasználónév vagy jelszó";
-          this.loading = false;
+          if ((error.status == 200) || (error.status == 201)) {
+            this.router.navigate([this.returnUrl]);
+          } else if (error.status == 422) {
+            this.error = "Elírta az email címét vagy a jelszavát, próbálja újra";
+          } else if (error.status == 409) {
+            this.error = "Már van ilyen email címre regisztrált felhasználó!";
+          } else if (error.status == 500) {
+            this.error = "Belső hiba történt a szerveren!";
+          } else {
+            this.error = "Nem felismert hiba történt, kérjük próbálja meg újra a regisztrációt.";
+          }
         });
   }
 

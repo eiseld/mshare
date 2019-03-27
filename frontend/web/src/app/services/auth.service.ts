@@ -3,7 +3,7 @@ import { User } from '../models/user';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { map } from 'rxjs/operators';
+import { map, observeOn, tap } from 'rxjs/operators';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
 
 @Injectable({
@@ -22,16 +22,19 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  isLoggedIn(): Boolean {
+    return (this.currentUserSubject.value != null);
+  }
+
   login(email: string, password: string) {
     const httpOptions = {
       headers: new HttpHeaders({
-         'Content-Type': 'application/json',
-      })
+        'Content-Type': 'application/json',
+        'email': email,
+        'password': password
+      }),
     };
-    return this.http.put<any>(`${environment.API_URL}/auth/login`, {
-      'email': email,
-      'password': password
-    }, httpOptions)
+    return this.http.post<any>(`${environment.API_URL}/users/login`, {}, httpOptions)
       .pipe(map(user => {
         if (user && user.token) {
           localStorage.setItem('currentUser', JSON.stringify(user));
@@ -48,7 +51,7 @@ export class AuthService {
          'Content-Type': 'application/json',
       })
     };
-    return this.http.post<any>(`${environment.API_URL}/auth/register`, {
+    return this.http.post<any>(`${environment.API_URL}/users/createUser`, {
       'email': email,
       'displayname': displayname,
       'password': password
@@ -62,6 +65,15 @@ export class AuthService {
          console.log(user);
          return user;
        }));
+  }
+
+  confirm(token: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+         'Content-Type': 'application/json',
+      })
+    };
+    return this.http.post<any>(`${environment.API_URL}/users/validateemail/`+token,{}, httpOptions);
   }
 
   logout() {

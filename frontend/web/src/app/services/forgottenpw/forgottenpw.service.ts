@@ -16,11 +16,11 @@ export class ForgottenpwService {
 
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'email': email
+        'Content-Type': 'application/json'
       })
     };
-    return this.http.post<any>(`${environment.API_URL}/forgotpass`, {}, httpOptions)
+    return this.http.post<any>(`${environment.API_URL}/forgottenpassword/forgotpass`, {
+      'email': email}, httpOptions)
       .pipe(map(email => {
         return email;
       }));
