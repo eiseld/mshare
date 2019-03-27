@@ -56,30 +56,36 @@ namespace MShare_ASP.Services {
             if (existingUser != null)
                 return false;
 
-            var emailToken = new DaoEmailToken() {
-                token_type = DaoEmailToken.Type.Validation,
-                expiration_date = DateTime.Now.AddDays(1),
-                token = GenerateRandomString(40)
-            };
+            using (var transaction = _context.Database.BeginTransaction()) {
+                try {
+                    var emailToken = new DaoEmailToken() {
+                        token_type = DaoEmailToken.Type.Validation,
+                        expiration_date = DateTime.Now.AddDays(1),
+                        token = GenerateRandomString(40)
+                    };
 
-            var userToBeInserted = new DaoUser() {
-                display_name = newUser.DisplayName,
-                email = newUser.Email,
-                password = Hasher.GetHash(newUser.Password),
-                email_tokens = new DaoEmailToken[] {
+                    var userToBeInserted = new DaoUser() {
+                        display_name = newUser.DisplayName,
+                        email = newUser.Email,
+                        password = Hasher.GetHash(newUser.Password),
+                        email_tokens = new DaoEmailToken[] {
                     emailToken
+                    }
+                    };
+
+                    await _context.users.AddAsync(userToBeInserted);
+
+                    int modifiedCount = await _context.SaveChangesAsync();
+                    if (modifiedCount == 2) {
+                        await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newUser.DisplayName, newUser.Email, "MShare Registration", $"Your registration was successful, please proceed to the activation link... {emailToken.token}");
+                    }
+                    transaction.Commit();
+                    return modifiedCount == 2;
+                } catch {
+                    return false;
                 }
-            };
-
-            await _context.users.AddAsync(userToBeInserted);
-
-            int modifiedCount = await _context.SaveChangesAsync();
-            if (modifiedCount != 2) {
-                return false;
-            } else {
-                await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newUser.DisplayName, newUser.Email, "MShare Registration", $"Your registration was successful, please proceed to the activation link... {emailToken.token}");
-                return true;
             }
+
         }
 
         public async Task<bool> Validate(string token) {
