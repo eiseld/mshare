@@ -14,6 +14,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using FluentValidation.AspNetCore;
 using Conf = MShare_ASP.Configurations;
 
 namespace MShare_ASP {
@@ -35,7 +36,11 @@ namespace MShare_ASP {
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddApiExplorer()
                 .AddJsonFormatters()
-                .AddAuthorization();
+                .AddAuthorization()
+                .AddFluentValidation(fv => {
+                    fv.RegisterValidatorsFromAssemblyContaining<API.Request.LoginCredentialsValidator>();
+                    fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                });
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info {
