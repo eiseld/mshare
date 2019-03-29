@@ -2,7 +2,7 @@ version: '3.6'
 services:
 
  mysql:
-  container_name: mshare-mysql-devb
+  container_name: mshare-mysql
   image: mysql:8.0.15
   environment:
    MYSQL_DATABASE: 'mshare'
@@ -14,15 +14,20 @@ services:
   - '3306:3306'
 
  aspnet:
-  container_name: mshare-aspnet-devb
-  build: './backend/aspnet'
+  container_name: mshare-aspnet
+  build: 
+   context: './backend/aspnet/MShare_ASP'
+   dockerfile: Dockerfile-aspnet-live
   environment:
   - ASPNETCORE_ENVIRONMENT=Development
+  - MSHARE_RUNNING_BEHIND_PROXY=true
+  volumes:
+  - ./backend/aspnet/MShare_ASP:/app
   ports:
   - '8081:8081'
 
  apache:
-  container_name: mshare-apache-devb
+  container_name: mshare-apache
   build:
    context: './frontend/web'
    dockerfile: Dockerfile-apache-dev
