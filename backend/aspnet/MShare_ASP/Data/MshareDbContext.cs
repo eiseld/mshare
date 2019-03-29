@@ -3,7 +3,6 @@ using MShare_ASP.Utils;
 
 namespace MShare_ASP.Data {
     internal class MshareDbContext : DbContext {
-        public DbSet<Test> test { get; set; }
         public DbSet<DaoUser> users { get; set; }
         public DbSet<DaoEmailToken> email_tokens { get; set; }
 

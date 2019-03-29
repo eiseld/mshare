@@ -16,6 +16,11 @@ namespace MShare_ASP.Controllers {
 
         private IAuthService AuthService { get; }
 
+        /// <summary>
+        /// Initializes the AuthController
+        /// </summary>
+        /// <param name="authService"></param>
+        /// <param name="mshareService"></param>
         public AuthController(IAuthService authService, IMshareService mshareService) :
             base(mshareService) {
             AuthService = authService;

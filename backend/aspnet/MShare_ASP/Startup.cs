@@ -6,19 +6,17 @@ using Microsoft.Extensions.DependencyInjection;
 using MShare_ASP.Data;
 using Microsoft.EntityFrameworkCore;
 using MShare_ASP.Services;
-using System.Web.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using System.Text;
-using System.Linq;
 using FluentValidation.AspNetCore;
 using Conf = MShare_ASP.Configurations;
+using MShare_ASP.Utils;
 
 namespace MShare_ASP {
-    public class Startup {
+    internal class Startup {
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
         }
@@ -121,10 +119,4 @@ namespace MShare_ASP {
         }
     }
 
-    public class APIPrefixFilter : IDocumentFilter {
-        public void Apply(SwaggerDocument swaggerDoc, DocumentFilterContext context) {
-            if (System.Environment.GetEnvironmentVariable("MSHARE_RUNNING_BEHIND_PROXY") == "true")
-                swaggerDoc.BasePath = "/api";
-        }
-    }
 }

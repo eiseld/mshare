@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace MShare_ASP {
-    public class Program {
+    internal class Program {
         public static void Main(string[] args) {
             CreateWebHostBuilder(args).Build().Run();
         }

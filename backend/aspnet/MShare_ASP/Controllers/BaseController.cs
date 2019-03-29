@@ -8,9 +8,20 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MShare_ASP.Controllers {
+    /// <summary>
+    /// Every custom controller should inherit from this BaseController
+    /// NOTE! Do not confuse this with `ControllerBase`
+    /// </summary>
     public class BaseController : ControllerBase {
-        protected IMshareService Service { get; }
+        /// <summary>
+        /// Common Service usable for each controller that inherits from us
+        /// </summary>
+        protected internal IMshareService Service { get; }
 
+        /// <summary>
+        /// Initializes a BaseController
+        /// </summary>
+        /// <param name="mshareService"></param>
         public BaseController(IMshareService mshareService) {
             Service = mshareService;
         }

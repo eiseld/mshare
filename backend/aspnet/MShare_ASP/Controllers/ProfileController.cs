@@ -10,22 +10,29 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MShare_ASP.Controllers {
+    /// <summary>
+    /// Profile controller contains information the currently logged in active user
+    /// </summary>
     [Route("[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class ProfileController : BaseController {
+
+        /// <summary>
+        /// Initializes the ProfileController 
+        /// </summary>
+        /// <param name="mshareService"></param>
         public ProfileController(IMshareService mshareService) :
             base(mshareService) {
         }
 
         /// <summary>
-        /// 
+        /// Gets the current signed in user
         /// </summary>
-        /// <returns></returns>
+        /// <response code="200">Returns with the user's profile data</response>
         [HttpGet]
         public async Task<ActionResult<DaoUser>> Get() {
-            DaoUser user = Service.GetUser(GetCurrentUserID());
-            return Ok(user);
+            return Ok(await Service.GetUser(GetCurrentUserID()));
         }
     }
 }

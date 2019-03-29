@@ -6,13 +6,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace MShare_ASP.Utils {
-
-    public enum LoggingCategories {
+    internal enum LoggingCategories {
         All = 0,
         SQL = 1
     }
 
-    public static class DbContextLoggingExtensions {
+    internal static class DbContextLoggingExtensions {
         public static void ConfigureLogging(this DbContext db, Action<String> logger, Func<string, LogLevel, bool> filter) {
             var serviceProvider = db.GetInfrastructure<IServiceProvider>();
             var loggerFactory = (ILoggerFactory)serviceProvider.GetService(typeof(ILoggerFactory));
