@@ -1,4 +1,4 @@
 FROM httpd:2.4
 
-COPY ./config/httpd.conf.dev /usr/local/apache2/conf/httpd.conf
+COPY ./config/httpd.conf.angular /usr/local/apache2/conf/httpd.conf
 COPY ./config/.htaccess /usr/local/apache2/htdocs/

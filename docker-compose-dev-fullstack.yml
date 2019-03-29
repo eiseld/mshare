@@ -6,8 +6,12 @@ services:
   - '3306:3306'
 
  aspnet:
+  build: 
+   dockerfile: Dockerfile-aspnet-live
   environment:
   - ASPNETCORE_ENVIRONMENT=Development
+  volumes:
+  - ./backend/aspnet/MShare_ASP:/app
   ports:
   - '8081:8081'
 
