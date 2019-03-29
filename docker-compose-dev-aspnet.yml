@@ -2,29 +2,19 @@ version: '3.6'
 services:
 
  mysql:
-  container_name: mshare-mysql-devb
-  image: mysql:8.0.15
-  environment:
-   MYSQL_DATABASE: 'mshare'
-   MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
-   MYSQL_ROOT_PASSWORD: 'ilovescrum'
-  security_opt:
-  - seccomp:unconfined
   ports:
   - '3306:3306'
 
  aspnet:
-  container_name: mshare-aspnet-devb
-  build: './backend/aspnet'
+  build: 
+   dockerfile: Dockerfile-aspnet-live
   environment:
   - ASPNETCORE_ENVIRONMENT=Development
+  volumes:
+  - ./backend/aspnet/MShare_ASP:/app
   ports:
   - '8081:8081'
 
  apache:
-  container_name: mshare-apache-devb
   build:
-   context: './frontend/web'
    dockerfile: Dockerfile-apache-dev
-  ports:
-   - '80:80'

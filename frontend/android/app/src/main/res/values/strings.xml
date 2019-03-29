@@ -2,14 +2,20 @@
     <string name="app_name">MoneyShare</string>
     <string name="login">Login</string>
     <string name="forgotten_password">Forgotten password</string>
-    <string name="base_url_value">http://192.168.99.100:8081/</string>
+    <string name="base_url_value">http://192.168.99.100:8081</string>
     <string name="register">Register</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="password_again">Password again</string>
     <string name="email">Email address</string>
+    <string name="emailAgain">Email address again</string>
     <string name="back">Go back</string>
     <string name="create_group">Create group</string>
     <string name="group_name">Group name</string>
-    <string name="access_token_key">access_token</string>
+    <string name="access_token_key">Authorization</string>
+    <string name="registration">Registration</string>
+    <string name="group_members">(%1$d)</string>
+    <string name="group_owe">You owe \n %1$d</string>
+    <string name="group_owned">You are owed \n %1$d</string>
+    <string name="group_settled">Settled up \n %1$d</string>
 </resources>

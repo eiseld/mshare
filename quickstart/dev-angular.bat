@@ -1,1 +1,1 @@
-cmd /k "cd ../ & docker-compose -f docker-compose-dev-angular.yml up --build"
+cmd /k "cd ../ & docker-compose -f docker-compose-prod.yml -f docker-compose-dev-angular.yml up --build"

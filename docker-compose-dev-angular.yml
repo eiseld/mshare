@@ -2,41 +2,28 @@ version: '3.6'
 services:
 
  mysql:
-  container_name: mshare-mysql-deva
-  image: mysql:8.0.15
-  environment:
-   MYSQL_DATABASE: 'mshare'
-   MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
-   MYSQL_ROOT_PASSWORD: 'ilovescrum'
-  security_opt:
-  - seccomp:unconfined
   ports:
   - '3306:3306'
 
  aspnet:
-  container_name: mshare-aspnet-deva
-  build: './backend/aspnet'
   environment:
   - ASPNETCORE_ENVIRONMENT=Development
-  - MSHARE_RUNNING_BEHIND_PROXY=true
   ports:
-  - ':8081'
+  - '8081:8081'
 
  angular:
-  container_name: mshare-angular-deva
+  container_name: mshare-angular
   build: 
    context: './frontend/web'
    dockerfile: Dockerfile-angular-live 
   volumes:
   - ./frontend/web:/usr/src/app
   - /usr/src/app/node_modules/
+  depends_on:
+  - aspnet
   ports:
    - "4200:4200"
 
  apache:
-  container_name: mshare-apache-deva
   build:
-   context: './frontend/web'
    dockerfile: Dockerfile-apache-live
-  ports:
-   - '80:80'

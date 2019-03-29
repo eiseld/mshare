@@ -53,20 +53,37 @@ object APIClient {
             apiSecretHeaders
         }
 
+    /*private fun addTokenToHeader(originalHeaders: Headers){
+        originalHeaders.names()
+        Headers.Builder()
+            .add(originalHeaders)
+            .add(accessTokenKey, SharedPreferences.token)
+            .build()
+
+    }*/
+
     private val accessTokenHeaders: Headers
         get() = Headers.Builder()
             .add(accessTokenKey, SharedPreferences.accessToken)
+            .add("Content-Type", "application/json")
             .build()
 
     private val apiSecretHeaders: Headers
-        get() = Headers.Builder().build()
+        get() = Headers.Builder()
+            .add("Content-Type", "application/json")
+            .build()
 
     private fun createHeadersInterceptor(): Interceptor {
         return Interceptor { chain ->
             //interceptor for headers
-            val requestBuilder = chain.request().newBuilder()
-            requestBuilder.headers(headersForRetrofit)
-            chain.proceed(requestBuilder.build())
+            if (SharedPreferences.accessToken.isNotEmpty()) {
+                val requestBuilder = chain.request().newBuilder()
+                requestBuilder.headers(headersForRetrofit)
+                    .method(chain.request().method(), chain.request().body())
+                chain.proceed(requestBuilder.build())
+            } else {
+                chain.proceed(chain.request())
+            }
         }
     }
 }

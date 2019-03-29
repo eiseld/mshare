@@ -8,12 +8,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>D:\Projects\School\ELTE_Msc\szf\mshare\Backend\aspnet\MShare_ASP\MShare_ASP.xml</DocumentationFile>
+    <DocumentationFile>MShare_ASP.xml</DocumentationFile>
     <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Projects\School\ELTE_Msc\szf\mshare\Backend\aspnet\MShare_ASP\MShare_ASP.xml</DocumentationFile>
+    <DocumentationFile>MShare_ASP.xml</DocumentationFile>
   </PropertyGroup>
   
   <ItemGroup>

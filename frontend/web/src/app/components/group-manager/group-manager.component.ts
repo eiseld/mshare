@@ -48,12 +48,13 @@ export class GroupManagerComponent implements OnInit {
         this.http.get<Group>(`${environment.API_URL}/groups/${groupId}`, httpOptions)
         .subscribe(data => {this.groups.push(data as Group)});
       }
-    },error => {this.error = this.error+"Failed to load groups!" as string});
+    },error => {this.error = "Sikertelen a csoportok betöltése!"});
   }
 
   startCreateGroup(){
     this.createGroupAttempt=true;
     this.newGroup="";
+    this.error="";
   }
   selectedGroup:Group=null;
   stopCreateGroup(){
@@ -70,7 +71,7 @@ export class GroupManagerComponent implements OnInit {
     };
     this.http.post<any>(`${environment.API_URL}/groups/newgroup/${this.newGroup}`, {}, httpOptions)
     .subscribe(data => {this.http.post<any>(`${environment.API_URL}/users/updategroups/`, {}, httpOptions)
-                              .subscribe( data => {this.getGroups()})}
+                              .subscribe( data => {this.getGroups()})}, error => {this.error="Sikertelen a csoport létrehozása!"}
     );
     this.createGroupAttempt=false;
   }

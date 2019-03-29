@@ -21,6 +21,8 @@ services:
   environment:
   - ASPNETCORE_ENVIRONMENT=Production
   - MSHARE_RUNNING_BEHIND_PROXY=true
+  depends_on:
+  - mysql
   ports:
   - '8081'
 
@@ -29,5 +31,7 @@ services:
   build: 
    context: './frontend/web'
    dockerfile: Dockerfile-apache-prod
+  depends_on:
+  - aspnet
   ports:
    - '80:80'

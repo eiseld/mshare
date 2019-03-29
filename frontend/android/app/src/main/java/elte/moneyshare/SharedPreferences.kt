@@ -12,8 +12,10 @@ object SharedPreferences {
 
     private lateinit var sharedPreferences: SharedPreferences
 
+    //TODO CHECK ACCESS_TOKEN HANDLING TO STILL STORE AFTER APP CLOSED (in APIClient headers creation)
     fun init(context: Context) {
         sharedPreferences = context.getSharedPreferences(prefKey, Context.MODE_PRIVATE)
+        accessToken = ""
     }
 
     var accessToken: String
