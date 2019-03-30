@@ -10,15 +10,16 @@ namespace MShare_ASP.Services {
     /// </summary>
     public interface IMshareService {
         /// <summary>
-        /// Gets all users
-        /// </summary>
-        IEnumerable<DaoUser> Users { get; }
-
-        /// <summary>
         /// Gets a specific user
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         Task<DaoUser> GetUser(long id);
+
+        /// <summary>
+        /// Returns all users
+        /// </summary>
+        /// <returns></returns>
+        Task<IList<DaoUser>> GetUsers();
     }
 }

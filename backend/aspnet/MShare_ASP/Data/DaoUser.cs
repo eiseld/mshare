@@ -9,32 +9,38 @@ namespace MShare_ASP.Data {
     /// <summary>
     /// Data Access Object for User
     /// </summary>
+    [Table("users", Schema = "mshare")]
     public class DaoUser {
         /// <summary>
         /// Primary key of the user
         /// </summary>
         [Key]
-        public long id { get; set; }
+        [Column("id")]
+        public long Id { get; set; }
         /// <summary>
         /// Email of the user
         /// </summary>
-        public String email { get; set; }
+        [Column("email")]
+        public String Email { get; set; }
         /// <summary>
         /// Hashed password of the user
         /// </summary>
-        public String password { get; set; }
+        [Column("password")]
+        public String Password { get; set; }
         /// <summary>
         /// Displayname (not unique!)
         /// </summary>
-        public String display_name { get; set; }
+        [Column("display_name")]
+        public String DisplayName { get; set; }
         /// <summary>
         /// Date and time when the user was registered
         /// </summary>
-        public DateTime creation_date { get; set; }
+        [Column("creation_date")]
+        public DateTime CreationDate { get; set; }
 
         /// <summary>
         /// All email tokens associated with user
         /// </summary>
-        public IEnumerable<DaoEmailToken> email_tokens { get; set; }
+        public IEnumerable<DaoEmailToken> EmailTokens { get; set; }
     }
 }

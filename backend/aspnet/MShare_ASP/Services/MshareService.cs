@@ -7,8 +7,8 @@ using MShare_ASP.Data;
 
 namespace MShare_ASP.Services {
     internal class MshareService : IMshareService {
-        public IEnumerable<DaoUser> Users => _context.users
-            .Include(x => x.email_tokens);
+        public IEnumerable<DaoUser> Users => _context.Users
+            .Include(x => x.EmailTokens);
 
         private readonly MshareDbContext _context;
 
@@ -17,7 +17,10 @@ namespace MShare_ASP.Services {
         }
 
         public async Task<DaoUser> GetUser(long id) {
-            return await _context.users.FindAsync(id);
+            return await _context.Users.FindAsync(id);
+        }
+        public async Task<IList<DaoUser>> GetUsers() {
+            return await _context.Users.Include(x => x.EmailTokens).ToListAsync();
         }
     }
 }

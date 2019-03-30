@@ -18,10 +18,12 @@ namespace MShare_ASP.Services {
         private Configurations.IJWTConfiguration _jwtConf;
         private Configurations.IURIConfiguration _uriConf;
         private IEmailService _emailService;
+        private ITimeService _timeService;
         private MshareDbContext _context;
 
-        public AuthService(MshareDbContext context, IEmailService emailService, Configurations.IJWTConfiguration jwtConf, Configurations.IURIConfiguration uriConf) {
+        public AuthService(MshareDbContext context, IEmailService emailService, ITimeService timeService, Configurations.IJWTConfiguration jwtConf, Configurations.IURIConfiguration uriConf) {
             _emailService = emailService;
+            _timeService = timeService;
             _context = context;
             _jwtConf = jwtConf;
             _uriConf = uriConf;
@@ -29,20 +31,24 @@ namespace MShare_ASP.Services {
 
         public string Login(LoginCredentials credentials) {
             string hashedPassword = Hasher.GetHash(credentials.Password);
-            var usr = _context.users
-                 .Include(x => x.email_tokens)
-                .FirstOrDefault(x => x.email == credentials.Email && x.password == hashedPassword);
-            if (usr == null || usr.email_tokens.Any(x => x.token_type == DaoEmailToken.Type.Validation))
-                return null;
+            var usr = _context.Users
+                 .Include(x => x.EmailTokens)
+                .FirstOrDefault(x => x.Email == credentials.Email && x.Password == hashedPassword);
+
+            if (usr == null)
+                throw new Exceptions.ResourceForbiddenException("User");
+            if (usr.EmailTokens.Any(x => x.TokenType == DaoEmailToken.Type.Validation)) {
+                throw new Exceptions.BusinessException("not_verified");
+            }
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtConf.SecretKey);
             var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, usr.id.ToString(), ClaimValueTypes.Integer64)
+                    new Claim(ClaimTypes.NameIdentifier, usr.Id.ToString(), ClaimValueTypes.Integer64)
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = _timeService.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -52,50 +58,59 @@ namespace MShare_ASP.Services {
         }
 
         public async Task<bool> Register(NewUser newUser) {
-            var existingUser = await _context.users.FirstOrDefaultAsync(x => x.email == newUser.Email);
+            var existingUser = await _context.Users.FirstOrDefaultAsync(x => x.Email == newUser.Email);
+
             if (existingUser != null)
-                return false;
+                throw new Exceptions.BusinessException("email_taken");
 
             using (var transaction = _context.Database.BeginTransaction()) {
                 try {
                     var emailToken = new DaoEmailToken() {
-                        token_type = DaoEmailToken.Type.Validation,
-                        expiration_date = DateTime.Now.AddDays(1),
-                        token = GenerateRandomString(40)
+                        TokenType = DaoEmailToken.Type.Validation,
+                        ExpirationDate = _timeService.UtcNow.AddDays(1),
+                        Token = GenerateRandomString(40)
                     };
 
                     var userToBeInserted = new DaoUser() {
-                        display_name = newUser.DisplayName,
-                        email = newUser.Email,
-                        password = Hasher.GetHash(newUser.Password),
-                        email_tokens = new DaoEmailToken[] {
-                    emailToken
-                    }
+                        DisplayName = newUser.DisplayName,
+                        Email = newUser.Email,
+                        Password = Hasher.GetHash(newUser.Password),
+                        EmailTokens = new DaoEmailToken[] {
+                            emailToken
+                        }
                     };
 
-                    await _context.users.AddAsync(userToBeInserted);
+                    await _context.Users.AddAsync(userToBeInserted);
 
-                    int modifiedCount = await _context.SaveChangesAsync();
-                    if (modifiedCount == 2) {
-                        await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newUser.DisplayName, newUser.Email, "MShare Registration", $"Your registration was successful, please proceed to the activation link... {emailToken.token}");
-                    }
+                    if (await _context.SaveChangesAsync() != 2)
+                        throw new Exceptions.DatabaseException();
+
+                    await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newUser.DisplayName, newUser.Email, "MShare Registration", $"Your registration was successful, please proceed to the activation link... {emailToken.Token}");
+
                     transaction.Commit();
-                    return modifiedCount == 2;
+                    return true;
                 } catch {
-                    return false;
+                    transaction.Rollback();
+                    throw;
                 }
             }
-
         }
 
         public async Task<bool> Validate(string token) {
-            var emailToken = await _context.email_tokens.FindAsync(token);
-            if (emailToken != null) {
-                _context.email_tokens.Remove(emailToken);
-                return await _context.SaveChangesAsync() == 1;
-            } else {
-                return false;
+            var emailToken = await _context.EmailTokens.FindAsync(token);
+
+            if (emailToken == null)
+                throw new Exceptions.ResourceGoneException();
+            if (emailToken.ExpirationDate > _timeService.UtcNow)
+                throw new Exceptions.BusinessException("token_expired");
+
+            _context.EmailTokens.Remove(emailToken);
+
+            if (await _context.SaveChangesAsync() != 1) {
+                throw new Exceptions.DatabaseException();
             }
+
+            return true;
         }
 
         private string GenerateRandomString(int len) {

@@ -14,6 +14,7 @@ using System.Text;
 using FluentValidation.AspNetCore;
 using Conf = MShare_ASP.Configurations;
 using MShare_ASP.Utils;
+using MShare_ASP.Middlewares;
 
 namespace MShare_ASP {
     internal class Startup {
@@ -77,6 +78,7 @@ namespace MShare_ASP {
             services.AddTransient<IMshareService, MshareService>();
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<ITimeService, TimeService>();
 
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("MShareSettings")["SecretKey"]);
             services.AddAuthentication(x => {
@@ -113,6 +115,7 @@ namespace MShare_ASP {
                 c.RoutePrefix = "";
             });
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseAuthentication();

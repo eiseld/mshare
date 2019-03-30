@@ -7,6 +7,7 @@ namespace MShare_ASP.Data {
     /// <summary>
     /// Data Access Object for EmailToken
     /// </summary>
+    [Table("email_tokens", Schema = "mshare")]
     public class DaoEmailToken {
         /// <summary>
         /// Determines the type of an email
@@ -24,27 +25,31 @@ namespace MShare_ASP.Data {
         /// <summary>
         /// Foreign key to the user
         /// </summary>
-        public long user_id { get; set; } = 0;
+        [Column("user_id")]
+        public long UserId { get; set; } = 0;
         /// <summary>
         /// Primary key of the emailtoken
         /// </summary>
         [Key]
-        public String token { get; set; }
+        [Column("token")]
+        public String Token { get; set; }
         /// <summary>
         /// Date and time of expiration
         /// </summary>
-        public DateTime expiration_date { get; set; }
+        [Column("expiration_date")]
+        public DateTime ExpirationDate { get; set; }
         /// <summary>
         /// Type of token
         /// </summary>
         [EnumDataType(typeof(Type))]
-        public Type token_type { get; set; }
+        [Column("token_type")]
+        public Type TokenType { get; set; }
 
         /// <summary>
         /// The user associated with this EmailToken
         /// </summary>
         [JsonIgnore]
-        [ForeignKey("user_id")]
+        [ForeignKey("UserId")]
         public virtual DaoUser User { get; set; }
     }
 }
