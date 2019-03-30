@@ -42,5 +42,10 @@ namespace MShare_ASP.Data {
         /// All email tokens associated with user
         /// </summary>
         public IEnumerable<DaoEmailToken> EmailTokens { get; set; }
+
+        /// <summary>
+        /// All groups associated with user
+        /// </summary>
+        public IEnumerable<DaoUsersGroupsMap> Groups { get; set; }
     }
 }

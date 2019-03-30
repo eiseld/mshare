@@ -4,7 +4,9 @@ using MShare_ASP.Utils;
 namespace MShare_ASP.Data {
     internal class MshareDbContext : DbContext {
         public DbSet<DaoUser> Users { get; set; }
+        public DbSet<DaoGroup> Groups { get; set; }
         public DbSet<DaoEmailToken> EmailTokens { get; set; }
+        public DbSet<DaoUsersGroupsMap> UsersGroupsMap { get; set; }
 
         public MshareDbContext(DbContextOptions<MshareDbContext> options) :
             base(options) {
@@ -13,6 +15,10 @@ namespace MShare_ASP.Data {
                 System.Console.WriteLine(s);
             }, LoggingCategories.All);
 
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<DaoUsersGroupsMap>()
+                .HasKey(o => new { o.UserId, o.GroupId });
         }
     }
 }

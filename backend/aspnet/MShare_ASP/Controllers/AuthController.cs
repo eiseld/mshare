@@ -34,7 +34,16 @@ namespace MShare_ASP.Controllers {
         /// <response code="500">Internal error, probably database related</response>
         [HttpGet]
         public async Task<ActionResult<IList<API.Response.UserData>>> Get() {
-            return Ok(await Service.GetUsers());
+            var a = (await Service.GetUsers()).Select(x => new API.Response.UserData() {
+                DisplayName = x.DisplayName,
+                Groups = x.Groups.Select(y => new API.Response.GroupData() {
+                    Id = y.Group.Id,
+                    Name = y.Group.Name,
+                    CreatorUser = new API.Response.UserData() { DisplayName = y.Group.CreatorUser.DisplayName },
+                    Members = null
+                }).ToList()
+            }).ToList();
+            return Ok(a);
         }
 #endif
 
@@ -62,7 +71,7 @@ namespace MShare_ASP.Controllers {
         /// <response code="409">Validation failed, token expired: 'token_expired' in 'errors'</response>
         /// <response code="500">Internal error, probably database related</response>
         [HttpPost]
-        [Route("register/{token}")]
+        [Route("validate/{token}")]
         public async Task<ActionResult> Validate(String token) {
             await AuthService.Validate(token);
             return Ok();

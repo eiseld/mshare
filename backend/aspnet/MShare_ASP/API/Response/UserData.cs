@@ -12,5 +12,10 @@ namespace MShare_ASP.API.Response {
         /// Max 32 length name of the user
         /// </summary>
         public String DisplayName { get; set; }
+
+        /// <summary>
+        /// All groups this user is in
+        /// </summary>
+        public IList<GroupData> Groups { get; set; }
     }
 }

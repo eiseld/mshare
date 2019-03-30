@@ -42,9 +42,17 @@ namespace MShare_ASP.Middlewares {
                 case Ex.BusinessException _: code = HttpStatusCode.Conflict; break;
                 case Ex.ResourceGoneException _: code = HttpStatusCode.Gone; break;
                 case Ex.ResourceForbiddenException _: code = HttpStatusCode.Forbidden; break;
+                case Ex.ResourceNotFoundException _: code = HttpStatusCode.NotFound; break;
             }
 
-            var result = JsonConvert.SerializeObject(new { errors = new Object[] { ex.Message } });
+            var errorMessage = new {
+                errors = new Object[] { ex.Message }
+#if DEBUG 
+                ,
+                exceptionDetails =  ex.StackTrace.ToString()
+#endif
+            };
+            var result = JsonConvert.SerializeObject(errorMessage);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);

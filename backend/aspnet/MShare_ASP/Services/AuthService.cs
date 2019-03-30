@@ -13,13 +13,13 @@ using MShare_ASP.Utils;
 
 namespace MShare_ASP.Services {
     internal class AuthService : IAuthService {
-        const string CHAR_SET = "0123456789qwertzuioplkjhgfdsayxcvbnm-_QWERTZUIOPLKJHGFDSAYXCVBNM";
 
         private Configurations.IJWTConfiguration _jwtConf;
         private Configurations.IURIConfiguration _uriConf;
         private IEmailService _emailService;
         private ITimeService _timeService;
         private MshareDbContext _context;
+        private Random _random;
 
         public AuthService(MshareDbContext context, IEmailService emailService, ITimeService timeService, Configurations.IJWTConfiguration jwtConf, Configurations.IURIConfiguration uriConf) {
             _emailService = emailService;
@@ -27,6 +27,7 @@ namespace MShare_ASP.Services {
             _context = context;
             _jwtConf = jwtConf;
             _uriConf = uriConf;
+            _random = new Random();
         }
 
         public string Login(LoginCredentials credentials) {
@@ -68,7 +69,7 @@ namespace MShare_ASP.Services {
                     var emailToken = new DaoEmailToken() {
                         TokenType = DaoEmailToken.Type.Validation,
                         ExpirationDate = _timeService.UtcNow.AddDays(1),
-                        Token = GenerateRandomString(40)
+                        Token = _random.RandomString(40)
                     };
 
                     var userToBeInserted = new DaoUser() {
@@ -83,9 +84,9 @@ namespace MShare_ASP.Services {
                     await _context.Users.AddAsync(userToBeInserted);
 
                     if (await _context.SaveChangesAsync() != 2)
-                        throw new Exceptions.DatabaseException();
+                        throw new Exceptions.DatabaseException("registration_not_saved");
 
-                    await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newUser.DisplayName, newUser.Email, "MShare Registration", $"Your registration was successful, please proceed to the activation link... {emailToken.Token}");
+                    await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newUser.DisplayName, newUser.Email, "MShare Regisztráció", $"Sikeres regisztráció, az email cím megerősítéséhez kérem kattintson ide: {_uriConf.URIForEndUsers}/account/confirm/{emailToken.Token}");
 
                     transaction.Commit();
                     return true;
@@ -99,28 +100,19 @@ namespace MShare_ASP.Services {
         public async Task<bool> Validate(string token) {
             var emailToken = await _context.EmailTokens.FindAsync(token);
 
-            if (emailToken == null)
+            if (emailToken == null || emailToken.TokenType != DaoEmailToken.Type.Validation)
                 throw new Exceptions.ResourceGoneException();
-            if (emailToken.ExpirationDate > _timeService.UtcNow)
+            if (emailToken.ExpirationDate < _timeService.UtcNow)
                 throw new Exceptions.BusinessException("token_expired");
 
             _context.EmailTokens.Remove(emailToken);
 
             if (await _context.SaveChangesAsync() != 1) {
-                throw new Exceptions.DatabaseException();
+                throw new Exceptions.DatabaseException("validation_email_remove_failed");
             }
 
             return true;
         }
 
-        private string GenerateRandomString(int len) {
-            Random r = new Random();
-
-            char[] chars = new char[len];
-            for (int i = 0; i < chars.Length; i++) {
-                chars[i] = CHAR_SET[r.Next(0, CHAR_SET.Length)];
-            }
-            return new String(chars);
-        }
     }
 }

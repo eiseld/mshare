@@ -35,6 +35,9 @@ namespace MShare_ASP {
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddApiExplorer()
                 .AddJsonFormatters()
+                .AddJsonOptions(options => {
+                    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                })
                 .AddAuthorization()
                 .AddFluentValidation(fv => {
                     fv.RegisterValidatorsFromAssemblyContaining<API.Request.LoginCredentialsValidator>();
