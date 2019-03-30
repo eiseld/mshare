@@ -29,12 +29,13 @@ export class AuthService {
   login(email: string, password: string) {
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'email': email,
-        'password': password
+        'Content-Type': 'application/json'
       }),
     };
-    return this.http.post<any>(`${environment.API_URL}/users/login`, {}, httpOptions)
+    return this.http.put<any>(`${environment.API_URL}/auth/login`, {
+      'email': email,
+      'password': password
+    }, httpOptions)
       .pipe(map(user => {
         if (user && user.token) {
           localStorage.setItem('currentUser', JSON.stringify(user));
@@ -51,7 +52,7 @@ export class AuthService {
          'Content-Type': 'application/json',
       })
     };
-    return this.http.post<any>(`${environment.API_URL}/users/createUser`, {
+    return this.http.post<any>(`${environment.API_URL}/auth/register`, {
       'email': email,
       'displayname': displayname,
       'password': password
@@ -73,7 +74,7 @@ export class AuthService {
          'Content-Type': 'application/json',
       })
     };
-    return this.http.post<any>(`${environment.API_URL}/users/validateemail/`+token,{}, httpOptions);
+    return this.http.post<any>(`${environment.API_URL}/auth/validate/`+token,{}, httpOptions);
   }
 
   logout() {

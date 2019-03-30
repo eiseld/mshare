@@ -17,7 +17,7 @@ resetPassword(email: string, password: string, token: string) {
       'Content-Type': 'application/json'
     })
   };
-  return this.http.post<any>(`${environment.API_URL}/forgottenpassword/resetpass`, {
+  return this.http.post<any>(`${environment.API_URL}/profile/password/update`, {
     'email': email,
     'token' : token,
     'password' : password}, httpOptions)

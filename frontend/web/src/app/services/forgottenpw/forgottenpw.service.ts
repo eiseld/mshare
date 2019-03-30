@@ -19,7 +19,7 @@ export class ForgottenpwService {
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post<any>(`${environment.API_URL}/forgottenpassword/forgotpass`, {
+    return this.http.post<any>(`${environment.API_URL}/profile/password/forgot`, {
       'email': email}, httpOptions)
       .pipe(map(email => {
         return email;

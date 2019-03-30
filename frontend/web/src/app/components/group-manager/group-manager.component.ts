@@ -41,11 +41,13 @@ export class GroupManagerComponent implements OnInit {
       this.groups=[];
     }
 
-    this.http.get<string[]>(`${environment.API_URL}/users/listgroups`, httpOptions)
-    .subscribe(data => {this.groupIds= data as string[];
-      for (let groupId of this.groupIds) {
-        this.http.get<Group>(`${environment.API_URL}/groups/${groupId}`, httpOptions)
-        .subscribe(data => {this.groups.push(data as Group)});
+    this.http.get<Profile>(`${environment.API_URL}/profile`, httpOptions)
+    .subscribe(data => {
+      let profile = data as Profile;
+      for (let group of profile.groups) {
+        //this.http.get<Group>(`${environment.API_URL}/groups/${groupId}`, httpOptions)
+        //.subscribe(data => {this.groups.push(data as Group)});
+        this.groups.push(group);
       }
     },error => {this.error = "Sikertelen a csoportok betöltése!"});
   }
@@ -67,9 +69,15 @@ export class GroupManagerComponent implements OnInit {
         'Content-Type': 'application/json'
       })
     };
-    this.http.post<any>(`${environment.API_URL}/groups/newgroup/${this.newGroup}`, {}, httpOptions)
-    .subscribe(data => {this.http.post<any>(`${environment.API_URL}/users/updategroups/`, {}, httpOptions)
-                              .subscribe( data => {this.getGroups()})}, error => {this.error="Sikertelen a csoport létrehozása!"}
+    this.http.post<any>(`${environment.API_URL}/group/create`, {
+      name: this.newGroup
+    }, httpOptions)
+    .subscribe(data => {
+      this.getGroups()
+      /*this.http.post<any>(`${environment.API_URL}/users/updategroups/`, {}, httpOptions)
+  .subscribe( data => {this.getGroups()})}, error => {this.error="Sikertelen a csoport létrehozása!"*/
+                          },
+                error => {this.error="Sikertelen a csoport létrehozása!"}
     );
     this.createGroupAttempt=false;
   }
@@ -82,8 +90,13 @@ export class GroupManagerComponent implements OnInit {
 export class Group {
   id: number;
   name: string;
-  creator: string;
-  members: string[];
+  creatorUser: Profile;
+  members: Profile[];
   memberCount: number;
   balance: number;
+}
+
+export class Profile {
+  displayName: string;
+  groups: Group[];
 }
