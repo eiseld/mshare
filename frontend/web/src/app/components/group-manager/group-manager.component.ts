@@ -29,8 +29,7 @@ export class GroupManagerComponent implements OnInit {
     let currentUser = this.authenticationService.currentUserValue;
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `${currentUser.token}`
+        'Content-Type': 'application/json'
       })
     };
     if( this.groupIds!=null){
@@ -65,8 +64,7 @@ export class GroupManagerComponent implements OnInit {
     let currentUser = this.authenticationService.currentUserValue;
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `${currentUser.token}`,
+        'Content-Type': 'application/json'
       })
     };
     this.http.post<any>(`${environment.API_URL}/groups/newgroup/${this.newGroup}`, {}, httpOptions)

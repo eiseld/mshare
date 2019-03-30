@@ -3,7 +3,7 @@ import { BotDetectCaptchaModule } from 'angular-captcha';
 import { RecaptchaModule } from 'angular-google-recaptcha';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -21,6 +21,7 @@ import { ForgottenpwComponent } from './components/forgottenpw/forgottenpw.compo
 import { ResetpasswordComponent } from './components/resetpassword/resetpassword.component';
 import { ConfirmComponent } from './components/confirm/confirm.component';
 import { SucregComponent } from './components/sucreg/sucreg.component';
+import { JwtInterceptor } from './helpers/jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,9 @@ import { SucregComponent } from './components/sucreg/sucreg.component';
       siteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
     }),
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
