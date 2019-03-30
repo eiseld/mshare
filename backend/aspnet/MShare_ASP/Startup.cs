@@ -17,14 +17,27 @@ using MShare_ASP.Utils;
 using MShare_ASP.Middlewares;
 
 namespace MShare_ASP {
-    internal class Startup {
+    /// <summary>
+    /// Startup for the servcer
+    /// </summary>
+    public class Startup {
+        /// <summary>
+        /// Initializes a new startup with a configuration
+        /// </summary>
+        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// Configuration of this server
+        /// </summary>
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container. 
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services) {
 
 
@@ -102,7 +115,11 @@ namespace MShare_ASP {
 
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
 
             if (env.IsDevelopment()) {

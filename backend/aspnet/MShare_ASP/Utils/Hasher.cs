@@ -3,7 +3,16 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace MShare_ASP.Utils {
-    internal static class Hasher {
+    /// <summary>
+    /// Hashing algorithms
+    /// </summary>
+    public static class Hasher {
+
+        /// <summary>
+        /// Returns the sha256 of the given string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string GetHash(string value) {
             byte[] bytes = Encoding.UTF8.GetBytes(value);
             using (SHA256 hasher = SHA256.Create()) {
