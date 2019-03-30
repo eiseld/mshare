@@ -22,10 +22,10 @@
 
 **external address:**  `<dockerip>`:8081
 
-| Environmental variables     | Production | Development |
-| --------------------------- |:----------:|:-----------:|
-| ASPNETCORE_ENVIRONMENT      | Production |Development  |
-| MSHARE_RUNNING_BEHIND_PROXY | true       |true         |
+| Environmental variables     | Production | (Angular / Aspnet / Full stack) Development |
+| --------------------------- |:----------:|:-------------------------------------------:|
+| ASPNETCORE_ENVIRONMENT      | Production |Development                                  |
+| MSHARE_RUNNING_BEHIND_PROXY | true       |true                                         |
 
 ---
 
@@ -35,6 +35,8 @@
 **internal address:**  mshare-apache:80
 
 **external address:** `<dockerip>`:80
+
+**configuration file path:** /frontend/web/config
 
 | Configuration file | Production | Angular Development | Aspnet Development | Full stack Development |
 | ------------------ |:----------:|:-------------------:|:------------------:|:----------------------:|
@@ -50,6 +52,13 @@
 **internal address:** mshare-angular:4200
 
 **external address:** `<dockerip>`:4200
+
+**configuration file path:** /frontend/web/src/environments
+
+| Configuration file  | Production | Angular Development | Aspnet Development | Full stack Development |
+| ------------------- |:----------:|:-------------------:|:------------------:|:----------------------:|
+| environment.prod.ts | X          |                     |                    |                        |
+| environment.ts      |            | X                   | X                  | X                      |
 
 ---
 
@@ -79,7 +88,7 @@ The batch files can be found in the **/quickstart** folder.
 | Full stack Development | dev-fullstack.bat| docker-compose -f docker-compose-prod.yml -f docker-compose-dev-fullstack.yml up --build |
 
 ## Database
-You can use **MYSQL Workbench 8.0 CE** to connect to the database.
+You can use [MYSQL Workbench 8.0 CE](https://dev.mysql.com/downloads/workbench/) to connect to the database.
 
 To import or export the content of the database use the batch files in the **/backend/database** folder or
 run the following commands.
@@ -89,7 +98,7 @@ run the following commands.
 | Import | import.bat | docker exec -i mshare-mysql mysql --user=root --password=ilovescrum mshare < data.sql     |
 | Export | export.bat | docker exec -i mshare-mysql mysqldump --user=root --password=ilovescrum mshare > data.sql |
 
-**WARNING:** The file **/backend/database/data.sql** contains test data, **don't push** to repository if you changed it after testing!
+> **_WARNING:_**  The file **/backend/database/data.sql** contains test data, **don't push** to repository if you changed it after testing!
 
 ## Good to know
 Aspnet live reload works, but you **cannot debug** in it.
