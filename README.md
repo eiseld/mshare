@@ -55,7 +55,6 @@
 
 ## Startup order
 ![Docker-order](./docs/docker-order.svg)
-<img src="./docs/docker-order.svg">
 
 ---
 ## Sharing volumes
