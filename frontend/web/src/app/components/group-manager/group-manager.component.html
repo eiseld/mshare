@@ -8,7 +8,7 @@
     <li class="groupElement" *ngFor="let group of groups">
       <a (click)=selectGroup(group)>
       {{group.name}}
-      <p>Létrehozta: {{group.creator}}</p>
+      <p>Létrehozta: {{group.creatorUser.displayName}}</p>
       <p *ngIf="group.balance<0">Egyenleg: tartozol {{0-group.balance | currency}}-ral</p>
       <p *ngIf="group.balance==0">Egyenleg: rendezett</p>
       <p *ngIf="group.balance>0">Egyenleg: tartoznak neked {{group.balance | currency}-ral}</p>
