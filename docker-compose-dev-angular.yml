@@ -7,7 +7,7 @@ services:
 
  aspnet:
   environment:
-  - ASPNETCORE_ENVIRONMENT=Development
+    ASPNETCORE_ENVIRONMENT: 'Development'
   ports:
   - '8081:8081'
 
