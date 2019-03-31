@@ -45,9 +45,7 @@ class GroupsFragment : Fragment() {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
+    fun getGroups() {
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupsViewModel::class.java)
 
@@ -61,7 +59,11 @@ class GroupsFragment : Fragment() {
                 }
             }
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        getGroups()
     }
 
 }

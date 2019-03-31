@@ -31,6 +31,7 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         loginButton.setOnClickListener {
+            //viewModel.postLoginUser("test1@test.hu", "default") { response, error ->
             viewModel.postLoginUser(emailEditText.text.toString(), passwordEditText.text.toString()) { response, error ->
                 if(error == null) {
                     Toast.makeText(context, response, Toast.LENGTH_SHORT).show()

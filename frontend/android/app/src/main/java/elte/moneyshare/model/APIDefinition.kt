@@ -16,6 +16,9 @@ interface APIDefinition {
     @POST("groups/newgroup/{groupName}")
     fun postNewGroup(@Path("groupName") groupName : String) : Call<NewGroupData>
 
+    @POST("users/updategroups")
+    fun postUpdateGroups() : Call<Any>
+
     @GET("/users/listUsers")
     fun getUsers(): Call<ArrayList<User>>
 

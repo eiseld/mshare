@@ -1,6 +1,7 @@
 package elte.moneyshare.model
 
 import android.content.Context
+import com.google.gson.GsonBuilder
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import okhttp3.Headers
@@ -32,10 +33,12 @@ object APIClient {
             .addInterceptor(interceptorForHeaders)
             .build()
 
+        val gson = GsonBuilder().setLenient().create()
+
         retrofit = Retrofit.Builder()
             .baseUrl(baseUrlValue)
-            .addConverterFactory(GsonConverterFactory.create())
             .client(client)
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 
         apiDefinition = retrofit.create(APIDefinition::class.java)
