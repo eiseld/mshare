@@ -66,8 +66,7 @@ namespace MShare_ASP.Services {
                         if (await _context.SaveChangesAsync() != 1)
                             throw new Exceptions.DatabaseException("token_not_saved");
 
-                        await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, user.DisplayName, email.Email, "Elfelejtett jelszó", $"Jelszó megváltoztatásához kattintson ide: {_uriConf.URIForEndUsers}/reset?token=/{emailToken.Token}");
-
+                        await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, user.DisplayName, email.Email, "Elfelejtett jelszó", $"Jelszó megváltoztatásához kattintson ide: {_uriConf.URIForEndUsers}/reset?token={emailToken.Token}");
                         transaction.Commit();
                     } catch {
                         transaction.Rollback();
