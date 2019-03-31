@@ -11,7 +11,7 @@ services:
   environment:
     ASPNETCORE_ENVIRONMENT: 'Development'
   volumes:
-  - ./backend/aspnet/MShare_ASP:/app
+  - /backend/aspnet/MShare_ASP:/app
   ports:
   - '8081:8081'
 

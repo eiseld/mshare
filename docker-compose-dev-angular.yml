@@ -17,7 +17,7 @@ services:
    context: './frontend/web'
    dockerfile: Dockerfile-angular-live 
   volumes:
-  - ./frontend/web:/usr/src/app
+  - /frontend/web:/usr/src/app
   - /usr/src/app/node_modules/
   depends_on:
   - aspnet
