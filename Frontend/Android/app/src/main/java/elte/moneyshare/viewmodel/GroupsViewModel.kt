@@ -10,6 +10,23 @@ class GroupsViewModel :ViewModel(){
     fun postNewGroup(name: String, completion: (response: String?, error: String?) -> Unit) {
         APIClient.getRepository().postNewGroup(name) { response, error ->
             if (error == null) {
+                //have to update groups after new added
+                postUpdateGroups { _, error ->
+                    if (error == null)
+                        completion(response, null)
+                    else {
+                        completion(null, error)
+                    }
+                }
+            } else {
+                completion(null, error)
+            }
+        }
+    }
+
+    private fun postUpdateGroups(completion: (response: Any?, error: String?) -> Unit) {
+        APIClient.getRepository().postUpdateGroups { response, error ->
+            if (error == null) {
                 completion(response, null)
             } else {
                 completion(null, error)

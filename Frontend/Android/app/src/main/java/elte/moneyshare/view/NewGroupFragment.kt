@@ -36,8 +36,7 @@ class NewGroupFragment : Fragment() {
                 if (error == null) {
                     if(response == "201") {
                         Toast.makeText(context, "Group successfully created!", Toast.LENGTH_SHORT).show()
-                        activity?.supportFragmentManager?.beginTransaction()
-                            ?.replace(R.id.frame_container, GroupsFragment())?.commit()
+                        activity?.supportFragmentManager?.popBackStackImmediate()
                     }
                     else
                     {

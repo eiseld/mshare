@@ -68,6 +68,25 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
         })
     }
 
+    override fun postUpdateGroups(completion: (response: Any?, error: String?) -> Unit) {
+        apiDefinition.postUpdateGroups().enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.body(), null)
+                    }
+                    else -> {
+                        completion(null, "update groups error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                completion(null, "update groups error")
+            }
+        })
+    }
+
     override fun getUsers(completion: (response: ArrayList<User>?, error: String?) -> Unit) {
         apiDefinition.getUsers().enqueue(object : Callback<ArrayList<User>> {
             override fun onResponse(call: Call<ArrayList<User>>, response: Response<ArrayList<User>>) {

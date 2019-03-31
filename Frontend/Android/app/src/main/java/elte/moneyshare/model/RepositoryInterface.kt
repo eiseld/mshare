@@ -17,4 +17,6 @@ interface RepositoryInterface {
     fun getGroupIds(completion: (response: ArrayList<String>?, error: String?) -> Unit)
 
     fun getGroup(groupId: String, completion: (response: Group?, error: String?) -> Unit)
+
+    fun postUpdateGroups(completion: (response: Any?, error: String?) -> Unit)
 }

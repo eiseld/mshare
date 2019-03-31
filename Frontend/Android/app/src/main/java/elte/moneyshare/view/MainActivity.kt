@@ -3,13 +3,14 @@ package elte.moneyshare.view
 import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import elte.moneyshare.R
 import elte.moneyshare.viewmodel.GroupsViewModel
+import android.widget.Toast
+import android.os.Handler
 
 class MainActivity : AppCompatActivity() {
 
+    private var isBackPressedOnce = false
     private lateinit var groupsViewModel: GroupsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,16 +22,19 @@ class MainActivity : AppCompatActivity() {
         groupsViewModel = ViewModelProviders.of(this).get(GroupsViewModel::class.java)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.createGroup -> {
-                supportFragmentManager.beginTransaction().replace(R.id.frame_container, NewGroupFragment()).commit()
-                true
-            }
+    override fun onBackPressed() {
+        if (supportFragmentManager?.backStackEntryCount == 0 && isBackPressedOnce) {
+            super.onBackPressed()
+            return
+        } else if (supportFragmentManager?.backStackEntryCount == 0 && !isBackPressedOnce) {
 
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
+            isBackPressedOnce = true
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+            Handler().postDelayed({
+                isBackPressedOnce = false
+            }, 2000)
+        } else {
+            super.onBackPressed()
         }
     }
 }
