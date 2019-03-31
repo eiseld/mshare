@@ -28,9 +28,6 @@ CREATE TABLE `email_tokens` (
   `expiration_date` datetime DEFAULT NULL,
   `token_type` tinyint(3) unsigned NOT NULL,
   PRIMARY KEY (`user_id`,`token`),
-  UNIQUE KEY `email_token_UNIQUE` (`token`),
-  UNIQUE KEY `user_id_UNIQUE` (`user_id`),
-  KEY `email_enum_idx` (`token_type`),
   CONSTRAINT `email_enum` FOREIGN KEY (`token_type`) REFERENCES `email_types` (`id`),
   CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -81,7 +78,6 @@ CREATE TABLE `groups` (
   `name` varchar(32) NOT NULL,
   `creator_user_id` bigint(20) unsigned NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_group_creator_idx` (`creator_user_id`),
   CONSTRAINT `fk_group_creator` FOREIGN KEY (`creator_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -135,7 +131,6 @@ CREATE TABLE `users` (
   `display_name` varchar(32) NOT NULL,
   `creation_date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

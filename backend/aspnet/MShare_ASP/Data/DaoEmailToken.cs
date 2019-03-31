@@ -30,7 +30,6 @@ namespace MShare_ASP.Data {
         /// <summary>
         /// Primary key of the emailtoken
         /// </summary>
-        [Key]
         [Column("token")]
         public String Token { get; set; }
         /// <summary>

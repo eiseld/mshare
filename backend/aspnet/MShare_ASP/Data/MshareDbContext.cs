@@ -43,6 +43,9 @@ namespace MShare_ASP.Data {
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<DaoUsersGroupsMap>()
                 .HasKey(o => new { o.UserId, o.GroupId });
+				
+			modelBuilder.Entity<DaoEmailToken>()
+				.HasKey(o => new { o.UserId, o.Token });
         }
     }
 }

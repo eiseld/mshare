@@ -49,7 +49,7 @@ namespace MShare_ASP.Services {
         }
 
         public async Task SendForgotPasswordMail(API.Request.ValidEmail email) {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == email.Email);
+            var user = await _context.Users.Include(x => x.EmailTokens).FirstOrDefaultAsync(x => x.Email == email.Email && !x.EmailTokens.Any(y => y.TokenType == DaoEmailToken.Type.Validation));
 
             if (user != null) {
                 using (var transaction = _context.Database.BeginTransaction()) {

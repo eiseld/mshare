@@ -98,9 +98,9 @@ namespace MShare_ASP.Services {
         }
 
         public async Task<bool> Validate(string token) {
-            var emailToken = await _context.EmailTokens.FindAsync(token);
+            var emailToken = await _context.EmailTokens.SingleOrDefaultAsync(x => x.Token == token && x.TokenType == DaoEmailToken.Type.Validation);
 
-            if (emailToken == null || emailToken.TokenType != DaoEmailToken.Type.Validation)
+            if (emailToken == null)
                 throw new Exceptions.ResourceGoneException();
             if (emailToken.ExpirationDate < _timeService.UtcNow)
                 throw new Exceptions.BusinessException("token_expired");
