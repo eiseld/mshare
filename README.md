@@ -1,3 +1,11 @@
+# Documentations
+
+**API:** After starting your copy of the site you can access the API documentation from **\<your-docker-ip>/api/**
+**Database:** To see information about the database click [here](./backend/README.md)
+**Angular:** Angular documentation can be found [here](./frontend/web/README.md)
+
+---
+
 # Docker information
 
 ---
@@ -47,6 +55,9 @@
 ---
 
 ## Angular
+
+**Angular cli version:** 7.3.4
+
 **node version:** 11.12.0
 
 **internal address:** mshare-angular:4200
@@ -72,6 +83,9 @@
 | --------- |:----------:|:-------------------:|:------------------:|:----------------------:|
 | /frontend |            | X                   |                    | X                      |
 | /backend  |            |                     | X                  | X                      |
+
+> **_NOTE:_** If you are using docker with virtualbox, you must set up shared folders like so
+![Virtualbox-Settings](./docs/virtualbox_settings.png)
 
 ---
 
