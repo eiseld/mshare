@@ -1,7 +1,9 @@
 # Documentations
 
 **API:** After starting your copy of the site you can access the API documentation from **\<your-docker-ip>/api/**
+
 **Database:** To see information about the database click [here](./backend/README.md)
+
 **Angular:** Angular documentation can be found [here](./frontend/web/README.md)
 
 ---
