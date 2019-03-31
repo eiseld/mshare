@@ -1,0 +1,15 @@
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\bin\Debug\netcoreapp2.2\MShare_ASP.deps.json
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\bin\Debug\netcoreapp2.2\MShare_ASP.runtimeconfig.json
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\bin\Debug\netcoreapp2.2\MShare_ASP.runtimeconfig.dev.json
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\bin\Debug\netcoreapp2.2\MShare_ASP.dll
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\bin\Debug\netcoreapp2.2\MShare_ASP.pdb
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\obj\Debug\netcoreapp2.2\MShare_ASP.csprojAssemblyReference.cache
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\obj\Debug\netcoreapp2.2\MShare_ASP.csproj.CoreCompileInputs.cache
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\obj\Debug\netcoreapp2.2\MShare_ASP.RazorAssemblyInfo.cache
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\obj\Debug\netcoreapp2.2\MShare_ASP.RazorAssemblyInfo.cs
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\obj\Debug\netcoreapp2.2\MShare_ASP.AssemblyInfoInputs.cache
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\obj\Debug\netcoreapp2.2\MShare_ASP.AssemblyInfo.cs
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\obj\Debug\netcoreapp2.2\MShare_ASP.RazorTargetAssemblyInfo.cache
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\obj\Debug\netcoreapp2.2\MShare_ASP.dll
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\obj\Debug\netcoreapp2.2\MShare_ASP.pdb
+D:\Projects\Git\mshare\backend\aspnet\MShare_ASP\bin\Debug\netcoreapp2.2\MShare_ASP.xml

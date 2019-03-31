@@ -1,0 +1,757 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MShare_ASP</name>
+    </assembly>
+    <members>
+        <member name="T:MShare_ASP.API.Request.LoginCredentials">
+            <summary>
+            Identifies the user
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Request.LoginCredentials.Email">
+            <summary>
+            Email that the user registered with
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Request.LoginCredentials.Password">
+            <summary>
+            Unhashed password
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.API.Request.LoginCredentialsValidator">
+            <summary>
+            Validator object for LoginCredentials data class
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.API.Request.LoginCredentialsValidator.#ctor">
+            <summary>
+            Initializese the validator object
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.API.Request.NewGroup">
+            <summary>
+            Represents a new group to be registered
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Request.NewGroup.Name">
+            <summary>
+            Name of the group to be created
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.API.Request.NewGroupValidator">
+            <summary>
+            Validator object for NewUser data class
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.API.Request.NewGroupValidator.#ctor">
+            <summary>
+            Initializese the validator object
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.API.Request.NewUser">
+            <summary>
+            Represents a new user to be registered
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Request.NewUser.Email">
+            <summary>
+            Email of the user as in SMTP standard
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Request.NewUser.DisplayName">
+            <summary>
+            Name to be displayed
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Request.NewUser.Password">
+            <summary>
+            Unhashed password
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.API.Request.NewUserValidator">
+            <summary>
+            Validator object for NewUser data class
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.API.Request.NewUserValidator.#ctor">
+            <summary>
+            Initializese the validator object
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.API.Request.PasswordUpdate">
+            <summary>
+            Represents a PasswordUpdate request
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Request.PasswordUpdate.Email">
+            <summary>
+            Email of the user as in SMTP standard
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Request.PasswordUpdate.Token">
+            <summary>
+            Name to be displayed
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Request.PasswordUpdate.Password">
+            <summary>
+            Unhashed password
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.API.Request.PasswordUpdateValidator">
+            <summary>
+            Validator object for NewUser data class
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.API.Request.PasswordUpdateValidator.#ctor">
+            <summary>
+            Initializese the validator object
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.API.Request.ValidEmail">
+            <summary>
+            Represents an Email
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Request.ValidEmail.Email">
+            <summary>
+            Email as in SMTP standard
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.API.Request.EmailValidator">
+            <summary>
+            Validator object for Email class
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.API.Request.EmailValidator.#ctor">
+            <summary>
+            Initializese the validator object
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.API.Response.GroupData">
+            <summary>
+            Describes a group's data
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Response.GroupData.Id">
+            <summary>
+            Id of the group
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Response.GroupData.Name">
+            <summary>
+            Name of the group
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Response.GroupData.CreatorUser">
+            <summary>
+            Creator of this group
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Response.GroupData.Members">
+            <summary>
+            Members of this group
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Response.GroupData.MemberCount">
+            <summary>
+            Calculated membercount based on Members property
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Response.GroupData.Balance">
+            <summary>
+            Balance of the group
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.API.Response.JWTToken">
+            <summary>
+            Encapsulates a JWT token https://jwt.io
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Response.JWTToken.Token">
+            <summary>
+            String representation of the token
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.API.Response.UserData">
+            <summary>
+            Describes the user' data
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Response.UserData.DisplayName">
+            <summary>
+            Max 32 length name of the user
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.API.Response.UserData.Groups">
+            <summary>
+            All groups this user is in
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Configurations.IEmailConfiguration">
+            <summary>
+            Configurations for an email account
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Configurations.IEmailConfiguration.Name">
+            <summary>
+            Name of the account (e.g. Mshare Noreply)
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Configurations.IEmailConfiguration.Address">
+            <summary>
+            Email Address of the account (e.g. noreply.mshare@gmail.com)
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Configurations.IEmailConfiguration.Password">
+            <summary>
+            Password for the email address
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Configurations.IEmailConfiguration.SmtpAddress">
+            <summary>
+            Address of the SMTP server
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Configurations.IEmailConfiguration.SmtpPort">
+            <summary>
+            Port used with SMTP server
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Configurations.IJWTConfiguration">
+            <summary>
+            Configuration for JWT token generation and validation
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Configurations.IJWTConfiguration.SecretKey">
+            <summary>
+            Secret key to encode tokens with
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Configurations.IURIConfiguration">
+            <summary>
+            URI related configurations go here
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Configurations.IURIConfiguration.URIForEndUsers">
+            <summary>
+            URI that the end user sees (like in an email)
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Controllers.AuthController">
+            <summary>
+            Authentication controller responseible for logging users in and registering new users.
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.Controllers.AuthController.#ctor(MShare_ASP.Services.IAuthService,MShare_ASP.Services.IMshareService)">
+            <summary>
+            Initializes the AuthController
+            </summary>
+            <param name="authService"></param>
+            <param name="mshareService"></param>
+        </member>
+        <member name="M:MShare_ASP.Controllers.AuthController.Get">
+            <summary>
+            Lists all users (use only for testing)
+            </summary>
+            <response code="200">Successfully returned all users</response>
+            <response code="500">Internal error, probably database related</response>
+        </member>
+        <member name="M:MShare_ASP.Controllers.AuthController.Register(MShare_ASP.API.Request.NewUser)">
+            <summary>
+            Register a new user
+            </summary>
+            <param name="newUser">The new user to be created</param>
+            <response code="201">User successfully created</response>
+            <response code="409">Conflict while registering: 'email_taken' in 'errors'</response>
+            <response code="400">Bad request, newUser probably failed validation</response>
+            <response code="500">Internal error, probably database related</response>
+        </member>
+        <member name="M:MShare_ASP.Controllers.AuthController.Validate(System.String)">
+            <summary>
+            Validate a new registration's email
+            </summary>
+            <param name="token">registration token</param>
+            <response code="200">Validation successful</response>
+            <response code="410">Validation failed, token already gone</response>
+            <response code="409">Validation failed, token expired: 'token_expired' in 'errors'</response>
+            <response code="500">Internal error, probably database related</response>
+        </member>
+        <member name="M:MShare_ASP.Controllers.AuthController.Login(MShare_ASP.API.Request.LoginCredentials)">
+            <summary>
+            Log a user in
+            </summary>
+            <remarks>Can be called multiple times, always returns a valid JWT!</remarks>
+            <param name="loginCred">Credentials of the user</param>
+            <response code="200">Successful login</response>
+            <response code="401">Login failed because user not found</response>
+            <response code="400">User found, but not validated email</response>
+            <response code="409">Email has not yet been verified: 'not_verified' in 'errors'</response>
+            <response code="500">Internal error, probably database related</response>
+        </member>
+        <member name="T:MShare_ASP.Controllers.BaseController">
+            <summary>
+            Every custom controller should inherit from this BaseController
+            NOTE! Do not confuse this with `ControllerBase`
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Controllers.BaseController.Service">
+            <summary>
+            Common Service usable for each controller that inherits from us
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.Controllers.BaseController.#ctor(MShare_ASP.Services.IMshareService)">
+            <summary>
+            Initializes a BaseController
+            </summary>
+            <param name="mshareService"></param>
+        </member>
+        <member name="M:MShare_ASP.Controllers.BaseController.GetCurrentUserID">
+            <summary>
+            Current user's id
+            </summary>
+            <returns>The JTW authenticated user's ID</returns>
+            <exception cref="T:System.InvalidOperationException">When called without an [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] tagged context</exception>
+        </member>
+        <member name="T:MShare_ASP.Controllers.GroupController">
+            <summary>
+            GroupController is responsible for Group related actions
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.Controllers.GroupController.#ctor(MShare_ASP.Services.IMshareService)">
+            <summary>
+            Initializes the AuthController
+            </summary>
+            <param name="mshareService"></param>
+        </member>
+        <member name="M:MShare_ASP.Controllers.GroupController.Get">
+            <summary>
+            Lists all users (use only for testing)
+            </summary>
+            <response code="200">Successfully returned all users</response>
+            <response code="500">Internal error, probably database related</response>
+        </member>
+        <member name="M:MShare_ASP.Controllers.GroupController.Get(System.Int64)">
+            <summary>
+            Returns the group with the given ID
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MShare_ASP.Controllers.GroupController.Members(System.Int64,System.Nullable{System.Int32})">
+            <summary>
+            Gets the members of the given group with the given limit
+            </summary>
+            <param name="id">Id of the group</param>
+            <param name="limit">Limit member count</param>
+            <response code="404">Resource not found: 'group_not_found'</response>
+        </member>
+        <member name="M:MShare_ASP.Controllers.GroupController.Create(MShare_ASP.API.Request.NewGroup)">
+            <summary>
+            Creates a group
+            </summary>
+            <param name="newGroup">The new group to be created</param>
+            <returns></returns>
+        </member>
+        <member name="T:MShare_ASP.Controllers.ProfileController">
+            <summary>
+            Profile controller contains information the currently logged in active user
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.Controllers.ProfileController.#ctor(MShare_ASP.Services.IMshareService)">
+            <summary>
+            Initializes the ProfileController 
+            </summary>
+            <param name="mshareService"></param>
+        </member>
+        <member name="M:MShare_ASP.Controllers.ProfileController.Get">
+            <summary>
+            Gets the current signed in user
+            </summary>
+            <response code="200">Returns with the user's profile data</response>
+        </member>
+        <member name="T:MShare_ASP.Data.DaoEmailToken">
+            <summary>
+            Data Access Object for EmailToken
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Data.DaoEmailToken.Type">
+            <summary>
+            Determines the type of an email
+            </summary>
+        </member>
+        <member name="F:MShare_ASP.Data.DaoEmailToken.Type.Password">
+            <summary>
+            Used for password related (e.g. forgotten password) emails
+            </summary>
+        </member>
+        <member name="F:MShare_ASP.Data.DaoEmailToken.Type.Validation">
+            <summary>
+            Used for email validation (when registering)
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoEmailToken.UserId">
+            <summary>
+            Foreign key to the user
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoEmailToken.Token">
+            <summary>
+            Primary key of the emailtoken
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoEmailToken.ExpirationDate">
+            <summary>
+            Date and time of expiration
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoEmailToken.TokenType">
+            <summary>
+            Type of token
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoEmailToken.User">
+            <summary>
+            The user associated with this EmailToken
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Data.DaoGroup">
+            <summary>
+            Data Access Object for Group
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoGroup.Id">
+            <summary>
+            Primary key for Group
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoGroup.Name">
+            <summary>
+            Name of the group
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoGroup.CreatorUserId">
+            <summary>
+            Id of the creator of this Group
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoGroup.CreatorUser">
+            <summary>
+            The creator of this group
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoGroup.Members">
+            <summary>
+            All Users associted with this Group
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Data.DaoUser">
+            <summary>
+            Data Access Object for User
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoUser.Id">
+            <summary>
+            Primary key of the user
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoUser.Email">
+            <summary>
+            Email of the user
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoUser.Password">
+            <summary>
+            Hashed password of the user
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoUser.DisplayName">
+            <summary>
+            Displayname (not unique!)
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoUser.CreationDate">
+            <summary>
+            Date and time when the user was registered
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoUser.EmailTokens">
+            <summary>
+            All email tokens associated with user
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoUser.Groups">
+            <summary>
+            All groups associated with user
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Data.DaoUsersGroupsMap">
+            <summary>
+            Junction table for Users and Groups many-to-many connection
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoUsersGroupsMap.UserId">
+            <summary>
+            Composite key of this table
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoUsersGroupsMap.GroupId">
+            <summary>
+            Composite key of this table
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoUsersGroupsMap.User">
+            <summary>
+            User contained in this junction
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.DaoUsersGroupsMap.Group">
+            <summary>
+            Group contained in this junction
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Data.IMshareDbContext">
+            <summary>
+            Db Context for all data in MShare
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.IMshareDbContext.Users">
+            <summary>
+            User informations
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.IMshareDbContext.Groups">
+            <summary>
+            Group specific informations
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.IMshareDbContext.EmailTokens">
+            <summary>
+            Tokens that have been sent to users
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.IMshareDbContext.UsersGroupsMap">
+            <summary>
+            Junction table for many-to-many user-group connections
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Data.MshareDbContext">
+            <summary>
+            Db Context for all data in MShare
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.MshareDbContext.Users">
+            <summary>
+            User informations
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.MshareDbContext.Groups">
+            <summary>
+            Group specific informations
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.MshareDbContext.EmailTokens">
+            <summary>
+            Tokens that have been sent to users
+            </summary>
+        </member>
+        <member name="P:MShare_ASP.Data.MshareDbContext.UsersGroupsMap">
+            <summary>
+            Junction table for many-to-many user-group connections
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.Data.MshareDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{MShare_ASP.Data.MshareDbContext})">
+            <summary>
+            Initializes a new DbContext
+            </summary>
+            <param name="options"></param>
+        </member>
+        <member name="M:MShare_ASP.Data.MshareDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Fluid rules
+            </summary>
+            <param name="modelBuilder"></param>
+        </member>
+        <member name="T:MShare_ASP.Middlewares.ErrorHandlingMiddleware">
+            <summary>
+            All thrown (and uncaught) exceptions bubble here
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.Middlewares.ErrorHandlingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Initializes the middleware, runs "before" requests, next ecapsulates the request
+            </summary>
+            <param name="next"></param>
+        </member>
+        <member name="M:MShare_ASP.Middlewares.ErrorHandlingMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invokes with the given context, this calls the custom exception handling logic
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MShare_ASP.Services.Exceptions.BusinessException">
+            <summary>
+            Equivalent to HttpStatusCode.Conflict, 409
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Services.Exceptions.DatabaseException">
+            <summary>
+            Equivalent to HttpStatusCode.InternalServerError, 500
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Services.Exceptions.ResourceForbiddenException">
+            <summary>
+            Equivalent to HttpStatusCode.Forbidden, 403
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Services.Exceptions.ResourceGoneException">
+            <summary>
+            Equivalent to HttpStatusCode.Gone, 410
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Services.Exceptions.ResourceNotFoundException">
+            <summary>
+            Equivalent to HttpStatusCode.NotFound, 404
+            </summary>
+        </member>
+        <member name="T:MShare_ASP.Services.IAuthService">
+            <summary>
+            Authentication related services
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.Services.IAuthService.Login(MShare_ASP.API.Request.LoginCredentials)">
+            <summary>
+            Checks the credentials of the user and signs him in.
+            </summary>
+            <param name="credentials">Credentials to check</param>
+            <returns>Valid JWT or null</returns>
+        </member>
+        <member name="M:MShare_ASP.Services.IAuthService.Register(MShare_ASP.API.Request.NewUser)">
+            <summary>
+            Registers a new user to the database, checks for duplication
+            </summary>
+            <param name="newUser">The new user data to register</param>
+            <returns>true if registration successful</returns>
+        </member>
+        <member name="M:MShare_ASP.Services.IAuthService.Validate(System.String)">
+            <summary>
+            Validates an email token for registration and updates user state
+            </summary>
+            <param name="token">Token to validate</param>
+            <returns>true if validation successful</returns>
+        </member>
+        <member name="T:MShare_ASP.Services.IEmailService">
+            <summary>
+            Interface defining email sending methods
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.Services.IEmailService.SendMailAsync(MimeKit.Text.TextFormat,System.String,System.String,System.String,System.String)">
+            <summary>
+            Send an email to the specified target with the given subject and message
+            </summary>
+            <param name="format"></param>
+            <param name="name"></param>
+            <param name="target"></param>
+            <param name="subject"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MShare_ASP.Services.IMshareService">
+            <summary>
+            General service for Mshare Application
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.Services.IMshareService.GetUser(System.Int64)">
+            <summary>
+            Gets a specific user
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MShare_ASP.Services.IMshareService.GetUsers">
+            <summary>
+            Returns all users
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MShare_ASP.Services.IMshareService.GetGroups">
+            <summary>
+            Returns all groups
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MShare_ASP.Services.IMshareService.GetGroup(System.Int64)">
+            <summary>
+            Returns the group with given Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MShare_ASP.Services.IMshareService.CreateGroup(MShare_ASP.API.Request.NewGroup,System.Int64)">
+            <summary>
+            Creates a group
+            </summary>
+            <param name="newGroup"></param>
+            <param name="forUser"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MShare_ASP.Services.IMshareService.SendForgotPasswordMail(MShare_ASP.API.Request.ValidEmail)">
+            <summary>
+            Sends the forgotten password email to the user
+            NOTE: Should always return 200!
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MShare_ASP.Services.IMshareService.UpdatePassword(MShare_ASP.API.Request.PasswordUpdate)">
+            <summary>
+            Updates the password of the user
+            </summary>
+            <param name="passwordUpdate"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MShare_ASP.Startup">
+            <summary>
+            Startup for the servcer
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Initializes a new startup with a configuration
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:MShare_ASP.Startup.Configuration">
+            <summary>
+            Configuration of this server
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            This method gets called by the runtime. Use this method to add services to the container. 
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:MShare_ASP.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+        </member>
+        <member name="T:MShare_ASP.Utils.Hasher">
+            <summary>
+            Hashing algorithms
+            </summary>
+        </member>
+        <member name="M:MShare_ASP.Utils.Hasher.GetHash(System.String)">
+            <summary>
+            Returns the sha256 of the given string
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

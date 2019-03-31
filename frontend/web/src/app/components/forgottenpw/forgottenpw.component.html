@@ -1,0 +1,12 @@
+<div class="container">
+  <h1>Elfelejtett jelszó</h1>
+  <ngb-alert *ngIf="successMessage" [type]="type" (close)="successMessage = null">{{ successMessage }}</ngb-alert>
+  <form [formGroup]="psResetForm" (ngSubmit)="makeRequestToResetLink(psResetForm.value,psResetForm.valid)">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email"  class="form-control" id="email" formControlName="email"/>
+      <button type="submit" class="btn btn-success">Elküld</button>
+      <a [routerLink]="['/login']" class="btn btn-link">Vissza</a>
+    </div>
+  </form>
+</div>
