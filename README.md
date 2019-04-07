@@ -6,6 +6,8 @@
 
 **Angular:** Angular documentation can be found [here](./frontend/web/README.md)
 
+**Backend development:** Getting started guide can be found [here](./backend/aspnet/README.md)
+
 ---
 
 # Docker information
