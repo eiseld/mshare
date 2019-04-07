@@ -1,1 +1,1 @@
-cmd /c "docker exec -i mshare-mysql mysqldump --events --user=root --password=ilovescrum mshare > data.sql"
+cmd /c "docker exec -i mshare-mysql mysqldump --events --routines --triggers --user=root --password=ilovescrum mshare > data.sql"
