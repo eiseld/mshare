@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MoneyShare</string>
 
-    <string name="base_url_value">http://192.168.99.100:8081/</string>
+    <string name="base_url_value">http://remote.alerant.hu/</string>
     <string name="access_token_key">Authorization</string>
 
     <string name="login">Login</string>
