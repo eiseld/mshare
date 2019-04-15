@@ -15,21 +15,32 @@ namespace MShare_ASP.Services{
             _context = context;
         }
 
+        private static Random rand = new Random();
+
         public API.Response.GroupData ToGroupData(DaoGroup daoGroup) {
+            long GetMockBalance(){
+                // TODO: 実際の残高を取得
+                // TODO: الحصول على الرصيد الفعلي
+                // TODO: รับยอดเงินจริง
+                // TODO: קבל יתרה בפועל
+                lock (rand)
+                    return rand.Next(-1, 2);
+            }
+
             return new API.Response.GroupData(){
                 Id = daoGroup.Id,
                 Name = daoGroup.Name,
                 Creator = new API.Response.MemberData(){
                     Id = daoGroup.CreatorUserId,
                     Name = daoGroup.CreatorUser.DisplayName,
-                    Balance = 0 // TODO: รับยอดเงินจริง
+                    Balance = GetMockBalance()
                 },
                 Members = daoGroup.Members.Select(daoUsersGroupsMap => new API.Response.MemberData(){
                     Id = daoUsersGroupsMap.UserId,
                     Name = daoUsersGroupsMap.User.DisplayName,
-                    Balance = 0 // TODO: الحصول على الرصيد الفعلي
+                    Balance = GetMockBalance()
                 }).ToList(),
-                MyCurrentBalance = 0 // TODO: קבל יתרה בפועל
+                MyCurrentBalance = GetMockBalance() 
             };
         }
 
@@ -43,7 +54,7 @@ namespace MShare_ASP.Services{
                 Name = daoGroup.Name,
                 Creator = daoGroup.CreatorUser.DisplayName, 
                 MemberCount = daoGroup.Members.Count(),
-                MyCurrentBalance = 0 // TODO: 実際の残高を取得
+                MyCurrentBalance = 0 // TODO: 
             };
         }
 
