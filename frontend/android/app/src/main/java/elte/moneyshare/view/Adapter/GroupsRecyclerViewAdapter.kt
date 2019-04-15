@@ -22,7 +22,7 @@ class GroupsRecyclerViewAdapter(private val context: Context, private val groups
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
         val group = groups[position]
         holder.groupNameTextView.text = group.name
-        holder.groupOwnerTextView.text = group.creator
+        holder.groupOwnerTextView.text = group.creatorUser.displayName
         holder.groupMemberCountTextView.text = String.format(context.getString(R.string.group_members), group.memberCount)
         //TODO OWN LOGIC
         holder.groupBalanceTextView.text = String.format(context.getString(R.string.group_settled), group.balance)

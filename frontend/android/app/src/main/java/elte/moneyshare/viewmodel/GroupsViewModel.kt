@@ -1,14 +1,14 @@
 package elte.moneyshare.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import android.util.Log
 import elte.moneyshare.entity.Group
+import elte.moneyshare.entity.NewGroup
 import elte.moneyshare.model.APIClient
 
 class GroupsViewModel :ViewModel(){
 
     fun postNewGroup(name: String, completion: (response: String?, error: String?) -> Unit) {
-        APIClient.getRepository().postNewGroup(name) { response, error ->
+        APIClient.getRepository().postNewGroup(NewGroup(name)) { response, error ->
             if (error == null) {
                 //have to update groups after new added
                 postUpdateGroups { _, error ->
@@ -34,7 +34,7 @@ class GroupsViewModel :ViewModel(){
         }
     }
 
-    //TODO BETTER LOGIC WAIT ASYNC CALLS
+    /*//TODO BETTER LOGIC WAIT ASYNC CALLS
     fun getGroups(completion: (response: ArrayList<Group>?, error: String?) -> Unit) {
         APIClient.getRepository().getGroupIds { ids, error ->
             val groups = ArrayList<Group>()
@@ -51,6 +51,16 @@ class GroupsViewModel :ViewModel(){
                         }
                     }
                 }
+            } else {
+                completion(null, error)
+            }
+        }
+    }*/
+
+    fun getGroups(completion: (response: ArrayList<Group>?, error: String?) -> Unit) {
+        APIClient.getRepository().getGroups { groups, error ->
+            if (groups != null) {
+                completion(groups, null)
             } else {
                 completion(null, error)
             }

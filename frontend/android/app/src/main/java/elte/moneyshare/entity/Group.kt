@@ -1,9 +1,10 @@
 package elte.moneyshare.entity
 
 data class Group(
-    var creator: String,
+    var id: Int,
     var name: String,
-    var balance: Int,
+    var creatorUser: GroupUser,
+    var members: ArrayList<GroupUser>,
     var memberCount: Int,
-    var members: ArrayList<String>
+    var balance: Int
 )
