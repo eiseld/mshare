@@ -38,9 +38,9 @@ namespace MShare_ASP.Services {
 
             if (usr == null)
                 throw new Exceptions.ResourceForbiddenException("User");
-            if (usr.EmailTokens.Any(x => x.TokenType == DaoEmailToken.Type.Validation)) {
+
+            if (usr.EmailTokens.Any(x => x.TokenType == DaoEmailToken.Type.Validation)) 
                 throw new Exceptions.BusinessException("not_verified");
-            }
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtConf.SecretKey);
@@ -102,14 +102,14 @@ namespace MShare_ASP.Services {
 
             if (emailToken == null)
                 throw new Exceptions.ResourceGoneException();
+
             if (emailToken.ExpirationDate < _timeService.UtcNow)
                 throw new Exceptions.BusinessException("token_expired");
 
             _context.EmailTokens.Remove(emailToken);
 
-            if (await _context.SaveChangesAsync() != 1) {
+            if (await _context.SaveChangesAsync() != 1) 
                 throw new Exceptions.DatabaseException("validation_email_remove_failed");
-            }
 
             return true;
         }

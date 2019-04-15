@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MShare_ASP.Services {
+namespace MShare_ASP.Services{
     /// <summary>
     /// Interface defining email sending methods
     /// </summary>
