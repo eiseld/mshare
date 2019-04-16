@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 namespace MShare_ASP.API.Response {
 
     /// <summary>
-    /// Describes a group's data
+    /// Describes a group's minimal data
     /// </summary>
-    public class GroupData {
+    public class GroupInfo{
 
         /// <summary>
         /// Id of the group
@@ -21,19 +21,14 @@ namespace MShare_ASP.API.Response {
         public string Name { get; set; }
 
         /// <summary>
-        /// Creator of this group
+        /// Name of the creator
         /// </summary>
-        public MemberData Creator { get; set; }
+        public string Creator { get; set; }
 
         /// <summary>
-        /// Members of this group
+        /// Number of members
         /// </summary>
-        public IList<MemberData> Members { get; set; }
-
-        /// <summary>
-        /// Calculated membercount based on Members property
-        /// </summary>
-        public int? MemberCount { get { return Members?.Count; } }
+        public int MemberCount { get; set; }
 
         /// <summary>
         /// User balance in the view of the group

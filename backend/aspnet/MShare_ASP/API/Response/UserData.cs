@@ -4,18 +4,21 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace MShare_ASP.API.Response {
+
     /// <summary>
     /// Describes the user' data
     /// </summary>
     public class UserData {
+
+        /// <summary>
+        /// Id of the user
+        /// </summary>
+        public long Id { get; set; }
+
         /// <summary>
         /// Max 32 length name of the user
         /// </summary>
-        public String DisplayName { get; set; }
+        public String Name { get; set; }
 
-        /// <summary>
-        /// All groups this user is in
-        /// </summary>
-        public IList<GroupData> Groups { get; set; }
     }
 }

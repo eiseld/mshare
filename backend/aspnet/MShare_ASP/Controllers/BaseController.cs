@@ -13,18 +13,11 @@ namespace MShare_ASP.Controllers {
     /// NOTE! Do not confuse this with `ControllerBase`
     /// </summary>
     public class BaseController : ControllerBase {
-        /// <summary>
-        /// Common Service usable for each controller that inherits from us
-        /// </summary>
-        protected internal IMshareService Service { get; }
 
         /// <summary>
         /// Initializes a BaseController
         /// </summary>
-        /// <param name="mshareService"></param>
-        public BaseController(IMshareService mshareService) {
-            Service = mshareService;
-        }
+        public BaseController() {}
 
         /// <summary>
         /// Current user's id
