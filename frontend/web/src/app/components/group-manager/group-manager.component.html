@@ -3,21 +3,24 @@
   <input class="groupNameInput" *ngIf="createGroupAttempt" [(ngModel)]="newGroup" placeholder="név">
   <button class="createGroupCancel" *ngIf="createGroupAttempt" (click)="stopCreateGroup()">Mégse</button>
   <button class="createGroupOK" *ngIf="createGroupAttempt" (click)="createGroup()">OK</button>
+  <p>{{error}}</p>
 </div>
+
+<div class="groupListParent">
   <ul class="groupList">
-    <li class="groupElement" *ngFor="let group of groups">
-      <a (click)=selectGroup(group)>
-      {{group.name}}
-      <p>Létrehozta: {{group.creatorUser.displayName}}</p>
-      <p *ngIf="group.balance<0">Egyenleg: tartozol {{0-group.balance | currency}}-ral</p>
-      <p *ngIf="group.balance==0">Egyenleg: rendezett</p>
-      <p *ngIf="group.balance>0">Egyenleg: tartoznak neked {{group.balance | currency}-ral}</p>
-      <p>Tagok: {{group.memberCount}}</p>
+    <li class="groupElement" *ngFor="let groupInfo of groupInfos">
+      <a (click)=selectGroup(groupInfo)>
+      {{groupInfo.name}}
+      <p>Létrehozta: {{groupInfo.creator}}</p>
+      <p *ngIf="groupInfo.myCurrentBalance < 0">Egyenleg: tartozol {{0 - groupInfo.myCurrentBalance | currency}}-ral</p>
+      <p *ngIf="groupInfo.myCurrentBalance == 0">Egyenleg: rendezett</p>
+      <p *ngIf="groupInfo.myCurrentBalance > 0">Egyenleg: tartoznak neked {{groupInfo.myCurrentBalance | currency}-ral}</p>
+      <p>Tagok: {{groupInfo.memberCount}}</p>
      </a>
     </li>
   </ul>
-  
-  
-<app-group-detail class="groupDetail" [group]="selectedGroup"></app-group-detail>
+</div>
 
-<p>{{error}}</p>
+<app-group-detail class="groupDetail" [groupData]="selectedGroup"></app-group-detail>
+
+<div class="clear"></div>

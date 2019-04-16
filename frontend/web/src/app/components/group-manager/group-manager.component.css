@@ -6,7 +6,7 @@ li{
     list-style-type: none;
 }
 p {
-    line-height:0%
+    line-height:100%
 }
 ul{
     padding: 0;
@@ -42,7 +42,7 @@ a{
 .createGroupOK, .createGroupCancel{
     width: 50%;
 }
-.createGroupDiv, ul{
+.createGroupDiv{
     width: 20%;
 }
 
@@ -50,7 +50,18 @@ a{
     width: 80%;
     background: lightcyan;
     display: inline-block;
+	float: left;
 }
 .groupList{
     display: inline-block;
+}
+.groupElement p{
+   line-height:20%
+}
+.groupListParent{
+	width: 20%;
+	float: left;
+}
+.clear{
+	clear: both;
 }

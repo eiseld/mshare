@@ -14,12 +14,11 @@ export class GroupManagerComponent implements OnInit {
 
   constructor( private http: HttpClient, private authenticationService: AuthService) {}
 
-  @Input() newGroup: string ="";
-  createGroupAttempt=false;
+  @Input() newGroup: string = "";
+  createGroupAttempt = false;
   
-  groupIds : string[]=[];
-  groups: Group[]=[];
-  error : string="";
+  groupInfos: GroupInfo[] = [];
+  error : string = "";
 
   ngOnInit() {
     this.getGroups();
@@ -32,34 +31,29 @@ export class GroupManagerComponent implements OnInit {
         'Content-Type': 'application/json'
       })
     };
-    if( this.groupIds!=null){
-      delete this.groupIds;
-      this.groupIds=[];
-    }
-    if(this.groups!=null){
-      delete this.groups;
-      this.groups=[];
+    if(this.groupInfos != null){
+      delete this.groupInfos;
+      this.groupInfos = [];
     }
 
-    this.http.get<Profile>(`${environment.API_URL}/profile`, httpOptions)
-    .subscribe(data => {
-      let profile = data as Profile;
-      for (let group of profile.groups) {
-        //this.http.get<Group>(`${environment.API_URL}/groups/${groupId}`, httpOptions)
-        //.subscribe(data => {this.groups.push(data as Group)});
-        this.groups.push(group);
+    this.http.get<GroupInfo[]>(`${environment.API_URL}/profile/groups`, httpOptions)
+    .subscribe(list => {
+      for (let groupInfo of list) {
+        this.groupInfos.push(groupInfo);
       }
     },error => {this.error = "Sikertelen a csoportok betöltése!"});
   }
 
   startCreateGroup(){
-    this.createGroupAttempt=true;
-    this.newGroup="";
-    this.error="";
+    this.createGroupAttempt = true;
+    this.newGroup = "";
+    this.error = "";
   }
-  selectedGroup:Group=null;
+  
+  selectedGroup: GroupData = null;
+  
   stopCreateGroup(){
-    this.createGroupAttempt=false;
+    this.createGroupAttempt = false;
   }
 
   createGroup(){
@@ -69,34 +63,49 @@ export class GroupManagerComponent implements OnInit {
         'Content-Type': 'application/json'
       })
     };
-    this.http.post<any>(`${environment.API_URL}/group/create`, {
-      name: this.newGroup
-    }, httpOptions)
-    .subscribe(data => {
-      this.getGroups()
-      /*this.http.post<any>(`${environment.API_URL}/users/updategroups/`, {}, httpOptions)
-  .subscribe( data => {this.getGroups()})}, error => {this.error="Sikertelen a csoport létrehozása!"*/
-                          },
-                error => {this.error="Sikertelen a csoport létrehozása!"}
-    );
-    this.createGroupAttempt=false;
+    this.http.post<any>(`${environment.API_URL}/group/create`, 
+	{name: this.newGroup},
+	httpOptions)
+		.subscribe(
+			data => {this.getGroups()},
+			error => {this.error="Sikertelen a csoport létrehozása!"}
+		);
+    this.createGroupAttempt = false;
   }
 
-  selectGroup(group : Group){
-    this.selectedGroup=group;
+  selectGroup(groupInfo : GroupInfo){
+	let currentUser = this.authenticationService.currentUserValue;
+	const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+	this.http.get<GroupData>(`${environment.API_URL}/group/${groupInfo.id}/data`, httpOptions)
+	.subscribe(data => {
+		this.selectedGroup = data
+    },error => {this.error = "Sikertelen a csoport betöltése!"});
   }
 }
 
-export class Group {
+export class GroupInfo {
   id: number;
   name: string;
-  creatorUser: Profile;
-  members: Profile[];
+  creator: string;
   memberCount: number;
-  balance: number;
+  myCurrentBalance: number;
 }
 
-export class Profile {
-  displayName: string;
-  groups: Group[];
+export class GroupData {
+  id: number;
+  name: string;
+  creator: MemberData;
+  members: MemberData[];
+  memberCount: number;
+  myCurrentBalance: number;
+}
+
+export class MemberData {
+  id: number;
+  name: string;
+  balance: number;
 }
