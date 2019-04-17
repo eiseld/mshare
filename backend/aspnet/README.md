@@ -45,6 +45,8 @@ Services are where the business logic goes. Every service is divided up with cat
 
 When an error happens (user already registered, cannot find group with id, ...) an appropriate exception should be thrown.
 
+> **_NOTE:_**  When creating a new service, make sure that the service's interface is in the namespace ```MShare_ASP.Services```.
+
 ### Data objects / DBContext
 When modifying the database the appropriate steps have to be taken to implement the MySql schema into the [EF Core](https://docs.microsoft.com/en-us/ef/core/).
 
