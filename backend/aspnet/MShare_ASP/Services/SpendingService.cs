@@ -9,10 +9,6 @@ using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
-<<<<<<< HEAD
-using MShare_ASP.Utils;
-=======
->>>>>>> dd3d8b4... Added spending creation (post) and list (get) API requests
 
 namespace MShare_ASP.Services {
     internal class SpendingService : ISpendingService {
@@ -39,11 +35,7 @@ namespace MShare_ASP.Services {
             }).ToList();
         }
 
-<<<<<<< HEAD
-        public async Task CreateNewSpending(NewSpending newSpending, long userId) {
-=======
         public async Task<DaoSpending> CreateNewSpending(NewSpending newSpending, long userId) {
->>>>>>> dd3d8b4... Added spending creation (post) and list (get) API requests
             var currentUser = await DbContext.Users.FindAsync(userId);
             if (currentUser == null)
                 throw new ResourceGoneException("current_user_gone");
@@ -109,71 +101,7 @@ namespace MShare_ASP.Services {
             if (await DbContext.SaveChangesAsync() != insertCount) {
                 throw new DatabaseException("spending_not_inserted");
             }
-<<<<<<< HEAD
-        }
-        private async Task OptimizeSpendingForGroup(long groupId)
-        {
-            var currentGroup = await DbContext.Groups
-                                              .Include(x => x.Members)
-                                              .SingleOrDefaultAsync(x => x.Id == groupId);
-            if (currentGroup == null)
-                throw new ResourceGoneException("group_gone");
-            var Spendings = await GetSpendingsForGroup(groupId);
-            Dictionary<int, long> NumberToId = new Dictionary<int, long>();
-            Dictionary<long, int> IdToNumber = new Dictionary<long, int>();
-            {
-                int i = 0;
-                foreach (var MemberId in currentGroup.Members.Select(x => x.UserId))
-                {
-                    NumberToId.Add(i, MemberId);
-                    IdToNumber.Add(MemberId, i);
-                    i++;
-                }
-            }
-
-
-            int ingroup = NumberToId.Count;
-            long[,] owes = new long[ingroup, ingroup];
-            for (int i = 0; i < ingroup; i++){
-                var iSpending = Spendings.Where(x => x.CreditorUserId == NumberToId[i]);
-                foreach(DaoSpending ds in iSpending){
-                    foreach(DaoDebtor dd in ds.Debtors)
-                    {
-                        owes[IdToNumber[dd.DebtorUserId], i] += dd.Debt??0;
-                    }
-                }
-            }
-            var Optimizer = new SpendingOptimizer(owes, ingroup);
-            Optimizer.Optimize();
-            owes = Optimizer.GetResult();
-            var oldOptimized = await DbContext.OptimizedDebt.Where(x => x.GroupId == groupId).ToListAsync();
-            DbContext.OptimizedDebt.RemoveRange(oldOptimized);
-            for(int i = 0; i < ingroup; i++) {
-                for(int j = 0; j < ingroup; j++) {
-                    if(owes[i,j] > 0){
-                        DaoOptimizedDebt optdebt = new DaoOptimizedDebt() {
-                           GroupId = groupId,
-                           UserOwesId = NumberToId[i],
-                           UserOwedId = NumberToId[j],
-                           OweAmount = owes[i, j]
-                        };
-                        await DbContext.OptimizedDebt.AddAsync(optdebt);
-                    }
-                }
-            }
-            await DbContext.SaveChangesAsync();
-            //save results
-        }
-
-        public async Task<IList<DaoOptimizedDebt>> GetOptimizedDebtForGroup(long groupId)
-        {
-            await OptimizeSpendingForGroup(groupId);
-            return await DbContext.OptimizedDebt.Where(x => x.GroupId == groupId).ToListAsync();
-        }
-
-=======
             return spending;
         }
->>>>>>> dd3d8b4... Added spending creation (post) and list (get) API requests
     }
 }
