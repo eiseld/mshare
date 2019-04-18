@@ -40,5 +40,9 @@ namespace MShare_ASP.Data {
         /// All Users associted with this Group
         /// </summary>
         public IEnumerable<DaoUsersGroupsMap> Members { get; set; }
+        /// <summary>
+        /// All Spendings associated with this Group
+        /// </summary>
+        public IEnumerable<DaoSpending> Spendings { get; set; }
     }
 }
