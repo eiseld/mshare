@@ -35,7 +35,7 @@ namespace MShare_ASP.Services {
             }).ToList();
         }
 
-        public async Task<DaoSpending> CreateNewSpending(NewSpending newSpending, long userId) {
+        public async Task CreateNewSpending(NewSpending newSpending, long userId) {
             var currentUser = await DbContext.Users.FindAsync(userId);
             if (currentUser == null)
                 throw new ResourceGoneException("current_user_gone");
@@ -101,7 +101,6 @@ namespace MShare_ASP.Services {
             if (await DbContext.SaveChangesAsync() != insertCount) {
                 throw new DatabaseException("spending_not_inserted");
             }
-            return spending;
         }
     }
 }

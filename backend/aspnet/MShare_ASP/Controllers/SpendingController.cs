@@ -52,9 +52,9 @@ namespace MShare_ASP.Controllers {
         /// can't find given debtor in database: 'debtor_gone'</response>
         /// <response code="500">Internal error: 'spending_not_inserted'</response>
         [HttpPost("create")]
-        public async Task<ActionResult<DaoSpending>> Create([FromBody] API.Request.NewSpending newSpending) {
-            var created = await SpendingService.CreateNewSpending(newSpending, GetCurrentUserID());
-            return Ok(created);
+        public async Task<IActionResult> Create([FromBody] API.Request.NewSpending newSpending) {
+            await SpendingService.CreateNewSpending(newSpending, GetCurrentUserID());
+            return Ok();
         }
     }
 }

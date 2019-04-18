@@ -9,6 +9,6 @@ namespace MShare_ASP.Services {
     public interface ISpendingService {
         Task<IList<DaoSpending>> GetSpendingsForGroup(long id);
         IList<API.Response.SpendingData> ToSpendingData(IList<DaoSpending> spendings);
-        Task<DaoSpending> CreateNewSpending(NewSpending newSpending, long userId);
+        Task CreateNewSpending(NewSpending newSpending, long userId);
     }
 }
