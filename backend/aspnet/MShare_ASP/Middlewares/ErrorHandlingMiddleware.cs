@@ -30,7 +30,11 @@ namespace MShare_ASP.Middlewares {
             try {
                 await next(context);
             } catch (Exception ex) {
-                await HandleExceptionAsync(context, ex);
+                try {
+                    await HandleExceptionAsync(context, ex);
+                } catch (InvalidOperationException _) {
+                    Console.WriteLine("[ERROR]: Response has probably already started, make sure you don't throw exception inside a response. (e.g.: Don't use a lazy IEnumerable inside a returning Ok(...)!)");
+                }
             }
         }
 
@@ -49,7 +53,8 @@ namespace MShare_ASP.Middlewares {
                 errors = new Object[] { ex.Message }
 #if DEBUG 
                 ,
-                exceptionDetails =  ex.StackTrace.ToString()
+                stackTrace = ex.StackTrace.ToString(),
+                innerException = ex.InnerException.Message
 #endif
             };
             var result = JsonConvert.SerializeObject(errorMessage);
