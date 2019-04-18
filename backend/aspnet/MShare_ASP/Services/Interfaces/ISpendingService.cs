@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace MShare_ASP.Services {
+<<<<<<< HEAD
     /// <summary>
     /// Spending related services
     /// </summary>
@@ -30,5 +31,11 @@ namespace MShare_ASP.Services {
         Task CreateNewSpending(NewSpending newSpending, long userId);
 
         Task<IList<DaoOptimizedDebt>> GetOptimizedDebtForGroup(long groupid);
+=======
+    public interface ISpendingService {
+        Task<IList<DaoSpending>> GetSpendingsForGroup(long id);
+        IList<API.Response.SpendingData> ToSpendingData(IList<DaoSpending> spendings);
+        Task<DaoSpending> CreateNewSpending(NewSpending newSpending, long userId);
+>>>>>>> dd3d8b4... Added spending creation (post) and list (get) API requests
     }
 }

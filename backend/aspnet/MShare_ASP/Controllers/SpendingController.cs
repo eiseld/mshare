@@ -52,6 +52,7 @@ namespace MShare_ASP.Controllers {
         /// can't find given debtor in database: 'debtor_gone'</response>
         /// <response code="500">Internal error: 'spending_not_inserted'</response>
         [HttpPost("create")]
+<<<<<<< HEAD
         public async Task<IActionResult> Create([FromBody] API.Request.NewSpending newSpending) {
             await SpendingService.CreateNewSpending(newSpending, GetCurrentUserID());
             return Ok();
@@ -66,5 +67,11 @@ namespace MShare_ASP.Controllers {
         }
 #endif
 
+=======
+        public async Task<ActionResult<DaoSpending>> Create([FromBody] API.Request.NewSpending newSpending) {
+            var created = await SpendingService.CreateNewSpending(newSpending, GetCurrentUserID());
+            return Ok(created);
+        }
+>>>>>>> dd3d8b4... Added spending creation (post) and list (get) API requests
     }
 }

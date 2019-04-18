@@ -9,7 +9,10 @@ using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
+<<<<<<< HEAD
 using MShare_ASP.Utils;
+=======
+>>>>>>> dd3d8b4... Added spending creation (post) and list (get) API requests
 
 namespace MShare_ASP.Services {
     internal class SpendingService : ISpendingService {
@@ -36,7 +39,11 @@ namespace MShare_ASP.Services {
             }).ToList();
         }
 
+<<<<<<< HEAD
         public async Task CreateNewSpending(NewSpending newSpending, long userId) {
+=======
+        public async Task<DaoSpending> CreateNewSpending(NewSpending newSpending, long userId) {
+>>>>>>> dd3d8b4... Added spending creation (post) and list (get) API requests
             var currentUser = await DbContext.Users.FindAsync(userId);
             if (currentUser == null)
                 throw new ResourceGoneException("current_user_gone");
@@ -102,6 +109,7 @@ namespace MShare_ASP.Services {
             if (await DbContext.SaveChangesAsync() != insertCount) {
                 throw new DatabaseException("spending_not_inserted");
             }
+<<<<<<< HEAD
         }
         private async Task OptimizeSpendingForGroup(long groupId)
         {
@@ -163,5 +171,9 @@ namespace MShare_ASP.Services {
             return await DbContext.OptimizedDebt.Where(x => x.GroupId == groupId).ToListAsync();
         }
 
+=======
+            return spending;
+        }
+>>>>>>> dd3d8b4... Added spending creation (post) and list (get) API requests
     }
 }
