@@ -51,8 +51,8 @@ namespace MShare_ASP.Data {
         [ForeignKey("GroupId")]
         public virtual DaoGroup Group { get; set; }
         /// <summary>
-        /// List of all the debters this spending includes
+        /// List of all the debtors this spending includes
         /// </summary>
-        public virtual IList<DaoDebtor> Debters { get; set; }
+        public virtual IList<DaoDebtor> Debtors { get; set; }
     }
 }

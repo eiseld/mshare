@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `debters`
+-- Table structure for table `debtors`
 --
 
-DROP TABLE IF EXISTS `debters`;
+DROP TABLE IF EXISTS `debtors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `debters` (
+CREATE TABLE `debtors` (
   `spending_id` bigint(20) unsigned NOT NULL,
   `debtor_user_id` bigint(20) unsigned NOT NULL,
   `debt` bigint(20) unsigned DEFAULT NULL,
@@ -34,13 +34,13 @@ CREATE TABLE `debters` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `debters`
+-- Dumping data for table `debtors`
 --
 
-LOCK TABLES `debters` WRITE;
-/*!40000 ALTER TABLE `debters` DISABLE KEYS */;
-INSERT INTO `debters` VALUES (4,3,3000),(5,1,476),(5,2,476),(5,3,476),(5,4,476),(5,5,476),(5,6,476),(5,7,476),(5,8,476),(5,9,476),(5,10,476),(5,11,476),(5,12,476),(5,13,476),(5,14,476),(5,15,476),(5,16,476),(5,17,476),(5,18,476),(5,19,476),(5,20,476),(5,21,476);
-/*!40000 ALTER TABLE `debters` ENABLE KEYS */;
+LOCK TABLES `debtors` WRITE;
+/*!40000 ALTER TABLE `debtors` DISABLE KEYS */;
+INSERT INTO `debtors` VALUES (4,3,3000),(5,1,476),(5,2,476),(5,3,476),(5,4,476),(5,5,476),(5,6,476),(5,7,476),(5,8,476),(5,9,476),(5,10,476),(5,11,476),(5,12,476),(5,13,476),(5,14,476),(5,15,476),(5,16,476),(5,17,476),(5,18,476),(5,19,476),(5,20,476),(5,21,476);
+/*!40000 ALTER TABLE `debtors` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -304,4 +304,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-18 15:37:20
+-- Dump completed on 2019-04-18 15:41:17

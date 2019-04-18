@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace MShare_ASP.Data {
     /// <summary>
-    /// Data Access Object for Debters
+    /// Data Access Object for Debtors
     /// </summary>
-    [Table("debters", Schema = "mshare")]
+    [Table("debtors", Schema = "mshare")]
     public class DaoDebtor {
         /// <summary>
         /// Id of the spending's id associated with this debt
