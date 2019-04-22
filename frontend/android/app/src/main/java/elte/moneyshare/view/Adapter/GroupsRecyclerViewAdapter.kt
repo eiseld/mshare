@@ -28,7 +28,7 @@ class GroupsRecyclerViewAdapter(private val context: Context, private val groups
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
         val group = groups[position]
         holder.groupNameTextView.text = group.name
-        holder.groupOwnerTextView.text = group.creatorUser.displayName
+        holder.groupOwnerTextView.text = group.creator
         holder.groupMemberCountTextView.text = String.format(context.getString(R.string.group_members), group.memberCount)
 
         if (group.myCurrentBalance < 0) {
