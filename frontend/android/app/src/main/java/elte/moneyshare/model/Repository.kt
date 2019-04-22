@@ -130,7 +130,27 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
         })
     }
 
-    override fun getGroup(groupId: String, completion: (response: Group?, error: String?) -> Unit) {
+    override fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit) {
+        apiDefinition.getProfileGroups().enqueue(object : Callback<ArrayList<GroupInfo>> {
+            override fun onResponse(call: Call<ArrayList<GroupInfo>>, response: Response<ArrayList<GroupInfo>>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val groupsInfo = response.body()
+                        completion(groupsInfo, null)
+                    }
+                    else -> {
+                        completion(null, "get groups error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<GroupInfo>>, t: Throwable) {
+                completion(null, "get groups error")
+            }
+        })
+    }
+
+    override fun getGroup(groupId: Int, completion: (response: Group?, error: String?) -> Unit) {
         apiDefinition.getGroup(groupId).enqueue(object : Callback<Group> {
             override fun onResponse(call: Call<Group>, response: Response<Group>) {
                 when (response?.code()) {
@@ -146,6 +166,46 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
 
             override fun onFailure(call: Call<Group>, t: Throwable) {
                 completion(null, "get group error")
+            }
+        })
+    }
+
+    override fun getGroupInfo(groupId: Int, completion: (response: GroupInfo?, error: String?) -> Unit) {
+        apiDefinition.getGroupInfo(groupId).enqueue(object : Callback<GroupInfo> {
+            override fun onResponse(call: Call<GroupInfo>, response: Response<GroupInfo>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val groupInfo = response.body()
+                        completion(groupInfo, null)
+                    }
+                    else -> {
+                        completion(null, "get groupInfo error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<GroupInfo>, t: Throwable) {
+                completion(null, "get groupInfo error")
+            }
+        })
+    }
+
+    override fun getGroupData(groupId: Int, completion: (response: GroupData?, error: String?) -> Unit) {
+        apiDefinition.getGroupData(groupId).enqueue(object : Callback<GroupData> {
+            override fun onResponse(call: Call<GroupData>, response: Response<GroupData>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val groupData = response.body()
+                        completion(groupData, null)
+                    }
+                    else -> {
+                        completion(null, "get groupData error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<GroupData>, t: Throwable) {
+                completion(null, "get groupData error")
             }
         })
     }

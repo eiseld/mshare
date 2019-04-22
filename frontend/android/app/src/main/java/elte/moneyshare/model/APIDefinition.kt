@@ -20,14 +20,23 @@ interface APIDefinition {
     @POST("/api/Group/create")
     fun postNewGroup(@Body groupName : NewGroup) : Call<ResponseBody>
 
-    @GET("/api/Group/")
-    fun getGroups(): Call<ArrayList<Group>>
-
     @GET("/api/Group/{id}")
-    fun getGroup(@Path("id") groupId: String): Call<Group>
+    fun getGroup(@Path("id") groupId: Int): Call<Group>
+
+    @GET("/api/Group/{groupId}/info")
+    fun getGroupInfo(@Path("groupId") groupId: Int): Call<GroupInfo>
+
+    @GET("/api/Group/{groupId}/data")
+    fun getGroupData(@Path("groupId") groupId: Int): Call<GroupData>
+
+    @GET("/api/Profile/groups")
+    fun getProfileGroups(): Call<ArrayList<GroupInfo>>
 
     @GET("/api/Group/{id}/members/{limit}")
     fun getGroup(@Path("id") groupId: String, @Path("limit") limit: String): Call<Group>
+
+    @GET("/api/Group/")
+    fun getGroups(): Call<ArrayList<Group>>
 
     //OLD
     @POST("users/updategroups")

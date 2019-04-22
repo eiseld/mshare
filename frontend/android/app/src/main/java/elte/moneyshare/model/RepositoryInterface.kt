@@ -16,7 +16,13 @@ interface RepositoryInterface {
 
     fun getGroups(completion: (response: ArrayList<Group>?, error: String?) -> Unit)
 
-    fun getGroup(groupId: String, completion: (response: Group?, error: String?) -> Unit)
+    fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit)
+
+    fun getGroup(groupId: Int, completion: (response: Group?, error: String?) -> Unit)
+
+    fun getGroupInfo(groupId: Int, completion: (response: GroupInfo?, error: String?) -> Unit)
+
+    fun getGroupData(groupId: Int, completion: (response: GroupData?, error: String?) -> Unit)
 
     fun postUpdateGroups(completion: (response: Any?, error: String?) -> Unit)
 }
