@@ -15,15 +15,16 @@ namespace MShare_ASP.Controllers {
     public class AuthController : BaseController {
 
         private IAuthService AuthService { get; }
+        private IUserService UserService { get; }
 
         /// <summary>
         /// Initializes the AuthController
         /// </summary>
         /// <param name="authService"></param>
-        /// <param name="mshareService"></param>
-        public AuthController(IAuthService authService, IMshareService mshareService) :
-            base(mshareService) {
+        /// <param name="userService"></param>
+        public AuthController(IAuthService authService, IUserService userService){
             AuthService = authService;
+            UserService = userService;
         }
 
 #if DEBUG
@@ -34,16 +35,7 @@ namespace MShare_ASP.Controllers {
         /// <response code="500">Internal error, probably database related</response>
         [HttpGet]
         public async Task<ActionResult<IList<API.Response.UserData>>> Get() {
-            var a = (await Service.GetUsers()).Select(x => new API.Response.UserData() {
-                DisplayName = x.DisplayName,
-                Groups = x.Groups.Select(y => new API.Response.GroupData() {
-                    Id = y.Group.Id,
-                    Name = y.Group.Name,
-                    CreatorUser = new API.Response.UserData() { DisplayName = y.Group.CreatorUser.DisplayName },
-                    Members = null
-                }).ToList()
-            }).ToList();
-            return Ok(a);
+            return Ok(UserService.ToUserData(await UserService.GetUsers()));
         }
 #endif
 

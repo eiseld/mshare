@@ -90,11 +90,13 @@ namespace MShare_ASP {
             services.AddDbContext<MshareDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("MySqlSrvConnection"))
             );
-
-            services.AddTransient<IMshareService, MshareService>();
+            
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IGroupService, GroupService>();
             services.AddTransient<ITimeService, TimeService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ISpendingService, SpendingService>();
 
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("MShareSettings")["SecretKey"]);
             services.AddAuthentication(x => {
@@ -122,12 +124,11 @@ namespace MShare_ASP {
         /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
 
-            if (env.IsDevelopment()) {
+            if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-            } else {
+            else
                 app.UseHsts();
-            }
-
+            
             app.UseSwagger();
 
             app.UseSwaggerUI(c => {

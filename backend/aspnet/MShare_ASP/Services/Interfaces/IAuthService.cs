@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace MShare_ASP.Services {
+namespace MShare_ASP.Services{
+
     /// <summary>
     /// Authentication related services
     /// </summary>
     public interface IAuthService {
+
         /// <summary>
         /// Checks the credentials of the user and signs him in.
         /// </summary>
@@ -29,5 +31,6 @@ namespace MShare_ASP.Services {
         /// <param name="token">Token to validate</param>
         /// <returns>true if validation successful</returns>
         Task<bool> Validate(String token);
+
     }
 }
