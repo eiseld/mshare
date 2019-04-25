@@ -6,17 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace MShare_ASP.API.Request {
-<<<<<<< HEAD
-    /// <summary>
-    /// Describes the structure of the request for creating a new spending
-    /// </summary>
     public class NewSpending {
-        /// <summary>
-        /// Debtor structure that should be added for this Spending
-        /// </summary>
-=======
-    public class NewSpending {
->>>>>>> dd3d8b4... Added spending creation (post) and list (get) API requests
         public class Debtor {
             /// <summary>
             /// Id of the debtor
@@ -25,10 +15,6 @@ namespace MShare_ASP.API.Request {
             /// <summary>
             /// Debt owed by this debtor
             /// Be aware: the sum of all of the debts, must be equal to MoneySpent!
-<<<<<<< HEAD
-            /// Note: calculate it client side
-=======
->>>>>>> dd3d8b4... Added spending creation (post) and list (get) API requests
             /// </summary>
             public long? Debt { get; set; }
         }
@@ -45,11 +31,7 @@ namespace MShare_ASP.API.Request {
         /// </summary>
         public long MoneySpent { get; set; }
         /// <summary>
-<<<<<<< HEAD
-        /// List of debtors, always specify this
-=======
         /// List of debtors, pass an empty array if you want it calculated automatically
->>>>>>> dd3d8b4... Added spending creation (post) and list (get) API requests
         /// </summary>
         public Debtor[] Debtors { get; set; }
     }
