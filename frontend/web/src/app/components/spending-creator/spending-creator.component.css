@@ -1,4 +1,5 @@
 .spendingAmountMemberInput{
+<<<<<<< HEAD
     color: black;
     font-weight: bold;
 }
@@ -6,6 +7,13 @@
 .spendingAmountMemberInput::placeholder{
     color:lightgray;
     font-style: italic;
+=======
+    color:#3BB300;
+}
+
+.spendingAmountMemberInput::placeholder{
+    color:#E60000;
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
 }
 
 img{
@@ -26,7 +34,10 @@ img{
 
 .errorP{
     color: red;
+<<<<<<< HEAD
 }
 .errorAddDebtorP{
     text-align: center;
+=======
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
 }

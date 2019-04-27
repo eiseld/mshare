@@ -12,14 +12,25 @@
     </datalist>
 
     <button id=addDebtorButton class="btn btn-primary" *ngIf="addDebtorAttempt" (click)="addDebtor()" (click)="ngOnChanges()">OK</button>
+<<<<<<< HEAD
     Összeg: <input class="spendingAmountInput" [(ngModel)]="spending.moneyOwed" placeholder="összeg" (input)="ngOnChanges()">
     <p class=errorAddDebtorP>{{errorAddDebtor}}</p>
+=======
+    <!--<button (click)="addAllAsDebtor()" (click)=ngOnChanges()>Mindenki hozzáadása</button>-->
+    Összeg: <input class="spendingAmountInput" [(ngModel)]="spending.moneyOwed" placeholder="összeg" (input)="ngOnChanges()">
+    
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
 
     <p>Tartozók:</p>
     <ul>
       <li *ngFor="let member of spending.debtors">
           {{member.name}}
+<<<<<<< HEAD
           Tartozás: <input class="spendingAmountMemberInput" [(ngModel)]="member.balance" placeholder="{{member.defaultBalance}}" (ngModelChange)="numberInputChanged($event,member)" (input)="numberInputChanged(member.balance)">
+=======
+          Tartozás: <input class="spendingAmountMemberInput" [(ngModel)]="member.balance" placeholder="{{defaultBalance}}" (input)="ngOnChanges()">
+          <!--<button (click)="removeDebtor(member)" (click)="ngOnChanges()">Személy elvétele</button>-->
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
           <a class="removeDebtorButton" href="#" (click)="removeDebtor(member)" (click)="ngOnChanges()"><img src="assets/noun_Minus_2331758.png" alt="Személy elvtétele"></a>
       </li>
     </ul>

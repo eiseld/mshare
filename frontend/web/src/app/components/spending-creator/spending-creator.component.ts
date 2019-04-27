@@ -4,8 +4,11 @@ import { parseIntAutoRadix } from '@angular/common/src/i18n/format_number';
 import { environment } from '../../../environments/environment'
 import { AuthService } from '../../services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+<<<<<<< HEAD
 import { empty } from 'rxjs';
 import { NgOnChangesFeature } from '@angular/core/src/render3';
+=======
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
 
 @Component({
   selector: 'app-spending-creator',
@@ -17,10 +20,16 @@ export class SpendingCreatorComponent implements OnChanges {
   @Input()
   spending: Spending;
   @Input()
+<<<<<<< HEAD
   newDebtor: DebtorData;
   @Input()
   spendingForGroupData: GroupData;
   defaultBalanceSum:number;
+=======
+  newDebtor: MemberData;
+  @Input()
+  spendingForGroupData: GroupData;
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
   defaultBalance:number;
   @Input()
   createSpendingAttempt:boolean;
@@ -29,7 +38,10 @@ export class SpendingCreatorComponent implements OnChanges {
   changeDetected:boolean;
   searchList:string[]=[];
   error:string="";
+<<<<<<< HEAD
   errorAddDebtor:string="";
+=======
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
 
   @Output() createSpendingAttemptStop = new EventEmitter();
 
@@ -38,16 +50,20 @@ export class SpendingCreatorComponent implements OnChanges {
   stopCreateSpendingAttempt(){
     this.addDebtorAttempt=false;
     this.error="";
+<<<<<<< HEAD
     this.errorAddDebtor="";
     delete this.spending.debtors;
     this.spending.name="";
     this.spending.moneyOwed=undefined;
     this.spending.debtors=[];
+=======
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
     this.createSpendingAttempt=false;
     this.createSpendingAttemptStop.emit();
   }
 
   updateSelectedGroup(){
+<<<<<<< HEAD
     this.addDebtorAttempt=false;
     this.error="";
     this.errorAddDebtor="";
@@ -56,6 +72,13 @@ export class SpendingCreatorComponent implements OnChanges {
     this.updateSelectedGroupEvent.next();
   }
 
+=======
+    this.stopCreateSpendingAttempt();
+    this.updateSelectedGroupEvent.next();
+  }
+
+
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
   constructor( private http: HttpClient ) { 
   }
 
@@ -73,6 +96,7 @@ export class SpendingCreatorComponent implements OnChanges {
   }
 
   onSearchChange(searchValue : string ) {  
+<<<<<<< HEAD
     this.errorAddDebtor="";
     this.searchList=["Mindenki",...this.spendingForGroupData.members.map((member)=> member.name).filter((name)=>name.slice(0,searchValue.length)==searchValue)];
   }
@@ -110,13 +134,37 @@ export class SpendingCreatorComponent implements OnChanges {
         }
         memberCount--;
         defaultBalanceSum-=debtor.defaultBalance;
+=======
+    this.searchList=["Mindenki",...this.spendingForGroupData.members.map((member)=> member.name).filter((name)=>name.slice(0,searchValue.length)==searchValue)];
+  }
+
+  calcDefaultDebt(){
+    if(this.spending.moneyOwed==undefined){
+      this.defaultBalance=0;
+    }
+    else{
+      this.defaultBalance=this.spending.moneyOwed;
+      var memberCount=this.spending.debtors.length;
+      for(let member of this.spending.debtors){
+        if(member.balance!=undefined){
+          this.defaultBalance-=member.balance;
+          memberCount--;
+        }
+      }
+      if(memberCount>0){
+        this.defaultBalance/=memberCount;
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
       }
     }
   }
 
   startAddDebtor(){
     this.addDebtorAttempt=true;
+<<<<<<< HEAD
     this.newDebtor=new DebtorData();
+=======
+    this.newDebtor=new MemberData();
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
     this.onSearchChange('');
   }
 
@@ -132,9 +180,12 @@ export class SpendingCreatorComponent implements OnChanges {
           if(!this.spending.debtors.some( ({id}) => id == this.newDebtor.id)){
             this.spending.debtors=[...this.spending.debtors, this.newDebtor];
           }
+<<<<<<< HEAD
           else{
             this.errorAddDebtor="A hozzáadni kívánt személy már szerepel a listán!"
           }
+=======
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
         }
     }
     this.addDebtorAttempt=false;
@@ -147,14 +198,21 @@ export class SpendingCreatorComponent implements OnChanges {
 
   addAllAsDebtor(){
     for(let member of this.spendingForGroupData.members){
+<<<<<<< HEAD
       var newDebtor=new DebtorData();
+=======
+      var newDebtor=new MemberData();
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
       newDebtor.id=member.id;
       newDebtor.name=member.name;
       if(!this.spending.debtors.some( ({id}) => id == newDebtor.id)){
         this.spending.debtors=[...this.spending.debtors, newDebtor];
       }
     }
+<<<<<<< HEAD
     this.calcDefaultDebt();
+=======
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
   }
 
   removeDebtor(member : MemberData){
@@ -179,10 +237,30 @@ export class SpendingCreatorComponent implements OnChanges {
     if(this.spending.name==undefined||this.spending.name.length==0||this.spending.name.length>32){
       this.error="Adjon egy legfeljebb 32 karakter hosszú nevet a költésnek!";
     }
+<<<<<<< HEAD
     else if(this.spending.debtors.map((debtor) => debtor.balance).filter((balance)=>balance==undefined).length==0
       &&this.spending.debtors.map((debtor)=>{return debtor.balance}).reduce(
         (partial_sum, a) => Number(partial_sum) + Number(a)) != this.spending.moneyOwed)
     {
+=======
+    else if(this.spending.debtors.map((debtor) => debtor.balance).filter((balance)=>balance!=undefined).length!=0
+      &&this.spending.debtors.map((debtor)=>{
+      if(debtor.balance!=undefined){
+        return debtor.balance;
+      } else{
+        return this.defaultBalance;
+      }
+    }).reduce((partial_sum, a) => Number(partial_sum) + Number(a)) != this.spending.moneyOwed)
+    {
+      var sum=this.spending.debtors.map((debtor) => debtor.balance).filter((balance)=>balance!=undefined).length!=0
+      &&this.spending.debtors.map((debtor)=>{
+      if(debtor.balance!=undefined){
+        return debtor.balance;
+      } else{
+        return this.defaultBalance;
+      }
+    }).reduce((partial_sum, a) => Number(partial_sum) + Number(a));
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
       this.error="Az egyéni költések összege nem egyezik meg a költés összegével!";
     }
     else if(this.defaultBalance<0||this.spending.debtors.some((debtor)=>debtor.balance<=0)){
@@ -194,9 +272,12 @@ export class SpendingCreatorComponent implements OnChanges {
             'Content-Type': 'application/json'
           })
         };
+<<<<<<< HEAD
         if(this.spending.debtors.length==0){
           this.addAllAsDebtor();
         }
+=======
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
         var debtors:Debtor[]=this.spending.debtors.map(item => new Debtor(item));
         this.http.post<any>(`${environment.API_URL}/spending/create`, 
         {
@@ -210,6 +291,10 @@ export class SpendingCreatorComponent implements OnChanges {
           data => {this.updateSelectedGroup();},
           error => {this.error="Sikertelen a költés létrehozása!";this.stopCreateSpendingAttempt();}
         );
+<<<<<<< HEAD
+=======
+        delete this.spending;
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
         this.spending=null;
         this.stopCreateSpendingAttempt();
     }
@@ -219,13 +304,18 @@ export class SpendingCreatorComponent implements OnChanges {
 export class Spending {
   name: string;
   moneyOwed: number;
+<<<<<<< HEAD
   debtors: DebtorData[];
+=======
+  debtors: MemberData[];
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component
 }
 
 export class Debtor{
   DebtorId: number;
   Debt:number;
 
+<<<<<<< HEAD
   constructor(debtorData: DebtorData) {
     this.DebtorId = debtorData.id;
     if(debtorData.balance!=undefined){
@@ -241,3 +331,10 @@ export class Debtor{
 export class DebtorData extends MemberData {
   defaultBalance:number;
 }
+=======
+  constructor(memberData: MemberData) {
+    this.DebtorId = memberData.id;
+    this.Debt = memberData.balance;
+  }
+}
+>>>>>>> f48cf20... Angular: added spending-creator component, added spending list to group-detail component

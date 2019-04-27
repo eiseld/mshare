@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment'
 import { AuthService } from '../../services/auth.service';
-import { Spending } from '../spending-creator/spending-creator.component'
 
 @Component({
   selector: 'app-group-manager',
@@ -17,12 +16,9 @@ export class GroupManagerComponent implements OnInit {
 
   @Input() newGroup: string = "";
   createGroupAttempt = false;
-  createSpendingAttempt = false;
-  spendingForGroupData : GroupData;
+  
   groupInfos: GroupInfo[] = [];
   error : string = "";
-  selectedGroup: GroupData = null;
-  selectedGroupSpendings: Spending[]=null;
 
   ngOnInit() {
     this.getGroups();
@@ -54,6 +50,8 @@ export class GroupManagerComponent implements OnInit {
     this.error = "";
   }
   
+  selectedGroup: GroupData = null;
+  
   stopCreateGroup(){
     this.createGroupAttempt = false;
   }
@@ -75,12 +73,6 @@ export class GroupManagerComponent implements OnInit {
     this.createGroupAttempt = false;
   }
 
-  updateSelectedGroup(){
-    if(this.selectedGroup!=null){
-      this.selectGroup(new GroupInfo(this.selectedGroup));
-    }
-  }
-
   selectGroup(groupInfo : GroupInfo){
 	let currentUser = this.authenticationService.currentUserValue;
 	const httpOptions = {
@@ -92,31 +84,6 @@ export class GroupManagerComponent implements OnInit {
 	.subscribe(data => {
 		this.selectedGroup = data
     },error => {this.error = "Sikertelen a csoport betöltése!"});
-    this.http.get<Spending[]>(`${environment.API_URL}/spending/${groupInfo.id}`, httpOptions)
-    .subscribe(data => {
-      this.selectedGroupSpendings = data;
-      },error => {this.error = "Sikertelen a költések betöltése!"});
-  }
-
-
-
-
-  startCreateSpending(spendingForGroupInfo:GroupInfo){
-      let currentUser = this.authenticationService.currentUserValue;
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
-      };
-    this.http.get<GroupData>(`${environment.API_URL}/group/${spendingForGroupInfo.id}/data`, httpOptions)
-    .subscribe(data => {
-      this.spendingForGroupData = data
-      this.createSpendingAttempt = true;
-      },error => {this.error = "Sikertelen a csoport betöltése!"});
-  }
-
-  stopCreateSpendingAttempt(){
-    this.createSpendingAttempt=false;
   }
 }
 
@@ -126,13 +93,6 @@ export class GroupInfo {
   creator: string;
   memberCount: number;
   myCurrentBalance: number;
-  constructor(groupData: GroupData) {
-    this.id = groupData.id;
-    this.name = groupData.name;
-    this.creator = groupData.creator.name;
-    this.memberCount = groupData.memberCount;
-    this.myCurrentBalance = groupData.myCurrentBalance;
-  }
 }
 
 export class GroupData {
