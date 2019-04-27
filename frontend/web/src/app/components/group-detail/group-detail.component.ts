@@ -22,7 +22,7 @@ export class GroupDetailComponent implements OnInit {
 
   constructor() { }
 
-  calcDefaultDebts(){
+  calcGroupSpending(){
     if(this.calculatedSpendings!=undefined){
       delete this.calculatedSpendings;
       this.calculatedSpendings=[];
@@ -30,25 +30,11 @@ export class GroupDetailComponent implements OnInit {
     for(let spending of this.spendings){
       var calculatedSpending=new CalculatedSpending();
       calculatedSpending.spending=spending;
-      if(spending.moneyOwed==undefined){
-        calculatedSpending.defaultDebt=0;
+      if(spending.debtors.length==this.groupData.memberCount){
+        calculatedSpending.groupSpending=true;
       }
       else{
-        calculatedSpending.defaultDebt=spending.moneyOwed;
-        var memberCount=spending.debtors.length;
-        for(let member of spending.debtors){
-          if(member.balance!=undefined){
-            calculatedSpending.defaultDebt-=member.balance;
-            memberCount--;
-          }
-        }
-        if(memberCount>0){
-          calculatedSpending.defaultDebt/=memberCount;
-          calculatedSpending.groupSpending=false;
-        }
-        else{
-          calculatedSpending.groupSpending=true;
-        }
+        calculatedSpending.groupSpending=false;
       }
       this.calculatedSpendings=[...this.calculatedSpendings,calculatedSpending];
     }
@@ -61,13 +47,12 @@ export class GroupDetailComponent implements OnInit {
   showPage(selectedPage){
     this.selectedPage=selectedPage;
     if(this.selectedPage==this.pages.groupSpendingDetails){
-      this.calcDefaultDebts();
+      this.calcGroupSpending();
     }
   }
 }
 
 export class CalculatedSpending{
   spending: Spending;
-  defaultDebt: number;
   groupSpending:boolean;
 }

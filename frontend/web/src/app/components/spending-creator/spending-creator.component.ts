@@ -18,6 +18,7 @@ export class SpendingCreatorComponent implements OnChanges {
   newDebtor: MemberData;
   @Input()
   spendingForGroupData: GroupData;
+  defaultBalanceSum:number;
   defaultBalance:number;
   @Input()
   createSpendingAttempt:boolean;
@@ -34,15 +35,21 @@ export class SpendingCreatorComponent implements OnChanges {
   stopCreateSpendingAttempt(){
     this.addDebtorAttempt=false;
     this.error="";
+    delete this.spending.debtors;
+    this.spending.name="";
+    this.spending.moneyOwed=undefined;
+    this.spending.debtors=[];
     this.createSpendingAttempt=false;
     this.createSpendingAttemptStop.emit();
   }
 
   updateSelectedGroup(){
-    this.stopCreateSpendingAttempt();
+    this.addDebtorAttempt=false;
+    this.error="";
+    this.createSpendingAttempt=false;
+    this.createSpendingAttemptStop.emit();
     this.updateSelectedGroupEvent.next();
   }
-
 
   constructor( private http: HttpClient ) { 
   }
@@ -66,19 +73,20 @@ export class SpendingCreatorComponent implements OnChanges {
 
   calcDefaultDebt(){
     if(this.spending.moneyOwed==undefined){
+      this.defaultBalanceSum=0;
       this.defaultBalance=0;
     }
     else{
-      this.defaultBalance=this.spending.moneyOwed;
+      this.defaultBalanceSum=this.spending.moneyOwed;
       var memberCount=this.spending.debtors.length;
       for(let member of this.spending.debtors){
         if(member.balance!=undefined){
-          this.defaultBalance-=member.balance;
+          this.defaultBalanceSum-=member.balance;
           memberCount--;
         }
       }
       if(memberCount>0){
-        this.defaultBalance/=memberCount;
+        this.defaultBalance=Math.trunc(this.defaultBalanceSum/memberCount);
       }
     }
   }
@@ -144,23 +152,10 @@ export class SpendingCreatorComponent implements OnChanges {
     if(this.spending.name==undefined||this.spending.name.length==0||this.spending.name.length>32){
       this.error="Adjon egy legfeljebb 32 karakter hosszú nevet a költésnek!";
     }
-    else if(this.spending.debtors.map((debtor) => debtor.balance).filter((balance)=>balance!=undefined).length!=0
-      &&this.spending.debtors.map((debtor)=>{
-      if(debtor.balance!=undefined){
-        return debtor.balance;
-      } else{
-        return this.defaultBalance;
-      }
-    }).reduce((partial_sum, a) => Number(partial_sum) + Number(a)) != this.spending.moneyOwed)
+    else if(this.spending.debtors.map((debtor) => debtor.balance).filter((balance)=>balance==undefined).length==0
+      &&this.spending.debtors.map((debtor)=>{return debtor.balance}).reduce(
+        (partial_sum, a) => Number(partial_sum) + Number(a)) != this.spending.moneyOwed)
     {
-      var sum=this.spending.debtors.map((debtor) => debtor.balance).filter((balance)=>balance!=undefined).length!=0
-      &&this.spending.debtors.map((debtor)=>{
-      if(debtor.balance!=undefined){
-        return debtor.balance;
-      } else{
-        return this.defaultBalance;
-      }
-    }).reduce((partial_sum, a) => Number(partial_sum) + Number(a));
       this.error="Az egyéni költések összege nem egyezik meg a költés összegével!";
     }
     else if(this.defaultBalance<0||this.spending.debtors.some((debtor)=>debtor.balance<=0)){
@@ -172,7 +167,23 @@ export class SpendingCreatorComponent implements OnChanges {
             'Content-Type': 'application/json'
           })
         };
+        if(this.spending.debtors.length==0){
+          this.addAllAsDebtor();
+        }
         var debtors:Debtor[]=this.spending.debtors.map(item => new Debtor(item));
+        var defaultDebtors=debtors.filter((debtor)=>(debtor.Debt==undefined));
+        var memberCount=defaultDebtors.length;
+        var defaultBalanceSum=this.defaultBalanceSum;
+        for(let debtor of defaultDebtors){
+          if(this.defaultBalance*memberCount!=defaultBalanceSum){
+            debtor.Debt=this.defaultBalance+1;
+          }
+          else{
+            debtor.Debt=this.defaultBalance;
+          }
+          memberCount--;
+          defaultBalanceSum-=debtor.Debt;
+        }
         this.http.post<any>(`${environment.API_URL}/spending/create`, 
         {
           'Name': this.spending.name,
