@@ -1,0 +1,11 @@
+*{
+    z-index: 0;
+    position: relative;
+    text-align: center;
+}
+
+.debtSettler{    
+    padding: 10px;
+    border: 1px solid;
+    background-color: lightcyan;
+}

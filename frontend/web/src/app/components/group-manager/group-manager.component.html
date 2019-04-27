@@ -21,6 +21,6 @@
   </ul>
 </div>
 
-<app-group-detail class="groupDetail" [groupData]="selectedGroup"></app-group-detail>
+<app-group-detail class="groupDetail" [groupData]="selectedGroup" (updateSelectedGroupEvent)='updateSelectedGroup()'></app-group-detail>
 
 <div class="clear"></div>

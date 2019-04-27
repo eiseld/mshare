@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { GroupData, MemberData } from '../group-manager/group-manager.component';
 @Component({
   selector: 'app-group-detail',
@@ -7,9 +7,25 @@ import { GroupData, MemberData } from '../group-manager/group-manager.component'
 })
 export class GroupDetailComponent implements OnInit {
   @Input() groupData: GroupData;
+  @Output() updateSelectedGroupEvent = new EventEmitter();
+
   constructor() { }
 
+  selectedMember: MemberData = null;
+
   ngOnInit() {
+  }
+
+  selectMember(memberData : MemberData){
+    this.selectedMember=memberData;
+  }
+
+  unselectMember(){
+    this.selectedMember=undefined;
+  }
+  
+  updateSelectedGroup(){
+    this.updateSelectedGroupEvent.next();
   }
 
 }

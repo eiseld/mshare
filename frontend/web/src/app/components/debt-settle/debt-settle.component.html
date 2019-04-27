@@ -1,0 +1,14 @@
+<div class=debtSettler *ngIf="selectedMember">
+  <h2>Megerősítés</h2>
+  <p *ngIf="selectedMember.balance < 0">
+    Biztos, hogy szeretnéd {{selectedMember.name}} felé rendezni {{0 - selectedMember.balance | currency}} értékű tartozásod?
+  </p>
+  <p *ngIf="selectedMember.balance == 0">
+    {{selectedMember.name}} felé nincs tartozásod!
+  </p>
+  <p *ngIf="selectedMember.balance > 0" >
+    Biztos, hogy szeretnéd {{selectedMember.name}} {{selectedMember.balance | currency}} értékű tartozását rendezettnek tekinteni?
+  </p>
+  <button id=stopSettleDebtButton class="btn btn-danger" *ngIf="selectedMember.balance != 0" (click)="stopSettleDebt()">Mégse</button>
+  <button id=settleDebtButton class="btn btn-primary" (click)="settleDebt()">OK</button>
+</div>

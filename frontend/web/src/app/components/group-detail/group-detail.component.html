@@ -8,7 +8,7 @@
     <p *ngIf="groupData.myCurrentBalance > 0">Egyenleg: tartoznak neked {{groupData.myCurrentBalance | currency}}-ral</p>
     <p>Tagok ({{groupData.memberCount}}):</p>
     <ul>
-      <li *ngFor="let memberData of groupData.members">
+      <li (click)='selectMember(memberData)' *ngFor="let memberData of groupData.members">
         {{memberData.name}}
 		<span *ngIf="memberData.balance < 0"> tartozás: {{0 - memberData.balance | currency}} </span>
 		<span *ngIf="memberData.balance == 0"> rendezett </span>
@@ -17,3 +17,4 @@
     </ul>
   </div>
 </div>
+<app-debt-settle class=debtSettler [selectedMember]=selectedMember (stopSettleDebtEvent)='unselectMember()' (updateSelectedGroupEvent)="updateSelectedGroup()"></app-debt-settle>

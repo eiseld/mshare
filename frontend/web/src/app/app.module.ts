@@ -22,6 +22,7 @@ import { ResetpasswordComponent } from './components/resetpassword/resetpassword
 import { ConfirmComponent } from './components/confirm/confirm.component';
 import { SucregComponent } from './components/sucreg/sucreg.component';
 import { JwtInterceptor } from './helpers/jwt.interceptor';
+import { DebtSettleComponent } from './components/debt-settle/debt-settle.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
     GroupManagerComponent,
     GroupDetailComponent,
     ForgottenpwComponent,
-    ResetpasswordComponent
+    ResetpasswordComponent,
+    DebtSettleComponent
   ],
   imports: [
     NgbModule,
