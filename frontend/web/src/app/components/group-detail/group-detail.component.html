@@ -1,15 +1,18 @@
-<div class="groupDetails" *ngIf="group">
+<div class="groupDetails" *ngIf="groupData">
  
-  <h2>{{group.name}}</h2>
+  <h2>{{groupData.name}}</h2>
   <div>
-    <p>Létrehozta: {{group.creatorUser.displayName}}</p>
-    <p *ngIf="group.balance<0">Egyenleg: tartozol {{0-group.balance | currency}}-ral</p>
-    <p *ngIf="group.balance==0">Egyenleg: rendezett</p>
-    <p *ngIf="group.balance>0">Egyenleg: tartoznak neked {{group.balance | currency}}-ral</p>
-    <p>Tagok ({{group.memberCount}}):</p>
+    <p>Létrehozta: {{groupData.creator.name}}</p>
+    <p *ngIf="groupData.myCurrentBalance < 0">Egyenleg: tartozol {{0 - groupData.myCurrentBalance | currency}}-ral</p>
+    <p *ngIf="groupData.myCurrentBalance == 0">Egyenleg: rendezett</p>
+    <p *ngIf="groupData.myCurrentBalance > 0">Egyenleg: tartoznak neked {{groupData.myCurrentBalance | currency}}-ral</p>
+    <p>Tagok ({{groupData.memberCount}}):</p>
     <ul>
-      <li *ngFor="let member of group.members">
-          {{member.displayName}}
+      <li *ngFor="let memberData of groupData.members">
+        {{memberData.name}}
+		<span *ngIf="memberData.balance < 0"> tartozás: {{0 - memberData.balance | currency}} </span>
+		<span *ngIf="memberData.balance == 0"> rendezett </span>
+		<span *ngIf="memberData.balance > 0"> túlfizetés: {{memberData.balance | currency}} </span>
       </li>
     </ul>
   </div>

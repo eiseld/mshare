@@ -5,44 +5,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MShare_ASP.Services {
+namespace MShare_ASP.Services{
+
     /// <summary>
-    /// General service for Mshare Application
+    /// User related services
     /// </summary>
-    public interface IMshareService {
+    public interface IUserService{
+
+        /// <summary>
+        /// Converts DaoUser to UserData
+        /// </summary>
+        /// <param name="daoUser"></param>
+        /// <returns></returns>
+        API.Response.UserData ToUserData(DaoUser daoUser);
+
+        /// <summary>
+        /// Converts list of DaoUser to list of UserData
+        /// </summary>
+        /// <param name="daoUsers"></param>
+        /// <returns></returns>
+        IList<API.Response.UserData> ToUserData(IList<DaoUser> daoUsers);
+
         /// <summary>
         /// Gets a specific user
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        Task<DaoUser> GetUser(long id);
+        Task<DaoUser> GetUser(long user);
 
         /// <summary>
         /// Returns all users
         /// </summary>
         /// <returns></returns>
         Task<IList<DaoUser>> GetUsers();
-
-        /// <summary>
-        /// Returns all groups
-        /// </summary>
-        /// <returns></returns>
-        Task<IList<DaoGroup>> GetGroups();
-
-        /// <summary>
-        /// Returns the group with given Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<DaoGroup> GetGroup(long id);
-
-        /// <summary>
-        /// Creates a group
-        /// </summary>
-        /// <param name="newGroup"></param>
-        /// <param name="forUser"></param>
-        /// <returns></returns>
-        Task CreateGroup(NewGroup newGroup, long forUser);
 
         /// <summary>
         /// Sends the forgotten password email to the user
@@ -58,5 +53,6 @@ namespace MShare_ASP.Services {
         /// <param name="passwordUpdate"></param>
         /// <returns></returns>
         Task UpdatePassword(API.Request.PasswordUpdate passwordUpdate);
+
     }
 }

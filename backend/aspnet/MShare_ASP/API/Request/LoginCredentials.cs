@@ -24,7 +24,7 @@ namespace MShare_ASP.API.Request {
     /// <summary>
     /// Validator object for LoginCredentials data class
     /// </summary>
-    internal class LoginCredentialsValidator : AbstractValidator<LoginCredentials> {
+    public class LoginCredentialsValidator : AbstractValidator<LoginCredentials> {
 
         /// <summary>
         /// Initializese the validator object
