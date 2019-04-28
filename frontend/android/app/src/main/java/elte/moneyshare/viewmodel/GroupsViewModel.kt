@@ -7,30 +7,13 @@ import elte.moneyshare.entity.GroupInfo
 import elte.moneyshare.entity.NewGroup
 import elte.moneyshare.model.APIClient
 
-class GroupsViewModel :ViewModel(){
+class GroupsViewModel : ViewModel() {
 
     var currentGroup: Group? = null
     //var currentBills: Bills? = null
 
     fun postNewGroup(name: String, completion: (response: String?, error: String?) -> Unit) {
         APIClient.getRepository().postNewGroup(NewGroup(name)) { response, error ->
-            if (error == null) {
-                //have to update groups after new added
-                postUpdateGroups { _, error ->
-                    if (error == null)
-                        completion(response, null)
-                    else {
-                        completion(null, error)
-                    }
-                }
-            } else {
-                completion(null, error)
-            }
-        }
-    }
-
-    private fun postUpdateGroups(completion: (response: Any?, error: String?) -> Unit) {
-        APIClient.getRepository().postUpdateGroups { response, error ->
             if (error == null) {
                 completion(response, null)
             } else {
@@ -54,7 +37,7 @@ class GroupsViewModel :ViewModel(){
             if (groupData != null) {
                 completion(groupData, null)
             } else {
-                completion(null , error)
+                completion(null, error)
             }
         }
     }
