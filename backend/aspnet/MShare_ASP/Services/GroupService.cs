@@ -122,7 +122,7 @@ namespace MShare_ASP.Services {
             ++delCount;
 
             if (await _context.SaveChangesAsync() != delCount)
-                throw new Exceptions.DatabaseException("group_not_removed");
+                throw new Exceptions.DatabaseException("group_member_not_removed");
         }
 
         public async Task CreateGroup(long userId, NewGroup newGroup) {
