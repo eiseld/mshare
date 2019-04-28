@@ -125,5 +125,39 @@ namespace MShare_ASP.Services{
                 throw new Exceptions.DatabaseException("group_not_created");
         }
 
-    }
+		public async Task<IList<DaoUser>> InviteUserFilter(string part)
+		{
+			return await _context.Users
+				.Where(s => s.DisplayName.Contains(part) || s.Email.Contains(part))
+				.ToListAsync();
+		}
+
+		public async Task<IList<DaoHistory>> GetGroupHistory(long groupid)
+		{
+			return await _context.History
+				.Where(s => s.GroupId == groupid)
+				.ToListAsync();
+		}
+
+		public async Task AddMember(long userId, long groupId, AddMember member)
+		{
+			var group = _context.Groups.SingleOrDefault(s => s.Id == groupId);
+
+			if (group == null)
+				throw new Exceptions.ResourceNotFoundException("group_not_found");
+
+			if (group.CreatorUserId != userId)
+				throw new Exceptions.ResourceForbiddenException("not_group_creator");
+
+			var daoMember = group.Members.FirstOrDefault(x => x.UserId == member.Id);
+
+			if (daoMember == null)
+				_context.UsersGroupsMap.Add(daoMember);
+
+			if (await _context.SaveChangesAsync() != 1)
+				throw new Exceptions.DatabaseException("group_not_added");
+		}
+
+	}
+
 }

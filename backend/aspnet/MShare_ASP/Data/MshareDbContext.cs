@@ -14,10 +14,14 @@ namespace MShare_ASP.Data {
         /// Group specific informations
         /// </summary>
         public DbSet<DaoGroup> Groups { get; set; }
-        /// <summary>
-        /// Tokens that have been sent to users
-        /// </summary>
-        public DbSet<DaoEmailToken> EmailTokens { get; set; }
+		/// <summary>
+		/// History informations
+		/// </summary>
+		public DbSet<DaoHistory> History { get; set; }
+		/// <summary>
+		/// Tokens that have been sent to users
+		/// </summary>
+		public DbSet<DaoEmailToken> EmailTokens { get; set; }
         /// <summary>
         /// Junction table for many-to-many user-group connections
         /// </summary>

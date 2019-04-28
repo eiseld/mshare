@@ -68,19 +68,37 @@ namespace MShare_ASP.Controllers {
         [Route("{groupId}/data")]
         public async Task<ActionResult<API.Response.GroupData>> GetGroupData(long groupId){
             return Ok(GroupService.ToGroupData(await GroupService.GetGroupOfUser(GetCurrentUserID(), groupId)));
-        }
+		}
 
 
-        /// <summary>
-        /// Removes a member from a group
-        /// </summary>
-        /// <param name="groupId">Id of the group</param>
-        /// <param name="member">Id of the member to be removed</param>
-        /// <response code="404">Resource not found: 'group_not_found'</response>
-        /// <response code="403">Resource forbidden: 'not_group_creator'</response>
-        /// <response code="410">Resource gone: 'member_not_found'</response>
-        /// <response code="500">Internal error: 'group_not_removed'</response>
-        [HttpDelete]
+		/// <summary>
+		/// Removes a member from a group
+		/// </summary>
+		/// <param name="groupId">Id of the group</param>
+		/// <param name="member">Id of the member to be added</param>
+		/// <response code="404">Resource not found: 'group_not_found'</response>
+		/// <response code="403">Resource forbidden: 'not_group_creator'</response>
+		/// <response code="410">Resource gone: 'member_not_found'</response>
+		/// <response code="500">Internal error: 'group_not_added'</response>
+		[HttpPost]
+		[Route("{groupId}/add")]
+		public async Task<ActionResult> AddMember(long groupId, [FromBody] API.Request.AddMember member)
+		{
+			await GroupService.AddMember(GetCurrentUserID(), groupId, member);
+			return Ok();
+		}
+
+
+		/// <summary>
+		/// Removes a member from a group
+		/// </summary>
+		/// <param name="groupId">Id of the group</param>
+		/// <param name="member">Id of the member to be removed</param>
+		/// <response code="404">Resource not found: 'group_not_found'</response>
+		/// <response code="403">Resource forbidden: 'not_group_creator'</response>
+		/// <response code="410">Resource gone: 'member_not_found'</response>
+		/// <response code="500">Internal error: 'group_not_removed'</response>
+		[HttpDelete]
         [Route("{groupId}/remove")]
         public async Task<ActionResult> RemoveMember(long groupId, [FromBody] API.Request.RemoveMember member){
             await GroupService.RemoveMember(GetCurrentUserID(), groupId, member);
@@ -100,5 +118,18 @@ namespace MShare_ASP.Controllers {
             await GroupService.CreateGroup(GetCurrentUserID(), newGroup);
             return Ok();
         }
-    }
+
+		[HttpGet("filteredusers")]
+		public async Task<ActionResult<IList<Data.DaoUser>>> GetFilteredUsers([FromQuery] string filter)
+		{
+			return Ok(await GroupService.InviteUserFilter(filter));
+		}
+
+		[HttpGet("grouphistory")]
+		public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory([FromQuery] long groupid)
+		{
+			return Ok(await GroupService.GetGroupHistory(groupid));
+		}
+
+	}
 }
