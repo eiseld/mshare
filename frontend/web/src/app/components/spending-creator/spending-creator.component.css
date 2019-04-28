@@ -1,9 +1,11 @@
 .spendingAmountMemberInput{
-    color:#3BB300;
+    color: black;
+    font-weight: bold;
 }
 
 .spendingAmountMemberInput::placeholder{
-    color:#E60000;
+    color:lightgray;
+    font-style: italic;
 }
 
 img{
@@ -24,4 +26,7 @@ img{
 
 .errorP{
     color: red;
+}
+.errorAddDebtorP{
+    text-align: center;
 }

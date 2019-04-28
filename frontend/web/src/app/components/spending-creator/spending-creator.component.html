@@ -13,13 +13,13 @@
 
     <button id=addDebtorButton class="btn btn-primary" *ngIf="addDebtorAttempt" (click)="addDebtor()" (click)="ngOnChanges()">OK</button>
     Összeg: <input class="spendingAmountInput" [(ngModel)]="spending.moneyOwed" placeholder="összeg" (input)="ngOnChanges()">
-    
+    <p class=errorAddDebtorP>{{errorAddDebtor}}</p>
 
     <p>Tartozók:</p>
     <ul>
       <li *ngFor="let member of spending.debtors">
           {{member.name}}
-          Tartozás: <input class="spendingAmountMemberInput" [(ngModel)]="member.balance" placeholder="{{defaultBalance}}" (input)="ngOnChanges()">
+          Tartozás: <input class="spendingAmountMemberInput" [(ngModel)]="member.balance" placeholder="{{member.defaultBalance}}" (ngModelChange)="numberInputChanged($event,member)" (input)="numberInputChanged(member.balance)">
           <a class="removeDebtorButton" href="#" (click)="removeDebtor(member)" (click)="ngOnChanges()"><img src="assets/noun_Minus_2331758.png" alt="Személy elvtétele"></a>
       </li>
     </ul>

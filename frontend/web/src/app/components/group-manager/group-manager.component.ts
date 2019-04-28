@@ -94,7 +94,7 @@ export class GroupManagerComponent implements OnInit {
     },error => {this.error = "Sikertelen a csoport betöltése!"});
     this.http.get<Spending[]>(`${environment.API_URL}/spending/${groupInfo.id}`, httpOptions)
     .subscribe(data => {
-      this.selectedGroupSpendings = data
+      this.selectedGroupSpendings = data;
       },error => {this.error = "Sikertelen a költések betöltése!"});
   }
 
