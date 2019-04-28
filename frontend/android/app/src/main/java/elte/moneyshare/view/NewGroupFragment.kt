@@ -34,14 +34,8 @@ class NewGroupFragment : Fragment() {
         createButton.setOnClickListener {
             viewModel.postNewGroup(groupNameEditText.text.toString()) { response, error ->
                 if (error == null) {
-                    if(response == "201") {
-                        Toast.makeText(context, "Group successfully created!", Toast.LENGTH_SHORT).show()
-                        activity?.supportFragmentManager?.popBackStackImmediate()
-                    }
-                    else
-                    {
-                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
-                    }
+                    Toast.makeText(context, "Group successfully created!", Toast.LENGTH_SHORT).show()
+                    activity?.supportFragmentManager?.popBackStackImmediate()
                 } else {
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                 }
