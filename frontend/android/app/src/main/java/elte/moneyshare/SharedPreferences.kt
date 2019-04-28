@@ -22,7 +22,8 @@ object SharedPreferences {
         get() = sharedPreferences.getString(ACCESS_TOKEN, "")
         set(accessToken) {
             with(sharedPreferences.edit()) {
-                putString(ACCESS_TOKEN, accessToken)
+                val bearerToken = "Bearer $accessToken"
+                putString(ACCESS_TOKEN, bearerToken)
                 apply()
             }
         }
