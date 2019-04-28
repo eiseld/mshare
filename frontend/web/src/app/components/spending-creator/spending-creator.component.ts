@@ -4,6 +4,8 @@ import { parseIntAutoRadix } from '@angular/common/src/i18n/format_number';
 import { environment } from '../../../environments/environment'
 import { AuthService } from '../../services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { empty } from 'rxjs';
+import { NgOnChangesFeature } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-spending-creator',
@@ -15,7 +17,7 @@ export class SpendingCreatorComponent implements OnChanges {
   @Input()
   spending: Spending;
   @Input()
-  newDebtor: MemberData;
+  newDebtor: DebtorData;
   @Input()
   spendingForGroupData: GroupData;
   defaultBalanceSum:number;
@@ -27,6 +29,7 @@ export class SpendingCreatorComponent implements OnChanges {
   changeDetected:boolean;
   searchList:string[]=[];
   error:string="";
+  errorAddDebtor:string="";
 
   @Output() createSpendingAttemptStop = new EventEmitter();
 
@@ -35,6 +38,7 @@ export class SpendingCreatorComponent implements OnChanges {
   stopCreateSpendingAttempt(){
     this.addDebtorAttempt=false;
     this.error="";
+    this.errorAddDebtor="";
     delete this.spending.debtors;
     this.spending.name="";
     this.spending.moneyOwed=undefined;
@@ -46,6 +50,7 @@ export class SpendingCreatorComponent implements OnChanges {
   updateSelectedGroup(){
     this.addDebtorAttempt=false;
     this.error="";
+    this.errorAddDebtor="";
     this.createSpendingAttempt=false;
     this.createSpendingAttemptStop.emit();
     this.updateSelectedGroupEvent.next();
@@ -68,32 +73,50 @@ export class SpendingCreatorComponent implements OnChanges {
   }
 
   onSearchChange(searchValue : string ) {  
+    this.errorAddDebtor="";
     this.searchList=["Mindenki",...this.spendingForGroupData.members.map((member)=> member.name).filter((name)=>name.slice(0,searchValue.length)==searchValue)];
   }
-
+  numberInputChanged(inputFieldValue:string,member:MemberData){
+    if(inputFieldValue!=undefined&&inputFieldValue.length>0){
+      member.balance=Number(inputFieldValue);
+    }
+    else{
+      member.balance=undefined;
+    }
+    this.ngOnChanges();
+  }
   calcDefaultDebt(){
     if(this.spending.moneyOwed==undefined){
       this.defaultBalanceSum=0;
       this.defaultBalance=0;
     }
     else{
-      this.defaultBalanceSum=this.spending.moneyOwed;
-      var memberCount=this.spending.debtors.length;
-      for(let member of this.spending.debtors){
-        if(member.balance!=undefined){
-          this.defaultBalanceSum-=member.balance;
-          memberCount--;
-        }
+      var exactDebtors=this.spending.debtors.filter((debtor)=>(debtor.balance!=undefined));
+      var defaultBalanceSum=this.spending.moneyOwed;
+      var exactBalanceSum:number;
+      if(exactDebtors.length!=0){
+          exactBalanceSum=exactDebtors.map((debtor)=>{return debtor.balance}).reduce((partial_sum, a) => Number(partial_sum) + Number(a));
+          defaultBalanceSum-=exactBalanceSum;
       }
-      if(memberCount>0){
-        this.defaultBalance=Math.trunc(this.defaultBalanceSum/memberCount);
+      var defaultDebtors=this.spending.debtors.filter((debtor)=>(debtor.balance==undefined));
+      var memberCount=defaultDebtors.length;
+      var defaultBalance=Math.trunc(defaultBalanceSum/memberCount);
+      for(let debtor of defaultDebtors){
+        if(defaultBalance*memberCount!=defaultBalanceSum){
+          debtor.defaultBalance=defaultBalance+1;
+        }
+        else{
+          debtor.defaultBalance=defaultBalance;
+        }
+        memberCount--;
+        defaultBalanceSum-=debtor.defaultBalance;
       }
     }
   }
 
   startAddDebtor(){
     this.addDebtorAttempt=true;
-    this.newDebtor=new MemberData();
+    this.newDebtor=new DebtorData();
     this.onSearchChange('');
   }
 
@@ -109,6 +132,9 @@ export class SpendingCreatorComponent implements OnChanges {
           if(!this.spending.debtors.some( ({id}) => id == this.newDebtor.id)){
             this.spending.debtors=[...this.spending.debtors, this.newDebtor];
           }
+          else{
+            this.errorAddDebtor="A hozzáadni kívánt személy már szerepel a listán!"
+          }
         }
     }
     this.addDebtorAttempt=false;
@@ -121,13 +147,14 @@ export class SpendingCreatorComponent implements OnChanges {
 
   addAllAsDebtor(){
     for(let member of this.spendingForGroupData.members){
-      var newDebtor=new MemberData();
+      var newDebtor=new DebtorData();
       newDebtor.id=member.id;
       newDebtor.name=member.name;
       if(!this.spending.debtors.some( ({id}) => id == newDebtor.id)){
         this.spending.debtors=[...this.spending.debtors, newDebtor];
       }
     }
+    this.calcDefaultDebt();
   }
 
   removeDebtor(member : MemberData){
@@ -171,19 +198,6 @@ export class SpendingCreatorComponent implements OnChanges {
           this.addAllAsDebtor();
         }
         var debtors:Debtor[]=this.spending.debtors.map(item => new Debtor(item));
-        var defaultDebtors=debtors.filter((debtor)=>(debtor.Debt==undefined));
-        var memberCount=defaultDebtors.length;
-        var defaultBalanceSum=this.defaultBalanceSum;
-        for(let debtor of defaultDebtors){
-          if(this.defaultBalance*memberCount!=defaultBalanceSum){
-            debtor.Debt=this.defaultBalance+1;
-          }
-          else{
-            debtor.Debt=this.defaultBalance;
-          }
-          memberCount--;
-          defaultBalanceSum-=debtor.Debt;
-        }
         this.http.post<any>(`${environment.API_URL}/spending/create`, 
         {
           'Name': this.spending.name,
@@ -196,7 +210,6 @@ export class SpendingCreatorComponent implements OnChanges {
           data => {this.updateSelectedGroup();},
           error => {this.error="Sikertelen a költés létrehozása!";this.stopCreateSpendingAttempt();}
         );
-        delete this.spending;
         this.spending=null;
         this.stopCreateSpendingAttempt();
     }
@@ -206,15 +219,25 @@ export class SpendingCreatorComponent implements OnChanges {
 export class Spending {
   name: string;
   moneyOwed: number;
-  debtors: MemberData[];
+  debtors: DebtorData[];
 }
 
 export class Debtor{
   DebtorId: number;
   Debt:number;
 
-  constructor(memberData: MemberData) {
-    this.DebtorId = memberData.id;
-    this.Debt = memberData.balance;
+  constructor(debtorData: DebtorData) {
+    this.DebtorId = debtorData.id;
+    if(debtorData.balance!=undefined){
+      this.Debt = debtorData.balance;
+    }
+    else{
+      this.Debt = debtorData.defaultBalance;
+    }
   }
+}
+
+
+export class DebtorData extends MemberData {
+  defaultBalance:number;
 }
