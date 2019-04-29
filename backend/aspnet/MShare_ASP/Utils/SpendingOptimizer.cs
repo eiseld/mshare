@@ -44,7 +44,7 @@ namespace MShare_ASP.Utils {
                 {
                     Path.Clear();
                     Path.Push(i);
-                    long cu = CycleUtil(i,visited,stack, Path);
+                    long cu = CycleUtil(i,visited,stack, ref Path);
                     if(cu > 0)
                     {
                         int[] cyclepath = Path.ToArray();
@@ -59,7 +59,7 @@ namespace MShare_ASP.Utils {
             }
         }
 
-        private long CycleUtil(int v, bool[] visited, bool[] stack, Stack<int> Path)
+        private long CycleUtil(int v, bool[] visited, bool[] stack, ref Stack<int> Path)
         {
             visited[v] = true;
             stack[v] = true;
@@ -71,7 +71,7 @@ namespace MShare_ASP.Utils {
                     long cu = 0;
                     if(visited[i] == false)
                     {
-                         cu = CycleUtil(i,visited,stack,Path);
+                         cu = CycleUtil(i,visited,stack, ref Path);
                     }
                     if(visited[i] == false && cu > 0)
                     {
