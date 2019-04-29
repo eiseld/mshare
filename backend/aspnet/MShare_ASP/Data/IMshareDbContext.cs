@@ -17,10 +17,18 @@ namespace MShare_ASP.Data {
         /// Group specific informations
         /// </summary>
         DbSet<DaoGroup> Groups { get; set; }
-        /// <summary>
-        /// Tokens that have been sent to users
-        /// </summary>
-        DbSet<DaoEmailToken> EmailTokens { get; set; }
+		/// <summary>
+		/// Debts inside the group
+		/// </summary>
+		DbSet<DaoDebt> Debts { get; set; }
+		/// <summary>
+		/// History of group transactions
+		/// </summary>
+		DbSet<DaoHistory> History { get; set; }
+		/// <summary>
+		/// Tokens that have been sent to users
+		/// </summary>
+		DbSet<DaoEmailToken> EmailTokens { get; set; }
         /// <summary>
         /// Junction table for many-to-many user-group connections
         /// </summary>

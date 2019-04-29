@@ -69,5 +69,13 @@ namespace MShare_ASP.Services{
         /// <param name="newGroup"></param>
         Task CreateGroup(long userId, NewGroup newGroup);
 
-    }
+		Task<IList<DaoUser>> InviteUserFilter(string part);
+
+		Task<IList<DaoHistory>> GetGroupHistory(long groupid);
+
+		Task AddMember(long userId, long groupId, AddMember member);
+
+		Task DebtSettlement(long debtorId, long lenderId, long groupId);
+
+	}
 }

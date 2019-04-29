@@ -125,5 +125,75 @@ namespace MShare_ASP.Services{
                 throw new Exceptions.DatabaseException("group_not_created");
         }
 
-    }
+		public async Task<IList<DaoUser>> InviteUserFilter(string part)
+		{
+			return await _context.Users
+				.Where(s => s.DisplayName.Contains(part) || s.Email.Contains(part))
+				.ToListAsync();
+		}
+
+		public async Task<IList<DaoHistory>> GetGroupHistory(long groupid)
+		{
+			return await _context.History
+				.Where(s => s.GroupId == groupid)
+				.ToListAsync();
+		}
+
+		public async Task AddMember(long userId, long groupId, AddMember member)
+		{
+			var group = _context.Groups.SingleOrDefault(s => s.Id == groupId);
+
+			if (group == null)
+				throw new Exceptions.ResourceNotFoundException("group_not_found");
+
+			if (group.CreatorUserId != userId)
+				throw new Exceptions.ResourceForbiddenException("not_group_creator");
+
+			var daoMember = group.Members.FirstOrDefault(x => x.UserId == member.Id);
+
+			if (daoMember == null)
+				_context.UsersGroupsMap.Add(daoMember);
+
+			if (await _context.SaveChangesAsync() != 1)
+				throw new Exceptions.DatabaseException("group_not_added");
+		}
+
+		public async Task DebtSettlement(long debtorId, long lenderId, long groupId)
+		{
+
+			var group = _context.Groups.SingleOrDefault(s => s.Id == groupId);
+
+			if (group == null)
+				throw new Exceptions.ResourceNotFoundException("group_not_found");
+
+			if (group.Members == null)
+				group.Members = new List<DaoUsersGroupsMap>();
+
+			var member = _context.UsersGroupsMap.FirstOrDefault(x => x.UserId == debtorId && x.GroupId == groupId);
+
+			if (member == null)
+				throw new Exceptions.ResourceForbiddenException("debter_not_group_member");
+
+			member = _context.UsersGroupsMap.FirstOrDefault(x => x.UserId == lenderId && x.GroupId == groupId);
+
+			if (member == null)
+				throw new Exceptions.ResourceForbiddenException("lender_not_group_member");
+
+			var debt = _context.Debts.SingleOrDefault(s => s.DebtorId == debtorId && s.LenderId == lenderId && s.GroupId == groupId);
+
+			if(debt == null)
+			{
+				throw new Exceptions.ResourceNotFoundException("debt_not_found");
+			} else
+			{
+				debt.Amount = 0;
+			}
+
+			if (await _context.SaveChangesAsync() != 1)
+				throw new Exceptions.DatabaseException("debt_not_settled");
+
+		}
+
+	}
+
 }

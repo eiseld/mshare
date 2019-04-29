@@ -2,22 +2,30 @@
 using MShare_ASP.Utils;
 
 namespace MShare_ASP.Data {
-    /// <summary>
-    /// Db Context for all data in MShare
-    /// </summary>
-    public class MshareDbContext : DbContext {
-        /// <summary>
-        /// User informations
-        /// </summary>
-        public DbSet<DaoUser> Users { get; set; }
-        /// <summary>
-        /// Group specific informations
-        /// </summary>
-        public DbSet<DaoGroup> Groups { get; set; }
-        /// <summary>
-        /// Tokens that have been sent to users
-        /// </summary>
-        public DbSet<DaoEmailToken> EmailTokens { get; set; }
+	/// <summary>
+	/// Db Context for all data in MShare
+	/// </summary>
+	public class MshareDbContext : DbContext {
+		/// <summary>
+		/// User informations
+		/// </summary>
+		public DbSet<DaoUser> Users { get; set; }
+		/// <summary>
+		/// Group specific informations
+		/// </summary>
+		public DbSet<DaoGroup> Groups { get; set; }
+		/// <summary>
+		/// Debt informations inside group
+		/// </summary>
+		public DbSet<DaoDebt> Debts { get; set; }
+		/// <summary>
+		/// History informations
+		/// </summary>
+		public DbSet<DaoHistory> History { get; set; }
+		/// <summary>
+		/// Tokens that have been sent to users
+		/// </summary>
+		public DbSet<DaoEmailToken> EmailTokens { get; set; }
         /// <summary>
         /// Junction table for many-to-many user-group connections
         /// </summary>
