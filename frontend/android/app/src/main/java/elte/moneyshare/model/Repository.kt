@@ -155,6 +155,27 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
     }
 
 
+    //SPEDING
+    override fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit) {
+        apiDefinition.getSpendings(groupId).enqueue(object : Callback<ArrayList<SpendingData>> {
+            override fun onResponse(call: Call<ArrayList<SpendingData>>, response: Response<ArrayList<SpendingData>>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val spendings = response.body()
+                        completion(spendings, null)
+                    }
+                    else -> {
+                        completion(null, "get spendings error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<SpendingData>>, t: Throwable) {
+                completion(null, "get spendings error")
+            }
+        })
+    }
+
     //TEST METHODS
     override fun getGroups(completion: (response: ArrayList<Group>?, error: String?) -> Unit) {
         apiDefinition.getGroups().enqueue(object : Callback<ArrayList<Group>> {

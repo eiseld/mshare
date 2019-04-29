@@ -1,10 +1,7 @@
 package elte.moneyshare.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import elte.moneyshare.entity.Group
-import elte.moneyshare.entity.GroupData
-import elte.moneyshare.entity.GroupInfo
-import elte.moneyshare.entity.NewGroup
+import elte.moneyshare.entity.*
 import elte.moneyshare.model.APIClient
 
 class GroupsViewModel : ViewModel() {
@@ -36,6 +33,16 @@ class GroupsViewModel : ViewModel() {
         APIClient.getRepository().getGroupData(id) { groupData, error ->
             if (groupData != null) {
                 completion(groupData, null)
+            } else {
+                completion(null, error)
+            }
+        }
+    }
+
+    fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit) {
+        APIClient.getRepository().getSpendings(groupId) { spendings, error ->
+            if (spendings != null) {
+                completion(spendings, null)
             } else {
                 completion(null, error)
             }

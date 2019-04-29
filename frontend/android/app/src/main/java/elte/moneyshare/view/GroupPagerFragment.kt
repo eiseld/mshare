@@ -26,14 +26,18 @@ class GroupPagerFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu, menu)
+        inflater.inflate(R.menu.menu_group, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    //TODO items add member, add bill
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.createGroup -> {
+            R.id.addMember -> {
+
+                return true
+            }
+            R.id.removeMember -> {
                 return true
             }
             else ->

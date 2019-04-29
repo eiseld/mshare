@@ -24,6 +24,10 @@ interface RepositoryInterface {
     fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit)
 
 
+    //SPENDING
+    fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit)
+
+
     //TEST METHOD
     fun getUsers(completion: (response: ArrayList<User>?, error: String?) -> Unit)
 
