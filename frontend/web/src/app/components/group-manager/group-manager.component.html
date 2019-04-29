@@ -15,7 +15,7 @@
       <p>Létrehozta: {{groupInfo.creator}}</p>
       <p *ngIf="groupInfo.myCurrentBalance < 0">Egyenleg: tartozol {{0 - groupInfo.myCurrentBalance | currency}}-ral</p>
       <p *ngIf="groupInfo.myCurrentBalance == 0">Egyenleg: rendezett</p>
-      <p *ngIf="groupInfo.myCurrentBalance > 0">Egyenleg: tartoznak neked {{groupInfo.myCurrentBalance | currency}-ral}</p>
+      <p *ngIf="groupInfo.myCurrentBalance > 0">Egyenleg: tartoznak neked {{groupInfo.myCurrentBalance | currency}}-ral</p>
       <p>Tagok: {{groupInfo.memberCount}}</p>
      </a>
     </li>

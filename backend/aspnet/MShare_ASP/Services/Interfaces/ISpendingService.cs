@@ -41,6 +41,14 @@ namespace MShare_ASP.Services {
         Task<IList<DaoOptimizedDebt>> GetOptimizedDebtForGroup(long userId, long groupId);
 
         /// <summary>
+        /// Get summarised debt of user in group
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        long GetDebtSum(long userId, long groupId);
+
+        /// <summary>
         /// Calculate the optimized debts of a group
         /// </summary>
         /// <param name="groupId">creator of the spending</param>

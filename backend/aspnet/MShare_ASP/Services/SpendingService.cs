@@ -56,6 +56,23 @@ namespace MShare_ASP.Services {
             return await DbContext.OptimizedDebt.Where(x => x.GroupId == groupId).ToListAsync();
         }
 
+        public long GetDebtSum(long userId, long groupId){
+            var credit =  DbContext.Spendings
+                            .Where(x => x.GroupId == groupId && x.CreditorUserId == userId)
+                            .Sum(x => x.MoneyOwed);
+
+            var debt =   DbContext.Spendings
+                            .Where(x => x.GroupId == groupId)
+                            .Sum(x => 
+                                x.Debtors
+                                .Where(y => y.DebtorUserId == userId)
+                                .Sum(y => y.Debt)
+                            );
+
+            return credit - (debt ?? 0);
+        }
+
+
         public async Task OptimizeSpendingForGroup(long groupId){
             var currentGroup = await DbContext.Groups
                                               .Include(x => x.Members)
