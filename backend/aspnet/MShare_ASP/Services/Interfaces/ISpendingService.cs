@@ -10,5 +10,7 @@ namespace MShare_ASP.Services {
         Task<IList<DaoSpending>> GetSpendingsForGroup(long id);
         IList<API.Response.SpendingData> ToSpendingData(IList<DaoSpending> spendings);
         Task CreateNewSpending(NewSpending newSpending, long userId);
+
+        Task<IList<DaoOptimizedDebt>> GetOptimizedDebtForGroup(long groupid);
     }
 }
