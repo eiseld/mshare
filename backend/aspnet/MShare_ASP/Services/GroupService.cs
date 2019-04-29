@@ -158,6 +158,39 @@ namespace MShare_ASP.Services{
 				throw new Exceptions.DatabaseException("group_not_added");
 		}
 
+		public async Task DebtSettlement(long debtorId, long lenderId, long groupId)
+		{
+
+			var group = _context.Groups.SingleOrDefault(s => s.Id == groupId);
+
+			if (group == null)
+				throw new Exceptions.ResourceNotFoundException("group_not_found");
+
+			if (group.Members == null)
+				group.Members = new List<DaoUsersGroupsMap>();
+
+			var member = _context.UsersGroupsMap.FirstOrDefault(x => x.UserId == debtorId && x.GroupId == groupId);
+
+			if (member == null)
+				throw new Exceptions.ResourceForbiddenException("debter_not_group_member");
+
+			member = _context.UsersGroupsMap.FirstOrDefault(x => x.UserId == lenderId && x.GroupId == groupId);
+
+			if (member == null)
+				throw new Exceptions.ResourceForbiddenException("lender_not_group_member");
+
+			var debt = _context.Debts.SingleOrDefault(s => s.DebtorId == debtorId && s.LenderId == lenderId && s.GroupId == groupId);
+
+			if(debt != null)
+			{
+				debt.Amount = 0;
+			}
+
+			if (await _context.SaveChangesAsync() != 1)
+				throw new Exceptions.DatabaseException("debt_not_settled");
+
+		}
+
 	}
 
 }

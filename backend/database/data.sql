@@ -16,6 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `debts`
+--
+
+DROP TABLE IF EXISTS `debts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `debts` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `deptorid` int(20) NOT NULL,
+  `lenderid` int(20) NOT NULL,
+  `groupid` int(20) NOT NULL,
+  `amount` int(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`) /*!80000 INVISIBLE */
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `debts`
+--
+
+LOCK TABLES `debts` WRITE;
+/*!40000 ALTER TABLE `debts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `debts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `email_tokens`
 --
 
@@ -275,4 +302,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-27 18:58:42
+-- Dump completed on 2019-04-28 23:29:14

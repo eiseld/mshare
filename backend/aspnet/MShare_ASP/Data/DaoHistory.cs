@@ -7,33 +7,33 @@ using System.Threading.Tasks;
 
 namespace MShare_ASP.Data {
     /// <summary>
-    /// Data Access Object for User
+    /// Data Access Object for History
     /// </summary>
     [Table("history", Schema = "mshare")]
     public class DaoHistory {
         /// <summary>
-        /// Primary key of the user
+        /// Primary key of the history
         /// </summary>
         [Key]
         [Column("id")]
         public long Id { get; set; }
         /// <summary>
-        /// Email of the user
+        /// Group id of the history
         /// </summary>
         [Column("groupid")]
         public long GroupId { get; set; }
         /// <summary>
-        /// Hashed password of the user
+        /// User id of the history
         /// </summary>
         [Column("userid")]
         public long UserId { get; set; }
         /// <summary>
-        /// Displayname (not unique!)
+        /// Date of the history
         /// </summary>
         [Column("date")]
         public DateTime Date { get; set; }
         /// <summary>
-        /// Date and time when the user was registered
+        /// Balance of the history
         /// </summary>
         [Column("balance")]
         public int CreationDate { get; set; }

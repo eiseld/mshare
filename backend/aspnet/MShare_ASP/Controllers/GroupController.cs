@@ -131,5 +131,13 @@ namespace MShare_ASP.Controllers {
 			return Ok(await GroupService.GetGroupHistory(groupid));
 		}
 
+		[HttpGet("debtsettlement")]
+		[AllowAnonymous]
+		public async Task<ActionResult> DebtSettlement([FromQuery] long debtorid, [FromQuery] long lenderid, [FromQuery] long groupid)
+		{
+			await GroupService.DebtSettlement(debtorid, lenderid, groupid);
+			return Ok();
+		}
+		
 	}
 }
