@@ -26,6 +26,22 @@ namespace MShare_ASP.Services {
                 Text = message
             };
 
+            var filePath = "./Resources/MoneyShareLogo_128px.png";
+            var logo = new MimePart("image", "png")
+            {
+                Content = new MimeContent(System.IO.File.OpenRead(filePath), ContentEncoding.Default),
+                ContentDisposition = new ContentDisposition(ContentDisposition.FormData),
+                ContentTransferEncoding = ContentEncoding.Base64,
+                FileName = System.IO.Path.GetFileName(filePath)
+            };
+
+
+            var multipart = new Multipart("mixed");
+            multipart.Add(logo);
+            multipart.Add(msg.Body);
+
+            msg.Body = multipart;
+
             using (var client = new SmtpClient()) {
                 client.ServerCertificateValidationCallback = (s, c, ch, e) => true;
 
