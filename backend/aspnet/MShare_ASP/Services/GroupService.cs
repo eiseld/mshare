@@ -181,7 +181,10 @@ namespace MShare_ASP.Services{
 
 			var debt = _context.Debts.SingleOrDefault(s => s.DebtorId == debtorId && s.LenderId == lenderId && s.GroupId == groupId);
 
-			if(debt != null)
+			if(debt == null)
+			{
+				throw new Exceptions.ResourceNotFoundException("debt_not_found");
+			} else
 			{
 				debt.Amount = 0;
 			}
