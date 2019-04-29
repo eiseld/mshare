@@ -28,13 +28,23 @@ namespace MShare_ASP.Controllers {
         /// <summary>
         /// Gets all the spendings associated with a group
         /// </summary>
-        /// <param name="id">id of the group</param>
+        /// <param name="groupId">id of the group</param>
         /// <returns></returns>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<IList<API.Response.SpendingData>>> Get(long id) {
-            var spendings = await SpendingService.GetSpendingsForGroup(id);
-            var publicFacing = SpendingService.ToSpendingData(spendings);
-            return Ok(publicFacing);
+        [HttpGet]
+        [Route("{groupId}")]
+        public async Task<ActionResult<IList<API.Response.SpendingData>>> GetSpendingData(long groupId) {
+            return Ok(SpendingService.ToSpendingData(await SpendingService.GetSpendingsForGroup(groupId)));
+        }
+
+        /// <summary>
+        /// Gets the optimized debts for a group
+        /// </summary>
+        /// <param name="groupId">id of the group</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{groupId}/optimised")]
+        public async Task<ActionResult<IList<API.Response.OptimisedDebtData>>> GetOptimizedDebts(long groupId){
+            return Ok(SpendingService.ToOptimisedDebtData(await SpendingService.GetOptimizedDebtForGroup(GetCurrentUserID(),groupId)));
         }
 
         /// <summary>
@@ -62,7 +72,7 @@ namespace MShare_ASP.Controllers {
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<IList<DaoOptimizedDebt>>> Get() {
-            return Ok(await SpendingService.GetOptimizedDebtForGroup(1));
+            return Ok(await SpendingService.GetOptimizedDebtForGroup(1,1));
         }
 #endif
 
