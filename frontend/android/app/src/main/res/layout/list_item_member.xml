@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/memberRootLayout"
+        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/memberRootLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -30,6 +30,19 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="gone"/>
 
+    <ImageButton
+
+            android:id="@+id/removeMember"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_weight="1.00"
+            android:background="@drawable/minus"
+            app:layout_constraintStart_toEndOf="@id/memberOwnerTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
     <TextView
             android:id="@+id/memberBalanceTextView"
             android:layout_width="0dp"
@@ -37,7 +50,7 @@
             android:gravity="end"
             android:text="Balance"
             android:layout_margin="16dp"
-            app:layout_constraintStart_toEndOf="@id/memberOwnerTextView"
+            app:layout_constraintStart_toEndOf="@id/removeMember"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

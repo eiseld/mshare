@@ -48,4 +48,7 @@ interface APIDefinition {
     //test method
     @GET("/api/Auth")
     fun getUsers(): Call<ArrayList<User>>
+
+    @DELETE ("api/Group/{groupId}/members/remove/{memberId}")
+    fun deleteMember(@Path("groupId") groupId: Int, @Path("memberId") memberId: Int): Call<ResponseBody>
 }

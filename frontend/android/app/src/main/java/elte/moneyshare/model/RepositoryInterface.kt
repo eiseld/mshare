@@ -25,4 +25,6 @@ interface RepositoryInterface {
     fun getGroupData(groupId: Int, completion: (response: GroupData?, error: String?) -> Unit)
 
     fun postUpdateGroups(completion: (response: Any?, error: String?) -> Unit)
+
+    fun deleteMember(groupId: Int,memberId : Int, completion: (response: String?, error: String?) -> Unit)
 }

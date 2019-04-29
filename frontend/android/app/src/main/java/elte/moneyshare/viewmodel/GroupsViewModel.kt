@@ -58,4 +58,15 @@ class GroupsViewModel :ViewModel(){
             }
         }
     }
+    fun deleteMember(groupId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit)
+    {
+        APIClient.getRepository().deleteMember(groupId,memberId) { groupData, error ->
+            if (groupData != null) {
+                completion(groupData, null)
+            } else {
+                completion(null , error)
+            }
+        }
+    }
+
 }
