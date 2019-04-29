@@ -202,19 +202,16 @@ namespace MShare_ASP.Services {
 			if (member == null)
 				throw new Exceptions.ResourceForbiddenException("lender_not_group_member");
 
-			var debt = _context.Debts.SingleOrDefault(s => s.DebtorId == debtorId && s.LenderId == lenderId && s.GroupId == groupId);
-
-			if(debt == null)
-			{
-				throw new Exceptions.ResourceNotFoundException("debt_not_found");
-			} else
-			{
-				debt.Amount = 0;
-			}
-
-			if (await _context.SaveChangesAsync() != 1)
-				throw new Exceptions.DatabaseException("debt_not_settled");
-
+            // TODO:
+            // 1) Make a weighted directional graph of debts,
+            //    (i,j) edge with weight 'w' : 'i' is in debt to 'j' with 'w' amount
+            // 2) Get the longest path in that graph from debtor (i) -> to lender (j)
+            // 3) Find the smallest value in that path
+            // 4) Remove that value from all edges on the path
+            // 5) If the updated 'w' is == 0 destroy that connection and make a note of it
+            // 6) goto 2) until there is a path between debtor (i) -> lender (j)
+            // 7) update database with deleted and updated connections
+            // 8) enjoy
 		}
 
 	}
