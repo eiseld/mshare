@@ -248,4 +248,24 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
         })
     }
+
+    override fun getUserId(completion: (response: UserData?, error: String?) -> Unit) {
+        apiDefinition.getUserId().enqueue(object : Callback<UserData> {
+            override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val users = response.body()
+                        completion(users, null)
+                    }
+                    else -> {
+                        completion(null, "get users error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<UserData>, t: Throwable) {
+                completion(null, "get users error")
+            }
+        })
+    }
 }

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import elte.moneyshare.SharedPreferences
 
 import elte.moneyshare.R
 import elte.moneyshare.viewmodel.LoginViewModel
@@ -31,10 +32,18 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         loginButton.setOnClickListener {
-            viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
-            //viewModel.putLoginUser(emailEditText.text.toString(), passwordEditText.text.toString()) { response, error ->
+            //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
+            viewModel.putLoginUser(emailEditText.text.toString(), passwordEditText.text.toString()) { response, error ->
                 if(error == null) {
                     Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
+                    viewModel.getUserId{ user, error ->
+                        if(user!=null)
+                        {
+                            SharedPreferences.userId = user._id
+                        }
+                    }
+
+
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()

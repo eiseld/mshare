@@ -51,4 +51,7 @@ interface APIDefinition {
 
     @DELETE ("api/Group/{groupId}/members/remove/{memberId}")
     fun deleteMember(@Path("groupId") groupId: Int, @Path("memberId") memberId: Int): Call<ResponseBody>
+
+    @GET("api/Profile")
+    fun getUserId(): Call<UserData>
 }

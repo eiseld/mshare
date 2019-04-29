@@ -12,6 +12,7 @@ import elte.moneyshare.R
 import elte.moneyshare.entity.Group
 import elte.moneyshare.entity.GroupData
 import elte.moneyshare.view.GroupsFragment
+import elte.moneyshare.SharedPreferences
 import elte.moneyshare.view.viewholder.MemberViewHolder
 import elte.moneyshare.viewmodel.GroupsViewModel
 
@@ -41,7 +42,9 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
         } else {
             holder.memberBalanceTextView.text = context.getString(R.string.group_settled_up)
         }
-        holder.removeButton.visibility = View.VISIBLE
+        if(groupData.creator.id == SharedPreferences.userId) {
+            holder.removeButton.visibility = View.VISIBLE
+        }
         holder.removeButton.setOnClickListener()
         {
             Model.deleteMember(groupData.id ,member.id) { response, error ->
@@ -52,7 +55,7 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
                 }
             }
         }
-        if(position == 1)
+        if(member.id == SharedPreferences.userId)
             holder.memberRootLayout.visibility = View.GONE
     }
 }

@@ -10,6 +10,8 @@ import android.widget.Toast
 import elte.moneyshare.FragmentDataKeys
 
 import elte.moneyshare.R
+import elte.moneyshare.SharedPreferences
+import elte.moneyshare.entity.Member
 import elte.moneyshare.view.Adapter.GroupsRecyclerViewAdapter
 import elte.moneyshare.view.Adapter.MembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupsViewModel
@@ -52,6 +54,14 @@ class MembersFragment : Fragment() {
                 viewModel.getGroupData(groupId) { groupData, error ->
                     if (groupData != null) {
                         val adapter = MembersRecyclerViewAdapter(it, groupData, viewModel)
+                        val user: Member? = groupData.members.find { it.id == SharedPreferences.userId }
+                        if(user == null)
+                        {
+                            my_balanceTextView2.text = "##"
+                        }
+                        else {
+                            my_balanceTextView2.text = user.balance.toString()
+                        }
                         membersRecyclerView.layoutManager =
                             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         membersRecyclerView.adapter = adapter
