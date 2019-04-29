@@ -15,10 +15,6 @@ namespace MShare_ASP.Data {
 		/// </summary>
 		public DbSet<DaoGroup> Groups { get; set; }
 		/// <summary>
-		/// Debt informations inside group
-		/// </summary>
-		public DbSet<DaoDebt> Debts { get; set; }
-		/// <summary>
 		/// History informations
 		/// </summary>
 		public DbSet<DaoHistory> History { get; set; }
