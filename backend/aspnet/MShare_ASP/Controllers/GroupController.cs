@@ -75,15 +75,15 @@ namespace MShare_ASP.Controllers {
         /// Removes a member from a group
         /// </summary>
         /// <param name="groupId">Id of the group</param>
-        /// <param name="member">Id of the member to be removed</param>
+        /// <param name="memberId">Id of the member to be removed</param>
         /// <response code="404">Resource not found: 'group_not_found'</response>
         /// <response code="403">Resource forbidden: 'not_group_creator'</response>
         /// <response code="410">Resource gone: 'member_not_found'</response>
         /// <response code="500">Internal error: 'group_not_removed'</response>
         [HttpDelete]
-        [Route("{groupId}/remove")]
-        public async Task<ActionResult> RemoveMember(long groupId, [FromBody] API.Request.RemoveMember member){
-            await GroupService.RemoveMember(GetCurrentUserID(), groupId, member);
+        [Route("{groupId}/members/remove/{memberId}")]
+        public async Task<ActionResult> RemoveMember(long groupId, long memberId){
+            await GroupService.RemoveMember(GetCurrentUserID(), groupId, memberId);
             return Ok();
         }
 
