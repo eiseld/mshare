@@ -152,8 +152,8 @@ DROP TABLE IF EXISTS `optimized_debt`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `optimized_debt` (
   `group_id` bigint(20) unsigned NOT NULL,
-  `user_owes_id` char(40) unsigned NOT NULL,
-  `user_owed_id` char(40) unsigned NOT NULL,
+  `user_owes_id` bigint(20) unsigned NOT NULL,
+  `user_owed_id` bigint(20) unsigned NOT NULL,
   `owe_amount` bigint(20) unsigned NOT NULL,
   PRIMARY KEY (`group_id`,`user_owes_id`,`user_owed_id`),
   KEY `fk_group_id` (`group_id`),
