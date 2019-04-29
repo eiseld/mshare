@@ -28,5 +28,7 @@ namespace MShare_ASP.Services {
         /// <param name="userId">creator of the spending</param>
         /// <returns></returns>
         Task CreateNewSpending(NewSpending newSpending, long userId);
+
+        Task<IList<DaoOptimizedDebt>> GetOptimizedDebtForGroup(long groupid);
     }
 }

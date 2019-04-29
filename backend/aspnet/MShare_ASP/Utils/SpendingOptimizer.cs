@@ -1,55 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.List
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using MShare_ASP.API.Request;
-using MShare_ASP.Data;
-using MShare_ASP.Utils;
 
-namespace MShare_ASP.Services {
-    internal class AlgoService : IAlgoService {
-
-        private Configurations.IJWTConfiguration _jwtConf;
-        private Configurations.IURIConfiguration _uriConf;
-        private IEmailService _emailService;
-        private ITimeService _timeService;
-        private MshareDbContext _context;
-        private Random _random;
-        private int[,] _owes;
-        private int _groupcount;
-
-        public AlgoService(MshareDbContext context, IEmailService emailService, ITimeService timeService, Configurations.IJWTConfiguration jwtConf, Configurations.IURIConfiguration uriConf) {
-            _emailService = emailService;
-            _timeService = timeService;
-            _context = context;
-            _jwtConf = jwtConf;
-            _uriConf = uriConf;
-            _random = new Random();
-        }
-
-        public bool Optimize()
+namespace MShare_ASP.Utils {
+    internal class SpendingOptimizer{
+        private long[,] _owes;
+        private int _usercount;
+        public SpendingOptimizer(long[,] owes, int usercount)
         {
-            ReadFromDB();
+            _owes = owes;
+            _usercount = usercount;
+        }
+        public void Optimize()
+        {
             RemoveCycle();
             ReduceTransfers();
-            SaveResults();
-            return true;
         }
 
-        public bool ReadFromDB()
+        public long[,] GetResult()
         {
-            return true;
+            return _owes;
         }
 
-        public bool RemoveCycle()
+        private void RemoveCycle()
         {
-            int n = _groupcount;
+            int n = _usercount;
             bool[] visited = new bool[n];
             bool[] stack = new bool[n];
             int[] parent = new int[n];
@@ -63,49 +39,48 @@ namespace MShare_ASP.Services {
                     stack[i] = false;
                     parent[i] = -1;
                 }
-                Stack<int> Path;
+                Stack<int> Path = new Stack<int>();
                 for(int i = 0; i < n && !foundcycle; i++)
                 {
                     Path.Clear();
                     Path.Push(i);
-                    int cu = CycleUtil(i,visited,stack);
+                    long cu = CycleUtil(i,visited,stack, Path);
                     if(cu > 0)
                     {
                         int[] cyclepath = Path.ToArray();
                         for(int j = 0; j < Path.Count - 1; j++)
                         {
-                            _owes(cyclepath[j],cyclepath[j+1]) -= cu;
+                            _owes[cyclepath[j],cyclepath[j+1]] -= cu;
                         }
-                        _owes(cyclepath[Path.Count-1],cyclepath[0]) -= cu;
+                        _owes[cyclepath[Path.Count-1],cyclepath[0]] -= cu;
                         foundcycle = true;
                     }
                 }
             }
-            return true;
         }
 
-        private int CycleUtil(int v, bool[] visited, bool[] stack)
+        private long CycleUtil(int v, bool[] visited, bool[] stack, Stack<int> Path)
         {
             visited[v] = true;
             stack[v] = true;
-            for(int i = 0; i < _groupcount; i++)
+            for(int i = 0; i < _usercount; i++)
             {
                 Path.Push(i);
-                if(_owes(i,j)>0)
+                if(_owes[v,i]>0)
                 {
-                    int cu = 0;
+                    long cu = 0;
                     if(visited[i] == false)
                     {
-                         cu = CycleUtil(i,visited,stack);
+                         cu = CycleUtil(i,visited,stack,Path);
                     }
                     if(visited[i] == false && cu > 0)
                     {
-                        return Math.Min(cu,_owes(i,j));
+                        return Math.Min(cu,_owes[v,i]);
                     }
                     else if (stack[i])
                     {
                         Path.Pop();
-                        return _owes(i,j);
+                        return _owes[v,i];
                     }
                 }
                 Path.Pop();
@@ -114,13 +89,13 @@ namespace MShare_ASP.Services {
             return 0;
         }
 
-        public bool ReduceTransfers()
+        private void ReduceTransfers()
         {
             bool done = false;
-            int n = _groupcount;
+            int n = _usercount;
             while(!done)
             {
-                Stack<int> Topological;
+                Stack<int> Topological = new Stack<int>();
                 int[] neighbors = new int[n];
                 for(int i = 0; i < n; i++)
                 {
@@ -151,7 +126,7 @@ namespace MShare_ASP.Services {
                     }
                 }
                 int[] TopologicalArray = Topological.ToArray();
-                int[] cost = new int[n];
+                long[] cost = new long[n];
                 int[] len = new int[n];
                 int[] parent = new int[n];
                 for(int i = 0; i < n; i++)
@@ -161,7 +136,7 @@ namespace MShare_ASP.Services {
                     len[i] = 0;
                 }
                 cost[TopologicalArray[0]] = 0;
-                for(int i = 0; i < TopologicalArray.Count; i++)
+                for(int i = 0; i < TopologicalArray.Length; i++)
                 {
                     for(int j = 0; j < n; j++)
                     {
@@ -176,8 +151,8 @@ namespace MShare_ASP.Services {
                         }
                     }
                 }
-                int max_save = 0;
-                int max_save_per = 0;
+                long max_save = 0;
+                long max_save_per = 0;
                 int max_ind = -1;
                 for(int i = 0; i < n; i++)
                 {
@@ -188,7 +163,7 @@ namespace MShare_ASP.Services {
                         max_ind = i;
                     }
                 }
-                if(max_ind = -1)
+                if(max_ind == -1)
                 {
                     done = true;
                 }
@@ -203,13 +178,6 @@ namespace MShare_ASP.Services {
                     _owes[curr,max_ind] += max_save_per;
                 }
             }
-            return true;
         }
-
-        public bool SaveResults()
-        {
-            return true;
-        }
-
     }
 }

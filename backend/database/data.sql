@@ -62,6 +62,7 @@ CREATE TABLE `email_tokens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
 --
 -- Dumping data for table `email_tokens`
 --
@@ -70,6 +71,8 @@ LOCK TABLES `email_tokens` WRITE;
 /*!40000 ALTER TABLE `email_tokens` DISABLE KEYS */;
 /*!40000 ALTER TABLE `email_tokens` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
 
 --
 -- Table structure for table `email_types`
@@ -139,9 +142,43 @@ DELIMITER ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
+
+--
+-- Table structure for table `optimized_debt`
+--
+
+DROP TABLE IF EXISTS `optimized_debt`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `optimized_debt` (
+  `group_id` bigint(20) unsigned NOT NULL,
+  `user_owes_id` char(40) unsigned NOT NULL,
+  `user_owed_id` char(40) unsigned NOT NULL,
+  `owe_amount` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`group_id`,`user_owes_id`,`user_owed_id`),
+  KEY `fk_group_id` (`group_id`),
+  KEY `fk_user_owes_id` (`user_owes_id`),
+  KEY `fk_user_owed_id` (`user_owed_id`),
+  CONSTRAINT `fk_group_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_owes_id` FOREIGN KEY (`user_owes_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_owed_id` FOREIGN KEY (`user_owed_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+--
+-- Dumping data for table `optimized_debt`
+--
+
+LOCK TABLES `optimized_debt` WRITE;
+/*!40000 ALTER TABLE `optimized_debt` DISABLE KEYS */;
+/*!40000 ALTER TABLE `optimized_debt` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 --
 -- Table structure for table `spendings`
 --
+
 
 DROP TABLE IF EXISTS `spendings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

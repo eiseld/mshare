@@ -56,5 +56,15 @@ namespace MShare_ASP.Controllers {
             await SpendingService.CreateNewSpending(newSpending, GetCurrentUserID());
             return Ok();
         }
+
+#if DEBUG
+        [Route("test1")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult<IList<DaoOptimizedDebt>>> Get() {
+            return Ok(await SpendingService.GetOptimizedDebtForGroup(1));
+        }
+#endif
+
     }
 }
