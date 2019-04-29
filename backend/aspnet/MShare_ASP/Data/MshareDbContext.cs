@@ -31,6 +31,8 @@ namespace MShare_ASP.Data {
         /// </summary>
         public DbSet<DaoDebtor> Depters { get; set; }
 
+        public DbSet<DaoOptimizedDebt> OptimizedDebt { get; set;}
+
         /// <summary>
         /// Initializes a new DbContext
         /// </summary>
@@ -57,6 +59,9 @@ namespace MShare_ASP.Data {
 
             modelBuilder.Entity<DaoDebtor>()
                 .HasKey(o => new { o.DebtorUserId, o.SpendingId });
+
+            modelBuilder.Entity<DaoOptimizedDebt>()
+                .HasKey(o => new {o.GroupId, o.UserOwesId, o.UserOwedId });
         }
     }
 }
