@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace MShare_ASP.API.Response {
+    /// <summary>
+    /// Facing Data for a specific debtor
+    /// </summary>
     public class DebtorData {
         /// <summary>
         /// Id of the debtor

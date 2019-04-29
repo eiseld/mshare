@@ -6,7 +6,13 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace MShare_ASP.API.Request {
+    /// <summary>
+    /// Describes the structure of the request for creating a new spending
+    /// </summary>
     public class NewSpending {
+        /// <summary>
+        /// Debtor structure that should be added for this Spending
+        /// </summary>
         public class Debtor {
             /// <summary>
             /// Id of the debtor
@@ -15,6 +21,7 @@ namespace MShare_ASP.API.Request {
             /// <summary>
             /// Debt owed by this debtor
             /// Be aware: the sum of all of the debts, must be equal to MoneySpent!
+            /// Note: calculate it client side
             /// </summary>
             public long? Debt { get; set; }
         }
@@ -31,7 +38,7 @@ namespace MShare_ASP.API.Request {
         /// </summary>
         public long MoneySpent { get; set; }
         /// <summary>
-        /// List of debtors, pass an empty array if you want it calculated automatically
+        /// List of debtors, always specify this
         /// </summary>
         public Debtor[] Debtors { get; set; }
     }
