@@ -139,7 +139,7 @@ namespace MShare_ASP.Services{
 				.ToListAsync();
 		}
 
-		public async Task AddMember(long userId, long groupId, AddMember member)
+		public async Task AddMember(long userId, long groupId, long memberId)
 		{
 			var group = _context.Groups.SingleOrDefault(s => s.Id == groupId);
 
@@ -149,13 +149,18 @@ namespace MShare_ASP.Services{
 			if (group.CreatorUserId != userId)
 				throw new Exceptions.ResourceForbiddenException("not_group_creator");
 
-			var daoMember = group.Members.FirstOrDefault(x => x.UserId == member.Id);
+			var daoMember = group.Members.FirstOrDefault(x => x.UserId == memberId);
 
-			if (daoMember == null)
+			if (daoMember != null)
+			{
+				throw new Exceptions.BusinessException("user_already_in_group");
+			} else
+			{
 				_context.UsersGroupsMap.Add(daoMember);
+			}
 
 			if (await _context.SaveChangesAsync() != 1)
-				throw new Exceptions.DatabaseException("group_not_added");
+				throw new Exceptions.DatabaseException("group_member_not_added");
 		}
 
 		public async Task DebtSettlement(long debtorId, long lenderId, long groupId)

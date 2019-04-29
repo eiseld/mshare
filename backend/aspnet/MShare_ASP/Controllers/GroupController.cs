@@ -80,11 +80,11 @@ namespace MShare_ASP.Controllers {
 		/// <response code="403">Resource forbidden: 'not_group_creator'</response>
 		/// <response code="410">Resource gone: 'member_not_found'</response>
 		/// <response code="500">Internal error: 'group_not_added'</response>
-		[HttpPost]
-		[Route("{groupId}/add")]
-		public async Task<ActionResult> AddMember(long groupId, [FromBody] API.Request.AddMember member)
+		[HttpGet]
+		[Route("{groupId}/members/add/{memberId}")]
+		public async Task<ActionResult> AddMember([FromQuery] long groupId, [FromQuery] long memberId)
 		{
-			await GroupService.AddMember(GetCurrentUserID(), groupId, member);
+			await GroupService.AddMember(GetCurrentUserID(), groupId, memberId);
 			return Ok();
 		}
 
@@ -132,7 +132,6 @@ namespace MShare_ASP.Controllers {
 		}
 
 		[HttpGet("debtsettlement")]
-		[AllowAnonymous]
 		public async Task<ActionResult> DebtSettlement([FromQuery] long debtorid, [FromQuery] long lenderid, [FromQuery] long groupid)
 		{
 			await GroupService.DebtSettlement(debtorid, lenderid, groupid);
