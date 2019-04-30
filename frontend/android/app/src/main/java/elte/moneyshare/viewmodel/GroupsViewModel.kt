@@ -1,10 +1,7 @@
 package elte.moneyshare.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import elte.moneyshare.entity.Group
-import elte.moneyshare.entity.GroupData
-import elte.moneyshare.entity.GroupInfo
-import elte.moneyshare.entity.NewGroup
+import elte.moneyshare.entity.*
 import elte.moneyshare.model.APIClient
 
 class GroupsViewModel :ViewModel(){
@@ -58,4 +55,26 @@ class GroupsViewModel :ViewModel(){
             }
         }
     }
+    fun deleteMember(groupId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit)
+    {
+        APIClient.getRepository().deleteMember(groupId,memberId) { groupData, error ->
+            if (groupData != null) {
+                completion(groupData, null)
+            } else {
+                completion(null , error)
+            }
+        }
+    }
+
+    fun getOptimizedDebtData(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit)
+    {
+        APIClient.getRepository().getOptimizedDebt(groupId) { debtData, error ->
+            if (debtData != null) {
+                completion(debtData, null)
+            } else {
+                completion(null , error)
+            }
+        }
+    }
+
 }
