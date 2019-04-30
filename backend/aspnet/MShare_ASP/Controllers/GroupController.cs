@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using MShare_ASP.Services;
 
 namespace MShare_ASP.Controllers {
@@ -80,9 +81,9 @@ namespace MShare_ASP.Controllers {
 		/// <response code="403">Resource forbidden: 'not_group_creator'</response>
 		/// <response code="410">Resource gone: 'member_not_found'</response>
 		/// <response code="500">Internal error: 'group_not_added'</response>
-		[HttpGet]
+		[HttpPost]
 		[Route("{groupId}/members/add/{memberId}")]
-		public async Task<ActionResult> AddMember([FromQuery] long groupId, [FromQuery] long memberId)
+		public async Task<ActionResult> AddMember(long groupId, long memberId)
 		{
 			await GroupService.AddMember(GetCurrentUserID(), groupId, memberId);
 			return Ok();
@@ -119,20 +120,22 @@ namespace MShare_ASP.Controllers {
             return Ok();
         }
 
-		[HttpGet("filteredusers")]
-		public async Task<ActionResult<IList<Data.DaoUser>>> GetFilteredUsers([FromQuery] string filter)
+		[HttpGet()]
+        [Route("searchinallusers/{filter}")]
+		public async Task<ActionResult<IList<Data.DaoUser>>> GetFilteredUsers(string filter)
 		{
 			return Ok(await GroupService.InviteUserFilter(filter));
 		}
 
-		[HttpGet("grouphistory")]
-		public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory([FromQuery] long groupid)
+		[HttpGet()]
+        [Route("{groupid}/history")]
+		public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory(long groupid)
 		{
 			return Ok(await GroupService.GetGroupHistory(groupid));
 		}
 
-		[HttpGet("debtsettlement")]
-		public async Task<ActionResult> DebtSettlement([FromQuery] long debtorid, [FromQuery] long lenderid, [FromQuery] long groupid)
+		[HttpPost("{groupid}/settledebt/{debtorid}/{lenderid}")]
+		public async Task<ActionResult> DebtSettlement(long debtorid, long lenderid, long groupid)
 		{
 			await GroupService.DebtSettlement(debtorid, lenderid, groupid);
 			return Ok();
