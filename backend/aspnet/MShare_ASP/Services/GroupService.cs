@@ -159,7 +159,7 @@ namespace MShare_ASP.Services {
 
 		public async Task AddMember(long userId, long groupId, long memberId)
 		{
-			var group = _context.Groups.SingleOrDefault(s => s.Id == groupId);
+			var group = _context.Groups.Include(x => x.Members).SingleOrDefault(s => s.Id == groupId);
 
 			if (group == null)
 				throw new Exceptions.ResourceNotFoundException("group_not_found");
@@ -174,7 +174,10 @@ namespace MShare_ASP.Services {
 				throw new Exceptions.BusinessException("user_already_in_group");
 			} else
 			{
-				_context.UsersGroupsMap.Add(daoMember);
+				_context.UsersGroupsMap.Add(new DaoUsersGroupsMap() {
+                    UserId = memberId,
+                    GroupId = groupId
+                });
 			}
 
 			if (await _context.SaveChangesAsync() != 1)
