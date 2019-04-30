@@ -1,36 +1,16 @@
 package elte.moneyshare.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import elte.moneyshare.entity.Group
-import elte.moneyshare.entity.GroupData
-import elte.moneyshare.entity.GroupInfo
-import elte.moneyshare.entity.NewGroup
+import elte.moneyshare.entity.*
 import elte.moneyshare.model.APIClient
 
-class GroupsViewModel :ViewModel(){
+class GroupsViewModel : ViewModel() {
 
     var currentGroup: Group? = null
     //var currentBills: Bills? = null
 
     fun postNewGroup(name: String, completion: (response: String?, error: String?) -> Unit) {
         APIClient.getRepository().postNewGroup(NewGroup(name)) { response, error ->
-            if (error == null) {
-                //have to update groups after new added
-                postUpdateGroups { _, error ->
-                    if (error == null)
-                        completion(response, null)
-                    else {
-                        completion(null, error)
-                    }
-                }
-            } else {
-                completion(null, error)
-            }
-        }
-    }
-
-    private fun postUpdateGroups(completion: (response: Any?, error: String?) -> Unit) {
-        APIClient.getRepository().postUpdateGroups { response, error ->
             if (error == null) {
                 completion(response, null)
             } else {
@@ -54,7 +34,27 @@ class GroupsViewModel :ViewModel(){
             if (groupData != null) {
                 completion(groupData, null)
             } else {
-                completion(null , error)
+                completion(null, error)
+            }
+        }
+    }
+
+    fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit) {
+        APIClient.getRepository().getSpendings(groupId) { spendings, error ->
+            if (spendings != null) {
+                completion(spendings, null)
+            } else {
+                completion(null, error)
+            }
+        }
+    }
+
+    fun postSpending(newSpending: NewSpending, completion: (response: String?, error: String?) -> Unit) {
+        APIClient.getRepository().postSpending(newSpending) { response, error ->
+            if (error == null) {
+                completion(response, null)
+            } else {
+                completion(null, error)
             }
         }
     }
