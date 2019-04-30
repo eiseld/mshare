@@ -179,7 +179,7 @@ export class SpendingCreatorComponent implements OnChanges {
     if(this.spending.name==undefined||this.spending.name.length==0||this.spending.name.length>32){
       this.error="Adjon egy legfeljebb 32 karakter hosszú nevet a költésnek!";
     }
-    else if(this.spending.debtors.map((debtor) => debtor.balance).filter((balance)=>balance==undefined).length==0
+    else if(this.spending.debtors.length!=0&&this.spending.debtors.map((debtor) => debtor.balance).filter((balance)=>balance==undefined).length==0
       &&this.spending.debtors.map((debtor)=>{return debtor.balance}).reduce(
         (partial_sum, a) => Number(partial_sum) + Number(a)) != this.spending.moneyOwed)
     {
