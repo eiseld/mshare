@@ -13,12 +13,12 @@ namespace MShare_ASP.API.Response{
         /// <summary>
         /// Id of the Debtor
         /// </summary>
-        public long DebtorId { get; set; }
+        public UserData Debtor { get; set; }
 
         /// <summary>
         /// Id of the Creditor
         /// </summary>
-        public long CreditorId { get; set; }
+        public UserData Creditor { get; set; }
 
         /// <summary>
         /// The amount of the optimised debt 

@@ -36,8 +36,14 @@ namespace MShare_ASP.Services {
 
         public IList<OptimisedDebtData> ToOptimisedDebtData(IList<DaoOptimizedDebt> optimizedDebts){
             return optimizedDebts.Select(x => new OptimisedDebtData(){
-                DebtorId = x.UserOwesId,
-                CreditorId = x.UserOwedId,
+                Debtor = new UserData() {
+                    Id = x.UserOwes.Id,
+                    Name = x.UserOwes.DisplayName
+                },
+                Creditor = new UserData(){
+                    Id = x.UserOwed.Id,
+                    Name = x.UserOwed.DisplayName
+                },
                 OptimisedDebtAmount = x.OweAmount
             }).ToList();
         }
@@ -53,7 +59,10 @@ namespace MShare_ASP.Services {
         public async Task<IList<DaoOptimizedDebt>> GetOptimizedDebtForGroup(long userId, long groupId){
             //TODO: Missing security checks 
             await OptimizeSpendingForGroup(groupId);
-            return await DbContext.OptimizedDebt.Where(x => x.GroupId == groupId).ToListAsync();
+            return await DbContext.OptimizedDebt.Where(x => x.GroupId == groupId)
+                .Include(x => x.UserOwed)
+                .Include(x => x.UserOwes)
+                .ToListAsync();
         }
 
         public async Task OptimizeSpendingForGroup(long groupId){
