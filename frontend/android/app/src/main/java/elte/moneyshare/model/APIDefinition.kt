@@ -34,10 +34,12 @@ interface APIDefinition {
     @GET("/api/Profile/groups")
     fun getProfileGroups(): Call<ArrayList<GroupInfo>>
 
-
     //SPENDING
     @GET("api/Spending/{id}")
     fun getSpendings(@Path("id") groupId: Int): Call<ArrayList<SpendingData>>
+
+    @POST("api/Spending/create")
+    fun postSpending(@Body newSpending: NewSpending): Call<Any>
 
     //TEST METHOD
     @GET("/api/Group/")

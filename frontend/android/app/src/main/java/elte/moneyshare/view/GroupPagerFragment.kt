@@ -30,11 +30,21 @@ class GroupPagerFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.addMember -> {
+            R.id.addSpending -> {
+                val fragment = AddSpendingFragment()
+                val args = Bundle()
+                groupId?.let {
+                    args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
+                }
+                fragment.arguments = args
+                (context as MainActivity).supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
 
+                return true
+            }
+            R.id.addMember -> {
                 return true
             }
             R.id.removeMember -> {
@@ -47,14 +57,16 @@ class GroupPagerFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        tabs.add("Members")
-        tabs.add("Bills")
+        if (tabs.isEmpty()) {
+            tabs.add("Members")
+            tabs.add("Bills")
+        }
         initViewPager()
     }
 
     private fun initViewPager() {
         groupId?.let {
-            pagerAdapter = GroupPagerAdapter(it, tabs, fragmentManager)
+            pagerAdapter = GroupPagerAdapter(it, tabs, childFragmentManager)
             viewPager.adapter = pagerAdapter
             viewPager.offscreenPageLimit = 1
             tabLayout.setupWithViewPager(viewPager)

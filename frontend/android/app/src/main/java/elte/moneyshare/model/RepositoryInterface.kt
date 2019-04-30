@@ -27,10 +27,10 @@ interface RepositoryInterface {
     //SPENDING
     fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit)
 
+    fun postSpending(newSpending: NewSpending, completion: (response: String?, error: String?) -> Unit)
 
     //TEST METHOD
     fun getUsers(completion: (response: ArrayList<User>?, error: String?) -> Unit)
 
     fun getGroups(completion: (response: ArrayList<Group>?, error: String?) -> Unit)
-
 }

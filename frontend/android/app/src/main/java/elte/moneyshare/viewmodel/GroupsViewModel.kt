@@ -48,4 +48,14 @@ class GroupsViewModel : ViewModel() {
             }
         }
     }
+
+    fun postSpending(newSpending: NewSpending, completion: (response: String?, error: String?) -> Unit) {
+        APIClient.getRepository().postSpending(newSpending) { response, error ->
+            if (error == null) {
+                completion(response, null)
+            } else {
+                completion(null, error)
+            }
+        }
+    }
 }

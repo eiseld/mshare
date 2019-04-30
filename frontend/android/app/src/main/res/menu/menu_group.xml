@@ -1,6 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/addSpending"
+          android:title="@string/add_spending"
+          app:showAsAction="never"/>
+
     <item android:id="@+id/addMember"
           android:title="@string/add_member"
           app:showAsAction="never"/>
