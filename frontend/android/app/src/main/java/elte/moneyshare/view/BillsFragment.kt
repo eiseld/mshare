@@ -10,15 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import elte.moneyshare.FragmentDataKeys
-
 import elte.moneyshare.R
 import elte.moneyshare.view.Adapter.BillsRecyclerViewAdapter
-import elte.moneyshare.viewmodel.GroupsViewModel
+import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_bills.*
 
 class BillsFragment : Fragment() {
 
-    private lateinit var viewModel: GroupsViewModel
+    private lateinit var viewModel: GroupViewModel
     private var groupId: Int? = null
 
     override fun onCreateView(
@@ -33,7 +32,7 @@ class BillsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         activity?.let {
-            viewModel = ViewModelProviders.of(it).get(GroupsViewModel::class.java)
+            viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
 
             groupId?.let { groupId ->
                 viewModel.getSpendings(groupId) { bills, error ->

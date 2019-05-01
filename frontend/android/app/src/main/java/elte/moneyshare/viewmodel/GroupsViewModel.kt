@@ -6,9 +6,6 @@ import elte.moneyshare.model.APIClient
 
 class GroupsViewModel : ViewModel() {
 
-    var currentGroup: Group? = null
-    //var currentBills: Bills? = null
-
     fun postNewGroup(name: String, completion: (response: String?, error: String?) -> Unit) {
         APIClient.getRepository().postNewGroup(NewGroup(name)) { response, error ->
             if (error == null) {
@@ -29,16 +26,6 @@ class GroupsViewModel : ViewModel() {
         }
     }
 
-    fun getGroupData(id: Int, completion: (group: GroupData?, error: String?) -> Unit) {
-        APIClient.getRepository().getGroupData(id) { groupData, error ->
-            if (groupData != null) {
-                completion(groupData, null)
-            } else {
-                completion(null, error)
-            }
-        }
-    }
-
     fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit) {
         APIClient.getRepository().getSpendings(groupId) { spendings, error ->
             if (spendings != null) {
@@ -48,25 +35,4 @@ class GroupsViewModel : ViewModel() {
             }
         }
     }
-
-    fun postSpending(newSpending: NewSpending, completion: (response: String?, error: String?) -> Unit) {
-        APIClient.getRepository().postSpending(newSpending) { response, error ->
-            if (error == null) {
-                completion(response, null)
-            } else {
-                completion(null, error)
-            }
-        }
-    }
-    fun deleteMember(groupId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit)
-    {
-        APIClient.getRepository().deleteMember(groupId,memberId) { groupData, error ->
-            if (groupData != null) {
-                completion(groupData, null)
-            } else {
-                completion(null , error)
-            }
-        }
-    }
-
 }

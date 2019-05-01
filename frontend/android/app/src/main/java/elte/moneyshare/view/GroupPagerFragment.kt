@@ -1,17 +1,20 @@
 package elte.moneyshare.view
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
 import elte.moneyshare.view.Adapter.GroupPagerAdapter
+import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_group.*
 
 class GroupPagerFragment : Fragment() {
 
     private var groupId: Int? = null
     private lateinit var pagerAdapter: GroupPagerAdapter
+    private lateinit var viewModel: GroupViewModel
 
     private var tabs: ArrayList<String> = ArrayList()
 
@@ -47,7 +50,9 @@ class GroupPagerFragment : Fragment() {
             R.id.addMember -> {
                 return true
             }
-            R.id.removeMemberImageButton -> {
+
+            R.id.removeMember -> {
+                viewModel.isDeleteMemberEnabled = !viewModel.isDeleteMemberEnabled
                 return true
             }
             else ->
@@ -57,6 +62,11 @@ class GroupPagerFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        activity?.let {
+            viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
+        }
+
         if (tabs.isEmpty()) {
             tabs.add("Members")
             tabs.add("Bills")

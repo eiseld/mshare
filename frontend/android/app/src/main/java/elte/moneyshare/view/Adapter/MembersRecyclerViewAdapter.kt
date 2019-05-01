@@ -3,7 +3,6 @@ package elte.moneyshare.view.Adapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import elte.moneyshare.R
@@ -11,9 +10,10 @@ import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.GroupData
 import elte.moneyshare.gone
 import elte.moneyshare.view.viewholder.MemberViewHolder
-import elte.moneyshare.viewmodel.GroupsViewModel
+import elte.moneyshare.viewmodel.GroupViewModel
+import elte.moneyshare.visible
 
-class MembersRecyclerViewAdapter(private val context: Context, private val groupData: GroupData, private val Model : GroupsViewModel): RecyclerView.Adapter<MemberViewHolder>()  {
+class MembersRecyclerViewAdapter(private val context: Context, private val groupData: GroupData, private val Model : GroupViewModel): RecyclerView.Adapter<MemberViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemberViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_member, parent, false)
@@ -27,10 +27,6 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
     override fun onBindViewHolder(holder: MemberViewHolder, position: Int) {
         val member = groupData.members[position]
 
-        if(member.id == SharedPreferences.userId) {
-            holder.memberRootLayout.gone()
-        }
-
         holder.memberNameTextView.text = member.name
         holder.memberBalanceTextView.text = member.balance.toString()
         //TODO real creator
@@ -43,13 +39,20 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
             holder.memberBalanceTextView.text = context.getString(R.string.group_settled_up)
         }
 
-        if(groupData.creator.id == SharedPreferences.userId) {
-            holder.removeButton.visibility = View.VISIBLE
+        if (groupData.creator.id == member.id) {
+            holder.memberOwnerTextView.visible()
+        } else {
+            holder.memberOwnerTextView.gone()
+        }
+
+        if(groupData.creator.id == SharedPreferences.userId && Model.isDeleteMemberEnabled) {
+            holder.removeButton.visible()
+        } else {
+            holder.removeButton.gone()
         }
 
         holder.removeButton.setOnClickListener()
         {
-            val memberId = member.id
             Model.deleteMember(groupData.id ,member.id) { response, error ->
                 if(error == null) {
                     val index = groupData.members.indexOf(member)
