@@ -47,7 +47,7 @@ class GroupPagerFragment : Fragment() {
             R.id.addMember -> {
                 return true
             }
-            R.id.removeMember -> {
+            R.id.removeMemberImageButton -> {
                 return true
             }
             else ->

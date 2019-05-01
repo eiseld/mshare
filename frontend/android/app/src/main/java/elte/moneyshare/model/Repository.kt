@@ -16,6 +16,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 when (response?.code()) {
                     in (200..300) -> {
+                        getUserId({ response, error ->})
                         SharedPreferences.isUserLoggedIn = true
                         SharedPreferences.accessToken = response?.body()?.token ?: ""
                         completion(response.code().toString(), null)
@@ -47,6 +48,28 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
 
             override fun onFailure(call: Call<Any>, t: Throwable) {
                 completion(null, "registration error")
+            }
+        })
+    }
+
+
+    override fun getUserId(completion: (response: UserData?, error: String?) -> Unit) {
+        apiDefinition.getUserId().enqueue(object : Callback<UserData> {
+            override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val user = response.body()
+                        SharedPreferences.userId = user?.id ?: 0
+                        completion(user, null)
+                    }
+                    else -> {
+                        completion(null, "get users error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<UserData>, t: Throwable) {
+                completion(null, "get users error")
             }
         })
     }
@@ -132,6 +155,25 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
         })
     }
 
+    override fun deleteMember(groupId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.deleteMember(groupId, memberId).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, "Error during removing member")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, "Error during removing member")
+            }
+        })
+    }
+
 
     //PROFILE
     override fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit) {
@@ -155,7 +197,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
     }
 
 
-    //SPEDING
+    //SPENDING
     override fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit) {
         apiDefinition.getSpendings(groupId).enqueue(object : Callback<ArrayList<SpendingData>> {
             override fun onResponse(call: Call<ArrayList<SpendingData>>, response: Response<ArrayList<SpendingData>>) {

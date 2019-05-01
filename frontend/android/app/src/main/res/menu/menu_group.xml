@@ -9,7 +9,7 @@
           android:title="@string/add_member"
           app:showAsAction="never"/>
 
-    <item android:id="@+id/removeMember"
+    <item android:id="@+id/removeMemberImageButton"
           android:title="@string/remove_member"
           app:showAsAction="never"/>
 

@@ -5,14 +5,13 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import elte.moneyshare.FragmentDataKeys
 
 import elte.moneyshare.R
-import elte.moneyshare.view.Adapter.GroupsRecyclerViewAdapter
+import elte.moneyshare.SharedPreferences
+import elte.moneyshare.entity.Member
 import elte.moneyshare.view.Adapter.MembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_members.*
@@ -39,9 +38,16 @@ class MembersFragment : Fragment() {
             groupId?.let { groupId ->
                 viewModel.getGroupData(groupId) { groupData, error ->
                     if (groupData != null) {
-                        val adapter = MembersRecyclerViewAdapter(it, groupData)
-                        membersRecyclerView.layoutManager =
-                            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+                        val adapter = MembersRecyclerViewAdapter(it, groupData, viewModel)
+                        val user: Member? = groupData.members.find { it.id == SharedPreferences.userId }
+                        if (user == null) {
+                            myBalanceTextView.text = "##"
+                        } else {
+                            myBalanceTextView.text = user.balance.toString()
+                        }
+
+                        membersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         membersRecyclerView.adapter = adapter
                     } else {
                         Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()

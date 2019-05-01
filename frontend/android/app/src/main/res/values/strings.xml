@@ -23,6 +23,7 @@
     <string name="group_owe">Owes you \n %1$d</string>
     <string name="group_owned">You are owed \n %1$d</string>
     <string name="group_settled_up">Settled up</string>
+    <string name="my_balance">My balance: </string>
 
     <string name="bill_money">%1$d Ft</string>
 

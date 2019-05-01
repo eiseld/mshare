@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/memberRootLayout"
+        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/memberRootLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -14,7 +14,6 @@
             android:textStyle="bold"
             android:layout_margin="6dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/memberOwnerTextView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -25,7 +24,6 @@
             android:text="(owner)"
             android:layout_margin="6dp"
             app:layout_constraintStart_toEndOf="@id/memberNameTextView"
-            app:layout_constraintEnd_toStartOf="@id/memberBalanceTextView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="gone"/>
@@ -38,8 +36,20 @@
             android:text="Balance"
             android:layout_margin="16dp"
             app:layout_constraintStart_toEndOf="@id/memberOwnerTextView"
+            app:layout_constraintEnd_toStartOf="@+id/removeMemberImageButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ImageButton
+            android:id="@+id/removeMemberImageButton"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/minus"
+            app:layout_constraintStart_toEndOf="@id/memberBalanceTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
+            tools:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

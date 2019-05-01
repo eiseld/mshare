@@ -34,5 +34,6 @@
     <string name="spending">Költés</string>
     <string name="add">Hozzáadás</string>
     <string name="select_members">Emberek kiválasztása</string>
+    <string name="my_balance">Egyenlegem:</string>
 
 </resources>

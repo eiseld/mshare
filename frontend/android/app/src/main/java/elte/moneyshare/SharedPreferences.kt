@@ -2,6 +2,7 @@ package elte.moneyshare
 
 import android.content.Context
 import android.content.SharedPreferences
+import elte.moneyshare.entity.User
 
 object SharedPreferences {
 
@@ -10,12 +11,16 @@ object SharedPreferences {
     private val ACCESS_TOKEN = "access_token"
     private val USER_LOGGED_IN = "user_logged_in"
 
+    private val USER_ID = "user_id"
+
+    private lateinit var user: User
     private lateinit var sharedPreferences: SharedPreferences
 
     //TODO CHECK ACCESS_TOKEN HANDLING TO STILL STORE AFTER APP CLOSED (in APIClient headers creation)
     fun init(context: Context) {
         sharedPreferences = context.getSharedPreferences(prefKey, Context.MODE_PRIVATE)
         accessToken = ""
+        userId = -1
     }
 
     var accessToken: String
@@ -33,6 +38,14 @@ object SharedPreferences {
         set(isUserLoggedIn) {
             with(sharedPreferences.edit()) {
                 putBoolean(USER_LOGGED_IN, isUserLoggedIn)
+                apply()
+            }
+        }
+    var userId : Int
+        get() = sharedPreferences.getInt(USER_ID, -1)
+        set(id) {
+            with(sharedPreferences.edit()) {
+                putInt(USER_ID, id)
                 apply()
             }
         }
