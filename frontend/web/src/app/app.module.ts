@@ -40,7 +40,7 @@ import { SpendingCreatorComponent } from './components/spending-creator/spending
     GroupDetailComponent,
     ForgottenpwComponent,
     ResetpasswordComponent,
-    DebtSettleComponent
+    DebtSettleComponent,
     SpendingCreatorComponent
   ],
   imports: [

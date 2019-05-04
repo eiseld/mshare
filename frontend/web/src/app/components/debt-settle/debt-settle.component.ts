@@ -43,14 +43,14 @@ export class DebtSettleComponent implements OnInit {
       httpOptions).subscribe(
         data => {
           if(this.selectedMember.balance<0){
-            this.http.get<any>(`${environment.API_URL}/group/debtsettlement?debtorid=`+data.id+`&lenderid=`+this.selectedMember.id+`&groupid=`+this.groupData.id,
-            httpOptions).subscribe(
+            this.http.post<any>(`${environment.API_URL}/group/${this.groupData.id}/settledebt/${data.id}/${this.selectedMember.id}`,
+            {}, httpOptions).subscribe(
               data => {this.updateSelectedGroup(); this.unselectMember();},
               error => {this.error="Sikertelen a tartozás rendezése!"}
             );
           }
           else if(this.selectedMember.balance>0){
-            this.http.get<any>(`${environment.API_URL}/group/debtsettlement?debtorid=`+this.selectedMember.id+`&lenderid=`+data.id+`&groupid=`+this.groupData.id,
+            this.http.post<any>(`${environment.API_URL}/group/${this.groupData.id}/settledebt/${this.selectedMember.id}/${data.id}`,{},
             httpOptions).subscribe(
               data => {this.updateSelectedGroup(); this.unselectMember();},
               error => {this.error="Sikertelen a tartozás rendezése!"}

@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, OnChanges, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
 import { GroupInfo, GroupData, MemberData } from '../group-manager/group-manager.component';
 import { Spending } from '../spending-creator/spending-creator.component'
-import { Output, EventEmitter } from '@angular/core'; 
 
 @Component({
   selector: 'app-group-detail',
@@ -70,6 +69,7 @@ export class GroupDetailComponent implements OnChanges {
   
   updateSelectedGroup(){
     this.updateSelectedGroupEvent.next();
+  }
 }
 
 export class CalculatedSpending{
