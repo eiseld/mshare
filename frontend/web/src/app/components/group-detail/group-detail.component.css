@@ -29,6 +29,7 @@ li:hover{
     max-width: 500px;
     z-index: 10;
     position: fixed;
+    top: 10%;
     vertical-align: center;
     align-content: center;
 }
