@@ -1,12 +1,20 @@
-<div class="groupDetails" *ngIf="groupData">
+<div *ngIf="groupData">
+  <div class="tab">
+      <button class="tablink" (click)='showPage(this.pages.groupMemberDetails)'>Tagok</button>
+      <button class="tablink" (click)='showPage(this.pages.groupSpendingDetails)'>Költések</button>
+  </div>
+
+      
+    <h2>{{groupData.name}}</h2>
+    <div>
+      <p>Létrehozta: {{groupData.creator.name}}</p>
+      <p *ngIf="groupData.myCurrentBalance < 0">Egyenleg: tartozol {{0 - groupData.myCurrentBalance | currency}}-ral</p>
+      <p *ngIf="groupData.myCurrentBalance == 0">Egyenleg: rendezett</p>
+      <p *ngIf="groupData.myCurrentBalance > 0">Egyenleg: tartoznak neked {{groupData.myCurrentBalance | currency}}-ral</p>
+      <button class="btn btn-primary"  *ngIf="!createSpendingAttempt" (click)="startCreateSpending()">Költés hozzáadása</button>
+<div class="groupMemberDetails" *ngIf="selectedPage==pages.groupMemberDetails">
  
-  <h2>{{groupData.name}}</h2>
-  <div>
-    <p>Létrehozta: {{groupData.creator.name}}</p>
-    <p *ngIf="groupData.myCurrentBalance < 0">Egyenleg: tartozol {{0 - groupData.myCurrentBalance | currency}}-ral</p>
-    <p *ngIf="groupData.myCurrentBalance == 0">Egyenleg: rendezett</p>
-    <p *ngIf="groupData.myCurrentBalance > 0">Egyenleg: tartoznak neked {{groupData.myCurrentBalance | currency}}-ral</p>
-    <p>Tagok ({{groupData.memberCount}}):</p>
+    <h3>Tagok ({{groupData.memberCount}}):</h3>
     <ul>
       <li (click)='selectMember(memberData)' *ngFor="let memberData of groupData.members">
         {{memberData.name}}
@@ -15,6 +23,23 @@
 		<span *ngIf="memberData.balance > 0"> túlfizetés: {{memberData.balance | currency}} </span>
       </li>
     </ul>
+  </div>
+</div>
+
+<div class="groupSpendingDetails" *ngIf="selectedPage==pages.groupSpendingDetails">
+  <h3>Költések:</h3>
+  <ul>
+    <li *ngFor="let calculatedSpending of calculatedSpendings">
+      
+      <h4><img src="assets/noun_group_861211.png" alt="Csoportköltés" *ngIf="calculatedSpending.groupSpending">{{calculatedSpending.spending.name}}</h4>
+      <h5>Egyenleg: {{calculatedSpending.spending.moneyOwed | currency}}</h5>
+      <ul>
+        <li *ngFor="let debtor of calculatedSpending.spending.debtors">
+            <div class="debtorData">{{debtor.name}} <div class=debtOfDebtor *ngIf="debtor.debt!=undefined">{{debtor.debt | currency}}</div> <div class=defaultDebtOfDebtor *ngIf="debtor.debt==undefined">{{calculatedSpending.defaultDebt | currency}}</div></div>
+        </li>
+      </ul>
+    </li>
+  </ul>
   </div>
 </div>
 <app-debt-settle class=debtSettler [selectedMember]=selectedMember [groupData]=groupData (stopSettleDebtEvent)='unselectMember()' (updateSelectedGroupEvent)="updateSelectedGroup()"></app-debt-settle>

@@ -23,6 +23,7 @@ import { ConfirmComponent } from './components/confirm/confirm.component';
 import { SucregComponent } from './components/sucreg/sucreg.component';
 import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { DebtSettleComponent } from './components/debt-settle/debt-settle.component';
+import { SpendingCreatorComponent } from './components/spending-creator/spending-creator.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { DebtSettleComponent } from './components/debt-settle/debt-settle.compon
     ForgottenpwComponent,
     ResetpasswordComponent,
     DebtSettleComponent
+    SpendingCreatorComponent
   ],
   imports: [
     NgbModule,

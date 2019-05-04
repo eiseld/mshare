@@ -59,8 +59,8 @@ namespace MShare_ASP.Services{
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="groupId"></param>
-        /// <param name="member"></param>
-        Task RemoveMember(long userId, long groupId, RemoveMember member);
+        /// <param name="memberId"></param>
+        Task RemoveMember(long userId, long groupId, long memberId);
 
         /// <summary>
         /// Creates a new group
@@ -73,7 +73,7 @@ namespace MShare_ASP.Services{
 
 		Task<IList<DaoHistory>> GetGroupHistory(long groupid);
 
-		Task AddMember(long userId, long groupId, AddMember member);
+		Task AddMember(long userId, long groupId, long memberId);
 
 		Task DebtSettlement(long debtorId, long lenderId, long groupId);
 

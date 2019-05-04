@@ -16,30 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `debts`
+-- Table structure for table `debtors`
 --
 
-DROP TABLE IF EXISTS `debts`;
+DROP TABLE IF EXISTS `debtors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `debts` (
-  `id` int(20) NOT NULL AUTO_INCREMENT,
-  `deptorid` int(20) NOT NULL,
-  `lenderid` int(20) NOT NULL,
-  `groupid` int(20) NOT NULL,
-  `amount` int(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id` (`id`) /*!80000 INVISIBLE */
+CREATE TABLE `debtors` (
+  `spending_id` bigint(20) unsigned NOT NULL,
+  `debtor_user_id` bigint(20) unsigned NOT NULL,
+  `debt` bigint(20) unsigned DEFAULT NULL,
+  PRIMARY KEY (`spending_id`,`debtor_user_id`),
+  KEY `fk_debtor_idx` (`debtor_user_id`),
+  CONSTRAINT `fk_debtor` FOREIGN KEY (`debtor_user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_spending` FOREIGN KEY (`spending_id`) REFERENCES `spendings` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `debts`
+-- Dumping data for table `debtors`
 --
 
-LOCK TABLES `debts` WRITE;
-/*!40000 ALTER TABLE `debts` DISABLE KEYS */;
-/*!40000 ALTER TABLE `debts` ENABLE KEYS */;
+LOCK TABLES `debtors` WRITE;
+/*!40000 ALTER TABLE `debtors` DISABLE KEYS */;
+INSERT INTO `debtors` VALUES (4,3,3000),(5,1,476),(5,2,476),(5,3,476),(5,4,476),(5,5,476),(5,6,476),(5,7,476),(5,8,476),(5,9,476),(5,10,476),(5,11,476),(5,12,476),(5,13,476),(5,14,476),(5,15,476),(5,16,476),(5,17,476),(5,18,476),(5,19,476),(5,20,476),(5,21,476);
+/*!40000 ALTER TABLE `debtors` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -166,6 +167,37 @@ CREATE TABLE `history` (
 LOCK TABLES `history` WRITE;
 /*!40000 ALTER TABLE `history` DISABLE KEYS */;
 /*!40000 ALTER TABLE `history` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `spendings`
+--
+
+DROP TABLE IF EXISTS `spendings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `spendings` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `money_owed` bigint(20) unsigned NOT NULL,
+  `creditor_user_id` bigint(20) unsigned NOT NULL,
+  `group_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_group_idx` (`group_id`),
+  KEY `fk_creditor_idx` (`creditor_user_id`),
+  CONSTRAINT `fk_creditor` FOREIGN KEY (`creditor_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_group` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `spendings`
+--
+
+LOCK TABLES `spendings` WRITE;
+/*!40000 ALTER TABLE `spendings` DISABLE KEYS */;
+INSERT INTO `spendings` VALUES (4,'Szombat este',3000,1,1),(5,'Sörözés',10000,1,1);
+/*!40000 ALTER TABLE `spendings` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

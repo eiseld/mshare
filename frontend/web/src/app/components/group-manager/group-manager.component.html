@@ -9,6 +9,7 @@
 <div class="groupListParent">
   <ul class="groupList">
     <li class="groupElement" *ngFor="let groupInfo of groupInfos">
+      <a class="createSpendingButton" href="#" (click)="startCreateSpending(groupInfo)"><img src="assets/noun_Plus.png" alt="Költés hozzáadása"></a>
       <a (click)=selectGroup(groupInfo)>
       {{groupInfo.name}}
       <p>Létrehozta: {{groupInfo.creator}}</p>
@@ -21,6 +22,7 @@
   </ul>
 </div>
 
-<app-group-detail class="groupDetail" [groupData]="selectedGroup" (updateSelectedGroupEvent)='updateSelectedGroup()'></app-group-detail>
+<app-spending-creator class="spendingCreator" [createSpendingAttempt]="createSpendingAttempt" [spendingForGroupData]="spendingForGroupData" (createSpendingAttemptStop)="stopCreateSpendingAttempt()" (updateSelectedGroupEvent)='updateSelectedGroup()'></app-spending-creator>
 
+<app-group-detail class="groupDetail" [groupData]="selectedGroup" [spendings]="selectedGroupSpendings" (startSpendingCreation)="startCreateSpending($event)" (updateSelectedGroupEvent)='updateSelectedGroup()'></app-group-detail>
 <div class="clear"></div>
