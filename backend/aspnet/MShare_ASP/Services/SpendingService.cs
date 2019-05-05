@@ -143,41 +143,9 @@ namespace MShare_ASP.Services {
             if (currentSpending.CreditorUserId != userId)
                 throw new ResourceForbiddenException("user_not_creditor");
 
-
-            //currentSpending.Id = spendingUpdate.Id;
             currentSpending.Name = spendingUpdate.Name;
             currentSpending.MoneyOwed = spendingUpdate.MoneySpent;
-            //currentSpending.Group = currentGroup;
-            //currentSpending.GroupId = currentGroup.Id;
-            //currentSpending.Creditor = currentUser;
-            //currentSpending.CreditorUserId = currentUser.Id;
-            /*
-            var nonSpecifiedCount = spendingUpdate.Debtors.Any()
-                ? spendingUpdate.Debtors.Count(s => !s.Debt.HasValue)
-                : currentGroup.Members.Count();
-                
-            var autoCalculatedIndividualDebt = nonSpecifiedCount == 0
-                ? 0
-                : (spendingUpdate.MoneySpent - spendingUpdate.Debtors.Sum(x => x.Debt ?? 0)) / nonSpecifiedCount;
-                
-            var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
-            {
-                Spending = currentSpending,
-                DebtorUserId = x.DebtorId,
-                Debt = x.Debt ?? autoCalculatedIndividualDebt
-            }).ToList();
-            
-            // If there were no debtors, populate it from group members
-            if (!debtors.Any())
-            {
-                debtors = currentGroup.Members.Select(x => new DaoDebtor()
-                {
-                    Spending = currentSpending,
-                    DebtorUserId = x.UserId,
-                    Debt = autoCalculatedIndividualDebt
-                }).ToList();
-            }
-            */
+
             DbContext.Debtors.RemoveRange(currentSpending.Debtors);
             var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
             {
@@ -186,9 +154,8 @@ namespace MShare_ASP.Services {
                 Debt = x.Debt
             }).ToList();
             currentSpending.Debtors = debtors.ToList();
-            var insertCount = 1 + currentSpending.Debtors.Count;
-            //DbContext.Spendings.Update(currentSpending);
-            if (await DbContext.SaveChangesAsync() != insertCount)
+
+            if (await DbContext.SaveChangesAsync() == 0)
             {
                 throw new DatabaseException("spending_not_updated");
             }
