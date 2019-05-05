@@ -1,0 +1,27 @@
+version: '3.6'
+
+networks:
+  mshare_prod:
+  mshare_dev:
+  mshare_infra:
+
+volumes:
+  mysql_prod:
+  mysql_dev:
+  jenkins_data:
+  jenkins_home:
+
+services:
+
+  jenkins:
+    container_name: jenkins
+    build: 
+      context: './infra/'
+      dockerfile: Dockerfile-jenkins
+    ports:
+      - '9000:8080'
+    networks:
+      - mshare_prod
+    volumes:
+      - 'jenkins_data:/jenkins_config'
+      - 'jenkins_home:/var/jenkins_home'
