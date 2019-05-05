@@ -45,9 +45,9 @@ class MembersFragment : Fragment() {
                         val adapter = MembersRecyclerViewAdapter(it, groupData, viewModel)
 
                         if (member == null) {
-                            myBalanceTextView.text = "##"
+                            myBalanceTextView?.text = "##"
                         } else {
-                            myBalanceTextView.text = member.balance.toString()
+                            myBalanceTextView?.text = member.balance.toString()
                         }
 
                         membersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
