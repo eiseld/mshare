@@ -39,10 +39,6 @@ export class SpendingCreatorComponent implements OnChanges {
     this.addDebtorAttempt=false;
     this.error="";
     this.errorAddDebtor="";
-    delete this.spending.debtors;
-    this.spending.name="";
-    this.spending.moneyOwed=undefined;
-    this.spending.debtors=[];
     this.createSpendingAttempt=false;
     this.createSpendingAttemptStop.emit();
   }
@@ -53,7 +49,7 @@ export class SpendingCreatorComponent implements OnChanges {
     this.errorAddDebtor="";
     this.createSpendingAttempt=false;
     this.createSpendingAttemptStop.emit();
-    this.updateSelectedGroupEvent.next();
+    this.updateSelectedGroupEvent.emit();
   }
 
   constructor( private http: HttpClient ) { 
@@ -86,30 +82,32 @@ export class SpendingCreatorComponent implements OnChanges {
     this.ngOnChanges();
   }
   calcDefaultDebt(){
-    if(this.spending.moneyOwed==undefined){
-      this.defaultBalanceSum=0;
-      this.defaultBalance=0;
-    }
-    else{
-      var exactDebtors=this.spending.debtors.filter((debtor)=>(debtor.balance!=undefined));
-      var defaultBalanceSum=this.spending.moneyOwed;
-      var exactBalanceSum:number;
-      if(exactDebtors.length!=0){
-          exactBalanceSum=exactDebtors.map((debtor)=>{return debtor.balance}).reduce((partial_sum, a) => Number(partial_sum) + Number(a));
-          defaultBalanceSum-=exactBalanceSum;
+    if(this.spending!=null){
+      if(this.spending.moneyOwed==undefined){
+        this.defaultBalanceSum=0;
+        this.defaultBalance=0;
       }
-      var defaultDebtors=this.spending.debtors.filter((debtor)=>(debtor.balance==undefined));
-      var memberCount=defaultDebtors.length;
-      var defaultBalance=Math.trunc(defaultBalanceSum/memberCount);
-      for(let debtor of defaultDebtors){
-        if(defaultBalance*memberCount!=defaultBalanceSum){
-          debtor.defaultBalance=defaultBalance+1;
+      else{
+        var exactDebtors=this.spending.debtors.filter((debtor)=>(debtor.balance!=undefined));
+        var defaultBalanceSum=this.spending.moneyOwed;
+        var exactBalanceSum:number;
+        if(exactDebtors.length!=0){
+            exactBalanceSum=exactDebtors.map((debtor)=>{return debtor.balance}).reduce((partial_sum, a) => Number(partial_sum) + Number(a));
+            defaultBalanceSum-=exactBalanceSum;
         }
-        else{
-          debtor.defaultBalance=defaultBalance;
+        var defaultDebtors=this.spending.debtors.filter((debtor)=>(debtor.balance==undefined));
+        var memberCount=defaultDebtors.length;
+        var defaultBalance=Math.trunc(defaultBalanceSum/memberCount);
+        for(let debtor of defaultDebtors){
+          if(defaultBalance*memberCount!=defaultBalanceSum){
+            debtor.defaultBalance=defaultBalance+1;
+          }
+          else{
+            debtor.defaultBalance=defaultBalance;
+          }
+          memberCount--;
+          defaultBalanceSum-=debtor.defaultBalance;
         }
-        memberCount--;
-        defaultBalanceSum-=debtor.defaultBalance;
       }
     }
   }
@@ -178,6 +176,9 @@ export class SpendingCreatorComponent implements OnChanges {
   createSpending(){
     if(this.spending.name==undefined||this.spending.name.length==0||this.spending.name.length>32){
       this.error="Adjon egy legfeljebb 32 karakter hosszú nevet a költésnek!";
+    }
+    else if(!(this.spending.moneyOwed>0)){
+      this.error="Adjon egy pozitív egész összeget a költésnek!";
     }
     else if(this.spending.debtors.length!=0&&this.spending.debtors.map((debtor) => debtor.balance).filter((balance)=>balance==undefined).length==0
       &&this.spending.debtors.map((debtor)=>{return debtor.balance}).reduce(
