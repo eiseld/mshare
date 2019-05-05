@@ -15,6 +15,8 @@ interface APIDefinition {
     @POST("/api//Auth/register")
     fun postRegisterUser(@Body registrationData: RegistrationData): Call<Any>
 
+    @GET("api/Profile")
+    fun getUserId(): Call<UserData>
 
     //GROUP
     @GET("/api/Group/{id}")
@@ -29,6 +31,8 @@ interface APIDefinition {
     @POST("/api/Group/create")
     fun postNewGroup(@Body groupName : NewGroup) : Call<ResponseBody>
 
+    @DELETE ("api/Group/{groupId}/members/remove/{memberId}")
+    fun deleteMember(@Path("groupId") groupId: Int, @Path("memberId") memberId: Int): Call<ResponseBody>
 
     //PROFILE
     @GET("/api/Profile/groups")

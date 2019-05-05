@@ -9,6 +9,7 @@ interface RepositoryInterface {
 
     fun postRegisterUser(registrationData: RegistrationData, completion: (response: String?, error: String?) -> Unit)
 
+    fun getUserId(completion: (response: UserData?, error: String?) -> Unit)
 
     //GROUP
     fun getGroup(groupId: Int, completion: (response: Group?, error: String?) -> Unit)
@@ -19,10 +20,10 @@ interface RepositoryInterface {
 
     fun postNewGroup(name: NewGroup, completion: (response: String?, error: String?) -> Unit)
 
+    fun deleteMember(groupId: Int,memberId : Int, completion: (response: String?, error: String?) -> Unit)
 
     //PROFILE
     fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit)
-
 
     //SPENDING
     fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit)

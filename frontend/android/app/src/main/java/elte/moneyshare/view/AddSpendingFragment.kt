@@ -15,12 +15,13 @@ import elte.moneyshare.R
 import elte.moneyshare.entity.Debtor
 import elte.moneyshare.entity.NewSpending
 import elte.moneyshare.view.Adapter.SelectMembersRecyclerViewAdapter
+import elte.moneyshare.viewmodel.GroupViewModel
 import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_add_spending.*
 
 class AddSpendingFragment : Fragment() {
 
-    private lateinit var viewModel: GroupsViewModel
+    private lateinit var viewModel: GroupViewModel
     private var groupId: Int? = null
 
     override fun onCreateView(
@@ -35,7 +36,7 @@ class AddSpendingFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         activity?.let {
-            viewModel = ViewModelProviders.of(it).get(GroupsViewModel::class.java)
+            viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
 
             groupId?.let { groupId ->
                 viewModel.getGroupData(groupId) { groupData, error ->
