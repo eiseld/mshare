@@ -188,7 +188,7 @@ namespace MShare_ASP.Services {
 			{
 				var groupCreator = _context.Users.FirstOrDefault(x => x.Id == userId);
 				var newMember = _context.Users.FirstOrDefault(x => x.Id == memberId);
-				await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newMember.DisplayName, newMember.Email, "MShare: Hozzáadva a(z) '" + group.Name + "' csoporthoz", groupCreator.DisplayName + " meghívott az alábbi csoportba: " + group.Name + ".");
+				await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newMember.DisplayName, newMember.Email, "MShare: Hozzáadva a(z) '" + group.Name + "' csoporthoz", groupCreator.DisplayName + " hozzáadott az alábbi csoporthoz: " + group.Name + ".");
 			}
 		}
 
