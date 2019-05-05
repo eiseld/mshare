@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 import { GroupInfo, GroupData, MemberData } from '../group-manager/group-manager.component';
-import { Spending } from '../spending-creator/spending-creator.component'
+import { Spending, DebtorData } from '../spending-creator/spending-creator.component'
 import { Output, EventEmitter } from '@angular/core'; 
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-group-detail',
@@ -15,7 +17,9 @@ export class GroupDetailComponent implements OnChanges {
   calculatedSpendings: CalculatedSpending[]=[];
   pages={groupMemberDetails:0,groupSpendingDetails:1};
   selectedPage=this.pages.groupMemberDetails;
+  currentUser:MemberData;
   @Output() startSpendingCreation = new EventEmitter();
+  @Output() startSpendingModification = new EventEmitter();
 
   ngOnChanges(){
     this.showPage(this.selectedPage);
@@ -25,7 +29,26 @@ export class GroupDetailComponent implements OnChanges {
     this.startSpendingCreation.emit(new GroupInfo(this.groupData));
   }
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
+
+  startModifySpending(spending:Spending) {
+    var modifiableSpending=new Spending();
+    modifiableSpending.id=spending.id;
+    modifiableSpending.name=spending.name;
+    modifiableSpending.moneyOwed=spending.moneyOwed;
+    modifiableSpending.creditorUserId=spending.creditorUserId;
+    modifiableSpending.debtors=[];
+    for(let debtor of spending.debtors){
+      var newDebtor=new DebtorData();
+      newDebtor.id=debtor.id;
+      newDebtor.name=debtor.name;
+      newDebtor.balance=debtor.balance;
+      newDebtor.defaultBalance=debtor.defaultBalance;
+      modifiableSpending.debtors=[...modifiableSpending.debtors, newDebtor];
+    }
+    this.startSpendingModification.emit(modifiableSpending);
+    this.startCreateSpending();
+  }
 
   calcGroupSpending(){
     if(this.calculatedSpendings!=undefined){
@@ -46,7 +69,20 @@ export class GroupDetailComponent implements OnChanges {
   }
 
   ngOnInit() {
+    this.getCurrentUser();
+  }
 
+  getCurrentUser(){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    this.http.get<any>(`${environment.API_URL}/profile/`,
+    httpOptions).subscribe(
+      data => { this.currentUser=data; },
+      error => {}
+    );
   }
 
   showPage(selectedPage){
