@@ -25,3 +25,14 @@ services:
     volumes:
       - 'jenkins_data:/jenkins_config'
       - 'jenkins_home:/var/jenkins_home'
+
+  nginx: 
+    container_name: nginx
+    build: 
+      context: './infra/'
+      dockerfile: Dockerfile-nginx
+    volumes:
+      - ./infra/config/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+      - 443:443
