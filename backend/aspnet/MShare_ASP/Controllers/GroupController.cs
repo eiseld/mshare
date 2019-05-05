@@ -82,6 +82,7 @@ namespace MShare_ASP.Controllers {
 		/// <response code="410">Resource gone: 'member_not_found'</response>
 		/// <response code="500">Internal error: 'group_not_added'</response>
 		[HttpPost]
+		[AllowAnonymous]
 		[Route("{groupId}/members/add/{memberId}")]
 		public async Task<ActionResult> AddMember(long groupId, long memberId)
 		{
