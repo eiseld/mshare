@@ -15,26 +15,30 @@ namespace MShare_ASP.Services{
         /// <summary>
         /// Converts DaoGroup to GroupData
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="daoGroup"></param>
-        API.Response.GroupData ToGroupData(DaoGroup daoGroup);
+        API.Response.GroupData ToGroupData(long userId, DaoGroup daoGroup);
 
         /// <summary>
         /// Converts list of DaoGroup to list of GroupData
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="daoGroups"></param>
-        IList<API.Response.GroupData> ToGroupData(IList<DaoGroup> daoGroups);
+        IList<API.Response.GroupData> ToGroupData(long userId, IList<DaoGroup> daoGroups);
 
         /// <summary>
         /// Converts DaoGroup to GroupInfo
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="daoGroup"></param>
-        API.Response.GroupInfo ToGroupInfo(DaoGroup daoGroup);
+        API.Response.GroupInfo ToGroupInfo(long userId, DaoGroup daoGroup);
 
         /// <summary>
         /// Converts list of DaoGroup to list of GroupInfo
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="daoGroups"></param>
-        IList<API.Response.GroupInfo> ToGroupInfo(IList<DaoGroup> daoGroups);
+        IList<API.Response.GroupInfo> ToGroupInfo(long userId, IList<DaoGroup> daoGroups);
 
         /// <summary>
         /// Gets all groups

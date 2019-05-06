@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,10 +15,12 @@ namespace MShare_ASP.API.Response{
         /// </summary>
         public UserData Debtor { get; set; }
 
+
         /// <summary>
         /// Id of the Creditor
         /// </summary>
         public UserData Creditor { get; set; }
+
 
         /// <summary>
         /// The amount of the optimised debt 

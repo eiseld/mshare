@@ -2,5 +2,7 @@
 <resources>
 
     <dimen name="elevation_medium">5dp</dimen>
+    <dimen name="padding_medium">6dp</dimen>
+    <dimen name="padding_large">10dp</dimen>
 
 </resources>

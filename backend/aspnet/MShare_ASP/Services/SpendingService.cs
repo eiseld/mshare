@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -44,6 +44,7 @@ namespace MShare_ASP.Services {
                     Id = x.UserOwed.Id,
                     Name = x.UserOwed.DisplayName
                 },
+
                 OptimisedDebtAmount = x.OweAmount
             }).ToList();
         }
@@ -63,6 +64,25 @@ namespace MShare_ASP.Services {
                 .Include(x => x.UserOwed)
                 .Include(x => x.UserOwes)
                 .ToListAsync();
+        }
+
+
+        }
+
+        public long GetDebtSum(long userId, long groupId){
+            var credit =  DbContext.Spendings
+                            .Where(x => x.GroupId == groupId && x.CreditorUserId == userId)
+                            .Sum(x => x.MoneyOwed);
+
+            var debt =   DbContext.Spendings
+                            .Where(x => x.GroupId == groupId)
+                            .Sum(x => 
+                                x.Debtors
+                                .Where(y => y.DebtorUserId == userId)
+                                .Sum(y => y.Debt)
+                            );
+
+            return credit - (debt ?? 0);
         }
 
         public async Task OptimizeSpendingForGroup(long groupId){

@@ -17,4 +17,10 @@
         <item name="tabSelectedTextColor">@color/colorHooverText2</item>
         <item name="tabTextColor">@color/colorText</item>
     </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/colorDivider</item>
+    </style>
 </resources>
