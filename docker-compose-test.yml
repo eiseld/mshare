@@ -39,7 +39,7 @@ services:
       - '8081'
 
   apache:
-    container_name: prod
+    container_name: test
     build: 
       context: './frontend/web'
       dockerfile: Dockerfile-apache-prod

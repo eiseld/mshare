@@ -1,9 +1,9 @@
 version: '3.6'
 
 networks:
-  mshare_prod:
-  mshare_dev:
-  mshare_infra:
+  prod:
+  dev:
+  infra:
 
 volumes:
   mysql_prod:
@@ -15,24 +15,37 @@ services:
 
   jenkins:
     container_name: jenkins
-    build: 
-      context: './infra/'
-      dockerfile: Dockerfile-jenkins
-    ports:
-      - '9000:8080'
+    environment:
+      - JENKINS_OPTS="--prefix=/jenkins"
+    build: ./infra/jenkins/
     networks:
-      - mshare_prod
+      - infra
+    ports:
+      - '8080:8080'
     volumes:
       - 'jenkins_data:/jenkins_config'
       - 'jenkins_home:/var/jenkins_home'
 
-  nginx: 
-    container_name: nginx
-    build: 
-      context: './infra/'
-      dockerfile: Dockerfile-nginx
-    volumes:
-      - ./infra/config/nginx.conf:/etc/nginx/nginx.conf
+  apache:
+    build: ./infra/apache/
+    networks:
+      - infra
+      - prod
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+    volumes:
+      - './infra/apache/config/httpd.conf:/usr/local/apache2/conf/httpd.conf'
+
+# nginx: 
+#   container_name: nginx
+#   environment:
+#     - JENKINS_OPTS="--prefix=/jenkins"
+#   build: ./infra/nginx
+#   networks:
+#     - infra
+#     - prod
+#   ports:
+#     - 80:80
+#     - 443:443
+#   volumes:
+#     - ./infra/nginx/config/nginx.conf:/etc/nginx/nginx.conf
