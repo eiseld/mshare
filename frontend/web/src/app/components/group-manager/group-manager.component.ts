@@ -172,7 +172,7 @@ export class GroupManagerComponent implements OnInit {
       {name: this.newGroup},
       httpOptions)
       .subscribe(
-        data => {this.selectedUser = {}},
+        data => {this.selectedUser = null;this.error = 'A felhasználó hozzáadása sikeresen megtörtént'},
         error => {this.selectedUser = {};this.error="Sikertelen a személy hozzáadása a kiválasztott csoporthoz!"}
       );
   }
