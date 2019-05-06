@@ -53,7 +53,7 @@ export class GroupManagerComponent implements OnInit {
       })
     };
 
-    if(4 == event.target.value.length) {
+    if(3 == event.target.value.length) {
       this.users = [];
       this.http.get<any[]>(`${environment.API_URL}/Group/searchinallusers/${event.target.value}`, httpOptions)
         .subscribe(list => {
