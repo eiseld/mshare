@@ -19,9 +19,6 @@ interface APIDefinition {
     fun getUserId(): Call<UserData>
 
     //GROUP
-    @GET("/api/Group/{id}")
-    fun getGroup(@Path("id") groupId: Int): Call<Group>
-
     @GET("/api/Group/{groupId}/info")
     fun getGroupInfo(@Path("groupId") groupId: Int): Call<GroupInfo>
 
@@ -45,14 +42,14 @@ interface APIDefinition {
     @POST("api/Spending/create")
     fun postSpending(@Body newSpending: NewSpending): Call<Any>
 
+    @GET("api/Spending/{groupId}/optimised")
+    fun getOptimizedDebt(@Path("groupId") groupId: Int) : Call<ArrayList<OptimizedDebtData>>
+
+
     //TEST METHOD
     @GET("/api/Group/")
     fun getGroups(): Call<ArrayList<Group>>
 
     @GET("/api/Auth")
     fun getUsers(): Call<ArrayList<User>>
-
-
-    @GET("api/Spending/{groupId}/optimised")
-    fun getOptimizedDebt(@Path("groupId") groupId: Int) : Call<ArrayList<OptimizedDebtData>>
 }

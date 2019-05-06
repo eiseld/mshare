@@ -26,35 +26,13 @@ class GroupsViewModel : ViewModel() {
         }
     }
 
-    fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit) {
-        APIClient.getRepository().getSpendings(groupId) { spendings, error ->
-            if (spendings != null) {
-                completion(spendings, null)
+    fun getOptimizedDebtData(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit) {
+        APIClient.getRepository().getOptimizedDebt(groupId) { debtData, error ->
+            if (debtData != null) {
+                completion(debtData, null)
             } else {
                 completion(null, error)
             }
         }
     }
-    fun deleteMember(groupId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit)
-    {
-        APIClient.getRepository().deleteMember(groupId,memberId) { groupData, error ->
-            if (groupData != null) {
-                completion(groupData, null)
-            } else {
-                completion(null , error)
-            }
-        }
-    }
-
-    fun getOptimizedDebtData(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit)
-    {
-        APIClient.getRepository().getOptimizedDebt(groupId) { debtData, error ->
-            if (debtData != null) {
-                completion(debtData, null)
-            } else {
-                completion(null , error)
-            }
-        }
-    }
-
 }

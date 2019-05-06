@@ -76,26 +76,6 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
 
 
     //GROUP
-    override fun getGroup(groupId: Int, completion: (response: Group?, error: String?) -> Unit) {
-        apiDefinition.getGroup(groupId).enqueue(object : Callback<Group> {
-            override fun onResponse(call: Call<Group>, response: Response<Group>) {
-                when (response?.code()) {
-                    in (200..300) -> {
-                        val group = response.body()
-                        completion(group, null)
-                    }
-                    else -> {
-                        completion(null, "get group error")
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<Group>, t: Throwable) {
-                completion(null, "get group error")
-            }
-        })
-    }
-
     override fun getGroupInfo(groupId: Int, completion: (response: GroupInfo?, error: String?) -> Unit) {
         apiDefinition.getGroupInfo(groupId).enqueue(object : Callback<GroupInfo> {
             override fun onResponse(call: Call<GroupInfo>, response: Response<GroupInfo>) {
@@ -237,6 +217,27 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
         })
     }
 
+    override fun getOptimizedDebt(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit) {
+        apiDefinition.getOptimizedDebt(groupId).enqueue(object : Callback<ArrayList<OptimizedDebtData>> {
+            override fun onResponse(call: Call<ArrayList<OptimizedDebtData>>, response: Response<ArrayList<OptimizedDebtData>>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val debtData = response.body()
+                        completion(debtData, null)
+                    }
+                    else -> {
+                        completion(null, "get optimized debt error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<OptimizedDebtData>>, t: Throwable) {
+                completion(null, "get optimized debt error")
+            }
+        })
+    }
+
+
     //TEST METHODS
     override fun getGroups(completion: (response: ArrayList<Group>?, error: String?) -> Unit) {
         apiDefinition.getGroups().enqueue(object : Callback<ArrayList<Group>> {
@@ -274,30 +275,6 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
 
             override fun onFailure(call: Call<ArrayList<User>>, t: Throwable) {
                 completion(null, "get users error")
-            }
-        })
-    }
-
-
-    override fun getOptimizedDebt(
-        groupId: Int,
-        completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit
-    ) {
-        apiDefinition.getOptimizedDebt(groupId).enqueue(object : Callback<ArrayList<OptimizedDebtData>> {
-            override fun onResponse(call: Call<ArrayList<OptimizedDebtData>>, response: Response<ArrayList<OptimizedDebtData>>) {
-                when (response?.code()) {
-                    in (200..300) -> {
-                        val debtData = response.body()
-                        completion(debtData, null)
-                    }
-                    else -> {
-                        completion(null, "get optimized debt error")
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<ArrayList<OptimizedDebtData>>, t: Throwable) {
-                completion(null, "get optimized debt error")
             }
         })
     }

@@ -12,8 +12,6 @@ interface RepositoryInterface {
     fun getUserId(completion: (response: UserData?, error: String?) -> Unit)
 
     //GROUP
-    fun getGroup(groupId: Int, completion: (response: Group?, error: String?) -> Unit)
-
     fun getGroupInfo(groupId: Int, completion: (response: GroupInfo?, error: String?) -> Unit)
 
     fun getGroupData(groupId: Int, completion: (response: GroupData?, error: String?) -> Unit)
@@ -30,12 +28,12 @@ interface RepositoryInterface {
 
     fun postSpending(newSpending: NewSpending, completion: (response: String?, error: String?) -> Unit)
 
+    fun getOptimizedDebt(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit)
+
     //TEST METHOD
     fun getUsers(completion: (response: ArrayList<User>?, error: String?) -> Unit)
 
 
-
-    fun getOptimizedDebt(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit)
   
     fun getGroups(completion: (response: ArrayList<Group>?, error: String?) -> Unit)
 }
