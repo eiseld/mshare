@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using MShare_ASP.Services;
+using MShare_ASP.Services.Exceptions;
 
 namespace MShare_ASP.Controllers {
 
@@ -129,7 +130,8 @@ namespace MShare_ASP.Controllers {
 
 		[HttpGet()]
         [Route("{groupid}/history")]
-		public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory(long groupid)
+        [AllowAnonymous]
+        public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory(long groupid)
 		{
 			return Ok(await GroupService.GetGroupHistory(groupid));
 		}
@@ -137,6 +139,8 @@ namespace MShare_ASP.Controllers {
 		[HttpPost("{groupid}/settledebt/{debtorid}/{lenderid}")]
 		public async Task<ActionResult> DebtSettlement(long debtorid, long lenderid, long groupid)
 		{
+            if (GetCurrentUserID() != debtorid && GetCurrentUserID() != lenderid)
+                throw new ResourceForbiddenException("user_not_debtor_or_lender");
 			await GroupService.DebtSettlement(debtorid, lenderid, groupid);
 			return Ok();
 		}

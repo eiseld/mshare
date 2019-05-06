@@ -18,12 +18,12 @@ namespace MShare_ASP.Data {
         [Column("id")]
         public long Id { get; set; }
         /// <summary>
-        /// Group id of the history
+        /// Associated group
         /// </summary>
         [Column("groupid")]
         public long GroupId { get; set; }
         /// <summary>
-        /// User id of the history
+        /// History creator
         /// </summary>
         [Column("userid")]
         public long UserId { get; set; }
@@ -31,11 +31,11 @@ namespace MShare_ASP.Data {
         /// Date of the history
         /// </summary>
         [Column("date")]
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
         /// <summary>
-        /// Balance of the history
+        /// Log that belongs to this history
         /// </summary>
-        [Column("balance")]
-        public int CreationDate { get; set; }
+        [Column("log")]
+        public string SerializedLog { get; set; }
     }
 }
