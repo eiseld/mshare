@@ -13,8 +13,10 @@ using MShare_ASP.Services.Exceptions;
 namespace MShare_ASP.Services {
     internal class SpendingService : ISpendingService {
         private MshareDbContext DbContext { get; set; }
-        public SpendingService(MshareDbContext dbContext) {
+        private ILoggingService _loggingService;
+        public SpendingService(MshareDbContext dbContext, ILoggingService loggingService) {
             DbContext = dbContext;
+            _loggingService = loggingService;
         }
         public async Task<IList<DaoSpending>> GetSpendingsForGroup(long id) {
             return await DbContext.Spendings
@@ -142,22 +144,32 @@ namespace MShare_ASP.Services {
             
             if (currentSpending.CreditorUserId != userId)
                 throw new ResourceForbiddenException("user_not_creditor");
+            using (var transaction = DbContext.Database.BeginTransaction()) {
+                try {
+                    await _loggingService.LogForGroup(userId, currentSpending.GroupId, currentSpending);
 
-            currentSpending.Name = spendingUpdate.Name;
-            currentSpending.MoneyOwed = spendingUpdate.MoneySpent;
+                    currentSpending.Name = spendingUpdate.Name;
+                    currentSpending.MoneyOwed = spendingUpdate.MoneySpent;
 
-            DbContext.Debtors.RemoveRange(currentSpending.Debtors);
-            var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
-            {
-                Spending = currentSpending,
-                DebtorUserId = x.DebtorId,
-                Debt = x.Debt
-            }).ToList();
-            currentSpending.Debtors = debtors.ToList();
+                    DbContext.Debtors.RemoveRange(currentSpending.Debtors);
+                    var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
+                    {
+                        Spending = currentSpending,
+                        DebtorUserId = x.DebtorId,
+                        Debt = x.Debt
+                    }).ToList();
+                    currentSpending.Debtors = debtors.ToList();
 
-            if (await DbContext.SaveChangesAsync() == 0)
-            {
-                throw new DatabaseException("spending_not_updated");
+                    if (await DbContext.SaveChangesAsync() == 0)
+                    {
+                        throw new DatabaseException("spending_not_updated");
+                    }
+
+                    transaction.Commit();
+                } catch {
+                    transaction.Rollback();
+                    throw;
+                }
             }
         }
     }
