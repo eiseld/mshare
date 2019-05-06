@@ -11,10 +11,12 @@ namespace MShare_ASP.Services {
     internal class GroupService : IGroupService {
         private readonly MshareDbContext _context;
         private ISpendingService _spendingService;
+		private IEmailService _emailService;
 
-        public GroupService(MshareDbContext context, ISpendingService spendingService) {
+        public GroupService(MshareDbContext context, ISpendingService spendingService, IEmailService emailService) {
             _context = context;
             _spendingService = spendingService;
+			_emailService = emailService;
         }
 
         private static Random rand = new Random();
@@ -182,6 +184,12 @@ namespace MShare_ASP.Services {
 
 			if (await _context.SaveChangesAsync() != 1)
 				throw new Exceptions.DatabaseException("group_member_not_added");
+			else
+			{
+				var groupCreator = _context.Users.FirstOrDefault(x => x.Id == userId);
+				var newMember = _context.Users.FirstOrDefault(x => x.Id == memberId);
+				await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newMember.DisplayName, newMember.Email, "MShare: Hozzáadva a(z) '" + group.Name + "' csoporthoz", groupCreator.DisplayName + " hozzáadott az alábbi csoporthoz: " + group.Name + ".");
+			}
 		}
 
 		public async Task DebtSettlement(long debtorId, long lenderId, long groupId)
