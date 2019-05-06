@@ -52,12 +52,7 @@ interface APIDefinition {
     @GET("/api/Auth")
     fun getUsers(): Call<ArrayList<User>>
 
-    @DELETE ("api/Group/{groupId}/members/remove/{memberId}")
-    fun deleteMember(@Path("groupId") groupId: Int, @Path("memberId") memberId: Int): Call<ResponseBody>
 
-    @GET("api/Profile")
-    fun getUserId(): Call<UserData>
-
-    @GET("api/Group/{groupId}/optimized")
+    @GET("api/Spending/{groupId}/optimised")
     fun getOptimizedDebt(@Path("groupId") groupId: Int) : Call<ArrayList<OptimizedDebtData>>
 }

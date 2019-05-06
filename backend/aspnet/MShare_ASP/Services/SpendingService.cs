@@ -67,7 +67,6 @@ namespace MShare_ASP.Services {
         }
 
 
-        }
 
         public long GetDebtSum(long userId, long groupId){
             var credit =  DbContext.Spendings
