@@ -6,6 +6,7 @@
 
     <string name="login">Login</string>
     <string name="forgotten_password">Forgotten password</string>
+    <string name="send_email">Send email</string>
     <string name="register">Register</string>
     <string name="registration">Registration</string>
 
