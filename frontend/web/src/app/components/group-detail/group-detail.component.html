@@ -12,6 +12,7 @@
       <p *ngIf="groupData.myCurrentBalance == 0">Egyenleg: rendezett</p>
       <p *ngIf="groupData.myCurrentBalance > 0">Egyenleg: tartoznak neked {{groupData.myCurrentBalance | currency}}-ral</p>
       <button class="btn btn-primary"  *ngIf="!createSpendingAttempt" (click)="startCreateSpending()">Költés hozzáadása</button>
+      <button class="btn btn-primary"  *ngIf="groupData.creator.name == currentUser.name" (click)="showPage(this.pages.groupManageMembers)">Tagok módosítása</button>
 <div class="groupMemberDetails" *ngIf="selectedPage==pages.groupMemberDetails">
  
     <h3>Tagok ({{groupData.memberCount}}):</h3>
@@ -41,4 +42,18 @@
     </li>
   </ul>
   </div>
+
+
+<div class="groupManageMembers" *ngIf="selectedPage==pages.groupManageMembers">
+  <h3>Tagok ({{groupData.memberCount}}):</h3>
+  <ul>
+    <li *ngFor="let memberData of groupData.members">
+      <span *ngIf="memberData.name != currentUser.name">{{memberData.name}}
+      <a (click)='deleteFromGroup(memberData.id,groupData.id)'><img src="assets/noun_Minus_2331758.png" alt="Csoportköltés" > </a> 
+      </span>
+    </li>
+  </ul>
+  <!--<button class="btn btn-primary"  (click)="addNewMember()">Új tag felvétele</button>-->
 </div>
+</div>
+

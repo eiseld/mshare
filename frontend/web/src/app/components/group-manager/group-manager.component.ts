@@ -98,6 +98,9 @@ export class GroupManagerComponent implements OnInit {
       },error => {this.error = "Sikertelen a költések betöltése!"});
   }
 
+
+
+
   startCreateSpending(spendingForGroupInfo:GroupInfo){
       let currentUser = this.authenticationService.currentUserValue;
       const httpOptions = {
