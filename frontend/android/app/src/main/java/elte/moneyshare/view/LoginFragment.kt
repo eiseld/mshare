@@ -50,6 +50,8 @@ class LoginFragment : Fragment() {
         registrationButton.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, RegisterFragment())?.addToBackStack(null)?.commit()
         }
-
+        forgottenPasswordButton.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, ForgotPasswordFragment())?.addToBackStack(null)?.commit()
+        }
     }
 }

@@ -75,6 +75,25 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
     }
 
 
+    override fun putForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.postForgotPassword(ForgottenPasswordData(email)).enqueue(object : Callback<ForgottenPasswordData> {
+            override fun onResponse(call: Call<ForgottenPasswordData>, response: Response<ForgottenPasswordData>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, "forgot password error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ForgottenPasswordData>, t: Throwable) {
+                completion(null, "forgot password error")
+            }
+        })
+    }
+
     //GROUP
     override fun getGroup(groupId: Int, completion: (response: Group?, error: String?) -> Unit) {
         apiDefinition.getGroup(groupId).enqueue(object : Callback<Group> {

@@ -7,6 +7,8 @@ interface RepositoryInterface {
     //AUTH
     fun putLoginUser(LoginCred: LoginCred, completion: (response: String?, error: String?) -> Unit)
 
+    fun putForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit)
+
     fun postRegisterUser(registrationData: RegistrationData, completion: (response: String?, error: String?) -> Unit)
 
     fun getUserId(completion: (response: UserData?, error: String?) -> Unit)
