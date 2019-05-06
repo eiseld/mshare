@@ -25,18 +25,19 @@ class OptimizedDebtRecyclerViewAdapter(private val context: Context, private val
     }
 
     override fun onBindViewHolder(holder: OptimizedDebtViewHolder, position: Int) {
-        val debt = DebtData[position]
-        holder.debtBalanceTextView.text = debt.OptimisedDebtAmount.toString()
+        val debt = DebtData[position%6]
+        holder.debtBalanceTextView.text = debt.optimisedDebtAmount.toString()
         //If i'm the creditor
-        if(debt.Creditor._id == SharedPreferences.userId)
+
+        if(debt.creditor.id == SharedPreferences.userId)
         {
-            holder.debtNameTextView.text = debt.Debtor.dispalyname
-            holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owe), debt.OptimisedDebtAmount)
+            holder.debtNameTextView.text = debt.debtor.name
+            holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owe), debt.optimisedDebtAmount)
         }
         //If i'm the debtor
-        else if(debt.Debtor._id == SharedPreferences.userId){
-            holder.debtNameTextView.text = debt.Creditor.dispalyname
-            holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owned), debt.OptimisedDebtAmount)
+        else if(debt.debtor.id == SharedPreferences.userId){
+            holder.debtNameTextView.text = debt.creditor.name
+            holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owned), debt.optimisedDebtAmount)
         }
         //Not relevant for user
         else

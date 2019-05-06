@@ -1,7 +1,7 @@
 package elte.moneyshare.entity
 
 data class OptimizedDebtData (
-    var Debtor : UserData,
-    var Creditor : UserData,
-    var OptimisedDebtAmount : Long
+    var debtor : UserData,
+    var creditor : UserData,
+    var optimisedDebtAmount : Long
 )
