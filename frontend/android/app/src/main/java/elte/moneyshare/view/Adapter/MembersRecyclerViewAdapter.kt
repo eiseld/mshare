@@ -28,24 +28,23 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
         val member = groupData.members[position]
 
         holder.memberNameTextView.text = member.name
-        holder.memberBalanceTextView.text = member.balance.toString()
+        holder.memberBalanceTextView.text = member.balance.toString() + " Ft"
         //TODO real creator
 
-        if (member.balance < 0) {
+        /*if (member.balance < 0) {
             holder.memberBalanceTextView.text = String.format(context.getString(R.string.group_owned), member.balance)
         } else if (member.balance > 0) {
             holder.memberBalanceTextView.text = String.format(context.getString(R.string.group_owe), member.balance)
         } else {
             holder.memberBalanceTextView.text = context.getString(R.string.group_settled_up)
-        }
-
+        }*/
         if (groupData.creator.id == member.id) {
             holder.memberOwnerTextView.visible()
         } else {
             holder.memberOwnerTextView.gone()
         }
 
-        if(groupData.creator.id == SharedPreferences.userId && Model.isDeleteMemberEnabled) {
+        if(groupData.creator.id == SharedPreferences.userId && SharedPreferences.isDeleteMemberEnabled) {
             holder.removeButton.visible()
         } else {
             holder.removeButton.gone()
@@ -64,5 +63,7 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
                 }
             }
         }
+
     }
+
 }
