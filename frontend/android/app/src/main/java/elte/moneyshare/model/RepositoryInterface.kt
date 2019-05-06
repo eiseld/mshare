@@ -33,5 +33,13 @@ interface RepositoryInterface {
     //TEST METHOD
     fun getUsers(completion: (response: ArrayList<User>?, error: String?) -> Unit)
 
+    fun postUpdateGroups(completion: (response: Any?, error: String?) -> Unit)
+
+    fun deleteMember(groupId: Int,memberId : Int, completion: (response: String?, error: String?) -> Unit)
+
+    fun getUserId(completion: (response: UserData?, error: String?) -> Unit)
+
+    fun getOptimizedDebt(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit)
+  
     fun getGroups(completion: (response: ArrayList<Group>?, error: String?) -> Unit)
 }

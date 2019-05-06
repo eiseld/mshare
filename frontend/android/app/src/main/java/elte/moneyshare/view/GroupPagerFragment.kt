@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.*
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
+import elte.moneyshare.SharedPreferences
 import elte.moneyshare.view.Adapter.GroupPagerAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_group.*
@@ -52,7 +53,18 @@ class GroupPagerFragment : Fragment() {
             }
 
             R.id.removeMember -> {
-                viewModel.isDeleteMemberEnabled = !viewModel.isDeleteMemberEnabled
+                //viewModel.isDeleteMemberEnabled = !viewModel.isDeleteMemberEnabled
+                SharedPreferences.isDeleteMemberEnabled = !SharedPreferences.isDeleteMemberEnabled
+                val fragment = GroupPagerFragment()
+                val args = Bundle()
+                groupId?.let {
+                    args.putInt(FragmentDataKeys.GROUP_PAGER_FRAGMENT.value, it)
+                }
+                fragment.arguments = args
+                (context as MainActivity).supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
+                return true
+            }
+            R.id.myDebts -> {
                 return true
             }
             else ->

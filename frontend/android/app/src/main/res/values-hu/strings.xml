@@ -40,4 +40,6 @@
     <string name="cannot_be_empty">Nem lehet üres</string>
     <string name="max_spending_limit">Max megmaradt összeg %1$d Ft</string>
 
+    <string name="my_debts">Saját tartozásaim</string>
+
 </resources>

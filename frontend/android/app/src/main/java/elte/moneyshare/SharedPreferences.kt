@@ -13,6 +13,8 @@ object SharedPreferences {
 
     private val USER_ID = "user_id"
 
+    private val DELETE_MEMBER_ENABLED = "delete_member_enabled"
+
     private lateinit var user: User
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -46,6 +48,16 @@ object SharedPreferences {
         set(id) {
             with(sharedPreferences.edit()) {
                 putInt(USER_ID, id)
+                apply()
+            }
+        }
+
+    var isDeleteMemberEnabled : Boolean
+        get() = sharedPreferences.getBoolean(DELETE_MEMBER_ENABLED, false)
+        set(enabled)
+        {
+            with(sharedPreferences.edit()){
+                putBoolean(DELETE_MEMBER_ENABLED,enabled)
                 apply()
             }
         }
