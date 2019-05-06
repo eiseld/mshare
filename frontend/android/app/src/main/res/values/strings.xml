@@ -42,6 +42,5 @@
     <string name="cannot_be_empty">Cannot be empty</string>
     <string name="max_spending_limit">Max remainder spending %1$d Ft</string>
 
-    <string name="my_debts">My debts</string>
 
 </resources>
