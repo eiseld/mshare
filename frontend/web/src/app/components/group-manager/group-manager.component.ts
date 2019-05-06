@@ -168,13 +168,23 @@ export class GroupManagerComponent implements OnInit {
         'Content-Type': 'application/json'
       })
     };
-    this.http.post<any>(`${environment.API_URL}//Group/${this.selectedGroupId}/members/add/${this.userModel.id}`,
-      {name: this.newGroup},
-      httpOptions)
-      .subscribe(
-        data => {this.selectedUser = null;this.error = 'A felhasználó hozzáadása sikeresen megtörtént'},
-        error => {this.selectedUser = {};this.error="Sikertelen a személy hozzáadása a kiválasztott csoporthoz!"}
-      );
+    if( undefined !== this.userModel) {
+      this.http.post<any>(`${environment.API_URL}//Group/${this.selectedGroupId}/members/add/${this.userModel.id}`,
+        {name: this.newGroup},
+        httpOptions)
+        .subscribe(
+          data => {
+            this.selectedUser = null;
+            this.error = 'A felhasználó hozzáadása sikeresen megtörtént'
+          },
+          error => {
+            this.selectedUser = {};
+            this.error = "Sikertelen a személy hozzáadása a kiválasztott csoporthoz!"
+          }
+        );
+    }else{
+      this.error = 'Sikertelen a személy hozzáadása a kiválasztott csoporthoz!';
+    }
   }
 
   private getDismissReason(reason: any): string {
