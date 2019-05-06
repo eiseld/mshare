@@ -39,7 +39,7 @@ interface APIDefinition {
     fun getProfileGroups(): Call<ArrayList<GroupInfo>>
 
     @POST("/api/profile/password/forgot")
-    fun postForgotPassword(@Body email: ForgottenPasswordData): Call<ForgottenPasswordData>
+    fun postForgotPassword(@Body email: ForgottenPasswordData): Call<String>
 
     @POST("/api/groups/newgroup/{groupName}")
     fun postNewGroup(@Path("groupName") groupName : String) : Call<NewGroupData>
