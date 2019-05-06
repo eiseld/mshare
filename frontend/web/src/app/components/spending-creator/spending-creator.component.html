@@ -1,6 +1,7 @@
 <div class="SpendingCreator" *ngIf="createSpendingAttempt" >
  
-  <h2>Költés hozzáadása</h2>
+  <h2 *ngIf="!modifySpendingAttempt">Költés hozzáadása</h2>
+  <h2 *ngIf="modifySpendingAttempt">Költés módosítása</h2>
   <div>
     Leírás: <input class="spendingNameInput" [(ngModel)]="spending.name" placeholder="leírás">
     <button id=startAddDebtorButton class="btn btn-primary" (click)="startAddDebtor()"  *ngIf="!addDebtorAttempt">Új személy hozzáadása</button>
