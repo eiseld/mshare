@@ -3,11 +3,12 @@
 
     <string name="base_url_value">http://192.168.99.100/</string>
     <string name="access_token_key">Authorization</string>
-
+    <string name="email_sent">Elküldtük a megadott levélre a jelszó változtatáshoz szükséges linket, kérem kattintson rá!</string>
     <string name="login">Belépés</string>
     <string name="forgotten_password">Elfelejtett jelszó</string>
     <string name="register">Regisztráció</string>
     <string name="registration">Regisztráció</string>
+    <string name="send_email">Email küldése</string>
 
     <string name="username">Felahsználónév</string>
     <string name="password">Jelszó</string>
