@@ -1,9 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { GroupedObservable } from 'rxjs';
+import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment'
 import { AuthService } from '../../services/auth.service';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {Observable} from "rxjs";
+import {debounceTime, map} from "rxjs/operators";
+import {distinctUntilChanged} from "rxjs/internal/operators/distinctUntilChanged";
+import { Spending } from '../spending-creator/spending-creator.component'
 
 @Component({
   selector: 'app-group-manager',
@@ -12,18 +15,64 @@ import { AuthService } from '../../services/auth.service';
 })
 export class GroupManagerComponent implements OnInit {
 
-  constructor( private http: HttpClient, private authenticationService: AuthService) {}
+  constructor( private http: HttpClient, private authenticationService: AuthService,public modalService: NgbModal) {}
 
   @Input() newGroup: string = "";
   createGroupAttempt = false;
-  
+  createSpendingAttempt = false;
+  spendingForGroupData : GroupData;
   groupInfos: GroupInfo[] = [];
   error : string = "";
+  selectedGroup: GroupData = null;
+  selectedGroupSpendings: Spending[]=null;
+  closeResult: string;
+  users: any[] = [];
+  @Input() selectedUser: any;
+  selectedGroupId: number;
+  userModel : any;
+  @Output() passEntry: EventEmitter<any> = new EventEmitter();
+  currentUser: any;
 
-  ngOnInit() {
+  search = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term => term.length <= 3 ? []
+        : this.users.filter(v => v.displayName.toLowerCase().startsWith(term.toLocaleLowerCase())).
+        splice(0, 10).map(user => user.displayName + '-' + user.email)
+    ));
+
+  ngOnInit() {    const httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  };
+    this.http.get<any>(`${environment.API_URL}/profile`, httpOptions)
+      .subscribe(user => {
+        this.currentUser = user;
+      },error => {this.error = "Sikertelen a jelenlegi felhasználó betöltése"});
+    console.log(this.authenticationService.currentUserValue.username + ' --000');
     this.getGroups();
   }
 
+  onKeyDown(event: any){
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'filter' : event.target.value
+      })
+    };
+
+    if(3 == event.target.value.length) {
+      this.users = [];
+      this.http.get<any[]>(`${environment.API_URL}/Group/searchinallusers/${event.target.value}`, httpOptions)
+        .subscribe(list => {
+          for (let user of list) {
+          this.users.push(user);
+          }
+          },error => {this.error = "Sikertelen a felhasználók betöltése!"});
+    }
+  }
   getGroups() {
     let currentUser = this.authenticationService.currentUserValue;
     const httpOptions = {
@@ -49,9 +98,7 @@ export class GroupManagerComponent implements OnInit {
     this.newGroup = "";
     this.error = "";
   }
-  
-  selectedGroup: GroupData = null;
-  
+
   stopCreateGroup(){
     this.createGroupAttempt = false;
   }
@@ -73,6 +120,12 @@ export class GroupManagerComponent implements OnInit {
     this.createGroupAttempt = false;
   }
 
+  updateSelectedGroup(){
+    if(this.selectedGroup!=null){
+      this.selectGroup(new GroupInfo(this.selectedGroup));
+    }
+  }
+
   selectGroup(groupInfo : GroupInfo){
 	let currentUser = this.authenticationService.currentUserValue;
 	const httpOptions = {
@@ -84,6 +137,74 @@ export class GroupManagerComponent implements OnInit {
 	.subscribe(data => {
 		this.selectedGroup = data
     },error => {this.error = "Sikertelen a csoport betöltése!"});
+    this.http.get<Spending[]>(`${environment.API_URL}/spending/${groupInfo.id}`, httpOptions)
+    .subscribe(data => {
+      this.selectedGroupSpendings = data;
+      },error => {this.error = "Sikertelen a költések betöltése!"});
+  }
+
+  startCreateSpending(spendingForGroupInfo:GroupInfo){
+      let currentUser = this.authenticationService.currentUserValue;
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      };
+    this.http.get<GroupData>(`${environment.API_URL}/group/${spendingForGroupInfo.id}/data`, httpOptions)
+    .subscribe(data => {
+      this.spendingForGroupData = data
+      this.createSpendingAttempt = true;
+      },error => {this.error = "Sikertelen a csoport betöltése!"});
+  }
+
+  stopCreateSpendingAttempt(){
+    this.createSpendingAttempt=false;
+    }
+
+  open(content, groupInfo: any) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+    this.selectedGroupId = groupInfo.id;
+  }
+
+  stringToUser() {
+   this.userModel =this.users.find(e => e.displayName ===this.selectedUser.split('-')[0] && e.email === this.selectedUser.split('-')[1]);
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    if( undefined !== this.userModel) {
+      this.http.post<any>(`${environment.API_URL}//Group/${this.selectedGroupId}/members/add/${this.userModel.id}`,
+        {name: this.newGroup},
+        httpOptions)
+        .subscribe(
+          data => {
+            this.selectedUser = null;
+            this.error = 'A felhasználó hozzáadása sikeresen megtörtént'
+          },
+          error => {
+            this.selectedUser = null;
+            this.error = "Sikertelen a személy hozzáadása a kiválasztott csoporthoz!"
+          }
+        );
+    }else{
+      this.error = 'A megadott felhasználó nem létezik!';
+    }
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
   }
 }
 
@@ -93,6 +214,13 @@ export class GroupInfo {
   creator: string;
   memberCount: number;
   myCurrentBalance: number;
+  constructor(groupData: GroupData) {
+    this.id = groupData.id;
+    this.name = groupData.name;
+    this.creator = groupData.creator.name;
+    this.memberCount = groupData.memberCount;
+    this.myCurrentBalance = groupData.myCurrentBalance;
+  }
 }
 
 export class GroupData {

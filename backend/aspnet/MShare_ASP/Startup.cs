@@ -96,6 +96,8 @@ namespace MShare_ASP {
             services.AddTransient<IGroupService, GroupService>();
             services.AddTransient<ITimeService, TimeService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ISpendingService, SpendingService>();
+            services.AddTransient<ILoggingService, LoggingService>();
 
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("MShareSettings")["SecretKey"]);
             services.AddAuthentication(x => {
