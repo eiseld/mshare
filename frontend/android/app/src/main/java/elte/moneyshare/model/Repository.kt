@@ -320,4 +320,23 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
         })
     }
+
+    override fun putDebitEqualization(groupId: Int, ownId: Int,selectedMember: Int, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.putDebitEqualization(groupId,ownId,selectedMember).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, "Debt settlement error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                completion(null, "Debt settlement error")
+            }
+        })
+    }
 }

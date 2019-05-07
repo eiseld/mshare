@@ -4,6 +4,7 @@ li{
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1.1em;
     list-style-type: none;
+    cursor: pointer;
 }
 p {
     line-height:0%
@@ -16,8 +17,21 @@ li:hover{
     background-color: lightcyan;
 }
 
+.groupDetails{
+    display: inline-block;
+}
 .debtOfDebtor{
     color:#3BB300;
+}
+.debtSettler{
+    min-width: 300px;
+    width: 30%;
+    max-width: 500px;
+    z-index: 10;
+    position: fixed;
+    top: 10%;
+    vertical-align: center;
+    align-content: center;
 }
 
 .defaultDebtOfDebtor{

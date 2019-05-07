@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, Output, OnChanges, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
 import { GroupInfo, GroupData, MemberData } from '../group-manager/group-manager.component';
 import { Spending } from '../spending-creator/spending-creator.component'
-import { Output, EventEmitter } from '@angular/core'; 
 
 @Component({
   selector: 'app-group-detail',
@@ -11,6 +10,8 @@ import { Output, EventEmitter } from '@angular/core';
 })
 export class GroupDetailComponent implements OnChanges {
   @Input() groupData: GroupData;
+  @Output() updateSelectedGroupEvent = new EventEmitter();
+
   @Input() spendings: Spending[];
   calculatedSpendings: CalculatedSpending[]=[];
   pages={groupMemberDetails:0,groupSpendingDetails:1};
@@ -26,6 +27,8 @@ export class GroupDetailComponent implements OnChanges {
   }
 
   constructor() { }
+
+  selectedMember: MemberData = null;
 
   calcGroupSpending(){
     if(this.calculatedSpendings!=undefined){
@@ -46,6 +49,14 @@ export class GroupDetailComponent implements OnChanges {
   }
 
   ngOnInit() {
+  }
+
+  selectMember(memberData : MemberData){
+    this.selectedMember=memberData;
+  }
+
+  unselectMember(){
+    this.selectedMember=undefined;
 
   }
 
@@ -54,6 +65,10 @@ export class GroupDetailComponent implements OnChanges {
     if(this.selectedPage==this.pages.groupSpendingDetails){
       this.calcGroupSpending();
     }
+  }
+  
+  updateSelectedGroup(){
+    this.updateSelectedGroupEvent.next();
   }
 }
 

@@ -60,6 +60,8 @@ interface APIDefinition {
     @GET("/api/Auth")
     fun getUsers(): Call<ArrayList<User>>
 
+    @POST("api/group/{groupId}/settledebt/{data}/{selectedMember}")
+    fun putDebitEqualization(@Path("groupId") groupId: Int,@Path("data") data: Int,@Path("selectedMember") selectedMember: Int): Call<Any>
 
     @GET("api/Spending/{groupId}/optimised")
     fun getOptimizedDebt(@Path("groupId") groupId: Int) : Call<ArrayList<OptimizedDebtData>>

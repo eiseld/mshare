@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.*
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.GroupData
@@ -60,6 +60,31 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
                     Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        holder.debitButton.setOnClickListener()
+        {
+            if (member.balance < 0){
+            Model.doDebitEqualization(groupData.id ,SharedPreferences.userId,member.id) { response, error ->
+                if(error == null) {
+                    val index = groupData.members.indexOf(member)
+                    notifyItemChanged(index)
+                    Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                }
+            }
+            }else if(member.balance > 0){
+                Model.doDebitEqualization(groupData.id ,member.id, SharedPreferences.userId) { response, error ->
+                    if(error == null) {
+                        val index = groupData.members.indexOf(member)
+                        notifyItemChanged(index)
+                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
