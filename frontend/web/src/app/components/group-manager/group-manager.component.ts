@@ -2,11 +2,11 @@ import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment'
 import { AuthService } from '../../services/auth.service';
+import { Spending, DebtorData } from '../spending-creator/spending-creator.component'
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {Observable} from "rxjs";
 import {debounceTime, map} from "rxjs/operators";
 import {distinctUntilChanged} from "rxjs/internal/operators/distinctUntilChanged";
-import { Spending } from '../spending-creator/spending-creator.component'
 
 @Component({
   selector: 'app-group-manager',
@@ -137,9 +137,19 @@ export class GroupManagerComponent implements OnInit {
 	.subscribe(data => {
 		this.selectedGroup = data
     },error => {this.error = "Sikertelen a csoport betöltése!"});
-    this.http.get<Spending[]>(`${environment.API_URL}/spending/${groupInfo.id}`, httpOptions)
-    .subscribe(data => {
-      this.selectedGroupSpendings = data;
+    this.http.get<any[]>(`${environment.API_URL}/spending/${groupInfo.id}`, httpOptions)
+    .subscribe(data => { 
+      this.selectedGroupSpendings = <Spending[]>data.map(x=><Spending>{
+        name: x.name,
+        moneyOwed: x.moneyOwed,
+        debtors: x.debtors.map(
+          (debtor)=><DebtorData>{
+            id: debtor.id,
+            name: debtor.name,
+            balance: debtor.debt,
+            defaultBalance: debtor.defaultBalance,
+          }),
+      });
       },error => {this.error = "Sikertelen a költések betöltése!"});
   }
 

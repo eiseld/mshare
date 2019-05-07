@@ -1,36 +1,13 @@
 package elte.moneyshare.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import elte.moneyshare.entity.Group
-import elte.moneyshare.entity.GroupData
-import elte.moneyshare.entity.GroupInfo
-import elte.moneyshare.entity.NewGroup
+import elte.moneyshare.entity.*
 import elte.moneyshare.model.APIClient
 
-class GroupsViewModel :ViewModel(){
-
-    var currentGroup: Group? = null
-    //var currentBills: Bills? = null
+class GroupsViewModel : ViewModel() {
 
     fun postNewGroup(name: String, completion: (response: String?, error: String?) -> Unit) {
         APIClient.getRepository().postNewGroup(NewGroup(name)) { response, error ->
-            if (error == null) {
-                //have to update groups after new added
-                postUpdateGroups { _, error ->
-                    if (error == null)
-                        completion(response, null)
-                    else {
-                        completion(null, error)
-                    }
-                }
-            } else {
-                completion(null, error)
-            }
-        }
-    }
-
-    private fun postUpdateGroups(completion: (response: Any?, error: String?) -> Unit) {
-        APIClient.getRepository().postUpdateGroups { response, error ->
             if (error == null) {
                 completion(response, null)
             } else {
@@ -49,12 +26,12 @@ class GroupsViewModel :ViewModel(){
         }
     }
 
-    fun getGroupData(id: Int, completion: (group: GroupData?, error: String?) -> Unit) {
-        APIClient.getRepository().getGroupData(id) { groupData, error ->
-            if (groupData != null) {
-                completion(groupData, null)
+    fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit) {
+        APIClient.getRepository().getSpendings(groupId) { spendings, error ->
+            if (spendings != null) {
+                completion(spendings, null)
             } else {
-                completion(null , error)
+                completion(null, error)
             }
         }
     }

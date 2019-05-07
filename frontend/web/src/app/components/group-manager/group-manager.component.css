@@ -90,7 +90,9 @@ div ul li a{
 
 .spendingCreator{
     z-index: 10;
-    position: absolute;
+    position: fixed;
     vertical-align: center;
-    align-content: center;
+    align-content: center; 
+    overflow-y: auto;
+    max-height: 80%;
 }

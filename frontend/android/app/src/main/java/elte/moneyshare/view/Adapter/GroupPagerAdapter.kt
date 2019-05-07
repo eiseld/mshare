@@ -17,10 +17,10 @@ class GroupPagerAdapter(var groupId: Int, var tabs: List<String>, fragmentManage
     override fun getItem(position: Int): Fragment {
         var fragment = Fragment()
         val args = Bundle()
+        args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, groupId)
 
         when(position) {
             0 -> {
-                args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, groupId)
                 fragment = MembersFragment()
             }
             1 -> {

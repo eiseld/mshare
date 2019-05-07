@@ -22,7 +22,7 @@ export class GroupDetailComponent implements OnChanges {
   }
 
   startCreateSpending() {
-    this.startSpendingCreation.next(new GroupInfo(this.groupData));
+    this.startSpendingCreation.emit(new GroupInfo(this.groupData));
   }
 
   constructor() { }
