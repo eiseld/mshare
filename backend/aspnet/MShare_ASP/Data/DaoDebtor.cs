@@ -22,7 +22,7 @@ namespace MShare_ASP.Data {
         [Column("debtor_user_id")]
         public long DebtorUserId { get; set; }
         /// <summary>
-        /// Dept of this debtor
+        /// Debt of this debtor
         /// </summary>
         [Column("debt")]
         public long? Debt { get; set; }
@@ -33,7 +33,7 @@ namespace MShare_ASP.Data {
         [JsonIgnore]
         public virtual DaoSpending Spending { get; set; }
         /// <summary>
-        /// Deptor contained in this junction
+        /// Debtor contained in this junction
         /// </summary>
         [ForeignKey("DebtorUserId")]
         [JsonIgnore]

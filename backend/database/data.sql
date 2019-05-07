@@ -176,6 +176,36 @@ UNLOCK TABLES;
 
 
 --
+-- Table structure for table `history`
+--
+
+DROP TABLE IF EXISTS `history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `history` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `groupid` bigint(20) unsigned NOT NULL,
+  `userid` bigint(20) unsigned NOT NULL,
+  `date` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `log` TEXT NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_group_mapping` (`groupid`),
+  KEY `fk_user_mapping` (`userid`),
+  CONSTRAINT `fk_group_mapping` FOREIGN KEY (`groupid`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_mapping` FOREIGN KEY (`userid`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `history`
+--
+
+LOCK TABLES `history` WRITE;
+/*!40000 ALTER TABLE `history` DISABLE KEYS */;
+/*!40000 ALTER TABLE `history` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `spendings`
 --
 

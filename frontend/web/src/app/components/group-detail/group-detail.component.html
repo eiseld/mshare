@@ -35,7 +35,7 @@
       <h5>Egyenleg: {{calculatedSpending.spending.moneyOwed | currency}}</h5>
       <ul>
         <li *ngFor="let debtor of calculatedSpending.spending.debtors">
-            <div class="debtorData">{{debtor.name}} <div class=debtOfDebtor *ngIf="debtor.debt!=undefined">{{debtor.debt | currency}}</div> <div class=defaultDebtOfDebtor *ngIf="debtor.debt==undefined">{{calculatedSpending.defaultDebt | currency}}</div></div>
+            <div class="debtorData">{{debtor.name}} <div class=debtOfDebtor *ngIf="debtor.balance!=undefined">{{debtor.balance | currency}}</div> <div class=defaultDebtOfDebtor *ngIf="debtor.balance==undefined">{{debtor.defaultBalance | currency}}</div></div>
         </li>
       </ul>
     </li>
