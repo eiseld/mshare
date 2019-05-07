@@ -7,5 +7,5 @@ import kotlinx.android.parcel.Parcelize
 data class RegistrationData (
     val email : String,
     val password : String,
-    val displayName : String
+    val displayname : String
 ) : Parcelable

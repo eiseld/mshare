@@ -49,9 +49,9 @@ class GroupsFragment : Fragment() {
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupsViewModel::class.java)
 
-            viewModel.getProfileGroups { groupsInfo, error ->
-                if (groupsInfo != null) {
-                    val adapter = GroupsRecyclerViewAdapter(it, groupsInfo)
+            viewModel.getGroups { groups, error ->
+                if (groups != null) {
+                    val adapter = GroupsRecyclerViewAdapter(it, groups)
                     groupsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     groupsRecyclerView.adapter = adapter
                 } else {
@@ -61,7 +61,6 @@ class GroupsFragment : Fragment() {
         }
     }
 
-    //livedata would be better to observe changes on data
     override fun onResume() {
         super.onResume()
         getGroups()

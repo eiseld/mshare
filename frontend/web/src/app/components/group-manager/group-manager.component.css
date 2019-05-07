@@ -56,8 +56,7 @@ a{
     display: inline-block;
 }
 .groupElement p{
-   line-height:100%;
-   margin: 0%;
+   line-height:20%
 }
 .groupListParent{
 	width: 20%;
@@ -65,32 +64,4 @@ a{
 }
 .clear{
 	clear: both;
-}
-div ul li a{
-    max-width: 80%;
-    display: inline-flexbox;
-}
-
-.createSpendingButton{
-    width: 75px;
-    height: 150px;
-    display: inline-block;
-    float: right;
-}
-
-.createSpendingButton img{
-    width: 75px;
-    height: 75px;
-}
-
-*{
-    z-index: 0;
-    position: relative;
-}
-
-.spendingCreator{
-    z-index: 10;
-    position: absolute;
-    vertical-align: center;
-    align-content: center;
 }

@@ -22,16 +22,6 @@ namespace MShare_ASP.Data {
         /// Junction table for many-to-many user-group connections
         /// </summary>
         public DbSet<DaoUsersGroupsMap> UsersGroupsMap { get; set; }
-        /// <summary>
-        /// Spendings of the groups
-        /// </summary>
-        public DbSet<DaoSpending> Spendings { get; set; }
-        /// <summary>
-        /// Junction table with data for many-to-many debtor-spending connections
-        /// </summary>
-        public DbSet<DaoDebtor> Depters { get; set; }
-
-        public DbSet<DaoOptimizedDebt> OptimizedDebt { get; set;}
 
         /// <summary>
         /// Initializes a new DbContext
@@ -53,15 +43,9 @@ namespace MShare_ASP.Data {
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<DaoUsersGroupsMap>()
                 .HasKey(o => new { o.UserId, o.GroupId });
-
-            modelBuilder.Entity<DaoEmailToken>()
-                .HasKey(o => new { o.UserId, o.Token });
-
-            modelBuilder.Entity<DaoDebtor>()
-                .HasKey(o => new { o.DebtorUserId, o.SpendingId });
-
-            modelBuilder.Entity<DaoOptimizedDebt>()
-                .HasKey(o => new {o.GroupId, o.UserOwesId, o.UserOwedId });
+				
+			modelBuilder.Entity<DaoEmailToken>()
+				.HasKey(o => new { o.UserId, o.Token });
         }
     }
 }
