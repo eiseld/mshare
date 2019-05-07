@@ -35,5 +35,11 @@
     <string name="add">Hozzáadás</string>
     <string name="select_members">Emberek kiválasztása</string>
     <string name="my_balance">Egyenlegem:</string>
+    <string name="next">Következő</string>
+    <string name="must_be_bigger_than_0">Nagyobbna kell lennie mint 0</string>
+    <string name="cannot_be_empty">Nem lehet üres</string>
+    <string name="max_spending_limit">Max megmaradt összeg %1$d Ft</string>
+
+    <string name="my_debts">Saját tartozásaim</string>
 
 </resources>

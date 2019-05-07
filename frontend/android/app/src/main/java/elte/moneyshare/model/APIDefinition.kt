@@ -59,4 +59,8 @@ interface APIDefinition {
 
     @GET("/api/Auth")
     fun getUsers(): Call<ArrayList<User>>
+
+
+    @GET("api/Spending/{groupId}/optimised")
+    fun getOptimizedDebt(@Path("groupId") groupId: Int) : Call<ArrayList<OptimizedDebtData>>
 }
