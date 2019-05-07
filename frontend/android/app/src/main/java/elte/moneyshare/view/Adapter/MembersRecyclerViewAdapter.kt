@@ -63,7 +63,5 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
                 }
             }
         }
-
     }
-
 }

@@ -31,6 +31,9 @@ interface APIDefinition {
     @DELETE ("api/Group/{groupId}/members/remove/{memberId}")
     fun deleteMember(@Path("groupId") groupId: Int, @Path("memberId") memberId: Int): Call<ResponseBody>
 
+    @POST ("api/Group/{groupId}/members/add/{memberId}")
+    fun postMember(@Path("groupId") groupId: Int, @Path("memberId") memberId: Int): Call<ResponseBody>
+
     //PROFILE
     @GET("/api/Profile/groups")
     fun getProfileGroups(): Call<ArrayList<GroupInfo>>

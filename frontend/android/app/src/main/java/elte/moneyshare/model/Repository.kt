@@ -10,7 +10,7 @@ import retrofit2.Response
 
 class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface {
 
-    //AUTH
+    //AUTHa
     override fun putLoginUser(loginCred: LoginCred, completion: (response: String?, error: String?) -> Unit) {
         apiDefinition.putLoginUser(loginCred).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
@@ -153,6 +153,26 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
         })
     }
+
+    override fun postMember(groupId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.postMember(groupId, memberId).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, "Error during add member")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, "Error during add member")
+            }
+        })
+    }
+
 
 
     //PROFILE

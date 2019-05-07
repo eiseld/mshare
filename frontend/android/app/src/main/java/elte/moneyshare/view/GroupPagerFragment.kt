@@ -4,12 +4,14 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
-import elte.moneyshare.FragmentDataKeys
-import elte.moneyshare.R
-import elte.moneyshare.SharedPreferences
 import elte.moneyshare.view.Adapter.GroupPagerAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_group.*
+import android.support.v4.view.MenuItemCompat
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SearchView
+import elte.moneyshare.*
+import elte.moneyshare.view.Adapter.SearchResultsRecyclerViewAdapter
 
 class GroupPagerFragment : Fragment() {
 
@@ -32,6 +34,40 @@ class GroupPagerFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_group, menu)
         super.onCreateOptionsMenu(menu, inflater)
+
+        val item = menu.findItem(R.id.menuSearch)
+        val searchView = SearchView((context as MainActivity).supportActionBar!!.themedContext)
+        MenuItemCompat.setShowAsAction(item,MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItemCompat.SHOW_AS_ACTION_IF_ROOM)
+        MenuItemCompat.setActionView(item, searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                val adapter = SearchResultsRecyclerViewAdapter(context!!, newText, groupId!!, viewModel)
+                searchResultsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                searchResultsRecyclerView?.adapter = adapter
+
+                if(newText.equals("")){
+                    searchResultsRecyclerView?.invisible()
+                    tabLayout?.visible()
+                } else {
+                    searchResultsRecyclerView?.visible()
+                    tabLayout?.invisible()
+                }
+                return false
+            }
+        })
+
+        searchView.setOnClickListener {}
+        searchView.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                searchResultsRecyclerView.visible()
+            } else {
+                searchResultsRecyclerView.invisible()
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -48,7 +84,8 @@ class GroupPagerFragment : Fragment() {
 
                 return true
             }
-            R.id.addMember -> {
+            R.id.menuSearch -> {
+
                 return true
             }
 
@@ -86,7 +123,7 @@ class GroupPagerFragment : Fragment() {
         initViewPager()
     }
 
-    private fun initViewPager() {
+    fun initViewPager() {
         groupId?.let {
             pagerAdapter = GroupPagerAdapter(it, tabs, childFragmentManager)
             viewPager.adapter = pagerAdapter

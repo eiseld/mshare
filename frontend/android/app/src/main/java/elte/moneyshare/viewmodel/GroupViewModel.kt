@@ -58,11 +58,20 @@ class GroupViewModel: ViewModel() {
         }
     }
 
-    fun deleteMember(groupId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit)
-    {
-        APIClient.getRepository().deleteMember(groupId,memberId) { groupData, error ->
-            if (groupData != null) {
-                completion(groupData, null)
+    fun deleteMember(groupId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit) {
+        APIClient.getRepository().deleteMember(groupId, memberId) { response, error ->
+            if (response != null) {
+                completion(response, null)
+            } else {
+                completion(null , error)
+            }
+        }
+    }
+
+    fun postMember(groupId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit) {
+        APIClient.getRepository().postMember(groupId, memberId) { response, error ->
+            if (response != null) {
+                completion(response, null)
             } else {
                 completion(null , error)
             }
