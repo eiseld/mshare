@@ -29,8 +29,8 @@ object APIClient {
         val interceptorForHeaders = createHeadersInterceptor()
 
         val client = OkHttpClient.Builder()
-            .addInterceptor(interceptorForHeaders)
             .addInterceptor(interceptorForLogging)
+            .addInterceptor(interceptorForHeaders)
             .build()
 
         val gson = GsonBuilder().setLenient().create()

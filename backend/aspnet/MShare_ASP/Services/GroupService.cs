@@ -7,20 +7,18 @@ using MShare_ASP.API.Request;
 using MShare_ASP.Data;
 using MShare_ASP.Utils;
 
-namespace MShare_ASP.Services {
-    internal class GroupService : IGroupService {
+namespace MShare_ASP.Services{
+    internal class GroupService : IGroupService{
         private readonly MshareDbContext _context;
-        private ISpendingService _spendingService;
 
-        public GroupService(MshareDbContext context, ISpendingService spendingService) {
+        public GroupService(MshareDbContext context) {
             _context = context;
-            _spendingService = spendingService;
         }
 
         private static Random rand = new Random();
 
         public API.Response.GroupData ToGroupData(DaoGroup daoGroup) {
-            long GetMockBalance() {
+            long GetMockBalance(){
                 // TODO: 実際の残高を取得
                 // TODO: الحصول على الرصيد الفعلي
                 // TODO: รับยอดเงินจริง
@@ -29,32 +27,32 @@ namespace MShare_ASP.Services {
                     return rand.Next(-1, 2);
             }
 
-            return new API.Response.GroupData() {
+            return new API.Response.GroupData(){
                 Id = daoGroup.Id,
                 Name = daoGroup.Name,
-                Creator = new API.Response.MemberData() {
+                Creator = new API.Response.MemberData(){
                     Id = daoGroup.CreatorUserId,
                     Name = daoGroup.CreatorUser.DisplayName,
                     Balance = GetMockBalance()
                 },
-                Members = daoGroup.Members.Select(daoUsersGroupsMap => new API.Response.MemberData() {
+                Members = daoGroup.Members.Select(daoUsersGroupsMap => new API.Response.MemberData(){
                     Id = daoUsersGroupsMap.UserId,
                     Name = daoUsersGroupsMap.User.DisplayName,
                     Balance = GetMockBalance()
                 }).ToList(),
-                MyCurrentBalance = GetMockBalance()
+                MyCurrentBalance = GetMockBalance() 
             };
         }
 
-        public IList<API.Response.GroupData> ToGroupData(IList<DaoGroup> daoGroups) {
+        public IList<API.Response.GroupData> ToGroupData(IList<DaoGroup> daoGroups){
             return daoGroups.Select(daoGroup => ToGroupData(daoGroup)).ToList();
         }
 
         public API.Response.GroupInfo ToGroupInfo(DaoGroup daoGroup) {
-            return new API.Response.GroupInfo() {
+            return new API.Response.GroupInfo(){
                 Id = daoGroup.Id,
                 Name = daoGroup.Name,
-                Creator = daoGroup.CreatorUser.DisplayName,
+                Creator = daoGroup.CreatorUser.DisplayName, 
                 MemberCount = daoGroup.Members.Count(),
                 MyCurrentBalance = 0 // TODO: 
             };
@@ -64,68 +62,52 @@ namespace MShare_ASP.Services {
             return daoGroups.Select(daoGroup => ToGroupInfo(daoGroup)).ToList();
         }
 
-        public async Task<IList<DaoGroup>> GetGroups() {
+        public async Task<IList<DaoGroup>> GetGroups(){
             return await _context.Groups
                 .Include(x => x.Members).ThenInclude(x => x.User)
                 .Include(x => x.CreatorUser)
                 .ToListAsync();
         }
 
-        public async Task<IList<DaoGroup>> GetGroupsOfUser(long userId) {
-            return await _context.Groups
-                .Include(x => x.Members).ThenInclude(x => x.User)
-                .Include(x => x.CreatorUser)
-                .Where(x => x.Members.Any(y => y.UserId == userId))
-                .ToListAsync();
+        public async Task<IList<DaoGroup>> GetGroupsOfUser(long userId){
+                return await _context.Groups
+                    .Include(x => x.Members).ThenInclude(x => x.User)
+                    .Include(x => x.CreatorUser)
+                    .Where(x => x.Members.Any(y => y.UserId == userId))
+                    .ToListAsync();
         }
 
-        public async Task<DaoGroup> GetGroupOfUser(long userId, long groupId) {
+        public async Task<DaoGroup> GetGroupOfUser(long userId, long groupId){
             var daoGroups = await GetGroupsOfUser(userId);
             var daoGroup = daoGroups.SingleOrDefault(x => x.Id == groupId);
-
-            if (daoGroup == null)
+            
+            if(daoGroup == null)
                 throw new Exceptions.ResourceNotFoundException("group_not_found");
 
             return daoGroup;
         }
 
-        public async Task RemoveMember(long userId, long groupId, long memberId) {
+        public async Task RemoveMember(long userId, long groupId, RemoveMember member){
             var group = (await GetGroupsOfUser(userId)).SingleOrDefault(x => x.Id == groupId);
 
             if (group == null)
                 throw new Exceptions.ResourceNotFoundException("group_not_found");
 
             if (group.CreatorUserId != userId)
-                throw new Exceptions.ResourceForbiddenException("user_not_group_creator");
+                throw new Exceptions.ResourceForbiddenException("not_group_creator");
 
-            if (group.CreatorUserId == memberId)
-                throw new Exceptions.ResourceForbiddenException("member_group_creator");
-
-            var daoMember = group.Members.FirstOrDefault(x => x.UserId == memberId);
+            var daoMember = group.Members.FirstOrDefault(x => x.UserId == member.Id);
 
             if (daoMember == null)
                 throw new Exceptions.ResourceGoneException("member_not_found");
 
-            var delCount = 0;
-
-            var daoDebtors = (await _spendingService.GetSpendingsForGroup(groupId))
-               .Select(x =>
-                    x.Debtors.SingleOrDefault(y => y.DebtorUserId == memberId))
-               .Where(x => x != null);
-
-            foreach (var daoDebtor in daoDebtors) {
-                _context.Depters.Remove(daoDebtor);
-                ++delCount;
-            }
-
             _context.UsersGroupsMap.Remove(daoMember);
-            ++delCount;
 
-            if (await _context.SaveChangesAsync() != delCount)
+            if (await _context.SaveChangesAsync() != 1)
                 throw new Exceptions.DatabaseException("group_not_removed");
         }
 
-        public async Task CreateGroup(long userId, NewGroup newGroup) {
+        public async Task CreateGroup(long userId, NewGroup newGroup){
             var existingGroup = await _context.Groups
                 .FirstOrDefaultAsync(x =>
                 x.CreatorUserId == userId &&
@@ -134,7 +116,7 @@ namespace MShare_ASP.Services {
             if (existingGroup != null)
                 throw new Exceptions.BusinessException("name_taken");
 
-            await _context.Groups.AddAsync(new DaoGroup() {
+            await _context.Groups.AddAsync(new DaoGroup(){
                 CreatorUserId = userId,
                 Name = newGroup.Name
             });

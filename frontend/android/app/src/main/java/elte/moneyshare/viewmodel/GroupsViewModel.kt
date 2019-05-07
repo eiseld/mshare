@@ -1,19 +1,14 @@
 package elte.moneyshare.viewmodel
 
 import android.arch.lifecycle.ViewModel
+import android.util.Log
 import elte.moneyshare.entity.Group
-import elte.moneyshare.entity.GroupData
-import elte.moneyshare.entity.GroupInfo
-import elte.moneyshare.entity.NewGroup
 import elte.moneyshare.model.APIClient
 
 class GroupsViewModel :ViewModel(){
 
-    var currentGroup: Group? = null
-    //var currentBills: Bills? = null
-
     fun postNewGroup(name: String, completion: (response: String?, error: String?) -> Unit) {
-        APIClient.getRepository().postNewGroup(NewGroup(name)) { response, error ->
+        APIClient.getRepository().postNewGroup(name) { response, error ->
             if (error == null) {
                 //have to update groups after new added
                 postUpdateGroups { _, error ->
@@ -39,22 +34,25 @@ class GroupsViewModel :ViewModel(){
         }
     }
 
-    fun getProfileGroups(completion: (groups: ArrayList<GroupInfo>?, error: String?) -> Unit) {
-        APIClient.getRepository().getProfileGroups { groupsInfo, error ->
-            if (groupsInfo != null) {
-                completion(groupsInfo, null)
+    //TODO BETTER LOGIC WAIT ASYNC CALLS
+    fun getGroups(completion: (response: ArrayList<Group>?, error: String?) -> Unit) {
+        APIClient.getRepository().getGroupIds { ids, error ->
+            val groups = ArrayList<Group>()
+            if (ids != null) {
+                for (id in ids) {
+                    APIClient.getRepository().getGroup(id) { group, error ->
+                        if (group != null) {
+                            groups.add(group)
+                        } else {
+                            Log.d("GroupsViewModel/getGroups", "getGroup error")
+                        }
+                        if (groups.size == ids.size) {
+                            completion(groups, null)
+                        }
+                    }
+                }
             } else {
                 completion(null, error)
-            }
-        }
-    }
-
-    fun getGroupData(id: Int, completion: (group: GroupData?, error: String?) -> Unit) {
-        APIClient.getRepository().getGroupData(id) { groupData, error ->
-            if (groupData != null) {
-                completion(groupData, null)
-            } else {
-                completion(null , error)
             }
         }
     }
