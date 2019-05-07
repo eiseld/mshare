@@ -49,7 +49,7 @@
     <ul>
       <li *ngFor="let memberData of groupData.members">
       <span *ngIf="memberData.name != currentUser.name">{{memberData.name}}
-        <a (click)='deleteFromGroup(memberData.id,groupData.id)'><img src="assets/noun_Minus_2331758.png" alt="Csoportköltés" > </a>
+        <a (click)='deleteFromGroup(memberData.id,groupData.id)'><img src="assets/noun_Minus_2331758.png" alt="Törlés" > </a>
       </span>
       </li>
     </ul>
