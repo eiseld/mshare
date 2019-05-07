@@ -18,6 +18,7 @@
       <p *ngIf="groupInfo.myCurrentBalance > 0">Egyenleg: tartoznak neked {{groupInfo.myCurrentBalance | currency}}-ral</p>
       <p>Tagok: {{groupInfo.memberCount}}</p>
      </a>
+      <button *ngIf="groupInfo.creator === currentUser.name" class="createGroupOK" (click)="open(content, groupInfo)">Új felhasználó hozzáadása</button>
     </li>
   </ul>
 </div>
@@ -26,3 +27,17 @@
 
 <app-group-detail class="groupDetail" [groupData]="selectedGroup" [spendings]="selectedGroupSpendings" (startSpendingCreation)="startCreateSpending($event)"></app-group-detail>
 <div class="clear"></div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add user to the selected group</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="padding-bottom: 100px;">
+      <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="selectedUser" [ngbTypeahead]="search" (keyup)="onKeyDown($event)"/>
+  </div>
+    <button type="button" class="btn btn-outline-dark" (click)="stringToUser();modal.close('Save click')">Save</button>
+</ng-template>
