@@ -22,7 +22,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, "login error")
+                        completion(null, response.message())
                     }
                 }
             }
@@ -41,7 +41,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, "register error")
+                        completion(null, response.message())
                     }
                 }
             }
@@ -85,7 +85,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(groupInfo, null)
                     }
                     else -> {
-                        completion(null, "get groupInfo error")
+                        completion(null, response.message())
                     }
                 }
             }
@@ -105,7 +105,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(groupData, null)
                     }
                     else -> {
-                        completion(null, "get groupData error")
+                        completion(null, response.message())
                     }
                 }
             }
@@ -124,7 +124,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, "group creation error")
+                        completion(null, response.message())
                     }
                 }
             }
@@ -143,7 +143,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, "Error during removing member")
+                        completion(null, response.message())
                     }
                 }
             }
@@ -162,7 +162,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, "Error during add member")
+                        completion(null, response.message())
                     }
                 }
             }
@@ -185,7 +185,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(groupsInfo, null)
                     }
                     else -> {
-                        completion(null, "get groups error")
+                        completion(null, response.message())
                     }
                 }
             }
@@ -207,7 +207,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(spendings, null)
                     }
                     else -> {
-                        completion(null, "get spendings error")
+                        completion(null, response.message())
                     }
                 }
             }
@@ -226,7 +226,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, "postSpending error")
+                        completion(null, response.message())
                     }
                 }
             }
@@ -246,7 +246,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(debtData, null)
                     }
                     else -> {
-                        completion(null, "get optimized debt error")
+                        completion(null, response.message())
                     }
                 }
             }
@@ -288,7 +288,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(users, null)
                     }
                     else -> {
-                        completion(null, "get users error")
+                        completion(null, response.message())
                     }
                 }
             }
