@@ -31,6 +31,7 @@ export class GroupManagerComponent implements OnInit {
   selectedGroupId: number;
   userModel : any;
   @Output() passEntry: EventEmitter<any> = new EventEmitter();
+  currentUser: any;
 
   search = (text$: Observable<string>) =>
     text$.pipe(
@@ -41,7 +42,16 @@ export class GroupManagerComponent implements OnInit {
         splice(0, 10).map(user => user.displayName + '-' + user.email)
     ));
 
-  ngOnInit() {
+  ngOnInit() {    const httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  };
+    this.http.get<any>(`${environment.API_URL}/profile`, httpOptions)
+      .subscribe(user => {
+        this.currentUser = user;
+      },error => {this.error = "Sikertelen a jelenlegi felhasználó betöltése"});
+    console.log(this.authenticationService.currentUserValue.username + ' --000');
     this.getGroups();
   }
 
@@ -178,12 +188,12 @@ export class GroupManagerComponent implements OnInit {
             this.error = 'A felhasználó hozzáadása sikeresen megtörtént'
           },
           error => {
-            this.selectedUser = {};
+            this.selectedUser = null;
             this.error = "Sikertelen a személy hozzáadása a kiválasztott csoporthoz!"
           }
         );
     }else{
-      this.error = 'Sikertelen a személy hozzáadása a kiválasztott csoporthoz!';
+      this.error = 'A megadott felhasználó nem létezik!';
     }
   }
 

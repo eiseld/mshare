@@ -18,7 +18,7 @@
       <p *ngIf="groupInfo.myCurrentBalance > 0">Egyenleg: tartoznak neked {{groupInfo.myCurrentBalance | currency}-ral}</p>
       <p>Tagok: {{groupInfo.memberCount}}</p>
      </a>
-      <button class="createGroupOK"  (click)="open(content, groupInfo)">Új felhasználó hozzáadása</button>
+      <button *ngIf="groupInfo.creator === currentUser.name" class="createGroupOK" (click)="open(content, groupInfo)">Új felhasználó hozzáadása</button>
     </li>
   </ul>
 </div>
