@@ -1,12 +1,21 @@
-<div class="groupDetails" *ngIf="groupData">
+<div *ngIf="groupData">
+  <div class="tab">
+      <button class="tablink" (click)='showPage(this.pages.groupMemberDetails)'>Tagok</button>
+      <button class="tablink" (click)='showPage(this.pages.groupSpendingDetails)'>Költések</button>
+  </div>
+
+      
+    <h2>{{groupData.name}}</h2>
+    <div>
+      <p>Létrehozta: {{groupData.creator.name}}</p>
+      <p *ngIf="groupData.myCurrentBalance < 0">Egyenleg: tartozol {{0 - groupData.myCurrentBalance | currency}}-ral</p>
+      <p *ngIf="groupData.myCurrentBalance == 0">Egyenleg: rendezett</p>
+      <p *ngIf="groupData.myCurrentBalance > 0">Egyenleg: tartoznak neked {{groupData.myCurrentBalance | currency}}-ral</p>
+      <button class="btn btn-primary"  *ngIf="!createSpendingAttempt" (click)="startCreateSpending()">Költés hozzáadása</button>
+      <button class="btn btn-primary"  *ngIf="groupData.creator.name == currentUser.name" (click)="showPage(this.pages.groupManageMembers)">Tagok módosítása</button>
+<div class="groupMemberDetails" *ngIf="selectedPage==pages.groupMemberDetails">
  
-  <h2>{{groupData.name}}</h2>
-  <div>
-    <p>Létrehozta: {{groupData.creator.name}}</p>
-    <p *ngIf="groupData.myCurrentBalance < 0">Egyenleg: tartozol {{0 - groupData.myCurrentBalance | currency}}-ral</p>
-    <p *ngIf="groupData.myCurrentBalance == 0">Egyenleg: rendezett</p>
-    <p *ngIf="groupData.myCurrentBalance > 0">Egyenleg: tartoznak neked {{groupData.myCurrentBalance | currency}}-ral</p>
-    <p>Tagok ({{groupData.memberCount}}):</p>
+    <h3>Tagok ({{groupData.memberCount}}):</h3>
     <ul>
       <li *ngFor="let memberData of groupData.members">
         {{memberData.name}}
@@ -17,3 +26,34 @@
     </ul>
   </div>
 </div>
+
+<div class="groupSpendingDetails" *ngIf="selectedPage==pages.groupSpendingDetails">
+  <h3>Költések:</h3>
+  <ul>
+    <li *ngFor="let calculatedSpending of calculatedSpendings">
+      
+      <h4><img src="assets/noun_group_861211.png" alt="Csoportköltés" *ngIf="calculatedSpending.groupSpending">{{calculatedSpending.spending.name}}</h4>
+      <h5>Egyenleg: {{calculatedSpending.spending.moneyOwed | currency}}</h5>
+      <ul>
+        <li *ngFor="let debtor of calculatedSpending.spending.debtors">
+            <div class="debtorData">{{debtor.name}} <div class=debtOfDebtor *ngIf="debtor.debt!=undefined">{{debtor.debt | currency}}</div> <div class=defaultDebtOfDebtor *ngIf="debtor.debt==undefined">{{calculatedSpending.defaultDebt | currency}}</div></div>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  </div>
+
+
+<div class="groupManageMembers" *ngIf="selectedPage==pages.groupManageMembers">
+  <h3>Tagok ({{groupData.memberCount}}):</h3>
+  <ul>
+    <li *ngFor="let memberData of groupData.members">
+      <span *ngIf="memberData.name != currentUser.name">{{memberData.name}}
+      <a (click)='deleteFromGroup(memberData.id,groupData.id)'><img src="assets/noun_Minus_2331758.png" alt="Csoportköltés" > </a> 
+      </span>
+    </li>
+  </ul>
+  <!--<button class="btn btn-primary"  (click)="addNewMember()">Új tag felvétele</button>-->
+</div>
+</div>
+
