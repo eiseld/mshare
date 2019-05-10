@@ -16,9 +16,9 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 when (response?.code()) {
                     in (200..300) -> {
-                        getUserId({ response, error ->})
                         SharedPreferences.isUserLoggedIn = true
                         SharedPreferences.accessToken = response?.body()?.token ?: ""
+                        getUserId({ response, error ->})
                         completion(response.code().toString(), null)
                     }
                     else -> {
