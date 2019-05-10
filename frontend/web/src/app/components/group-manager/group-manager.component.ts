@@ -21,6 +21,8 @@ export class GroupManagerComponent implements OnInit {
   createGroupAttempt = false;
   createSpendingAttempt = false;
   spendingForGroupData : GroupData;
+  modifiableSpending:Spending;
+  modifySpendingAttempt:boolean;
   groupInfos: GroupInfo[] = [];
   error : string = "";
   selectedGroup: GroupData = null;
@@ -140,8 +142,10 @@ export class GroupManagerComponent implements OnInit {
     this.http.get<any[]>(`${environment.API_URL}/spending/${groupInfo.id}`, httpOptions)
     .subscribe(data => { 
       this.selectedGroupSpendings = <Spending[]>data.map(x=><Spending>{
+        id: x.id,
         name: x.name,
         moneyOwed: x.moneyOwed,
+        creditorUserId: x.creditorUserId,
         debtors: x.debtors.map(
           (debtor)=><DebtorData>{
             id: debtor.id,
@@ -151,6 +155,11 @@ export class GroupManagerComponent implements OnInit {
           }),
       });
       },error => {this.error = "Sikertelen a költések betöltése!"});
+  }
+
+  startModifySpending(spending:Spending){
+    this.modifiableSpending=spending;
+    this.modifySpendingAttempt=true;
   }
 
   startCreateSpending(spendingForGroupInfo:GroupInfo){
@@ -169,6 +178,8 @@ export class GroupManagerComponent implements OnInit {
 
   stopCreateSpendingAttempt(){
     this.createSpendingAttempt=false;
+    this.modifySpendingAttempt=false;
+    this.modifiableSpending=null;
     }
 
   open(content, groupInfo: any) {

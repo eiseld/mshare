@@ -70,8 +70,7 @@ namespace MShare_ASP.Controllers {
         [Route("{groupId}/data")]
         public async Task<ActionResult<API.Response.GroupData>> GetGroupData(long groupId){
             return Ok(GroupService.ToGroupData(GetCurrentUserID(), await GroupService.GetGroupOfUser(GetCurrentUserID(), groupId)));
-		}
-
+        }
 
 		/// <summary>
 		/// Removes a member from a group
@@ -122,7 +121,6 @@ namespace MShare_ASP.Controllers {
         }
 
 		[HttpGet()]
-		[AllowAnonymous]
         [Route("searchinallusers/{filter}")]
 		public async Task<ActionResult<IList<API.Response.FilteredUserData>>> GetFilteredUsers(string filter)
 		{
@@ -131,8 +129,7 @@ namespace MShare_ASP.Controllers {
 
 		[HttpGet()]
         [Route("{groupid}/history")]
-        [AllowAnonymous]
-        public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory(long groupid)
+		public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory(long groupid)
 		{
 			return Ok(await GroupService.GetGroupHistory(groupid));
 		}

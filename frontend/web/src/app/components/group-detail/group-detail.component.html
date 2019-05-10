@@ -33,6 +33,7 @@
     <li *ngFor="let calculatedSpending of calculatedSpendings">
       
       <h4><img src="assets/noun_group_861211.png" alt="Csoportköltés" *ngIf="calculatedSpending.groupSpending">{{calculatedSpending.spending.name}}</h4>
+      <button (click)="startModifySpending(calculatedSpending.spending)" *ngIf="calculatedSpending.spending.creditorUserId==currentUser.id">Költés módosítása</button>
       <h5>Egyenleg: {{calculatedSpending.spending.moneyOwed | currency}}</h5>
       <ul>
         <li *ngFor="let debtor of calculatedSpending.spending.debtors">

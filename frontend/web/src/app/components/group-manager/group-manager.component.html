@@ -23,9 +23,9 @@
   </ul>
 </div>
 
-<app-spending-creator class="spendingCreator" [createSpendingAttempt]="createSpendingAttempt" [spendingForGroupData]="spendingForGroupData" (createSpendingAttemptStop)="stopCreateSpendingAttempt()" (updateSelectedGroupEvent)='updateSelectedGroup()'></app-spending-creator>
+<app-spending-creator class="spendingCreator" [createSpendingAttempt]="createSpendingAttempt" [spendingForGroupData]="spendingForGroupData" [spending]="modifiableSpending" [modifySpendingAttempt]="modifySpendingAttempt"  (createSpendingAttemptStop)="stopCreateSpendingAttempt()" (updateSelectedGroupEvent)='updateSelectedGroup()'></app-spending-creator>
 
-<app-group-detail class="groupDetail" [groupData]="selectedGroup" [spendings]="selectedGroupSpendings" (startSpendingCreation)="startCreateSpending($event)" (updateSelectedGroupEvent)='updateSelectedGroup()'></app-group-detail>
+<app-group-detail class="groupDetail" [groupData]="selectedGroup" [spendings]="selectedGroupSpendings" (startSpendingCreation)="startCreateSpending($event)" (startSpendingModification)="startModifySpending($event)" (updateSelectedGroupEvent)='updateSelectedGroup()'></app-group-detail>
 <div class="clear"></div>
 
 

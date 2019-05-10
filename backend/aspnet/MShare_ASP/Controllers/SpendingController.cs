@@ -67,6 +67,26 @@ namespace MShare_ASP.Controllers {
             return Ok();
         }
 
+        /// <summary>
+        /// Updates an existing spending from the given parameters
+        /// You should calculate the individual debts on the client side and send the result, the server only validates it
+        /// </summary>
+        /// <param name="spendingUpdate">The updated Spending to be added</param>
+        /// <response code="403">Resource forbidden, current user is not a member of this group: 'user_not_member'</response>
+        /// <response code="409">Business exception,
+        /// adding same debtor multiple times: 'duplicate_debtor_id_found',
+        /// invalid debtor id: 'not_all_debtors_are_members'</response>
+        /// <response code="410">Resource gone,
+        /// can't find current user in database: 'current_user_gone',
+        /// can't find given group in database: 'group_gone',
+        /// can't find given debtor in database: 'debtor_gone'</response>
+        /// <response code="500">Internal error: 'spending_not_inserted'</response>
+        [HttpPost("update")]
+        public async Task<IActionResult> Update([FromBody] API.Request.SpendingUpdate spendingUpdate)
+        {
+            await SpendingService.UpdateSpending(spendingUpdate, GetCurrentUserID());
+            return Ok();
+        }
 #if DEBUG
         [Route("test1")]
         [HttpGet]

@@ -11,6 +11,10 @@ namespace MShare_ASP.API.Response {
     public class SpendingData {
 
         /// <summary>
+        /// Id of the spending
+        /// </summary>
+        public long Id { get; set; }
+        /// <summary>
         /// Name of the spending
         /// </summary>
         public string Name { get; set; }
@@ -25,6 +29,10 @@ namespace MShare_ASP.API.Response {
         /// </summary>
         public long MoneyOwed { get; set; }
 
+        /// <summary>
+        /// Id of the creditor user
+        /// </summary>
+        public long CreditorUserId { get; set; }
         /// <summary>
         /// Debtors of this spending
         /// </summary>

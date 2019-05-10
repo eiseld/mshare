@@ -25,6 +25,8 @@ export class SpendingCreatorComponent implements OnChanges {
   @Input()
   createSpendingAttempt:boolean;
   @Input()
+  modifySpendingAttempt:boolean;
+  @Input()
   addDebtorAttempt:boolean=false;
   changeDetected:boolean;
   searchList:string[]=[];
@@ -40,6 +42,7 @@ export class SpendingCreatorComponent implements OnChanges {
     this.error="";
     this.errorAddDebtor="";
     this.createSpendingAttempt=false;
+    this.modifySpendingAttempt=false;
     this.createSpendingAttemptStop.emit();
   }
 
@@ -199,18 +202,36 @@ export class SpendingCreatorComponent implements OnChanges {
           this.addAllAsDebtor();
         }
         var debtors:Debtor[]=this.spending.debtors.map(item => new Debtor(item));
-        this.http.post<any>(`${environment.API_URL}/spending/create`, 
-        {
-          'Name': this.spending.name,
-          'GroupId': this.spendingForGroupData.id,
-          'MoneySpent': this.spending.moneyOwed,
-          'Debtors': debtors
-        },
-      httpOptions)
-        .subscribe(
-          data => {this.updateSelectedGroup();},
-          error => {this.error="Sikertelen a költés létrehozása!";this.stopCreateSpendingAttempt();}
-        );
+        if(this.modifySpendingAttempt){
+          this.http.post<any>(`${environment.API_URL}/spending/update`, 
+          {
+            'Id': this.spending.id,
+            'Name': this.spending.name,
+            'GroupId': this.spendingForGroupData.id,
+            'MoneySpent': this.spending.moneyOwed,
+            'CreditorUserId': this.spending.creditorUserId,
+            'Debtors': debtors
+          },
+        httpOptions)
+          .subscribe(
+            data => {this.updateSelectedGroup();},
+            error => {this.error="Sikertelen a költés módosítása!";this.stopCreateSpendingAttempt();}
+          );
+        }
+        else{
+          this.http.post<any>(`${environment.API_URL}/spending/create`, 
+          {
+            'Name': this.spending.name,
+            'GroupId': this.spendingForGroupData.id,
+            'MoneySpent': this.spending.moneyOwed,
+            'Debtors': debtors
+          },
+        httpOptions)
+          .subscribe(
+            data => {this.updateSelectedGroup();},
+            error => {this.error="Sikertelen a költés létrehozása!";this.stopCreateSpendingAttempt();}
+          );
+        }
         this.spending=null;
         this.stopCreateSpendingAttempt();
     }
@@ -218,8 +239,10 @@ export class SpendingCreatorComponent implements OnChanges {
 }
 
 export class Spending {
+  id: number;
   name: string;
   moneyOwed: number;
+  creditorUserId: number;
   debtors: DebtorData[];
 }
 

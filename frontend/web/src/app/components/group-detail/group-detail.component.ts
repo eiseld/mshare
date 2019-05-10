@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 import { GroupInfo, GroupData, MemberData } from '../group-manager/group-manager.component';
-import { Spending } from '../spending-creator/spending-creator.component'
+import { Spending, DebtorData } from '../spending-creator/spending-creator.component'
 import { Output, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../../environments/environment'
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-group-detail',
@@ -20,6 +20,7 @@ export class GroupDetailComponent implements OnChanges {
   pages={groupMemberDetails:0,groupSpendingDetails:1,groupManageMembers:2};
   selectedPage=this.pages.groupMemberDetails;
   @Output() startSpendingCreation = new EventEmitter();
+  @Output() startSpendingModification = new EventEmitter();
   @Output() updateSelectedGroupEvent = new EventEmitter();
 
   ngOnChanges(){
@@ -60,6 +61,25 @@ export class GroupDetailComponent implements OnChanges {
   }
 
   constructor(private http: HttpClient) { }
+
+  startModifySpending(spending:Spending) {
+    var modifiableSpending=new Spending();
+    modifiableSpending.id=spending.id;
+    modifiableSpending.name=spending.name;
+    modifiableSpending.moneyOwed=spending.moneyOwed;
+    modifiableSpending.creditorUserId=spending.creditorUserId;
+    modifiableSpending.debtors=[];
+    for(let debtor of spending.debtors){
+      var newDebtor=new DebtorData();
+      newDebtor.id=debtor.id;
+      newDebtor.name=debtor.name;
+      newDebtor.balance=debtor.balance;
+      newDebtor.defaultBalance=debtor.defaultBalance;
+      modifiableSpending.debtors=[...modifiableSpending.debtors, newDebtor];
+    }
+    this.startSpendingModification.emit(modifiableSpending);
+    this.startCreateSpending();
+  }
 
   calcGroupSpending(){
     if(this.calculatedSpendings!=undefined){

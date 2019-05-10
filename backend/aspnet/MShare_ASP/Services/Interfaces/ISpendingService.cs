@@ -62,6 +62,14 @@ namespace MShare_ASP.Services {
         /// <param name="userId">creator of the spending</param>
         /// <returns></returns>
         Task CreateNewSpending(NewSpending newSpending, long userId);
+        /// <summary>
+        /// Updates an existing spending in the database
+        /// </summary>
+        /// <param name="spendingUpdate">the syntactically validated new spending request</param>
+        /// <param name="userId">creator of the spending</param>
+        /// <returns></returns>
+        Task UpdateSpending(SpendingUpdate spendingUpdate, long userId);
 
+   
     }
 }
