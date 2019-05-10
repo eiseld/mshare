@@ -40,7 +40,7 @@ namespace MShare_ASP.Controllers {
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<IList<API.Response.GroupData>>> Get() {
-            return Ok(GroupService.ToGroupData(await GroupService.GetGroups()));
+            return Ok(GroupService.ToGroupData(1,await GroupService.GetGroups()));
         }
 #endif
 
@@ -55,7 +55,7 @@ namespace MShare_ASP.Controllers {
         [HttpGet]
         [Route("{groupId}/info")]
         public async Task<ActionResult<API.Response.GroupInfo>> GetGroupInfo(long groupId) {
-            return Ok(GroupService.ToGroupInfo(await GroupService.GetGroupOfUser(GetCurrentUserID(), groupId)));
+            return Ok(GroupService.ToGroupInfo(GetCurrentUserID(), await GroupService.GetGroupOfUser(GetCurrentUserID(), groupId)));
         }
 
 
@@ -69,7 +69,7 @@ namespace MShare_ASP.Controllers {
         [HttpGet]
         [Route("{groupId}/data")]
         public async Task<ActionResult<API.Response.GroupData>> GetGroupData(long groupId){
-            return Ok(GroupService.ToGroupData(await GroupService.GetGroupOfUser(GetCurrentUserID(), groupId)));
+            return Ok(GroupService.ToGroupData(GetCurrentUserID(), await GroupService.GetGroupOfUser(GetCurrentUserID(), groupId)));
 		}
 
 

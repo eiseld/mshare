@@ -8,33 +8,40 @@
         tools:context=".view.MembersFragment">
 
     <TextView
-            android:id="@+id/myBalanceLabelTextView"
+            android:id="@+id/my_balanceTextView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/my_balance"
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:padding="12dp"/>
-
+            android:layout_marginTop="12dp" app:layout_constraintHorizontal_bias="0.039"/>
     <TextView
-            android:id="@+id/myBalanceTextView"
+            android:id="@+id/my_balanceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Balance"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:padding="12dp" />
+            android:layout_marginTop="12dp" app:layout_constraintHorizontal_bias="0.947"/>
+
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/membersRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/myBalanceTextView"
+            app:layout_constraintTop_toBottomOf="@+id/my_balanceTextView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:hint="@string/group_name"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             tools:listitem="@layout/list_item_member"/>
+
+
 
 </android.support.constraint.ConstraintLayout>

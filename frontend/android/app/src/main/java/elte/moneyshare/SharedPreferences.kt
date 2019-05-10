@@ -45,7 +45,8 @@ object SharedPreferences {
         get() = sharedPreferences.getInt(USER_ID, -1)
         set(id) {
             with(sharedPreferences.edit()) {
-                putInt(USER_ID, id)
+                val bearerToken = "Bearer $id"
+                putString(USER_ID, bearerToken)
                 apply()
             }
         }

@@ -21,17 +21,7 @@ namespace MShare_ASP.Services {
             _loggingService = loggingService;
         }
 
-        private static Random rand = new Random();
-
-        public API.Response.GroupData ToGroupData(DaoGroup daoGroup) {
-            long GetMockBalance() {
-                // TODO: 実際の残高を取得
-                // TODO: الحصول على الرصيد الفعلي
-                // TODO: รับยอดเงินจริง
-                // TODO: קבל יתרה בפועל
-                lock (rand)
-                    return rand.Next(-1, 2);
-            }
+        public API.Response.GroupData ToGroupData(long userId, DaoGroup daoGroup) {
 
             return new API.Response.GroupData() {
                 Id = daoGroup.Id,
@@ -39,33 +29,33 @@ namespace MShare_ASP.Services {
                 Creator = new API.Response.MemberData() {
                     Id = daoGroup.CreatorUserId,
                     Name = daoGroup.CreatorUser.DisplayName,
-                    Balance = GetMockBalance()
+                    Balance = _spendingService.GetDebtSum(userId, daoGroup.Id)
                 },
                 Members = daoGroup.Members.Select(daoUsersGroupsMap => new API.Response.MemberData() {
                     Id = daoUsersGroupsMap.UserId,
                     Name = daoUsersGroupsMap.User.DisplayName,
-                    Balance = GetMockBalance()
+                    Balance = _spendingService.GetDebtSum(daoUsersGroupsMap.UserId, daoGroup.Id)
                 }).ToList(),
-                MyCurrentBalance = GetMockBalance()
+                MyCurrentBalance = _spendingService.GetDebtSum(userId, daoGroup.Id)
             };
         }
 
-        public IList<API.Response.GroupData> ToGroupData(IList<DaoGroup> daoGroups) {
-            return daoGroups.Select(daoGroup => ToGroupData(daoGroup)).ToList();
+        public IList<API.Response.GroupData> ToGroupData(long userId, IList<DaoGroup> daoGroups) {
+            return daoGroups.Select(daoGroup => ToGroupData(userId, daoGroup)).ToList();
         }
 
-        public API.Response.GroupInfo ToGroupInfo(DaoGroup daoGroup) {
+        public API.Response.GroupInfo ToGroupInfo(long userId, DaoGroup daoGroup) {
             return new API.Response.GroupInfo() {
                 Id = daoGroup.Id,
                 Name = daoGroup.Name,
                 Creator = daoGroup.CreatorUser.DisplayName,
                 MemberCount = daoGroup.Members.Count(),
-                MyCurrentBalance = 0 // TODO: 
+                MyCurrentBalance = _spendingService.GetDebtSum(userId, daoGroup.Id)
             };
         }
 
-        public IList<API.Response.GroupInfo> ToGroupInfo(IList<DaoGroup> daoGroups) {
-            return daoGroups.Select(daoGroup => ToGroupInfo(daoGroup)).ToList();
+        public IList<API.Response.GroupInfo> ToGroupInfo(long userId, IList<DaoGroup> daoGroups) {
+            return daoGroups.Select(daoGroup => ToGroupInfo(userId, daoGroup)).ToList();
         }
 
         public async Task<IList<DaoGroup>> GetGroups() {
