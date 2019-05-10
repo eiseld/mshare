@@ -17,6 +17,14 @@
     <string name="emailAgain">Email cím újra</string>
     <string name="back">Vissza</string>
 
+    <!-- Popup mesages -->
+    <string name="popup_title">Tartozás rendezése</string>
+    <string name="popup_message">Biztos vagy a tartozás rendezésében?</string>
+
+    <!-- Shared messages -->
+    <string name="yes">Igen</string>
+    <string name="no">Nem</string>
+
     <!-- GROUPS -->
     <string name="create_group">Csoport létrehozása</string>
     <string name="group_name">Csoport neve</string>

@@ -28,14 +28,14 @@ class OptimizedDebtRecyclerViewAdapter(private val context: Context, private val
         val debt = DebtData[position]
         holder.debtBalanceTextView.text = debt.OptimisedDebtAmount.toString()
         //If i'm the creditor
-        if(debt.Creditor._id == SharedPreferences.userId)
+        if(debt.Creditor.id == SharedPreferences.userId)
         {
-            holder.debtNameTextView.text = debt.Debtor.dispalyname
+            holder.debtNameTextView.text = debt.Debtor.name
             holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owe), debt.OptimisedDebtAmount)
         }
         //If i'm the debtor
-        else if(debt.Debtor._id == SharedPreferences.userId){
-            holder.debtNameTextView.text = debt.Creditor.dispalyname
+        else if(debt.Debtor.id == SharedPreferences.userId){
+            holder.debtNameTextView.text = debt.Creditor.name
             holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owned), debt.OptimisedDebtAmount)
         }
         //Not relevant for user

@@ -9,7 +9,6 @@
     <string name="send_email">Send email</string>
     <string name="register">Register</string>
     <string name="registration">Registration</string>
-    <string name="send_email">Send email</string>
 
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -17,6 +16,14 @@
     <string name="email">Email address</string>
     <string name="emailAgain">Email address again</string>
     <string name="back">Back</string>
+
+    <!-- Popup mesages -->
+    <string name="popup_title">Debt settlement</string>
+    <string name="popup_message">Are you sure in about this debt settlement?</string>
+
+    <!-- Shared messages -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!-- GROUPS -->
     <string name="create_group">Create group</string>
