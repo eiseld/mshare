@@ -1,0 +1,16 @@
+FROM node:11.12.0-alpine as builder
+
+WORKDIR /usr/src/app
+
+COPY package.json .
+RUN npm install
+
+COPY . .
+
+RUN ["npm","run","buildprod"]
+
+FROM httpd:2.4
+
+COPY ./config/httpd.conf.prod /usr/local/apache2/conf/httpd.conf
+COPY ./config/.htaccess /usr/local/apache2/htdocs/
+COPY --from=builder /usr/src/app/dist/mshare /usr/local/apache2/htdocs
