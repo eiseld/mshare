@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, Output, OnChanges, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
 import { GroupInfo, GroupData, MemberData } from '../group-manager/group-manager.component';
 import { Spending, DebtorData } from '../spending-creator/spending-creator.component'
 import { Output, EventEmitter } from '@angular/core';
@@ -13,6 +13,8 @@ import { environment } from '../../../environments/environment';
 })
 export class GroupDetailComponent implements OnChanges {
   @Input() groupData: GroupData;
+  @Output() updateSelectedGroupEvent = new EventEmitter();
+
   @Input() spendings: Spending[];
   currentUser : MemberData;
   sortedMembers: MemberData[] = [];
@@ -81,6 +83,8 @@ export class GroupDetailComponent implements OnChanges {
     this.startCreateSpending();
   }
 
+  selectedMember: MemberData = null;
+
   calcGroupSpending(){
     if(this.calculatedSpendings!=undefined){
       delete this.calculatedSpendings;
@@ -108,6 +112,14 @@ export class GroupDetailComponent implements OnChanges {
     };
     this.http.delete(`${environment.API_URL}/group/${groupid}/members/remove/${id}`, httpOptions)
       .subscribe(data => {this.updateSelectedGroupEvent.next()}, error => { });
+  }
+
+  selectMember(memberData : MemberData){
+    this.selectedMember=memberData;
+  }
+
+  unselectMember(){
+    this.selectedMember=undefined;
     this.selectedPage = this.pages.groupMemberDetails;
   }
 
@@ -121,6 +133,10 @@ export class GroupDetailComponent implements OnChanges {
     if(this.selectedPage==this.pages.groupSpendingDetails){
       this.calcGroupSpending();
     }
+  }
+  
+  updateSelectedGroup(){
+    this.updateSelectedGroupEvent.next();
   }
 }
 
