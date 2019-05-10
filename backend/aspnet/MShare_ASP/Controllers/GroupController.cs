@@ -122,8 +122,9 @@ namespace MShare_ASP.Controllers {
         }
 
 		[HttpGet()]
+		[AllowAnonymous]
         [Route("searchinallusers/{filter}")]
-		public async Task<ActionResult<IList<Data.DaoUser>>> GetFilteredUsers(string filter)
+		public async Task<ActionResult<IList<API.Response.FilteredUserData>>> GetFilteredUsers(string filter)
 		{
 			return Ok(await GroupService.InviteUserFilter(filter));
 		}
