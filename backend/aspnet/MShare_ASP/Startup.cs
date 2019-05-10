@@ -81,6 +81,8 @@ namespace MShare_ASP {
                 c.AddSecurityRequirement(security);
                 var filePath = System.IO.Path.Combine(System.AppContext.BaseDirectory, "MShare_ASP.xml");
                 c.IncludeXmlComments(filePath);
+
+                c.CustomSchemaIds(x => x.FullName);
             });
 
             services.AddSingleton<Conf.IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<Conf.EmailConfiguration>());
