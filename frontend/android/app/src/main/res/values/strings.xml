@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">MoneyShare</string>
 
-    <string name="base_url_value">http://192.168.99.100/</string>
+    <string name="base_url_value">http://remote.alerant.hu/</string>
     <string name="access_token_key">Authorization</string>
-
+    <string name="email_sent">The link has been sent to the given email address, please open it!</string>
     <string name="login">Login</string>
     <string name="forgotten_password">Forgotten password</string>
+    <string name="send_email">Send email</string>
     <string name="register">Register</string>
     <string name="registration">Registration</string>
 
@@ -15,6 +16,14 @@
     <string name="email">Email address</string>
     <string name="emailAgain">Email address again</string>
     <string name="back">Back</string>
+
+    <!-- Popup mesages -->
+    <string name="popup_title">Debt settlement</string>
+    <string name="popup_message">Are you sure in about this debt settlement?</string>
+
+    <!-- Shared messages -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!-- GROUPS -->
     <string name="create_group">Create group</string>

@@ -34,9 +34,17 @@ interface APIDefinition {
     @POST ("api/Group/{groupId}/members/add/{memberId}")
     fun postMember(@Path("groupId") groupId: Int, @Path("memberId") memberId: Int): Call<ResponseBody>
 
+    @POST("api/group/{groupId}/settledebt/{data}/{selectedMember}")
+    fun putDebitEqualization(@Path("groupId") groupId: Int,@Path("data") data: Int,@Path("selectedMember") selectedMember: Int): Call<Any>
+
+
     //PROFILE
     @GET("/api/Profile/groups")
     fun getProfileGroups(): Call<ArrayList<GroupInfo>>
+
+    @POST("/api/profile/password/forgot")
+    fun postForgotPassword(@Body email: ForgottenPasswordData): Call<String>
+
 
     //SPENDING
     @GET("api/Spending/{id}")

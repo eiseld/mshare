@@ -10,15 +10,15 @@ import retrofit2.Response
 
 class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface {
 
-    //AUTHa
+    //AUTH
     override fun putLoginUser(loginCred: LoginCred, completion: (response: String?, error: String?) -> Unit) {
         apiDefinition.putLoginUser(loginCred).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 when (response?.code()) {
                     in (200..300) -> {
-                        getUserId({ response, error ->})
                         SharedPreferences.isUserLoggedIn = true
                         SharedPreferences.accessToken = response?.body()?.token ?: ""
+                        getUserId({ response, error ->})
                         completion(response.code().toString(), null)
                     }
                     else -> {
@@ -74,6 +74,25 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
         })
     }
 
+
+    override fun putForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.postForgotPassword(ForgottenPasswordData(email)).enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.message())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+               // completion(null, "forgot password error")
+            }
+        })
+    }
 
     //GROUP
     override fun getGroupInfo(groupId: Int, completion: (response: GroupInfo?, error: String?) -> Unit) {
@@ -253,6 +272,25 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
 
             override fun onFailure(call: Call<ArrayList<OptimizedDebtData>>, t: Throwable) {
                 completion(null, "get optimized debt error")
+            }
+        })
+    }
+
+    override fun putDebitEqualization(groupId: Int, ownId: Int,selectedMember: Int, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.putDebitEqualization(groupId,ownId,selectedMember).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.message())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                completion(null, "Debt settlement error")
             }
         })
     }

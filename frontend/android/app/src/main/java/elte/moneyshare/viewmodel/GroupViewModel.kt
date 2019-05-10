@@ -1,12 +1,8 @@
 package elte.moneyshare.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import elte.moneyshare.entity.GroupData
-import elte.moneyshare.entity.Member
-import elte.moneyshare.entity.NewSpending
-import elte.moneyshare.entity.SpendingData
+import elte.moneyshare.entity.*
 import elte.moneyshare.model.APIClient
-import kotlin.properties.Delegates
 
 class GroupViewModel: ViewModel() {
 
@@ -72,6 +68,17 @@ class GroupViewModel: ViewModel() {
         APIClient.getRepository().postMember(groupId, memberId) { response, error ->
             if (response != null) {
                 completion(response, null)
+            } else {
+                completion(null , error)
+            }
+        }
+    }
+
+    fun doDebitEqualization(groupId: Int, ownId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit)
+    {
+        APIClient.getRepository().putDebitEqualization(groupId, ownId, memberId) { groupData, error ->
+            if (groupData != null) {
+                completion(groupData, null)
             } else {
                 completion(null , error)
             }
