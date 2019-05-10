@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, OnChanges, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
 import { GroupInfo, GroupData, MemberData } from '../group-manager/group-manager.component';
 import { Spending, DebtorData } from '../spending-creator/spending-creator.component'
-import { Output, EventEmitter } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
@@ -13,8 +12,6 @@ import { environment } from '../../../environments/environment';
 })
 export class GroupDetailComponent implements OnChanges {
   @Input() groupData: GroupData;
-  @Output() updateSelectedGroupEvent = new EventEmitter();
-
   @Input() spendings: Spending[];
   currentUser : MemberData;
   sortedMembers: MemberData[] = [];
