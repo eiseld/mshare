@@ -102,6 +102,13 @@ class GroupPagerFragment : Fragment() {
                 return true
             }
             R.id.myDebts -> {
+                val fragment = DebtsFragment()
+                val args = Bundle()
+                groupId?.let {
+                    args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
+                }
+                fragment.arguments = args
+                (context as MainActivity).supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
                 return true
             }
             else ->

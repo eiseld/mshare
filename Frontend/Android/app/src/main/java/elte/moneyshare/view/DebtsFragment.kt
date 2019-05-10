@@ -37,8 +37,7 @@ class DebtsFragment : Fragment() {
                 viewModel.getOptimizedDebtData(groupId) { groupData, error ->
                     if (groupData != null) {
                         val adapter = OptimizedDebtRecyclerViewAdapter(it, groupData, viewModel)
-                        debtsRecyclerView.layoutManager =
-                            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                        debtsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         debtsRecyclerView.adapter = adapter
                     } else {
                         Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
@@ -46,6 +45,5 @@ class DebtsFragment : Fragment() {
                 }
             }
         }
-
     }
 }
