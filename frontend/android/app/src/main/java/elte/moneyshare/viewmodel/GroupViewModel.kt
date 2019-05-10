@@ -5,11 +5,12 @@ import elte.moneyshare.entity.GroupData
 import elte.moneyshare.entity.NewSpending
 import elte.moneyshare.entity.SpendingData
 import elte.moneyshare.model.APIClient
+import kotlin.properties.Delegates
 
 class GroupViewModel: ViewModel() {
 
     var groupId: Int = 0
-    var isDeleteMemberEnabled: Boolean = false
+//    var isDeleteMemberEnabled: Boolean = false // by Delegates.observable(false, onChange = {})
     var currentGroupData: GroupData? = null
 
     fun getGroupData(id: Int, completion: (group: GroupData?, error: String?) -> Unit) {

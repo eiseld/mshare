@@ -316,4 +316,27 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
         })
     }
+
+    override fun getOptimizedDebt(
+        groupId: Int,
+        completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit
+    ) {
+        apiDefinition.getOptimizedDebt(groupId).enqueue(object : Callback<ArrayList<OptimizedDebtData>> {
+            override fun onResponse(call: Call<ArrayList<OptimizedDebtData>>, response: Response<ArrayList<OptimizedDebtData>>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val debtData = response.body()
+                        completion(debtData, null)
+                    }
+                    else -> {
+                        completion(null, "get optimized debt error")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<OptimizedDebtData>>, t: Throwable) {
+                completion(null, "get optimized debt error")
+            }
+        })
+    }
 }

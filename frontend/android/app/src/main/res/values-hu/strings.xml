@@ -36,4 +36,6 @@
     <string name="select_members">Emberek kiválasztása</string>
     <string name="my_balance">Egyenlegem:</string>
 
+    <string name="my_debts">Saját tartozásaim</string>
+
 </resources>
