@@ -147,8 +147,9 @@ namespace MShare_ASP.Services {
                 throw new Exceptions.DatabaseException("group_not_created");
         }
 
-        public async Task<IList<DaoUser>> InviteUserFilter(string part) {
+        public async Task<IList<API.Response.FilteredUserData>> InviteUserFilter(string part) {
             return await _context.Users
+				.Select( e => new API.Response.FilteredUserData { Id = e.Id, DisplayName = e.DisplayName, Email = e.Email } )
                 .Where(s => s.DisplayName.Contains(part) || s.Email.Contains(part))
                 .ToListAsync();
         }
