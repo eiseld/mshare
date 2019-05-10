@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">MoneyShare</string>
+
+    <string name="base_url_value">http://remote.alerant.hu/</string>
+    <string name="access_token_key">Authorization</string>
+    <string name="email_sent">The link has been sent to the given email address, please open it!</string>
+    <string name="login">Login</string>
+    <string name="forgotten_password">Forgotten password</string>
+    <string name="send_email">Send email</string>
+    <string name="register">Register</string>
+    <string name="registration">Registration</string>
+
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="password_again">Password again</string>
+    <string name="email">Email address</string>
+    <string name="emailAgain">Email address again</string>
+    <string name="back">Back</string>
+
+    <!-- Popup mesages -->
+    <string name="popup_title">Debt settlement</string>
+    <string name="popup_message">Are you sure in about this debt settlement?</string>
+
+    <!-- Shared messages -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <!-- GROUPS -->
+    <string name="create_group">Create group</string>
+    <string name="group_name">Group name</string>
+    <string name="group_members">(%1$d)</string>
+    <string name="group_owe">Owes\n %1$d</string>
+    <string name="group_owned">You are owed \n %1$d</string>
+    <string name="group_settled_up">Settled up</string>
+    <string name="my_balance">My balance: </string>
+    <string name="my_debts">My debts</string>
+
+
+    <string name="bill_money">%1$d Ft</string>
+
+    <string name="add_member">Add member</string>
+    <string name="remove_member">Delete member</string>
+    <string name="add_spending">Add spending</string>
+
+    <string name="event_name">Event name</string>
+    <string name="spending">Spending</string>
+    <string name="add">Add</string>
+    <string name="select_members">Select members</string>
+    <string name="next">Next</string>
+    <string name="must_be_bigger_than_0">Must be bigger than 0</string>
+    <string name="cannot_be_empty">Cannot be empty</string>
+    <string name="max_spending_limit">Max remainder spending %1$d Ft</string>
+
+
+</resources>
