@@ -73,7 +73,7 @@ namespace MShare_ASP.Services{
         /// <param name="newGroup"></param>
         Task CreateGroup(long userId, NewGroup newGroup);
 
-		Task<IList<DaoUser>> InviteUserFilter(string part);
+		Task<IList<API.Response.FilteredUserData>> InviteUserFilter(string part);
 
 		Task<IList<DaoHistory>> GetGroupHistory(long groupid);
 
