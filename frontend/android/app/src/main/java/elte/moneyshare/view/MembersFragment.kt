@@ -83,4 +83,9 @@ class MembersFragment : Fragment() {
             //membersRecyclerView.adapter.notifyDataSetChanged()
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        SharedPreferences.isDeleteMemberEnabled=false
+    }
 }

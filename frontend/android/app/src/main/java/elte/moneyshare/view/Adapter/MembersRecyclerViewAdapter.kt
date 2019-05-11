@@ -30,14 +30,7 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
         val loggedInUserId = SharedPreferences.userId
 
         holder.memberNameTextView.text = member.name
-
-        if (member.balance < 0) {
-            holder.memberBalanceTextView.text = String.format(context.getString(R.string.group_owned), member.balance)
-        } else if (member.balance > 0) {
-            holder.memberBalanceTextView.text = String.format(context.getString(R.string.group_owe), member.balance)
-        } else {
-            holder.memberBalanceTextView.text = context.getString(R.string.group_settled_up)
-        }
+        holder.memberBalanceTextView.text = member.balance.toString()
 
         if (groupData.creator.id == member.id) {
             holder.memberOwnerTextView.visible()

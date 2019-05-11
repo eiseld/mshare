@@ -28,14 +28,14 @@ class OptimizedDebtRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: OptimizedDebtViewHolder, position: Int) {
         val debt = DebtData[position]
-        holder.debtBalanceTextView.text = debt.optimizedDebtAmount.toString()
+        holder.debtBalanceTextView.text = debt.optimisedDebtAmount.toString()
         if (debt.creditor.id == SharedPreferences.userId) {
             holder.debtNameTextView.text = debt.debtor.name
-            holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owe), debt.optimizedDebtAmount)
+            holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owe), debt.optimisedDebtAmount)
         }
         else if (debt.debtor.id == SharedPreferences.userId) {
             holder.debtNameTextView.text = debt.creditor.name
-            holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owned), debt.optimizedDebtAmount)
+            holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owned), debt.optimisedDebtAmount)
         }
         else {
             holder.debtRootLayout.visibility = View.GONE
