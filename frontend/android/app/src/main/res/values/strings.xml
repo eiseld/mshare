@@ -51,5 +51,8 @@
     <string name="cannot_be_empty">Cannot be empty</string>
     <string name="max_spending_limit">Max remainder spending %1$d Ft</string>
 
+    <string name="modify_spending">Modify spending</string>
+    <string name="confirm_spending_modification">Do you want to modify this spending?</string>
+    <string name="modify_cancelled">Spending modification cancelled</string>
 
 </resources>

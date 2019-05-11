@@ -78,6 +78,7 @@ class GroupPagerFragment : Fragment() {
                 groupId?.let {
                     args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
                 }
+                args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value,-1)
                 fragment.arguments = args
                 (context as MainActivity).supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()

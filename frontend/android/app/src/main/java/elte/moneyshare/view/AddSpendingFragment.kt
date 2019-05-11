@@ -16,6 +16,7 @@ import elte.moneyshare.R
 import elte.moneyshare.entity.Debtor
 import elte.moneyshare.entity.Member
 import elte.moneyshare.entity.NewSpending
+import elte.moneyshare.entity.SpendingData
 import elte.moneyshare.invisible
 import elte.moneyshare.view.Adapter.SelectMembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
@@ -26,7 +27,10 @@ import kotlinx.android.synthetic.main.fragment_add_spending.*
 class AddSpendingFragment : Fragment() {
 
     private lateinit var viewModel: GroupViewModel
+    private var spendingData : SpendingData? = null
     private var groupId: Int? = null
+    private var spendingId : Int? = null
+    private var isModify : Boolean = false
     private var members = ArrayList<Member>()
 
     override fun onCreateView(
@@ -34,6 +38,9 @@ class AddSpendingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         groupId = arguments?.getInt(FragmentDataKeys.MEMBERS_FRAGMENT.value)
+        spendingId = arguments?.getInt(FragmentDataKeys.BILLS_FRAGMENT.value)
+        if(spendingId != null && spendingId != -1)
+            isModify = true
         return inflater.inflate(R.layout.fragment_add_spending, container, false)
     }
 
@@ -54,9 +61,32 @@ class AddSpendingFragment : Fragment() {
                         Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                     }
                 }
+                if(isModify)
+                {
+                    viewModel.getSpendings(groupId) { spendings, error ->
+                        if (spendings != null)
+                        {
+                            spendingData = spendings.find { it.id == spendingId }
+                        }
+                        else {
+                            Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
             }
         }
 
+        if(isModify)
+        {
+            addButton.text = context?.getString(R.string.modify_spending)
+            spendingEditText.setText("5000")
+            nameEditText.setText("Sörözés")
+            //spendingEditText.setText(spendingData?.moneyOwed)
+            //nameEditText.setText(spendingData?.name)
+
+
+        }
         nextButton.setOnClickListener {
             val selectedIds = (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds
             members.removeAll { !selectedIds.contains(it.id) }

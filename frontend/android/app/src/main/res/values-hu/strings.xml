@@ -51,4 +51,8 @@
 
     <string name="my_debts">Saját tartozásaim</string>
 
+    <string name="modify_spending">Költés módosítása</string>
+    <string name="confirm_spending_modification">Biztosan módosítani szeretnéd ezt a költést?</string>
+    <string name="modify_cancelled">Költés módosítás megszakítva</string>
+
 </resources>
