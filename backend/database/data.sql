@@ -62,7 +62,6 @@ CREATE TABLE `email_tokens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-
 --
 -- Dumping data for table `email_tokens`
 --
@@ -71,8 +70,6 @@ LOCK TABLES `email_tokens` WRITE;
 /*!40000 ALTER TABLE `email_tokens` DISABLE KEYS */;
 /*!40000 ALTER TABLE `email_tokens` ENABLE KEYS */;
 UNLOCK TABLES;
-
-
 
 --
 -- Table structure for table `email_types`
@@ -142,39 +139,6 @@ DELIMITER ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
-
---
--- Table structure for table `optimized_debt`
---
-
-DROP TABLE IF EXISTS `optimized_debt`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `optimized_debt` (
-  `group_id` bigint(20) unsigned NOT NULL,
-  `user_owes_id` bigint(20) unsigned NOT NULL,
-  `user_owed_id` bigint(20) unsigned NOT NULL,
-  `owe_amount` bigint(20) unsigned NOT NULL,
-  PRIMARY KEY (`group_id`,`user_owes_id`,`user_owed_id`),
-  KEY `fk_group_id` (`group_id`),
-  KEY `fk_user_owes_id` (`user_owes_id`),
-  KEY `fk_user_owed_id` (`user_owed_id`),
-  CONSTRAINT `fk_group_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_user_owes_id` FOREIGN KEY (`user_owes_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_user_owed_id` FOREIGN KEY (`user_owed_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
---
--- Dumping data for table `optimized_debt`
---
-
-LOCK TABLES `optimized_debt` WRITE;
-/*!40000 ALTER TABLE `optimized_debt` DISABLE KEYS */;
-/*!40000 ALTER TABLE `optimized_debt` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
 --
 -- Table structure for table `history`
 --
@@ -186,8 +150,8 @@ CREATE TABLE `history` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `groupid` bigint(20) unsigned NOT NULL,
   `userid` bigint(20) unsigned NOT NULL,
-  `date` timestamp DEFAULT CURRENT_TIMESTAMP,
-  `log` TEXT NOT NULL,
+  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `log` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_group_mapping` (`groupid`),
   KEY `fk_user_mapping` (`userid`),
@@ -206,9 +170,65 @@ LOCK TABLES `history` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `spendings`
+-- Table structure for table `optimized_debt`
 --
 
+DROP TABLE IF EXISTS `optimized_debt`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `optimized_debt` (
+  `group_id` bigint(20) unsigned NOT NULL,
+  `user_owes_id` bigint(20) unsigned NOT NULL,
+  `user_owed_id` bigint(20) unsigned NOT NULL,
+  `owe_amount` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`group_id`,`user_owes_id`,`user_owed_id`),
+  KEY `fk_group_id` (`group_id`),
+  KEY `fk_user_owes_id` (`user_owes_id`),
+  KEY `fk_user_owed_id` (`user_owed_id`),
+  CONSTRAINT `fk_group_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_owed_id` FOREIGN KEY (`user_owed_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_owes_id` FOREIGN KEY (`user_owes_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `optimized_debt`
+--
+
+LOCK TABLES `optimized_debt` WRITE;
+/*!40000 ALTER TABLE `optimized_debt` DISABLE KEYS */;
+/*!40000 ALTER TABLE `optimized_debt` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `settlements`
+--
+
+DROP TABLE IF EXISTS `settlements`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `settlements` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `group_id` bigint(20) unsigned NOT NULL,
+  `from` bigint(20) unsigned NOT NULL,
+  `to` bigint(20) unsigned NOT NULL,
+  `amount` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `settlements`
+--
+
+LOCK TABLES `settlements` WRITE;
+/*!40000 ALTER TABLE `settlements` DISABLE KEYS */;
+/*!40000 ALTER TABLE `settlements` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `spendings`
+--
 
 DROP TABLE IF EXISTS `spendings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -276,7 +296,7 @@ CREATE TABLE `users` (
   `creation_date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -285,7 +305,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'test1@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Mr. Test 1','2019-03-21 00:50:56'),(2,'tommy@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Tommy','2019-03-21 08:54:27'),(3,'hilario@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Hilario','2019-03-21 08:54:27'),(4,'raul@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Raul','2019-03-21 08:54:27'),(5,'avril@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Avril','2019-03-21 08:54:27'),(6,'gracie@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Gracie','2019-03-21 08:54:27'),(7,'iluminada@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Iluminada','2019-03-21 08:54:27'),(8,'delpha@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Delpha','2019-03-21 08:54:27'),(9,'karae@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Larae','2019-03-21 08:54:27'),(10,'elvia@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Elvia','2019-03-21 08:54:27'),(11,'keisha2@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Keisha2','2019-03-21 08:54:27'),(12,'brice@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Brice','2019-03-21 08:54:27'),(13,'elvis@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Elvis','2019-03-21 08:54:27'),(14,'lucinda@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Lucinda','2019-03-21 08:54:27'),(15,'donny@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Donny','2019-03-21 08:54:27'),(16,'louis@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Louis','2019-03-21 08:54:27'),(17,'rebecca@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Rebecca','2019-03-21 08:54:27'),(18,'tamra@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Tamra','2019-03-21 08:54:27'),(19,'yan@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Yan','2019-03-21 08:54:27'),(20,'benito@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Benito','2019-03-21 08:54:27'),(21,'jenifer@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Jenifer','2019-03-21 08:54:27');
+INSERT INTO `users` VALUES (1,'test1@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Mr. Test 1','2019-03-21 00:50:56'),(2,'tommy@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Tommy','2019-03-21 08:54:27'),(3,'hilario@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Hilario','2019-03-21 08:54:27'),(4,'raul@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Raul','2019-03-21 08:54:27'),(5,'avril@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Avril','2019-03-21 08:54:27'),(6,'gracie@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Gracie','2019-03-21 08:54:27'),(7,'iluminada@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Iluminada','2019-03-21 08:54:27'),(8,'delpha@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Delpha','2019-03-21 08:54:27'),(9,'karae@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Larae','2019-03-21 08:54:27'),(10,'elvia@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Elvia','2019-03-21 08:54:27'),(11,'keisha2@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Keisha2','2019-03-21 08:54:27'),(12,'brice@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Brice','2019-03-21 08:54:27'),(13,'elvis@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Elvis','2019-03-21 08:54:27'),(14,'lucinda@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Lucinda','2019-03-21 08:54:27'),(15,'donny@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Donny','2019-03-21 08:54:27'),(16,'louis@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Louis','2019-03-21 08:54:27'),(17,'rebecca@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Rebecca','2019-03-21 08:54:27'),(18,'tamra@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Tamra','2019-03-21 08:54:27'),(19,'yan@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Yan','2019-03-21 08:54:27'),(20,'benito@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Benito','2019-03-21 08:54:27'),(21,'jenifer@test.hu','37A8EEC1CE19687D132FE29051DCA629D164E2C4958BA141D5F4133A33F0688F','Jenifer','2019-03-21 08:54:27'),(22,'beke.zoltan00@gmail.com','410BCBC111D3760E048B0FDEA79253E4CBDA0417567EA381FF2DDF6ED2FA4D61','ZoliTest','0001-01-01 00:00:00'),(23,'mx.griggs00@gmail.com','410BCBC111D3760E048B0FDEA79253E4CBDA0417567EA381FF2DDF6ED2FA4D61','MxTest','0001-01-01 00:00:00');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -371,4 +391,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-28 23:29:14
+-- Dump completed on 2019-05-11 13:09:47

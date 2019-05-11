@@ -179,7 +179,7 @@ namespace MShare_ASP.Services {
             }
         }
 
-        public async Task DebtSettlement(long debtorId, long lenderId, long groupId) {
+        public async Task DebtSettlement(long userId, long lenderId, long groupId) {
 
             var group = _context.Groups.SingleOrDefault(s => s.Id == groupId);
 
@@ -189,7 +189,7 @@ namespace MShare_ASP.Services {
             if (group.Members == null)
                 group.Members = new List<DaoUsersGroupsMap>();
 
-            var member = _context.UsersGroupsMap.FirstOrDefault(x => x.UserId == debtorId && x.GroupId == groupId);
+            var member = _context.UsersGroupsMap.FirstOrDefault(x => x.UserId == userId && x.GroupId == groupId);
 
             if (member == null)
                 throw new Exceptions.ResourceForbiddenException("debter_not_group_member");
@@ -203,22 +203,30 @@ namespace MShare_ASP.Services {
                 try {
                     // Log the previous spending here
                     var spendings = await _spendingService.GetSpendingsForGroup(groupId);
-                    await _loggingService.LogForGroup(debtorId, groupId, spendings);
+                    await _loggingService.LogForGroup(userId, groupId, spendings);
 
-                    // TODO:
-                    // 1) Make a weighted directional graph of debts,
-                    //    (i,j) edge with weight 'w' : 'i' is in debt to 'j' with 'w' amount
-                    // 2) Get the longest path in that graph from debtor (i) -> to lender (j)
-                    // 3) Find the smallest value in that path
-                    // 4) Remove that value from all edges on the path
-                    // 5) If the updated 'w' is == 0 destroy that connection and make a note of it
-                    // 6) goto 2) until there is a path between debtor (i) -> lender (j)
-                    // 7) update database with deleted and updated connections
-                    // 8) enjoy
+					var optDeb = _context.OptimizedDebt.FirstOrDefault(x => x.GroupId == groupId && x.UserOwesId == userId && x.UserOwedId == lenderId);
 
-                    // Add algorithm saving here
+					if (optDeb == null)
+						throw new Exceptions.ResourceGoneException("debt_gone");
 
-                    transaction.Commit();
+					if (optDeb.OweAmount == 0)
+						throw new Exceptions.BusinessException("debt_already_payed");
+
+					DaoSettlement settlement = new DaoSettlement()
+					{
+						GroupId = groupId,
+						From = userId,
+						To = lenderId,
+						Amount = optDeb.OweAmount
+					};
+
+					await _context.Settlements.AddAsync(settlement);
+
+					if (await _context.SaveChangesAsync() != 1)
+						throw new Exceptions.DatabaseException("debt_not_settled");
+
+					transaction.Commit();
                 } catch {
                     transaction.Rollback();
                     throw;
