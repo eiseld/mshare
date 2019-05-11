@@ -208,7 +208,7 @@ DROP TABLE IF EXISTS `settlements`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `settlements` (
-  `id` bigint(20) unsigned NOT NULL,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `group_id` bigint(20) unsigned NOT NULL,
   `from` bigint(20) unsigned NOT NULL,
   `to` bigint(20) unsigned NOT NULL,
