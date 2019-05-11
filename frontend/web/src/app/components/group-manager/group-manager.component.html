@@ -1,6 +1,6 @@
 <div class="page-container">
   <div class="createGroupDiv">
-    <button class="createGroupButton" *ngIf="!createGroupAttempt" (click)="startCreateGroup()">Új csoport
+    <button class="btn btn-primary" *ngIf="!createGroupAttempt" (click)="startCreateGroup()">Új csoport
       létrehozása</button>
     <input class="groupNameInput" *ngIf="createGroupAttempt" [(ngModel)]="newGroup" placeholder="név">
     <button class="createGroupCancel" *ngIf="createGroupAttempt" (click)="stopCreateGroup()">Mégse</button>
@@ -23,7 +23,7 @@
             {{groupInfo.myCurrentBalance | currency}}-ral</p>
           <p>Tagok: {{groupInfo.memberCount}}</p>
         </a>
-        <button *ngIf="groupInfo.creator === currentUser.name" class="createGroupOK"
+        <button *ngIf="groupInfo.creator === currentUser.name" class="btn btn-primary"
           (click)="open(content, groupInfo)">Új felhasználó hozzáadása</button>
       </li>
     </ul>
