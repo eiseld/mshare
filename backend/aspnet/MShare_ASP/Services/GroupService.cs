@@ -205,15 +205,15 @@ namespace MShare_ASP.Services {
                     var spendings = await _spendingService.GetSpendingsForGroup(groupId);
                     await _loggingService.LogForGroup(userId, groupId, spendings);
 
-					DaoOptimizedDebt optdebt = new DaoOptimizedDebt()
+					DaoSettlement settlement = new DaoSettlement()
 					{
 						GroupId = groupId,
-						UserOwesId = userId,
-						UserOwedId = lenderId,
-						OweAmount = amount
+						From = userId,
+						To = lenderId,
+						Amount = amount
 					};
 
-					await _context.OptimizedDebt.AddAsync(optdebt);
+					await _context.Settlements.AddAsync(settlement);
 					await _context.SaveChangesAsync();
 
 					transaction.Commit();
