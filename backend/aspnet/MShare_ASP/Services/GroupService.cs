@@ -210,6 +210,9 @@ namespace MShare_ASP.Services {
 					if (optDeb == null)
 						throw new Exceptions.ResourceGoneException("debt_gone");
 
+					if (optDeb.OweAmount == 0)
+						throw new Exceptions.BusinessException("debt_already_payed");
+
 					DaoSettlement settlement = new DaoSettlement()
 					{
 						GroupId = groupId,
@@ -219,7 +222,9 @@ namespace MShare_ASP.Services {
 					};
 
 					await _context.Settlements.AddAsync(settlement);
-					await _context.SaveChangesAsync();
+
+					if (await _context.SaveChangesAsync() != 1)
+						throw new Exceptions.DatabaseException("group_member_not_added");
 
 					transaction.Commit();
                 } catch {
