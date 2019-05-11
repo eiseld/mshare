@@ -79,7 +79,7 @@ namespace MShare_ASP.Services{
 
 		Task AddMember(long userId, long groupId, long memberId);
 
-		Task DebtSettlement(long userId, long lenderId, long groupId, long amount);
+		Task DebtSettlement(long userId, long lenderId, long groupId);
 
 	}
 }

@@ -179,7 +179,7 @@ namespace MShare_ASP.Services {
             }
         }
 
-        public async Task DebtSettlement(long userId, long lenderId, long groupId, long amount) {
+        public async Task DebtSettlement(long userId, long lenderId, long groupId) {
 
             var group = _context.Groups.SingleOrDefault(s => s.Id == groupId);
 
@@ -209,8 +209,7 @@ namespace MShare_ASP.Services {
 					{
 						GroupId = groupId,
 						From = userId,
-						To = lenderId,
-						Amount = amount
+						To = lenderId
 					};
 
 					await _context.Settlements.AddAsync(settlement);
