@@ -125,3 +125,8 @@ a {
 .negative-balance {
   color: #f80652;
 }
+
+.sidebar-action-button {
+  padding : 0.5rem 2rem
+
+}

@@ -32,6 +32,10 @@
                 </span>
               </h6>
             </a>
+            <div class="sidebar-heading align-items-center sidebar-action-button">
+              <button *ngIf="groupInfo.creator === currentUser.name" class="btn btn-secondary"
+                (click)="open(content, groupInfo)">Új felhasználó hozzáadása</button>
+            </div>
           </li>
         </ul>
       </div>
@@ -39,27 +43,6 @@
     </nav>
 
     <div id="content" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-      <!--div class="groupListParent">
-        <ul class="groupList">
-          <li class="groupElement" *ngFor="let groupInfo of groupInfos">
-            <a class="createSpendingButton" href="#" (click)="startCreateSpending(groupInfo)"><img
-                src="assets/noun_Plus.png" alt="Költés hozzáadása"></a>
-            <a (click)=selectGroup(groupInfo)>
-              {{groupInfo.name}}
-              <p>Létrehozta: {{groupInfo.creator}}</p>
-              <p *ngIf="groupInfo.myCurrentBalance < 0">Egyenleg: tartozol
-                {{0 - groupInfo.myCurrentBalance | currency}}-ral
-              </p>
-              <p *ngIf="groupInfo.myCurrentBalance == 0">Egyenleg: rendezett</p>
-              <p *ngIf="groupInfo.myCurrentBalance > 0">Egyenleg: tartoznak neked
-                {{groupInfo.myCurrentBalance | currency}}-ral</p>
-              <p>Tagok: {{groupInfo.memberCount}}</p>
-            </a>
-            <button *ngIf="groupInfo.creator === currentUser.name" class="btn btn-primary"
-              (click)="open(content, groupInfo)">Új felhasználó hozzáadása</button>
-          </li>
-        </ul>
-      </div>-->
 
       <div class="createGroupDiv">
         <input class="groupNameInput" *ngIf="createGroupAttempt" [(ngModel)]="newGroup" placeholder="név">
@@ -93,6 +76,7 @@
         <button type="button" class="btn btn-outline-dark"
           (click)="stringToUser();modal.close('Save click')">Save</button>
       </ng-template>
+
     </div>
   </div>
 </div>
