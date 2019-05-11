@@ -1,56 +1,86 @@
 <div class="page-container">
-  <div class="createGroupDiv">
-    <button class="btn btn-primary" *ngIf="!createGroupAttempt" (click)="startCreateGroup()">Új csoport
-      létrehozása</button>
-    <input class="groupNameInput" *ngIf="createGroupAttempt" [(ngModel)]="newGroup" placeholder="név">
-    <button class="createGroupCancel" *ngIf="createGroupAttempt" (click)="stopCreateGroup()">Mégse</button>
-    <button class="createGroupOK" *ngIf="createGroupAttempt" (click)="createGroup()">OK</button>
-    <p>{{error}}</p>
-  </div>
+  <div class="group-manager-wrapper">
+    <nav class="sidebar-nav col-md-2 d-none d-md-block">
+      <div class="sidebar">
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Csoportok</span>
+          <a class="d-flex align-items-center text-muted" *ngIf="!createGroupAttempt" (click)="startCreateGroup()">
+            <svg xmlns=" http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="feather feather-plus-circle">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="16"></line>
+              <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+            <i class="fas fa-plus"></i>
+          </a>
+        </h6>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item" *ngFor="let groupInfo of groupInfos">
+            <a (click)=selectGroup(groupInfo) class="nav-link">
+              {{groupInfo.name}}
+            </a>
+          </li>
+        </ul>
+      </div>
 
-  <div class="groupListParent">
-    <ul class="groupList">
-      <li class="groupElement" *ngFor="let groupInfo of groupInfos">
-        <a class="createSpendingButton" href="#" (click)="startCreateSpending(groupInfo)"><img
-            src="assets/noun_Plus.png" alt="Költés hozzáadása"></a>
-        <a (click)=selectGroup(groupInfo)>
-          {{groupInfo.name}}
-          <p>Létrehozta: {{groupInfo.creator}}</p>
-          <p *ngIf="groupInfo.myCurrentBalance < 0">Egyenleg: tartozol {{0 - groupInfo.myCurrentBalance | currency}}-ral
-          </p>
-          <p *ngIf="groupInfo.myCurrentBalance == 0">Egyenleg: rendezett</p>
-          <p *ngIf="groupInfo.myCurrentBalance > 0">Egyenleg: tartoznak neked
-            {{groupInfo.myCurrentBalance | currency}}-ral</p>
-          <p>Tagok: {{groupInfo.memberCount}}</p>
-        </a>
-        <button *ngIf="groupInfo.creator === currentUser.name" class="btn btn-primary"
-          (click)="open(content, groupInfo)">Új felhasználó hozzáadása</button>
-      </li>
-    </ul>
-  </div>
+    </nav>
 
-  <app-spending-creator class="spendingCreator" [createSpendingAttempt]="createSpendingAttempt"
-    [spendingForGroupData]="spendingForGroupData" [spending]="modifiableSpending"
-    [modifySpendingAttempt]="modifySpendingAttempt" (createSpendingAttemptStop)="stopCreateSpendingAttempt()"
-    (updateSelectedGroupEvent)='updateSelectedGroup()'></app-spending-creator>
+    <div id="content" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <!--div class="groupListParent">
+        <ul class="groupList">
+          <li class="groupElement" *ngFor="let groupInfo of groupInfos">
+            <a class="createSpendingButton" href="#" (click)="startCreateSpending(groupInfo)"><img
+                src="assets/noun_Plus.png" alt="Költés hozzáadása"></a>
+            <a (click)=selectGroup(groupInfo)>
+              {{groupInfo.name}}
+              <p>Létrehozta: {{groupInfo.creator}}</p>
+              <p *ngIf="groupInfo.myCurrentBalance < 0">Egyenleg: tartozol
+                {{0 - groupInfo.myCurrentBalance | currency}}-ral
+              </p>
+              <p *ngIf="groupInfo.myCurrentBalance == 0">Egyenleg: rendezett</p>
+              <p *ngIf="groupInfo.myCurrentBalance > 0">Egyenleg: tartoznak neked
+                {{groupInfo.myCurrentBalance | currency}}-ral</p>
+              <p>Tagok: {{groupInfo.memberCount}}</p>
+            </a>
+            <button *ngIf="groupInfo.creator === currentUser.name" class="btn btn-primary"
+              (click)="open(content, groupInfo)">Új felhasználó hozzáadása</button>
+          </li>
+        </ul>
+      </div>-->
 
-  <app-group-detail class="groupDetail" [groupData]="selectedGroup" [spendings]="selectedGroupSpendings"
-    (startSpendingCreation)="startCreateSpending($event)" (startSpendingModification)="startModifySpending($event)"
-    (updateSelectedGroupEvent)='updateSelectedGroup()'></app-group-detail>
-  <div class="clear"></div>
+      <div class="createGroupDiv">
+        <input class="groupNameInput" *ngIf="createGroupAttempt" [(ngModel)]="newGroup" placeholder="név">
+        <button class="btn btn-primary" *ngIf="createGroupAttempt" (click)="stopCreateGroup()">Mégse</button>
+        <button class="btn btn-danger" *ngIf="createGroupAttempt" (click)="createGroup()">OK</button>
+        <p>{{error}}</p>
+      </div>
+
+      <app-spending-creator class="spendingCreator" [createSpendingAttempt]="createSpendingAttempt"
+        [spendingForGroupData]="spendingForGroupData" [spending]="modifiableSpending"
+        [modifySpendingAttempt]="modifySpendingAttempt" (createSpendingAttemptStop)="stopCreateSpendingAttempt()"
+        (updateSelectedGroupEvent)='updateSelectedGroup()'></app-spending-creator>
+
+      <app-group-detail class="groupDetail" [groupData]="selectedGroup" [spendings]="selectedGroupSpendings"
+        (startSpendingCreation)="startCreateSpending($event)" (startSpendingModification)="startModifySpending($event)"
+        (updateSelectedGroupEvent)='updateSelectedGroup()'></app-group-detail>
+      <div class="clear"></div>
 
 
-  <ng-template #content let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Add user to the selected group</h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <ng-template #content let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Add user to the selected group</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-bottom: 100px;">
+          <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="selectedUser"
+            [ngbTypeahead]="search" (keyup)="onKeyDown($event)" />
+        </div>
+        <button type="button" class="btn btn-outline-dark"
+          (click)="stringToUser();modal.close('Save click')">Save</button>
+      </ng-template>
     </div>
-    <div class="modal-body" style="padding-bottom: 100px;">
-      <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="selectedUser" [ngbTypeahead]="search"
-        (keyup)="onKeyDown($event)" />
-    </div>
-    <button type="button" class="btn btn-outline-dark" (click)="stringToUser();modal.close('Save click')">Save</button>
-  </ng-template>
+  </div>
 </div>
