@@ -6,7 +6,7 @@ ul {
   margin: 0;
 }
 li:hover {
-  background-color: #E8F1F8;
+  background-color: #e8f1f8;
 }
 
 a {
@@ -43,7 +43,7 @@ a {
 
 .groupDetail {
   width: 80%;
-  background: #E8F1F8;
+  background: #e8f1f8;
   display: inline-block;
   float: left;
 }
@@ -112,4 +112,8 @@ a {
   overflow-x: hidden;
   overflow-y: auto;
   position: sticky;
+}
+
+.sidebar-nav-link {
+  display: block;
 }
