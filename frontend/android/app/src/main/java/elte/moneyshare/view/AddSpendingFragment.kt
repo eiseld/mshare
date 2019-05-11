@@ -10,18 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import elte.moneyshare.FragmentDataKeys
+import elte.moneyshare.*
 
-import elte.moneyshare.R
-import elte.moneyshare.entity.Debtor
-import elte.moneyshare.entity.Member
-import elte.moneyshare.entity.NewSpending
-import elte.moneyshare.entity.SpendingData
-import elte.moneyshare.invisible
+import elte.moneyshare.entity.*
 import elte.moneyshare.view.Adapter.SelectMembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import elte.moneyshare.viewmodel.GroupsViewModel
-import elte.moneyshare.visible
 import kotlinx.android.synthetic.main.fragment_add_spending.*
 
 class AddSpendingFragment : Fragment() {
@@ -29,7 +23,7 @@ class AddSpendingFragment : Fragment() {
     private lateinit var viewModel: GroupViewModel
     private var spendingData : SpendingData? = null
     private var groupId: Int? = null
-    private var spendingId : Int? = null
+    private var spendingId = -1
     private var isModify : Boolean = false
     private var members = ArrayList<Member>()
 
@@ -38,9 +32,13 @@ class AddSpendingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         groupId = arguments?.getInt(FragmentDataKeys.MEMBERS_FRAGMENT.value)
-        spendingId = arguments?.getInt(FragmentDataKeys.BILLS_FRAGMENT.value)
-        if(spendingId != null && spendingId != -1)
+        var spendingIdTemp = arguments?.getInt(FragmentDataKeys.BILLS_FRAGMENT.value)
+        if(spendingIdTemp != null && spendingIdTemp != -1)
+        {
             isModify = true
+            spendingId = spendingIdTemp
+        }
+
         return inflater.inflate(R.layout.fragment_add_spending, container, false)
     }
 
@@ -81,7 +79,7 @@ class AddSpendingFragment : Fragment() {
         {
             addButton.text = context?.getString(R.string.modify_spending)
             spendingEditText.setText("5000")
-            nameEditText.setText("Sörözés")
+            nameEditText.setText(spendingData?.name)
             //spendingEditText.setText(spendingData?.moneyOwed)
             //nameEditText.setText(spendingData?.name)
 
@@ -137,19 +135,40 @@ class AddSpendingFragment : Fragment() {
                     debt = member.balance
                 ))
             }
+            if(!isModify)
+            {
+                val spending = NewSpending(
+                    groupId = groupId!!,
+                    moneySpent = Integer.valueOf(spendingEditText.editableText.toString()),
+                    name = nameEditText.editableText.toString(),
+                    debtors = debtors
+                )
 
-            val spending = NewSpending(
-                groupId = groupId!!,
-                moneySpent = Integer.valueOf(spendingEditText.editableText.toString()),
-                name = nameEditText.editableText.toString(),
-                debtors = debtors
-            )
+                viewModel.postSpending(spending) { response, error ->
+                    if (error == null) {
+                        (context as MainActivity).onBackPressed()
+                    } else {
+                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            else
+            {
+                val spending = SpendingUpdate(
+                    groupId = groupId!!,
+                    moneySpent = Integer.valueOf(spendingEditText.editableText.toString()),
+                    name = nameEditText.editableText.toString(),
+                    debtors = debtors,
+                    id = spendingId,
+                    creditorUserId = SharedPreferences.userId
+                )
 
-            viewModel.postSpending(spending) { response, error ->
-                if (error == null) {
-                    (context as MainActivity).onBackPressed()
-                } else {
-                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                viewModel.postSpendingUpdate(spending) { response, error ->
+                    if (error == null) {
+                        (context as MainActivity).onBackPressed()
+                    } else {
+                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
