@@ -224,7 +224,7 @@ namespace MShare_ASP.Services {
 					await _context.Settlements.AddAsync(settlement);
 
 					if (await _context.SaveChangesAsync() != 1)
-						throw new Exceptions.DatabaseException("group_member_not_added");
+						throw new Exceptions.DatabaseException("debt_not_settled");
 
 					transaction.Commit();
                 } catch {
