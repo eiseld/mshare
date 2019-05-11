@@ -6,7 +6,7 @@ ul {
   margin: 0;
 }
 li:hover {
-  background-color: lightcyan;
+  background-color: #E8F1F8;
 }
 
 a {
@@ -43,7 +43,7 @@ a {
 
 .groupDetail {
   width: 80%;
-  background: lightcyan;
+  background: #E8F1F8;
   display: inline-block;
   float: left;
 }

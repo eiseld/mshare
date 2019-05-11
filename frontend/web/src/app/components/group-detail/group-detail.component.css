@@ -6,7 +6,7 @@ ul{
     margin: 0;
 }
 li:hover{
-    background-color: lightcyan;
+    background-color: #E8F1F8;
 }
 
 .groupDetails{
@@ -40,7 +40,7 @@ img{
 .tab {
     overflow: hidden;
     border: 1px solid #ccc;
-    background-color: lightcyan;
+    background-color: #E8F1F8;
     width: fit-content;
   }
   
