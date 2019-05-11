@@ -53,6 +53,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"/>
+
     <ImageButton
             android:id="@+id/removeMemberImageButton"
             android:layout_width="42dp"

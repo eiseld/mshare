@@ -75,7 +75,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
     }
 
 
-    override fun putForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit) {
+    override fun postForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit) {
         apiDefinition.postForgotPassword(ForgottenPasswordData(email)).enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 when (response?.code()) {
@@ -89,7 +89,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
-               // completion(null, "forgot password error")
+               completion(null, "forgot password error")
             }
         })
     }
@@ -193,7 +193,6 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
     }
 
 
-
     //PROFILE
     override fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit) {
         apiDefinition.getProfileGroups().enqueue(object : Callback<ArrayList<GroupInfo>> {
@@ -291,6 +290,26 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
 
             override fun onFailure(call: Call<Any>, t: Throwable) {
                 completion(null, "Debt settlement error")
+            }
+        })
+    }
+
+    override fun getSearchedUsers(filter: String, completion: (response: ArrayList<FilteredUserData>?, error: String?) -> Unit) {
+        apiDefinition.getSearchedUsers(filter).enqueue(object : Callback<ArrayList<FilteredUserData>> {
+            override fun onResponse(call: Call<ArrayList<FilteredUserData>>, response: Response<ArrayList<FilteredUserData>>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val filteredUsers = response.body()
+                        completion(filteredUsers, null)
+                    }
+                    else -> {
+                        completion(null, response.message())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<FilteredUserData>>, t: Throwable) {
+                completion(null, "Search users error")
             }
         })
     }

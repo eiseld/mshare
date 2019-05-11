@@ -42,7 +42,7 @@
     <string name="event_name">Esemény neve</string>
     <string name="spending">Költés</string>
     <string name="add">Hozzáadás</string>
-    <string name="select_members">Emberek kiválasztása</string>
+    <string name="select_members">Tagok kiválasztása</string>
     <string name="my_balance">Egyenlegem:</string>
     <string name="next">Következő</string>
     <string name="must_be_bigger_than_0">Nagyobbna kell lennie mint 0</string>
@@ -50,5 +50,7 @@
     <string name="max_spending_limit">Max megmaradt összeg %1$d Ft</string>
 
     <string name="my_debts">Saját tartozásaim</string>
+    <string name="filtered_users">%1$s - %2$s</string>
+    <string name="select_members_missing">Jelöljön ki tagokat</string>
 
 </resources>

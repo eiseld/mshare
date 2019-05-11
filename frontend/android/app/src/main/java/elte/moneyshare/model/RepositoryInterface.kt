@@ -7,7 +7,7 @@ interface RepositoryInterface {
     //AUTH
     fun putLoginUser(LoginCred: LoginCred, completion: (response: String?, error: String?) -> Unit)
 
-    fun putForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit)
+    fun postForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit)
 
     fun postRegisterUser(registrationData: RegistrationData, completion: (response: String?, error: String?) -> Unit)
 
@@ -27,6 +27,7 @@ interface RepositoryInterface {
 
     fun putDebitEqualization(groupId: Int, ownId: Int,selectedMember: Int, completion: (response: String?, error: String?) -> Unit)
 
+    fun getSearchedUsers(filter: String, completion: (response: ArrayList<FilteredUserData>?, error: String?) -> Unit)
 
     //PROFILE
     fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit)

@@ -63,7 +63,8 @@ class AddSpendingFragment : Fragment() {
 
             val validAll = !TextUtils.isEmpty(nameEditText.editableText.toString()) &&
                     !TextUtils.isEmpty(spendingEditText.editableText.toString()) &&
-                    !spendingEditText.editableText.toString().equals("0")
+                    !spendingEditText.editableText.toString().equals("0") &&
+                    members.size > 0
 
             if (TextUtils.isEmpty(nameEditText.editableText.toString())) {
                 nameEditText.error = context?.getString(R.string.cannot_be_empty)
@@ -71,6 +72,10 @@ class AddSpendingFragment : Fragment() {
 
             if (TextUtils.isEmpty(spendingEditText.editableText.toString()) || spendingEditText.editableText.toString().equals("0")) {
                 spendingEditText.error = context?.getString(R.string.must_be_bigger_than_0)
+            }
+
+            if (members.size == 0) {
+                Toast.makeText(context, getString(R.string.select_members_missing), Toast.LENGTH_SHORT).show()
             }
 
             if (validAll) {

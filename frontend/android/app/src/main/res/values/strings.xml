@@ -50,6 +50,8 @@
     <string name="must_be_bigger_than_0">Must be bigger than 0</string>
     <string name="cannot_be_empty">Cannot be empty</string>
     <string name="max_spending_limit">Max remainder spending %1$d Ft</string>
+    <string name="filtered_users">%1$s - %2$s</string>
+    <string name="select_members_missing">Select members</string>
 
 
 </resources>
