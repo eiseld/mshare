@@ -25,7 +25,7 @@ namespace MShare_ASP.Data
 		/// <summary>
 		/// The group's id to where this settlement is payed
 		/// </summary>
-		[Column("groupid")]
+		[Column("group_id")]
 		public long GroupId { get; set; }
 
 		/// <summary>

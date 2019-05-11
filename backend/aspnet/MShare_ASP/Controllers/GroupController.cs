@@ -134,7 +134,7 @@ namespace MShare_ASP.Controllers {
 			return Ok(await GroupService.GetGroupHistory(groupid));
 		}
 
-		[HttpGet("{groupid}/settledebt/{userid}/{lenderid}")]
+		[HttpPost("{groupid}/settledebt/{userid}/{lenderid}")]
 		public async Task<ActionResult> DebtSettlement(long userid, long lenderid, long groupid)
 		{
             if (GetCurrentUserID() != userid && GetCurrentUserID() != lenderid)
