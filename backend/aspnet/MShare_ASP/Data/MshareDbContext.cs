@@ -37,6 +37,8 @@ namespace MShare_ASP.Data {
 
         public DbSet<DaoOptimizedDebt> OptimizedDebt { get; set;}
 
+		public DbSet<DaoSettlement> Settlements { get; set; }
+
         /// <summary>
         /// Initializes a new DbContext
         /// </summary>
