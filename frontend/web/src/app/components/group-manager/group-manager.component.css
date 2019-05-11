@@ -117,3 +117,11 @@ a {
 .sidebar-nav-link {
   display: block;
 }
+
+.positive-balance {
+  color: green;
+}
+
+.negative-balance {
+  color: #f80652;
+}

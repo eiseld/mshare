@@ -17,11 +17,21 @@
         </h3>
         <ul class="nav flex-column mb-2">
           <li class="nav-item" *ngFor="let groupInfo of groupInfos">
-            <h5 class="sidebar-heading justify-content-between align-items-center px-3 mt-4 mb-2 text-muted">
-              <a (click)=selectGroup(groupInfo) class="nav-link sidebar-nav-link">
-                {{groupInfo.name}}
-              </a>
-            </h5>
+            <a (click)=selectGroup(groupInfo) class="nav-link sidebar-nav-link">
+              <h5 class="sidebar-heading justify-content-between align-items-center px-3 mt-4 mb-2 text-muted">
+                {{groupInfo.name}} ({{groupInfo.memberCount}})
+              </h5>
+              <h6 class="sidebar-heading justify-content-between align-items-center px-3 mt-4 mb-2 text-muted">
+                Létrehozta: {{groupInfo.creator}}
+              </h6>
+              <h6 class="sidebar-heading justify-content-between align-items-center px-3 mt-4 mb-2 text-muted">
+                Egyenleg: <span *ngIf="">{{groupInfo.myCurrentBalance | currency}}</span>
+                <span
+                  [ngClass]="{'negative-balance': groupInfo.myCurrentBalance < 0, 'positive-balance': groupInfo.myCurrentBalance >= 0}">
+                  {{groupInfo.myCurrentBalance | currency}}
+                </span>
+              </h6>
+            </a>
           </li>
         </ul>
       </div>
