@@ -134,12 +134,12 @@ namespace MShare_ASP.Controllers {
 			return Ok(await GroupService.GetGroupHistory(groupid));
 		}
 
-		[HttpGet("{groupid}/settledebt/{userid}/{lenderid}/{amount}")]
-		public async Task<ActionResult> DebtSettlement(long userid, long lenderid, long groupid, long amount)
+		[HttpGet("{groupid}/settledebt/{userid}/{lenderid}")]
+		public async Task<ActionResult> DebtSettlement(long userid, long lenderid, long groupid)
 		{
             if (GetCurrentUserID() != userid && GetCurrentUserID() != lenderid)
                 throw new ResourceForbiddenException("user_not_debtor_or_lender");
-			await GroupService.DebtSettlement(userid, lenderid, groupid, amount);
+			await GroupService.DebtSettlement(userid, lenderid, groupid);
 			return Ok();
 		}
 		
