@@ -70,21 +70,18 @@ namespace MShare_ASP.Services {
                 .ToListAsync();
         }
 
+        public async Task<long> GetDebtSum(long userId, long groupId){
+            var daoOptimizedDebts =  await GetOptimizedDebtForGroup(userId, groupId);
 
-        public long GetDebtSum(long userId, long groupId){
-            var credit =  DbContext.Spendings
-                            .Where(x => x.GroupId == groupId && x.CreditorUserId == userId)
-                            .Sum(x => x.MoneyOwed);
+            var credit = daoOptimizedDebts 
+                .Where(x => x.UserOwedId == userId)  
+                .Sum(x => x.OweAmount);
 
-            var debt =   DbContext.Spendings
-                            .Where(x => x.GroupId == groupId)
-                            .Sum(x => 
-                                x.Debtors
-                                .Where(y => y.DebtorUserId == userId)
-                                .Sum(y => y.Debt)
-                            );
+            var debt = daoOptimizedDebts  
+                .Where(x => x.UserOwesId == userId)
+                .Sum(x => x.OweAmount);
 
-            return credit - (debt ?? 0);
+            return credit - debt;
         }
 
         public async Task OptimizeSpendingForGroup(long groupId){

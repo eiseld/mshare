@@ -69,7 +69,7 @@ namespace MShare_ASP.Controllers {
         [HttpGet]
         [Route("{groupId}/data")]
         public async Task<ActionResult<API.Response.GroupData>> GetGroupData(long groupId){
-            return Ok(GroupService.ToGroupData(GetCurrentUserID(), await GroupService.GetGroupOfUser(GetCurrentUserID(), groupId)));
+            return Ok(await GroupService.ToGroupData(GetCurrentUserID(), await GroupService.GetGroupOfUser(GetCurrentUserID(), groupId)));
         }
 
 		/// <summary>

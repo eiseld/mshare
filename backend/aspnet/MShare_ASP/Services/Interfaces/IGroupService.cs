@@ -17,7 +17,7 @@ namespace MShare_ASP.Services{
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="daoGroup"></param>
-        API.Response.GroupData ToGroupData(long userId, DaoGroup daoGroup);
+        Task<API.Response.GroupData> ToGroupData(long userId, DaoGroup daoGroup);
 
         /// <summary>
         /// Converts list of DaoGroup to list of GroupData
@@ -31,7 +31,7 @@ namespace MShare_ASP.Services{
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="daoGroup"></param>
-        API.Response.GroupInfo ToGroupInfo(long userId, DaoGroup daoGroup);
+        Task<API.Response.GroupInfo> ToGroupInfo(long userId, DaoGroup daoGroup);
 
         /// <summary>
         /// Converts list of DaoGroup to list of GroupInfo

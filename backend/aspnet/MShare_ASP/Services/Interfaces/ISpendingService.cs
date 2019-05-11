@@ -46,7 +46,7 @@ namespace MShare_ASP.Services {
         /// <param name="userId"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        long GetDebtSum(long userId, long groupId);
+        Task<long> GetDebtSum(long userId, long groupId);
 
         /// <summary>
         /// Calculate the optimized debts of a group
