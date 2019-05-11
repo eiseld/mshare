@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_add_spending.*
 class AddSpendingFragment : Fragment() {
 
     private lateinit var viewModel: GroupViewModel
-    private var spendingData : SpendingData? = null
+    private lateinit var spendingData : SpendingData
     private var groupId: Int? = null
     private var spendingId = -1
     private var isModify : Boolean = false
@@ -55,31 +55,37 @@ class AddSpendingFragment : Fragment() {
                         val adapter = SelectMembersRecyclerViewAdapter(it, members)
                         selectMembersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         selectMembersRecyclerView.adapter = adapter
+                        if(isModify)
+                        {
+                            viewModel.getSpendings(groupId) { spendings, error ->
+                                if (spendings != null)
+                                {
+                                    val spendingDataTemp = spendings.find { it.id == spendingId }
+                                    spendingDataTemp?.let {
+                                        spendingEditText.setText(it.moneyOwed.toString())
+                                        nameEditText.setText(it.name)
+                                        val debtorIds = it.debtors.map { it.id }
+                                        (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds = ArrayList(debtorIds)
+                                        val selectedMembers = members.filter { it.id in debtorIds }
+                                        (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedMembers = ArrayList(selectedMembers)
+                                        adapter.notifyDataSetChanged()
+                                    }
+                                }
+                            }
+                        }
                     } else {
                         Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                     }
-                }
-                if(isModify)
-                {
-                    viewModel.getSpendings(groupId) { spendings, error ->
-                        if (spendings != null)
-                        {
-                            spendingData = spendings.find { it.id == spendingId }
-                        }
-                        else {
-                            Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
 
+                }
             }
         }
 
         if(isModify)
         {
             addButton.text = context?.getString(R.string.modify_spending)
-            spendingEditText.setText("5000")
-            nameEditText.setText(spendingData?.name)
+
+            //
             //spendingEditText.setText(spendingData?.moneyOwed)
             //nameEditText.setText(spendingData?.name)
 
