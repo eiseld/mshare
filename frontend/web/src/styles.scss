@@ -1,0 +1,25 @@
+/* Colors
+    - #F80652 - error text, important button text
+    - #E8F1F8 - background
+    - #ADC4D6 - notifications background, errors background
+    - #222F3F - button color
+    - #E8F1F8 - button text color
+    - #101C28 - text color, button hoover color
+*/
+
+/* Bootstrap customizing */
+@import "customize-bootstrap.scss";
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+/* Common styles*/
+.page-container {
+  min-height: 100vh;
+  color: #101c28;
+  background: #e8f1f8;
+  padding: 48px 2rem 0 2rem;
+  width: 100%;
+}
+
+.h2 {
+  color: #222f3f;
+}
