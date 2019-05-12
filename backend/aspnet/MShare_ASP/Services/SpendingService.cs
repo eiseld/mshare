@@ -90,6 +90,9 @@ namespace MShare_ASP.Services {
                                               .SingleOrDefaultAsync(x => x.Id == groupId);
             if (currentGroup == null)
                 throw new ResourceGoneException("group_gone");
+
+            var currentGroupSettleMents = DbContext.Settlements.Where(x => x.GroupId == groupId);
+
             var Spendings = await GetSpendingsForGroup(groupId);
             Dictionary<int, long> NumberToId = new Dictionary<int, long>();
             Dictionary<long, int> IdToNumber = new Dictionary<long, int>();
@@ -104,6 +107,8 @@ namespace MShare_ASP.Services {
             }
 
 
+
+
             int ingroup = NumberToId.Count;
             long[,] owes = new long[ingroup, ingroup];
             for (int i = 0; i < ingroup; i++){
@@ -115,8 +120,22 @@ namespace MShare_ASP.Services {
                     }
                 }
             }
+
+            foreach (var settlement in currentGroupSettleMents)
+            {
+                if (currentGroup.Members.Any(x => x.UserId == settlement.From) && currentGroup.Members.Any(x => x.UserId == settlement.To))
+                {
+                    owes[IdToNumber[settlement.To], IdToNumber[settlement.From]] += settlement.Amount;
+                }
+            }
+
+            for (int i = 0; i < ingroup; i++)
+            {
+                owes[i, i] = 0;
+            }
+
             var Optimizer = new SpendingOptimizer(owes, ingroup);
-            //Optimizer.Optimize();
+            Optimizer.Optimize();
             owes = Optimizer.GetResult();
             var oldOptimized = await DbContext.OptimizedDebt.Where(x => x.GroupId == groupId).ToListAsync();
             DbContext.OptimizedDebt.RemoveRange(oldOptimized);

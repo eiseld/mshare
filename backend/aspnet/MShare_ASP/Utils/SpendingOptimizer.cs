@@ -15,7 +15,7 @@ namespace MShare_ASP.Utils {
         public void Optimize()
         {
             RemoveCycle();
-            ReduceTransfers();
+            //ReduceTransfers();
         }
 
         public long[,] GetResult()
@@ -102,7 +102,7 @@ namespace MShare_ASP.Utils {
                     neighbors[i] = 0;
                     for(int j = 0; j < n; j++)
                     {
-                        if(_owes[i,j] > 0)
+                        if(_owes[j,i] > 0)
                         {
                             neighbors[i] += 1;
                         }
@@ -142,7 +142,7 @@ namespace MShare_ASP.Utils {
                     {
                         if(_owes[TopologicalArray[i],j] > 0)
                         {
-                            if(cost[j] * len[j] < Math.Min(cost[TopologicalArray[i]],_owes[TopologicalArray[i],j]) * (len[TopologicalArray[i]] + 1))
+                            if(len[j] < len[TopologicalArray[i]] + 1)
                             {
                                 cost[j] = Math.Min(cost[TopologicalArray[i]],_owes[TopologicalArray[i],j]);
                                 len[j] = len[TopologicalArray[i]] + 1;
