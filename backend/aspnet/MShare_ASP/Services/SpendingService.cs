@@ -116,7 +116,7 @@ namespace MShare_ASP.Services {
                 }
             }
             var Optimizer = new SpendingOptimizer(owes, ingroup);
-            Optimizer.Optimize();
+            //Optimizer.Optimize();
             owes = Optimizer.GetResult();
             var oldOptimized = await DbContext.OptimizedDebt.Where(x => x.GroupId == groupId).ToListAsync();
             DbContext.OptimizedDebt.RemoveRange(oldOptimized);
