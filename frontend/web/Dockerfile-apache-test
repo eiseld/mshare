@@ -7,7 +7,7 @@ RUN npm install
 
 COPY . .
 
-RUN ["npm","run","buildprod"]
+RUN ["npm","run","buildtest"]
 
 FROM httpd:2.4
 

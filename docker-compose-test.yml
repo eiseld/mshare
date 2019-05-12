@@ -12,7 +12,7 @@ volumes:
 services:
 
   mysql:
-    container_name: mshare-mysql
+    container_name: mshare-mysql-test
     image: mysql:8.0.15
     environment:
       MYSQL_DATABASE: 'mshare'
@@ -26,12 +26,12 @@ services:
       - mysql_prod:/var/lib/mysql
 
   aspnet:
-    container_name: mshare-aspnet
+    container_name: mshare-aspnet-test
     build: 
       context: './backend/aspnet/MShare_ASP'
       dockerfile: Dockerfile-aspnet-prod
     environment:
-      ASPNETCORE_ENVIRONMENT: 'Production'
+      ASPNETCORE_ENVIRONMENT: 'Test'
       MSHARE_RUNNING_BEHIND_PROXY: 'true'
     depends_on:
       - mysql
@@ -42,7 +42,7 @@ services:
     container_name: test
     build: 
       context: './frontend/web'
-      dockerfile: Dockerfile-apache-prod
+      dockerfile: Dockerfile-apache-test
     depends_on:
       - aspnet
     ports:
