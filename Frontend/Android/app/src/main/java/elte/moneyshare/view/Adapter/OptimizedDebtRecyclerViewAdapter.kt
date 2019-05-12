@@ -17,7 +17,7 @@ import elte.moneyshare.visible
 
 class OptimizedDebtRecyclerViewAdapter(
     private val context: Context,
-    private val DebtData: ArrayList<OptimizedDebtData>,
+    private var DebtData: ArrayList<OptimizedDebtData>,
     private val Model: GroupsViewModel,
     private val groupId: Int
 ) : RecyclerView.Adapter<OptimizedDebtViewHolder>() {
@@ -68,7 +68,17 @@ class OptimizedDebtRecyclerViewAdapter(
                 if (debt.debtor.id == SharedPreferences.userId) {
                     Model.doDebitEqualization(groupId,debt.debtor.id, debt.creditor.id) { response, error ->
                         if (error == null) {
-                            debt.optimisedDebtAmount =0
+                            groupId?.let { groupId ->
+                                Model.getOptimizedDebtData(groupId) { groupData, error ->
+                                    if (groupData != null) {
+                                        println("Siker?")
+                                        DebtData = groupData
+                                        println(groupData)
+                                    } else {
+                                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
                             notifyItemChanged(position)
                             Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                         } else {
