@@ -71,9 +71,7 @@ class OptimizedDebtRecyclerViewAdapter(
                             groupId?.let { groupId ->
                                 Model.getOptimizedDebtData(groupId) { groupData, error ->
                                     if (groupData != null) {
-                                        println("Siker?")
                                         DebtData = groupData
-                                        println(groupData)
                                     } else {
                                         Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                                     }
@@ -88,6 +86,15 @@ class OptimizedDebtRecyclerViewAdapter(
                 } else if (debt.creditor.id == SharedPreferences.userId) {
                     Model.doDebitEqualization(groupId, debt.debtor.id, debt.creditor.id) { response, error ->
                         if (error == null) {
+                            groupId?.let { groupId ->
+                                Model.getOptimizedDebtData(groupId) { groupData, error ->
+                                    if (groupData != null) {
+                                        DebtData = groupData
+                                    } else {
+                                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
                              notifyItemChanged(position)
                             Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                         } else {
