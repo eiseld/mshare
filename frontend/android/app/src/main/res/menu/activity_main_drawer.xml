@@ -7,11 +7,11 @@
         <item
                 android:id="@+id/navHome"
                 android:icon="@drawable/ic_menu_camera"
-                android:title="@string/menu_home"/>
+                android:title="@string/menu_groups"/>
 
         <item
                 android:id="@+id/navSettings"
                 android:icon="@drawable/ic_menu_manage"
-                android:title="@string/menu_tools"/>
+                android:title="@string/menu_settings"/>
     </group>
 </menu>
