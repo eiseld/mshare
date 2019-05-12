@@ -14,7 +14,7 @@ namespace MShare_ASP.Utils {
         }
         public void Optimize()
         {
-            RemoveCycle();
+            //RemoveCycle();
             //ReduceTransfers();
         }
 
@@ -44,16 +44,16 @@ namespace MShare_ASP.Utils {
                 {
                     Path.Clear();
                     Path.Push(i);
-                    long cu = CycleUtil(i,visited,stack, Path);
+                    long cu =  CycleUtil(i,visited,stack, Path);
                     if(cu > 0)
                     {
-                        int[] cyclepath = Path.ToArray();
-                        for(int j = 0; j < Path.Count - 1; j++)
+                       int[] cyclepath = Path.ToArray();
+                       for(int j = 0; j < Path.Count - 1; j++)
                         {
-                            _owes[cyclepath[j],cyclepath[j+1]] -= cu;
+                            _owes[cyclepath[j],cyclepath[j+1]] = 0;
                         }
-                        _owes[cyclepath[Path.Count-1],cyclepath[0]] -= cu;
-                        foundcycle = true;
+                        _owes[cyclepath[Path.Count-1],cyclepath[0]] = 0;
+                        //foundcycle = true;
                     }
                 }
             }
