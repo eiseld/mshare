@@ -53,4 +53,5 @@
     <string name="ok">Ok</string>
 
     <string name="on_failure_message">Hálózati hiba!</string>
+    <string name="press_back_again_to_exit">Kilépéshez nyomja meg mégegyszer</string>
 </resources>

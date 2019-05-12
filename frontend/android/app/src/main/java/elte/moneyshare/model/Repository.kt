@@ -18,6 +18,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                     in (200..300) -> {
                         SharedPreferences.isUserLoggedIn = true
                         SharedPreferences.accessToken = response?.body()?.token ?: ""
+                        SharedPreferences.email = loginCred.email
                         getUserId({ response, error ->})
                         completion(response.code().toString(), null)
                     }
@@ -60,6 +61,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                     in (200..300) -> {
                         val user = response.body()
                         SharedPreferences.userId = user?.id ?: 0
+                        SharedPreferences.userName = user?.name ?: ""
                         completion(user, null)
                     }
                     else -> {

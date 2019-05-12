@@ -12,6 +12,8 @@ object SharedPreferences {
     private val USER_LOGGED_IN = "user_logged_in"
 
     private val USER_ID = "user_id"
+    private val USER_NAME = "user_name"
+    private val USER_EMAIL = "user_email"
 
     private val DELETE_MEMBER_ENABLED = "delete_member_enabled"
 
@@ -48,6 +50,24 @@ object SharedPreferences {
         set(id) {
             with(sharedPreferences.edit()) {
                 putInt(USER_ID, id)
+                apply()
+            }
+        }
+
+    var userName : String?
+        get() = sharedPreferences.getString(USER_NAME, "")
+        set(name) {
+            with(sharedPreferences.edit()) {
+                putString(USER_NAME, name)
+                apply()
+            }
+        }
+
+    var email : String?
+        get() = sharedPreferences.getString(USER_EMAIL, "")
+        set(email) {
+            with(sharedPreferences.edit()) {
+                putString(USER_EMAIL, email)
                 apply()
             }
         }
