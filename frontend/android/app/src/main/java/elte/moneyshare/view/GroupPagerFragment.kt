@@ -37,19 +37,26 @@ class GroupPagerFragment : Fragment() {
 
         val item = menu.findItem(R.id.menuSearch)
         val searchView = SearchView((context as MainActivity).supportActionBar!!.themedContext)
-        MenuItemCompat.setShowAsAction(item,MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItemCompat.SHOW_AS_ACTION_IF_ROOM)
+        MenuItemCompat.setShowAsAction(
+            item,
+            MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItemCompat.SHOW_AS_ACTION_IF_ROOM
+        )
         MenuItemCompat.setActionView(item, searchView)
+        searchResultsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                val adapter = SearchResultsRecyclerViewAdapter(context!!, newText, groupId!!, viewModel)
-                searchResultsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                searchResultsRecyclerView?.adapter = adapter
+                viewModel.getSearchedUsers(newText) { filteredUsers, error ->
+                    if (filteredUsers != null && !filteredUsers.equals("")) {
+                        val adapter = SearchResultsRecyclerViewAdapter(context!!, filteredUsers, groupId!!, viewModel)
+                        searchResultsRecyclerView?.adapter = adapter
+                    }
+                }
 
-                if(newText.equals("")){
+                if (newText.equals("") || newText.length < 4) {
                     searchResultsRecyclerView?.invisible()
                     tabLayout?.visible()
                 } else {
@@ -98,7 +105,8 @@ class GroupPagerFragment : Fragment() {
                     args.putInt(FragmentDataKeys.GROUP_PAGER_FRAGMENT.value, it)
                 }
                 fragment.arguments = args
-                (context as MainActivity).supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
+                (context as MainActivity).supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
                 return true
             }
             R.id.myDebts -> {
@@ -108,7 +116,8 @@ class GroupPagerFragment : Fragment() {
                     args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
                 }
                 fragment.arguments = args
-                (context as MainActivity).supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
+                (context as MainActivity).supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
                 return true
             }
             else ->
