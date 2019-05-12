@@ -36,7 +36,7 @@ class DebtsFragment : Fragment() {
             groupId?.let { groupId ->
                 viewModel.getOptimizedDebtData(groupId) { groupData, error ->
                     if (groupData != null) {
-                        val adapter = OptimizedDebtRecyclerViewAdapter(it, groupData, viewModel)
+                        val adapter = OptimizedDebtRecyclerViewAdapter(it, groupData, viewModel, groupId)
                         debtsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         debtsRecyclerView.adapter = adapter
                     } else {

@@ -238,8 +238,8 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
     }
 
     override fun postSpending(newSpending: NewSpending, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.postSpending(newSpending).enqueue(object : Callback<Any> {
-            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+        apiDefinition.postSpending(newSpending).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {
                         completion(response.code().toString(), null)
@@ -250,7 +250,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                 }
             }
 
-            override fun onFailure(call: Call<Any>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 completion(null, "postSpending error")
             }
         })
@@ -277,8 +277,8 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
     }
 
     override fun putDebitEqualization(groupId: Int, ownId: Int,selectedMember: Int, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.putDebitEqualization(groupId,ownId,selectedMember).enqueue(object : Callback<Any> {
-            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+        apiDefinition.putDebitEqualization(groupId,ownId,selectedMember).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {
                         completion(response.code().toString(), null)
@@ -289,7 +289,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                 }
             }
 
-            override fun onFailure(call: Call<Any>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 completion(null, "Debt settlement error")
             }
         })

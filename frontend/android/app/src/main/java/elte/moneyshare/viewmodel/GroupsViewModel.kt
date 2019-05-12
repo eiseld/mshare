@@ -35,4 +35,15 @@ class GroupsViewModel : ViewModel() {
             }
         }
     }
+
+    fun doDebitEqualization(groupId: Int, ownId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit)
+    {
+        APIClient.getRepository().putDebitEqualization(groupId, ownId, memberId) { groupData, error ->
+            if (groupData != null) {
+                completion(groupData, null)
+            } else {
+                completion(null , error)
+            }
+        }
+    }
 }

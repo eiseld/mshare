@@ -19,11 +19,15 @@
 
     <!-- Popup mesages -->
     <string name="popup_title">Tartozás rendezése</string>
-    <string name="popup_message">Biztos vagy a tartozás rendezésében?</string>
+    <string name="popup_message_to_you">Biztos vagy %1$s %2$d tartozásának feléd irányuló kiegyelnítésében?</string>
+    <string name="popup_message_from_you">Biztos vagy a %1$d tartozásod rendezésében %2$s felé?</string>
 
     <!-- Shared messages -->
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
+
+    <string name="settle">Rendez</string>
+
 
     <!-- GROUPS -->
     <string name="create_group">Csoport létrehozása</string>

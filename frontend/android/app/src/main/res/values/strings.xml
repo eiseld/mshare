@@ -19,7 +19,10 @@
 
     <!-- Popup mesages -->
     <string name="popup_title">Debt settlement</string>
-    <string name="popup_message">Are you sure in about this debt settlement?</string>
+    <string name="popup_message_to_you">Are you sure that settle %1$s %2$d debt to you?</string>
+    <string name="popup_message_from_you">Are you sure you settle your %1$d debt to %2$s?</string>
+
+    <string name="settle">Settle</string>
 
     <!-- Shared messages -->
     <string name="yes">Yes</string>
