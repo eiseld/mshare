@@ -12,6 +12,7 @@ import elte.moneyshare.view.Adapter.GroupsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_groups.*
 import elte.moneyshare.R
+import elte.moneyshare.manager.DialogManager
 
 class GroupsFragment : Fragment() {
 
@@ -55,7 +56,7 @@ class GroupsFragment : Fragment() {
                     groupsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     groupsRecyclerView.adapter = adapter
                 } else {
-                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                    DialogManager.showInfoDialog(error, context)
                 }
             }
         }

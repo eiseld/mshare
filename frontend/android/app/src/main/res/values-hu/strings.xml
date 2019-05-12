@@ -50,5 +50,7 @@
     <string name="max_spending_limit">Max megmaradt összeg %1$d Ft</string>
 
     <string name="my_debts">Saját tartozásaim</string>
+    <string name="ok">Ok</string>
 
+    <string name="on_failure_message">Hálózati hiba!</string>
 </resources>

@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_members.*
 import android.database.DataSetObserver
 import android.support.v7.widget.RecyclerView
 import elte.moneyshare.entity.GroupData
+import elte.moneyshare.manager.DialogManager
 
 
 class MembersFragment : Fragment() {
@@ -66,7 +67,7 @@ class MembersFragment : Fragment() {
                         membersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         membersRecyclerView.adapter = adapter
                     } else {
-                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                        DialogManager.showInfoDialog(error, context)
                     }
                 }
             }

@@ -8,7 +8,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface {
+class Repository(private val apiDefinition: APIDefinition, private val onFailureMessage: String) : RepositoryInterface {
 
     //AUTH
     override fun putLoginUser(loginCred: LoginCred, completion: (response: String?, error: String?) -> Unit) {
@@ -28,7 +28,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                completion(null, "login error")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -47,7 +47,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<Any>, t: Throwable) {
-                completion(null, "registration error")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -63,13 +63,13 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(user, null)
                     }
                     else -> {
-                        completion(null, "get users error")
+                        completion(null, onFailureMessage)
                     }
                 }
             }
 
             override fun onFailure(call: Call<UserData>, t: Throwable) {
-                completion(null, "get users error")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -110,7 +110,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<GroupInfo>, t: Throwable) {
-                completion(null, "get groupInfo error")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -130,7 +130,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<GroupData>, t: Throwable) {
-                completion(null, "get groupData error")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -149,7 +149,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                completion(null, "group creation error")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -168,7 +168,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                completion(null, "Error during removing member")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -187,7 +187,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                completion(null, "Error during add member")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -210,7 +210,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<ArrayList<GroupInfo>>, t: Throwable) {
-                completion(null, "get groups error")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -232,7 +232,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<ArrayList<SpendingData>>, t: Throwable) {
-                completion(null, "get spendings error")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -251,7 +251,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<Any>, t: Throwable) {
-                completion(null, "postSpending error")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -271,7 +271,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<ArrayList<OptimizedDebtData>>, t: Throwable) {
-                completion(null, "get optimized debt error")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -290,7 +290,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<Any>, t: Throwable) {
-                completion(null, "Debt settlement error")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -306,13 +306,13 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
                         completion(groups, null)
                     }
                     else -> {
-                        completion(null, "get group error")
+                        completion(null, onFailureMessage)
                     }
                 }
             }
 
             override fun onFailure(call: Call<ArrayList<Group>>, t: Throwable) {
-                completion(null, "get group error")
+                completion(null, onFailureMessage)
             }
         })
     }
@@ -332,7 +332,7 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
 
             override fun onFailure(call: Call<ArrayList<User>>, t: Throwable) {
-                completion(null, "get users error")
+                completion(null, onFailureMessage)
             }
         })
     }

@@ -10,6 +10,7 @@ import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.GroupData
 import elte.moneyshare.gone
+import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.view.viewholder.MemberViewHolder
 import elte.moneyshare.viewmodel.GroupViewModel
 import elte.moneyshare.visible
@@ -60,7 +61,7 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
                     groupData.members.removeAt(index)
                     Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    DialogManager.showInfoDialog(error, context)
                 }
             }
         }
@@ -79,7 +80,7 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
                             notifyItemChanged(index)
                             Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                         } else {
-                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                            DialogManager.showInfoDialog(error, context)
                         }
                     }
                 } else if (member.balance > 0) {
@@ -89,7 +90,7 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
                             notifyItemChanged(index)
                             Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                         } else {
-                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                            DialogManager.showInfoDialog(error, context)
                         }
                     }
                 }

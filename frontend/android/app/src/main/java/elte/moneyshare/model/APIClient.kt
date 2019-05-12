@@ -22,6 +22,7 @@ object APIClient {
     fun init(context: Context) {
         baseUrlValue = context.getString(R.string.base_url_value)
         accessTokenKey = context.getString(R.string.access_token_key)
+        val onFailureMessage = context.resources.getString(R.string.on_failure_message)
 
         val interceptorForLogging = HttpLoggingInterceptor()
         interceptorForLogging.level = HttpLoggingInterceptor.Level.BODY
@@ -42,7 +43,7 @@ object APIClient {
             .build()
 
         apiDefinition = retrofit.create(APIDefinition::class.java)
-        repository = Repository(apiDefinition)
+        repository = Repository(apiDefinition, onFailureMessage)
     }
 
     fun getRepository(): Repository{

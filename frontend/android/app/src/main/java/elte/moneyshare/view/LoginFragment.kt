@@ -11,6 +11,8 @@ import android.widget.Toast
 import elte.moneyshare.SharedPreferences
 
 import elte.moneyshare.R
+import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.showAsDialog
 import elte.moneyshare.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -35,10 +37,10 @@ class LoginFragment : Fragment() {
             viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
             //viewModel.putLoginUser(emailEditText.text.toString(), passwordEditText.text.toString()) { response, error ->
                 if(error == null) {
-                    Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
+                    DialogManager.showInfoDialog(response, context)
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
-                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    DialogManager.showInfoDialog(error, context)
                 }
             }
 

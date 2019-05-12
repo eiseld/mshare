@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
+import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.view.GroupPagerFragment
 import elte.moneyshare.view.MainActivity
 import elte.moneyshare.view.viewholder.SearchResultViewHolder
@@ -39,7 +40,7 @@ class SearchResultsRecyclerViewAdapter(private val context: Context, private val
                     (context as MainActivity).onBackPressed()
                     Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    DialogManager.showInfoDialog(error, context)
                 }
             })
         }

@@ -13,6 +13,7 @@ import android.util.Patterns
 
 import elte.moneyshare.R
 import elte.moneyshare.entity.RegistrationData
+import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.viewmodel.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
 
@@ -70,12 +71,11 @@ class RegisterFragment : Fragment() {
                         activity?.supportFragmentManager?.beginTransaction()
                             ?.replace(R.id.frame_container, LoginFragment())?.commit()
                     }
-                    else
-                    {
+                    else {
                         Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    DialogManager.showInfoDialog(error, context)
                 }
             }
         }

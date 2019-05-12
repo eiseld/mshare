@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 
 import elte.moneyshare.R
+import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_groupcreation.*
 
@@ -37,7 +38,7 @@ class NewGroupFragment : Fragment() {
                     Toast.makeText(context, "Group successfully created!", Toast.LENGTH_SHORT).show()
                     activity?.supportFragmentManager?.popBackStackImmediate()
                 } else {
-                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    DialogManager.showInfoDialog(error, context)
                 }
             }
         }

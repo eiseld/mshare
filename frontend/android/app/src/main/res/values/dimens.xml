@@ -5,4 +5,6 @@
     <dimen name="padding_medium">6dp</dimen>
     <dimen name="padding_large">10dp</dimen>
 
+    <dimen name="text_size_normal">13sp</dimen>
+
 </resources>

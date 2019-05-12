@@ -17,6 +17,7 @@ import elte.moneyshare.entity.Debtor
 import elte.moneyshare.entity.Member
 import elte.moneyshare.entity.NewSpending
 import elte.moneyshare.invisible
+import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.view.Adapter.SelectMembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import elte.moneyshare.viewmodel.GroupsViewModel
@@ -51,7 +52,7 @@ class AddSpendingFragment : Fragment() {
                         selectMembersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         selectMembersRecyclerView.adapter = adapter
                     } else {
-                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                        DialogManager.showInfoDialog(error, context)
                     }
                 }
             }
@@ -119,7 +120,7 @@ class AddSpendingFragment : Fragment() {
                 if (error == null) {
                     (context as MainActivity).onBackPressed()
                 } else {
-                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                    DialogManager.showInfoDialog(error, context)
                 }
             }
         }

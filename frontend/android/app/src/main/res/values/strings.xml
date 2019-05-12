@@ -50,6 +50,7 @@
     <string name="must_be_bigger_than_0">Must be bigger than 0</string>
     <string name="cannot_be_empty">Cannot be empty</string>
     <string name="max_spending_limit">Max remainder spending %1$d Ft</string>
+    <string name="ok">Ok</string>
 
-
+    <string name="on_failure_message">Connection error!</string>
 </resources>
