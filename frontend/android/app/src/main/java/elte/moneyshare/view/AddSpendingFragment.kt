@@ -19,7 +19,6 @@ import elte.moneyshare.entity.NewSpending
 import elte.moneyshare.invisible
 import elte.moneyshare.view.Adapter.SelectMembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
-import elte.moneyshare.viewmodel.GroupsViewModel
 import elte.moneyshare.visible
 import kotlinx.android.synthetic.main.fragment_add_spending.*
 

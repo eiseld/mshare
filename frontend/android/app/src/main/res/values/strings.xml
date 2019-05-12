@@ -52,6 +52,4 @@
     <string name="max_spending_limit">Max remainder spending %1$d Ft</string>
     <string name="filtered_users">%1$s - %2$s</string>
     <string name="select_members_missing">Select members</string>
-
-
 </resources>
