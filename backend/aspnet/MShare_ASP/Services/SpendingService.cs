@@ -88,7 +88,7 @@ namespace MShare_ASP.Services {
             var currentGroup = await DbContext.Groups
                                               .Include(x => x.Members)
                                               .SingleOrDefaultAsync(x => x.Id == groupId);
-            if (currentGroup == null) 
+            if (currentGroup == null)
                 throw new ResourceGoneException("group_gone");
             var Spendings = await GetSpendingsForGroup(groupId);
             Dictionary<int, long> NumberToId = new Dictionary<int, long>();
