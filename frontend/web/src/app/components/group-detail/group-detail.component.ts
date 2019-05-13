@@ -107,7 +107,7 @@ export class GroupDetailComponent implements OnChanges {
         'Content-Type': 'application/json'
       })
     };
-    this.http.delete(`${environment.API_URL}/group/${groupid}/members/remove/${id}`, httpOptions)
+    this.http.post(`${environment.API_URL}/group/${groupid}/members/remove/${id}`, httpOptions)
       .subscribe(data => {this.updateSelectedGroupEvent.next()}, error => { });
   }
 
