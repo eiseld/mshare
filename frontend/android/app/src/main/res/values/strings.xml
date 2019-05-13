@@ -10,12 +10,21 @@
     <string name="register">Register</string>
     <string name="registration">Registration</string>
 
+    <!-- Registration messages -->
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="password_again">Password again</string>
     <string name="email">Email address</string>
     <string name="emailAgain">Email address again</string>
     <string name="back">Back</string>
+    <string name="minimum_characters">Minimum length is 6</string>
+    <string name="uppercase_required">At least one uppercase character required</string>
+    <string name="lowercase_required">At least one lowercase character required</string>
+    <string name="number_required">At least one number required</string>
+    <string name="password_not_matching">Passwords not matching</string>
+    <string name="email_not_matching">Emails not matching</string>
+    <string name="email_not_correct">Email format is not correct</string>
+    <string name="successful_registration">Successful registration!</string>
 
     <!-- Popup mesages -->
     <string name="popup_title">Debt settlement</string>

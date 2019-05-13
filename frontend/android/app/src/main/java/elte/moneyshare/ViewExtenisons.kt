@@ -6,7 +6,6 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.view.View
-import kotlin.reflect.KMutableProperty1
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 
@@ -117,12 +116,4 @@ fun View?.animateHeight(fromSize: Int, toSize: Int, endAnimationAction: (() -> U
 
 fun View.fitWidthToScreen(context: Context) {
     this.layoutParams.width = context.resources.displayMetrics.widthPixels
-}
-
-inline fun <reified T, Y> MutableList<T>.listOfField(property: KMutableProperty1<T, Y?>):MutableList<Y> {
-    val yy = ArrayList<Y>()
-    this.forEach { t: T ->
-        yy.add(property.get(t) as Y)
-    }
-    return yy
 }

@@ -10,12 +10,21 @@
     <string name="registration">Regisztráció</string>
     <string name="send_email">Email küldése</string>
 
+    <!-- Registration messages -->
     <string name="username">Felahsználónév</string>
     <string name="password">Jelszó</string>
     <string name="password_again">Jelszó újra</string>
     <string name="email">Email cím</string>
     <string name="emailAgain">Email cím újra</string>
     <string name="back">Vissza</string>
+    <string name="minimum_characters">Legalább 6 karaktert tartalmazzon</string>
+    <string name="uppercase_required">Legalább egy nagybetűs karaktert tartalmazzon</string>
+    <string name="lowercase_required">Legalább egy kisbetűs karaktert tartalmazzon</string>
+    <string name="number_required">Legalább egy számot tartalmazzon</string>
+    <string name="password_not_matching">Nem egyeznek a jelszavak</string>
+    <string name="email_not_matching">Nem egyeznek az emailek</string>
+    <string name="email_not_correct">Nem megfelelő az email formátum</string>
+    <string name="successful_registration">Sikeres regisztráció!</string>
 
     <!-- Popup mesages -->
     <string name="popup_title">Tartozás rendezése</string>

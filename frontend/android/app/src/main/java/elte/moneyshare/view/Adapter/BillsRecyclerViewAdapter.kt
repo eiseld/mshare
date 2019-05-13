@@ -28,12 +28,6 @@ class BillsRecyclerViewAdapter(private val context: Context, private val bills: 
 
     private var animationDuration = 300L
 
-    private var listener: (() -> Unit)? = null
-
-    fun setListener(listener: (() -> Unit)?) {
-        this.listener = listener
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BillViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_bill, parent, false)
         return BillViewHolder(itemView)

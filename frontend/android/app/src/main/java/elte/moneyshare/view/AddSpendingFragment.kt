@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.fragment_add_spending.*
 class AddSpendingFragment : Fragment() {
 
     private lateinit var viewModel: GroupViewModel
-    private lateinit var spendingData : SpendingData
     private var groupId: Int? = null
     private var spendingId = -1
     private var isModify : Boolean = false
@@ -84,12 +83,6 @@ class AddSpendingFragment : Fragment() {
         if(isModify)
         {
             addButton.text = context?.getString(R.string.modify_spending)
-
-            //
-            //spendingEditText.setText(spendingData?.moneyOwed)
-            //nameEditText.setText(spendingData?.name)
-
-
         }
         nextButton.setOnClickListener {
             val selectedIds = (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds

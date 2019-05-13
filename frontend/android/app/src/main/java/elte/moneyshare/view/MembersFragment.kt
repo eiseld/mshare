@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
 import android.widget.Toast
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
@@ -16,8 +15,6 @@ import elte.moneyshare.entity.Member
 import elte.moneyshare.view.Adapter.MembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_members.*
-import android.database.DataSetObserver
-import android.support.v7.widget.RecyclerView
 import elte.moneyshare.entity.GroupData
 
 
@@ -27,14 +24,12 @@ class MembersFragment : Fragment() {
     private lateinit var groupDataStored : GroupData
     private lateinit var adapter : MembersRecyclerViewAdapter
     private var groupId: Int? = null
-    private var lastValueDeleteEnabled: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         groupId = arguments?.getInt(FragmentDataKeys.MEMBERS_FRAGMENT.value)
-        //SharedPreferences.isDeleteMemberEnabled=false
         return inflater.inflate(R.layout.fragment_members, container, false)
     }
 
@@ -55,8 +50,6 @@ class MembersFragment : Fragment() {
                         groupDataStored = groupData
 
                         adapter = MembersRecyclerViewAdapter(it, groupData, viewModel)
-                        //adapter.registerAdapterDataObserver()
-                        //adapter.registerAdapterDataObserver()
                         if (member == null) {
                             myBalanceTextView?.text = "##"
                         } else {
@@ -70,17 +63,6 @@ class MembersFragment : Fragment() {
                     }
                 }
             }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if(lastValueDeleteEnabled != SharedPreferences.isDeleteMemberEnabled)
-        {
-            lastValueDeleteEnabled = SharedPreferences.isDeleteMemberEnabled
-            //adapter.notifyDataSetChanged()
-            //membersRecyclerView.adapter=adapter
-            //membersRecyclerView.adapter.notifyDataSetChanged()
         }
     }
 
