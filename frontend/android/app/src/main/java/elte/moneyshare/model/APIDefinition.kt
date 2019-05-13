@@ -37,7 +37,6 @@ interface APIDefinition {
     @POST("test/api/group/{groupId}/settledebt/{data}/{selectedMember}")
     fun putDebitEqualization(@Path("groupId") groupId: Int,@Path("data") data: Int,@Path("selectedMember") selectedMember: Int): Call<ResponseBody>
 
-
     //PROFILE
     @GET("/test/api/Profile/groups")
     fun getProfileGroups(): Call<ArrayList<GroupInfo>>
