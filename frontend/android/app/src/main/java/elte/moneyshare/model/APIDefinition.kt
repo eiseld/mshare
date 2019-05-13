@@ -38,7 +38,7 @@ interface APIDefinition {
     fun postMember(@Path("groupId") groupId: Int, @Path("memberId") memberId: Int): Call<ResponseBody>
 
     @POST("test/api/group/{groupId}/settledebt/{data}/{selectedMember}")
-    fun putDebitEqualization(@Path("groupId") groupId: Int,@Path("data") data: Int,@Path("selectedMember") selectedMember: Int): Call<Any>
+    fun putDebitEqualization(@Path("groupId") groupId: Int,@Path("data") data: Int, @Path("selectedMember") selectedMember: Int): Call<ResponseBody>
 
     @GET("test/api/Group/searchinallusers/{filter}")
     fun getSearchedUsers(@Path("filter") filter: String): Call<ArrayList<FilteredUserData>>

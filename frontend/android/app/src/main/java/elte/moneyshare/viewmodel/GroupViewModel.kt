@@ -7,7 +7,7 @@ import elte.moneyshare.model.APIClient
 class GroupViewModel : ViewModel() {
 
     var groupId: Int = 0
-    //    var isDeleteMemberEnabled: Boolean = false // by Delegates.observable(false, onChange = {})
+//    var isDeleteMemberEnabled: Boolean = false // by Delegates.observable(false, onChange = {})
     var currentGroupData: GroupData? = null
 
     fun getGroupData(id: Int, completion: (group: GroupData?, error: String?) -> Unit) {
@@ -74,12 +74,22 @@ class GroupViewModel : ViewModel() {
         }
     }
 
+    fun getOptimizedDebtData(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit) {
+        APIClient.getRepository().getOptimizedDebt(groupId) { debtData, error ->
+            if (debtData != null) {
+                completion(debtData, null)
+            } else {
+                completion(null, error)
+            }
+        }
+    }
+
     fun doDebitEqualization(groupId: Int, ownId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit) {
         APIClient.getRepository().putDebitEqualization(groupId, ownId, memberId) { groupData, error ->
             if (groupData != null) {
                 completion(groupData, null)
             } else {
-                completion(null, error)
+                completion(null , error)
             }
         }
     }

@@ -5,7 +5,7 @@ import elte.moneyshare.entity.*
 interface RepositoryInterface {
 
     //AUTH
-    fun putLoginUser(LoginCred: LoginCred, completion: (response: String?, error: String?) -> Unit)
+    fun putLoginUser(loginCred: LoginCred, completion: (response: String?, error: String?) -> Unit)
 
     fun postForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit)
 

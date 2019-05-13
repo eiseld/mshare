@@ -18,18 +18,22 @@
 
     <!-- Popup mesages -->
     <string name="popup_title">Tartozás rendezése</string>
-    <string name="popup_message">Biztos vagy a tartozás rendezésében?</string>
+    <string name="popup_message_to_you">Biztos vagy %1$s %2$d tartozásának feléd irányuló kiegyelnítésében?</string>
+    <string name="popup_message_from_you">Biztos vagy a %1$d tartozásod rendezésében %2$s felé?</string>
 
     <!-- Shared messages -->
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
 
+    <string name="settle">Rendez</string>
+
+
     <!-- GROUPS -->
     <string name="create_group">Csoport létrehozása</string>
     <string name="group_name">Csoport neve</string>
     <string name="group_members">(%1$d)</string>
-    <string name="group_owe">Tartozásod \n %1$d</string>
-    <string name="group_owned">Neked tartoznak \n %1$d</string>
+    <string name="group_owe">Tartozásod \n %1$d Ft</string>
+    <string name="group_owned">Neked tartoznak \n %1$d Ft</string>
     <string name="group_settled_up">Kiegyenlítve</string>
 
     <string name="bill_money">%1$d Ft</string>
