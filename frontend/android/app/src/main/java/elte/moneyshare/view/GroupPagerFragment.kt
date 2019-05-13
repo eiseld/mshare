@@ -49,20 +49,28 @@ class GroupPagerFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                viewModel.getSearchedUsers(newText) { filteredUsers, error ->
-                    if (filteredUsers != null && !filteredUsers.equals("")) {
-                        val adapter = SearchResultsRecyclerViewAdapter(context!!, filteredUsers, groupId!!, viewModel)
-                        searchResultsRecyclerView?.adapter = adapter
-                    }
-                }
+                var filteredUsersSize = 0
+                if (newText.length > 3) {
+                    viewModel.getSearchedUsers(newText) { filteredUsers, error ->
+                        filteredUsers?.let {
+                            filteredUsersSize = it.size
+                            val adapter = SearchResultsRecyclerViewAdapter(context!!, it, groupId!!, viewModel)
+                            searchResultsRecyclerView?.adapter = adapter
+                        }
 
-                if (newText.equals("") || newText.length < 4) {
+                        if (filteredUsersSize > 0) {
+                            searchResultsRecyclerView?.visible()
+                            tabLayout?.invisible()
+                        } else {
+                            searchResultsRecyclerView?.invisible()
+                            tabLayout?.visible()
+                        }
+                    }
+                } else {
                     searchResultsRecyclerView?.invisible()
                     tabLayout?.visible()
-                } else {
-                    searchResultsRecyclerView?.visible()
-                    tabLayout?.invisible()
                 }
+
                 return false
             }
         })
@@ -85,7 +93,7 @@ class GroupPagerFragment : Fragment() {
                 groupId?.let {
                     args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
                 }
-                args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value,-1)
+                args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value, -1)
                 fragment.arguments = args
                 (context as MainActivity).supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
