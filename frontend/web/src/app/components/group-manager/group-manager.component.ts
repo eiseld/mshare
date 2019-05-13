@@ -25,6 +25,7 @@ export class GroupManagerComponent implements OnInit {
   modifySpendingAttempt:boolean;
   groupInfos: GroupInfo[] = [];
   error : string = "";
+  success: boolean = false;
   selectedGroup: GroupData = null;
   selectedGroupSpendings: Spending[]=null;
   closeResult: string;
@@ -52,7 +53,7 @@ export class GroupManagerComponent implements OnInit {
     this.http.get<any>(`${environment.API_URL}/profile`, httpOptions)
       .subscribe(user => {
         this.currentUser = user;
-      },error => {this.error = "Sikertelen a jelenlegi felhasználó betöltése"});
+      },error => {this.success = false;this.error = "Sikertelen a jelenlegi felhasználó betöltése";});
     console.log(this.authenticationService.currentUserValue.username + ' --000');
     this.getGroups();
   }
@@ -72,7 +73,7 @@ export class GroupManagerComponent implements OnInit {
           for (let user of list) {
           this.users.push(user);
           }
-          },error => {this.error = "Sikertelen a felhasználók betöltése!"});
+          },error => {this.success = false;this.error = "Sikertelen a felhasználók betöltése!";});
     }
   }
   getGroups() {
@@ -92,7 +93,7 @@ export class GroupManagerComponent implements OnInit {
       for (let groupInfo of list) {
         this.groupInfos.push(groupInfo);
       }
-    },error => {this.error = "Sikertelen a csoportok betöltése!"});
+    },error => {this.success = false;this.error = "Sikertelen a csoportok betöltése!";});
   }
 
   startCreateGroup(){
@@ -116,8 +117,8 @@ export class GroupManagerComponent implements OnInit {
 	{name: this.newGroup},
 	httpOptions)
 		.subscribe(
-			data => {this.getGroups()},
-			error => {this.error="Sikertelen a csoport létrehozása!"}
+			data => {this.getGroups(); this.success = true; this.error='A csoport létrehozása sikeresen megtörtént!'},
+			error => {this.success = false;this.error="Sikertelen a csoport létrehozása!"; }
 		);
     this.createGroupAttempt = false;
   }
@@ -138,7 +139,7 @@ export class GroupManagerComponent implements OnInit {
 	this.http.get<GroupData>(`${environment.API_URL}/group/${groupInfo.id}/data`, httpOptions)
 	.subscribe(data => {
 		this.selectedGroup = data
-    },error => {this.error = "Sikertelen a csoport betöltése!"});
+    },error => {this.success = false;this.error = "Sikertelen a csoport betöltése!";});
     this.http.get<any[]>(`${environment.API_URL}/spending/${groupInfo.id}`, httpOptions)
     .subscribe(data => { 
       this.selectedGroupSpendings = <Spending[]>data.map(x=><Spending>{
@@ -154,7 +155,7 @@ export class GroupManagerComponent implements OnInit {
             defaultBalance: debtor.defaultBalance,
           }),
       });
-      },error => {this.error = "Sikertelen a költések betöltése!"});
+      },error => {this.success = false;this.error = "Sikertelen a költések betöltése!";});
   }
 
   startModifySpending(spending:Spending){
@@ -173,7 +174,7 @@ export class GroupManagerComponent implements OnInit {
     .subscribe(data => {
       this.spendingForGroupData = data
       this.createSpendingAttempt = true;
-      },error => {this.error = "Sikertelen a csoport betöltése!"});
+      },error => {this.success = false;this.error = "Sikertelen a csoport betöltése!";});
   }
 
   stopCreateSpendingAttempt(){
@@ -206,15 +207,18 @@ export class GroupManagerComponent implements OnInit {
         .subscribe(
           data => {
             this.selectedUser = null;
-            this.error = 'A felhasználó hozzáadása sikeresen megtörtént'
+            this.success =true;
+            this.error = 'A felhasználó hozzáadása sikeresen megtörtént';
             this.getGroups();
           },
           error => {
             this.selectedUser = null;
+            this.success = false;
             this.error = "Sikertelen a személy hozzáadása a kiválasztott csoporthoz!"
           }
         );
     }else{
+      this.success =false;
       this.error = 'A megadott felhasználó nem létezik!';
     }
   }

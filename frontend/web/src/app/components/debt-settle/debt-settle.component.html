@@ -11,5 +11,6 @@
   </p>
   <button id=stopSettleDebtButton class="btn btn-danger" *ngIf="selectedMember.balance != 0" (click)="stopSettleDebt()">Mégse</button>
   <button id=settleDebtButton class="btn btn-primary" (click)="settleDebt()">OK</button>
-  <p>{{error}}</p>
+  <div class="alert alert-danger alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>{{error}}</div>
 </div>
