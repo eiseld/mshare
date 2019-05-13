@@ -1,0 +1,51 @@
+version: '3.6'
+
+networks:
+  prod:
+  dev:
+  infra:
+
+volumes:
+  mysql_prod:
+  mysql_dev:
+  jenkins_data:
+  jenkins_home:
+
+services:
+
+  jenkins:
+    container_name: jenkins
+    environment:
+      - JENKINS_OPTS="--prefix=/jenkins"
+    build: ./infra/jenkins/
+    networks:
+      - infra
+    ports:
+      - '8080:8080'
+    volumes:
+      - 'jenkins_data:/jenkins_config'
+      - 'jenkins_home:/var/jenkins_home'
+
+  apache:
+    build: ./infra/apache/
+    networks:
+      - infra
+      - prod
+    ports:
+      - "80:80"
+    volumes:
+      - './infra/apache/config/httpd.conf:/usr/local/apache2/conf/httpd.conf'
+
+# nginx: 
+#   container_name: nginx
+#   environment:
+#     - JENKINS_OPTS="--prefix=/jenkins"
+#   build: ./infra/nginx
+#   networks:
+#     - infra
+#     - prod
+#   ports:
+#     - 80:80
+#     - 443:443
+#   volumes:
+#     - ./infra/nginx/config/nginx.conf:/etc/nginx/nginx.conf

@@ -24,7 +24,6 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
@@ -37,7 +36,6 @@ class LoginFragment : Fragment() {
             viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
             //viewModel.putLoginUser(emailEditText.text.toString(), passwordEditText.text.toString()) { response, error ->
                 if(error == null) {
-                    DialogManager.showInfoDialog(response, context)
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
                     DialogManager.showInfoDialog(error, context)

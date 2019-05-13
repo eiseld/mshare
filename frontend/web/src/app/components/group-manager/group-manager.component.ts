@@ -201,12 +201,13 @@ export class GroupManagerComponent implements OnInit {
     };
     if( undefined !== this.userModel) {
       this.http.post<any>(`${environment.API_URL}//Group/${this.selectedGroupId}/members/add/${this.userModel.id}`,
-        {name: this.newGroup},
+        {},
         httpOptions)
         .subscribe(
           data => {
             this.selectedUser = null;
             this.error = 'A felhasználó hozzáadása sikeresen megtörtént'
+            this.getGroups();
           },
           error => {
             this.selectedUser = null;

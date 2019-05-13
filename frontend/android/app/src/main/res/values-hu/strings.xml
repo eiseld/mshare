@@ -1,8 +1,7 @@
 <resources>
-    <string name="app_name">MoneyShare</string>
+    <string name="base_url_value" translatable="false">http://remote.alerant.hu/</string>
+    <string name="access_token_key" translatable="false">Authorization</string>
 
-    <string name="base_url_value">http://remote.alerant.hu</string>
-    <string name="access_token_key">Authorization</string>
     <string name="email_sent">Elküldtük a megadott levélre a jelszó változtatáshoz szükséges linket, kérem kattintson rá!</string>
     <string name="login">Belépés</string>
     <string name="forgotten_password">Elfelejtett jelszó</string>
@@ -10,27 +9,40 @@
     <string name="registration">Regisztráció</string>
     <string name="send_email">Email küldése</string>
 
+    <!-- Registration messages -->
     <string name="username">Felahsználónév</string>
     <string name="password">Jelszó</string>
     <string name="password_again">Jelszó újra</string>
     <string name="email">Email cím</string>
     <string name="emailAgain">Email cím újra</string>
     <string name="back">Vissza</string>
+    <string name="minimum_characters">Legalább 6 karaktert tartalmazzon</string>
+    <string name="uppercase_required">Legalább egy nagybetűs karaktert tartalmazzon</string>
+    <string name="lowercase_required">Legalább egy kisbetűs karaktert tartalmazzon</string>
+    <string name="number_required">Legalább egy számot tartalmazzon</string>
+    <string name="password_not_matching">Nem egyeznek a jelszavak</string>
+    <string name="email_not_matching">Nem egyeznek az emailek</string>
+    <string name="email_not_correct">Nem megfelelő az email formátum</string>
+    <string name="successful_registration">Sikeres regisztráció!</string>
 
     <!-- Popup mesages -->
     <string name="popup_title">Tartozás rendezése</string>
-    <string name="popup_message">Biztos vagy a tartozás rendezésében?</string>
+    <string name="popup_message_to_you">Biztos vagy %1$s %2$d Ft tartozásának feléd irányuló kiegyelnítésében?</string>
+    <string name="popup_message_from_you">Biztos vagy a %1$d Ft tartozásod rendezésében %2$s felé?</string>
 
     <!-- Shared messages -->
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
 
+    <string name="settle">Rendez</string>
+
+
     <!-- GROUPS -->
     <string name="create_group">Csoport létrehozása</string>
     <string name="group_name">Csoport neve</string>
     <string name="group_members">(%1$d)</string>
-    <string name="group_owe">Tartozásod \n %1$d</string>
-    <string name="group_owned">Neked tartoznak \n %1$d</string>
+    <string name="group_owe">Tartozásod \n %1$d Ft</string>
+    <string name="group_owned">Neked tartoznak \n %1$d Ft</string>
     <string name="group_settled_up">Kiegyenlítve</string>
 
     <string name="bill_money">%1$d Ft</string>
@@ -42,7 +54,7 @@
     <string name="event_name">Esemény neve</string>
     <string name="spending">Költés</string>
     <string name="add">Hozzáadás</string>
-    <string name="select_members">Emberek kiválasztása</string>
+    <string name="select_members">Tagok kiválasztása</string>
     <string name="my_balance">Egyenlegem:</string>
     <string name="next">Következő</string>
     <string name="must_be_bigger_than_0">Nagyobbna kell lennie mint 0</string>
@@ -50,7 +62,14 @@
     <string name="max_spending_limit">Max megmaradt összeg %1$d Ft</string>
 
     <string name="my_debts">Saját tartozásaim</string>
+    <string name="filtered_users">%1$s - %2$s</string>
+    <string name="select_members_missing">Jelöljön ki tagokat</string>
+
+    <string name="modify_spending">Költés módosítása</string>
+    <string name="confirm_spending_modification">Biztosan módosítani szeretnéd ezt a költést?</string>
+    <string name="modify_cancelled">Költés módosítás megszakítva</string>
     <string name="ok">Ok</string>
 
     <string name="on_failure_message">Hálózati hiba!</string>
+    <string name="group_created">Csoport létrehozva!</string>
 </resources>

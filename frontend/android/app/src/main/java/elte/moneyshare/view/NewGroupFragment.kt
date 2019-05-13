@@ -35,7 +35,7 @@ class NewGroupFragment : Fragment() {
         createButton.setOnClickListener {
             viewModel.postNewGroup(groupNameEditText.text.toString()) { response, error ->
                 if (error == null) {
-                    Toast.makeText(context, "Group successfully created!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, getString(R.string.group_created), Toast.LENGTH_SHORT).show()
                     activity?.supportFragmentManager?.popBackStackImmediate()
                 } else {
                     DialogManager.showInfoDialog(error, context)

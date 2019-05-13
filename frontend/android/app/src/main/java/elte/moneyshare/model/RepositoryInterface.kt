@@ -5,9 +5,9 @@ import elte.moneyshare.entity.*
 interface RepositoryInterface {
 
     //AUTH
-    fun putLoginUser(LoginCred: LoginCred, completion: (response: String?, error: String?) -> Unit)
+    fun putLoginUser(loginCred: LoginCred, completion: (response: String?, error: String?) -> Unit)
 
-    fun putForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit)
+    fun postForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit)
 
     fun postRegisterUser(registrationData: RegistrationData, completion: (response: String?, error: String?) -> Unit)
 
@@ -27,6 +27,7 @@ interface RepositoryInterface {
 
     fun putDebitEqualization(groupId: Int, ownId: Int,selectedMember: Int, completion: (response: String?, error: String?) -> Unit)
 
+    fun getSearchedUsers(filter: String, completion: (response: ArrayList<FilteredUserData>?, error: String?) -> Unit)
 
     //PROFILE
     fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit)
@@ -39,6 +40,7 @@ interface RepositoryInterface {
 
     fun getOptimizedDebt(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit)
 
+    fun postSpendingUpdate(spendingUpdate : SpendingUpdate, completion: (response: String?, error: String?) -> Unit)
 
     //TEST METHOD
     fun getUsers(completion: (response: ArrayList<User>?, error: String?) -> Unit)
