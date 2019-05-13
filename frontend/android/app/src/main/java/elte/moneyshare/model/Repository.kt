@@ -355,4 +355,26 @@ class Repository(private val apiDefinition: APIDefinition) : RepositoryInterface
             }
         })
     }
+
+    override fun postSpendingUpdate(
+        spendingUpdate: SpendingUpdate,
+        completion: (response: String?, error: String?) -> Unit
+    ) {
+        apiDefinition.postSpendingUpdate(spendingUpdate).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.message())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, "postSpendingUpdate error")
+            }
+        })
+    }
 }

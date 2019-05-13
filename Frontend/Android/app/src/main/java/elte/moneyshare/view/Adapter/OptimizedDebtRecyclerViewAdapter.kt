@@ -36,12 +36,10 @@ class OptimizedDebtRecyclerViewAdapter(
         holder.debtBalanceTextView.text = debt.optimisedDebtAmount.toString()
         if (debt.debtor.id == SharedPreferences.userId) {
             holder.debtNameTextView.text = debt.debtor.name
-            holder.debtBalanceTextView.text =
-                String.format(context.getString(R.string.group_owe), debt.optimisedDebtAmount)
+            holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owe), debt.optimisedDebtAmount)
         } else if (debt.creditor.id == SharedPreferences.userId) {
             holder.debtNameTextView.text = debt.debtor.name
-            holder.debtBalanceTextView.text =
-                String.format(context.getString(R.string.group_owned), debt.optimisedDebtAmount)
+            holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owned), debt.optimisedDebtAmount)
         } else {
             holder.debtRootLayout.visibility = View.GONE
         }

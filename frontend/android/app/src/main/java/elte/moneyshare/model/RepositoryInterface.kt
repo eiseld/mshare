@@ -40,6 +40,7 @@ interface RepositoryInterface {
 
     fun getOptimizedDebt(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit)
 
+    fun postSpendingUpdate(spendingUpdate : SpendingUpdate, completion: (response: String?, error: String?) -> Unit)
 
     //TEST METHOD
     fun getUsers(completion: (response: ArrayList<User>?, error: String?) -> Unit)

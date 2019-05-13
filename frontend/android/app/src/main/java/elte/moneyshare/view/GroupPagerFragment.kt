@@ -85,6 +85,7 @@ class GroupPagerFragment : Fragment() {
                 groupId?.let {
                     args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
                 }
+                args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value,-1)
                 fragment.arguments = args
                 (context as MainActivity).supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
@@ -97,16 +98,12 @@ class GroupPagerFragment : Fragment() {
             }
 
             R.id.removeMember -> {
-                //viewModel.isDeleteMemberEnabled = !viewModel.isDeleteMemberEnabled
-                SharedPreferences.isDeleteMemberEnabled = !SharedPreferences.isDeleteMemberEnabled
-                val fragment = GroupPagerFragment()
-                val args = Bundle()
-                groupId?.let {
-                    args.putInt(FragmentDataKeys.GROUP_PAGER_FRAGMENT.value, it)
-                }
-                fragment.arguments = args
-                (context as MainActivity).supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
+                viewModel.isDeleteMemberEnabled = !viewModel.isDeleteMemberEnabled
+
+                //TODO REPLACE TO ENUM KEY
+                (childFragmentManager.fragments[0] as MembersFragment).adapter.notifyDataSetChanged()
+                tabLayout.getTabAt(0)?.select()
+
                 return true
             }
             R.id.myDebts -> {

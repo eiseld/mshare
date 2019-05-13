@@ -41,7 +41,8 @@ class DebtsFragment : Fragment() {
                         debtsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         debtsRecyclerView.adapter = adapter
                     } else {
-                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                        if(error != null)
+                            Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                     }
                 }
             }

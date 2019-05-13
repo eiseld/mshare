@@ -61,6 +61,8 @@ interface APIDefinition {
     @GET("test/api/Spending/{groupId}/optimised")
     fun getOptimizedDebt(@Path("groupId") groupId: Int) : Call<ArrayList<OptimizedDebtData>>
 
+    @POST("api/Spending/update/")
+    fun postSpendingUpdate(@Body updatedSpending : SpendingUpdate) : Call<ResponseBody>
 
     //TEST METHOD
     @GET("test/api/Group/")

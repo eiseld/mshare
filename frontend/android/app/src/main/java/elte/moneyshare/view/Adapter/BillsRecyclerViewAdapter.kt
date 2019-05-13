@@ -9,14 +9,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
-import elte.moneyshare.R
+import android.widget.Toast
 import elte.moneyshare.entity.SpendingData
-import elte.moneyshare.gone
-import elte.moneyshare.measure
 import elte.moneyshare.view.viewholder.BillViewHolder
-import elte.moneyshare.visible
+import android.support.v7.app.AlertDialog
+import android.content.DialogInterface
+import elte.moneyshare.viewmodel.GroupViewModel
+import android.arch.lifecycle.ViewModelProviders
+import android.os.Bundle
+import android.support.v4.app.FragmentActivity
+import android.support.v4.app.Fragment
+import elte.moneyshare.*
+import elte.moneyshare.view.AddSpendingFragment
+import elte.moneyshare.view.MainActivity
+import elte.moneyshare.view.NewGroupFragment
 
-class BillsRecyclerViewAdapter(private val context: Context, private val bills: List<SpendingData>) : RecyclerView.Adapter<BillViewHolder>() {
+class BillsRecyclerViewAdapter(private val context: Context, private val bills: List<SpendingData>, private val groupId : Int) : RecyclerView.Adapter<BillViewHolder>() {
 
     private var animationDuration = 300L
 
@@ -78,5 +86,53 @@ class BillsRecyclerViewAdapter(private val context: Context, private val bills: 
                 animatorSet.start()
             }
         }
+        holder.billRootConstraintLayout.setOnLongClickListener {
+            val id = bills[position].id
+            showModifyDialog(id)
+            return@setOnLongClickListener true
+        }
     }
+    private fun showModifyDialog(id: Int){
+        // Late initialize an alert dialog object
+        lateinit var dialog:AlertDialog
+
+
+        // Initialize a new instance of alert dialog builder object
+        val builder = AlertDialog.Builder(context)
+
+        // Set a title for alert dialog
+        builder.setTitle(context.getString(R.string.modify_spending))
+
+        // Set a message for alert dialog
+        builder.setMessage(context.getString(R.string.confirm_spending_modification))
+
+
+        // On click listener for dialog buttons
+        val dialogClickListener = DialogInterface.OnClickListener{_,which ->
+            when(which){
+                DialogInterface.BUTTON_POSITIVE -> modifySpending(id)
+                DialogInterface.BUTTON_NEGATIVE -> Toast.makeText(context, context.getString(R.string.modify_cancelled), Toast.LENGTH_SHORT).show()
+            }
+        }
+        builder.setPositiveButton(context.getString(R.string.yes),dialogClickListener)
+
+        builder.setNegativeButton(context.getString(R.string.no),dialogClickListener)
+
+
+
+        dialog = builder.create()
+
+        dialog.show()
+    }
+    private fun modifySpending(id: Int)
+    {
+        val fragment = AddSpendingFragment()
+        val args = Bundle()
+        args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, groupId)
+        args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value,id)
+        fragment.arguments = args
+        (context as MainActivity).supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
+    }
+
 }

@@ -10,22 +10,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import elte.moneyshare.FragmentDataKeys
+import elte.moneyshare.*
 
-import elte.moneyshare.R
 import elte.moneyshare.entity.Debtor
 import elte.moneyshare.entity.Member
 import elte.moneyshare.entity.NewSpending
-import elte.moneyshare.invisible
+import elte.moneyshare.entity.SpendingUpdate
 import elte.moneyshare.view.Adapter.SelectMembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
-import elte.moneyshare.visible
+import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_add_spending.*
 
 class AddSpendingFragment : Fragment() {
 
     private lateinit var viewModel: GroupViewModel
     private var groupId: Int? = null
+    private var spendingId = -1
+    private var isModify : Boolean = false
     private var members = ArrayList<Member>()
 
     override fun onCreateView(
@@ -33,6 +34,13 @@ class AddSpendingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         groupId = arguments?.getInt(FragmentDataKeys.MEMBERS_FRAGMENT.value)
+        var spendingIdTemp = arguments?.getInt(FragmentDataKeys.BILLS_FRAGMENT.value)
+        if(spendingIdTemp != null && spendingIdTemp != -1)
+        {
+            isModify = true
+            spendingId = spendingIdTemp
+        }
+
         return inflater.inflate(R.layout.fragment_add_spending, container, false)
     }
 
@@ -49,6 +57,24 @@ class AddSpendingFragment : Fragment() {
                         val adapter = SelectMembersRecyclerViewAdapter(it, members)
                         selectMembersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         selectMembersRecyclerView.adapter = adapter
+                        if(isModify)
+                        {
+                            viewModel.getSpendings(groupId) { spendings, error ->
+                                if (spendings != null)
+                                {
+                                    val spendingDataTemp = spendings.find { it.id == spendingId }
+                                    spendingDataTemp?.let {
+                                        spendingEditText.setText(it.moneyOwed.toString())
+                                        nameEditText.setText(it.name)
+                                        val debtorIds = it.debtors.map { it.id }
+                                        (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds = ArrayList(debtorIds)
+                                        val selectedMembers = members.filter { it.id in debtorIds }
+                                        (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedMembers = ArrayList(selectedMembers)
+                                        adapter.notifyDataSetChanged()
+                                    }
+                                }
+                            }
+                        }
                     } else {
                         Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                     }
@@ -56,6 +82,10 @@ class AddSpendingFragment : Fragment() {
             }
         }
 
+        if(isModify)
+        {
+            addButton.text = context?.getString(R.string.modify_spending)
+        }
         nextButton.setOnClickListener {
             val selectedIds = (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds
             members.removeAll { !selectedIds.contains(it.id) }
@@ -111,19 +141,40 @@ class AddSpendingFragment : Fragment() {
                     debt = member.balance
                 ))
             }
+            if(!isModify)
+            {
+                val spending = NewSpending(
+                    groupId = groupId!!,
+                    moneySpent = Integer.valueOf(spendingEditText.editableText.toString()),
+                    name = nameEditText.editableText.toString(),
+                    debtors = debtors
+                )
 
-            val spending = NewSpending(
-                groupId = groupId!!,
-                moneySpent = Integer.valueOf(spendingEditText.editableText.toString()),
-                name = nameEditText.editableText.toString(),
-                debtors = debtors
-            )
+                viewModel.postSpending(spending) { response, error ->
+                    if (error == null) {
+                        (context as MainActivity).onBackPressed()
+                    } else {
+                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            else
+            {
+                val spending = SpendingUpdate(
+                    groupId = groupId!!,
+                    moneySpent = Integer.valueOf(spendingEditText.editableText.toString()),
+                    name = nameEditText.editableText.toString(),
+                    debtors = debtors,
+                    id = spendingId,
+                    creditorUserId = SharedPreferences.userId
+                )
 
-            viewModel.postSpending(spending) { response, error ->
-                if (error == null) {
-                    (context as MainActivity).onBackPressed()
-                } else {
-                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                viewModel.postSpendingUpdate(spending) { response, error ->
+                    if (error == null) {
+                        (context as MainActivity).onBackPressed()
+                    } else {
+                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
