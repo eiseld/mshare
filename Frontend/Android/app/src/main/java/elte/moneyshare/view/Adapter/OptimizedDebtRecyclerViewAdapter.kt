@@ -65,43 +65,23 @@ class OptimizedDebtRecyclerViewAdapter(
             }
 
             builder.setPositiveButton(context.getString(R.string.yes)) { dialog, which ->
-                if (debt.debtor.id == SharedPreferences.userId) {
                     Model.doDebitEqualization(groupId,debt.debtor.id, debt.creditor.id) { response, error ->
                         if (error == null) {
                             groupId?.let { groupId ->
                                 Model.getOptimizedDebtData(groupId) { groupData, error ->
                                     if (groupData != null) {
                                         DebtData = groupData
+                                        notifyItemChanged(position)
                                     } else {
                                         Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                                     }
                                 }
                             }
-                            notifyItemChanged(position)
                             Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                         } else {
                             Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                         }
                     }
-                } else if (debt.creditor.id == SharedPreferences.userId) {
-                    Model.doDebitEqualization(groupId, debt.debtor.id, debt.creditor.id) { response, error ->
-                        if (error == null) {
-                            groupId?.let { groupId ->
-                                Model.getOptimizedDebtData(groupId) { groupData, error ->
-                                    if (groupData != null) {
-                                        DebtData = groupData
-                                    } else {
-                                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            }
-                             notifyItemChanged(position)
-                            Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
             }
             builder.setNeutralButton(context.getString(R.string.no)) { _, _ ->
             }
