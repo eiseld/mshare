@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">MoneyShare</string>
 
-    <string name="base_url_value" translatable="false">http://192.168.99.100/</string>
+    <string name="base_url_value" translatable="false">http://remote.alerant.hu/</string>
     <string name="access_token_key" translatable="false">Authorization</string>
 
     <string name="email_sent">The link has been sent to the given email address, please open it!</string>
