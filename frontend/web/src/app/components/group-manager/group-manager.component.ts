@@ -266,3 +266,10 @@ export class MemberData {
   name: string;
   balance: number;
 }
+
+export class Debt {
+  debtor: MemberData;
+  creditor: MemberData;
+  optimisedDebtAmount: number;
+}
+

@@ -2,6 +2,7 @@
   <div class="tab">
     <button class="tablink" (click)='showPage(this.pages.groupMemberDetails)'>Tagok</button>
     <button class="tablink" (click)='showPage(this.pages.groupSpendingDetails)'>Költések</button>
+    <button class="tablink" (click)='getOptimized()'>Tartozások</button>
   </div>
 
 
@@ -20,7 +21,7 @@
 
       <h3>Tagok ({{groupData.memberCount}}):</h3>
       <ul>
-        <li (click)='selectMember(memberData)' *ngFor="let memberData of groupData.members">
+        <li *ngFor="let memberData of groupData.members">
           {{memberData.name}}
           <span *ngIf="memberData.balance < 0"> tartozás: {{0 - memberData.balance | currency}} </span>
           <span *ngIf="memberData.balance == 0"> rendezett </span>
@@ -67,6 +68,20 @@
     </ul>
     <!--<button class="btn btn-primary"  (click)="addNewMember()">Új tag felvétele</button>-->
   </div>
+
+  <div class="groupDebtDetails" *ngIf="selectedPage==pages.groupDebtDetails">
+
+    <h3>Tartozások ({{personalizedDebtsCount}}):</h3>
+    <ul>
+      <li (click)='selectMember(debt)' *ngFor="let debt of personalizedDebts">
+        {{debt.debtor.name}}
+        <span *ngIf="debt.optimisedDebtAmount < 0"> tartzol neki: {{0 - debt.optimisedDebtAmount | currency}} </span>
+        <span *ngIf="debt.optimisedDebtAmount == 0"> rendezett </span>
+        <span *ngIf="debt.optimisedDebtAmount > 0"> tartozik neked: {{debt.optimisedDebtAmount | currency}} </span>
+      </li>
+    </ul>
+  </div>
+  
 </div>
-<app-debt-settle class=debtSettler [selectedMember]=selectedMember [groupData]=groupData
+<app-debt-settle class=debtSettler [selectedDebt]=selectedDebt [groupData]=groupData
   (stopSettleDebtEvent)='unselectMember()' (updateSelectedGroupEvent)="updateSelectedGroup()"></app-debt-settle>
