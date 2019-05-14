@@ -15,6 +15,7 @@ import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.showAsDialog
 import elte.moneyshare.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 
 class LoginFragment : Fragment() {
 
@@ -33,17 +34,15 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         loginButton.setOnClickListener {
-            viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
-            //viewModel.putLoginUser(emailEditText.text.toString(), passwordEditText.text.toString()) { response, error ->
+            val email = emailEditText.text.toString()
+            val password = passwordEditText.text.toString()
+            //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
+            viewModel.putLoginUser(email, password) { response, error ->
                 if(error == null) {
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
                     DialogManager.showInfoDialog(error, context)
                 }
-            }
-
-            viewModel.getUsers { users, error ->
-                Log.d("LoginFragment:", "users: $users")
             }
         }
 

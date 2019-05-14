@@ -72,4 +72,12 @@
 
     <string name="on_failure_message">Hálózati hiba!</string>
     <string name="group_created">Csoport létrehozva!</string>
+
+    <string name="navigation_drawer_open">Navigációs ablak kinyitása</string>
+    <string name="navigation_drawer_close">Navigációs ablak bezárása</string>
+    <string name="action_settings">Beállítások</string>
+
+    <string name="press_back_again_to_exit">Kilépéshez nyomja meg mégegyszer</string>
+    <string name="menu_groups">Csoportok</string>
+    <string name="menu_settings">Beállítások</string>
 </resources>
