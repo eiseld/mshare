@@ -25,14 +25,4 @@ class GroupsViewModel : ViewModel() {
             }
         }
     }
-
-    fun getOptimizedDebtData(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit) {
-        APIClient.getRepository().getOptimizedDebt(groupId) { debtData, error ->
-            if (debtData != null) {
-                completion(debtData, null)
-            } else {
-                completion(null, error)
-            }
-        }
-    }
 }

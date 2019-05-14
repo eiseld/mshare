@@ -15,7 +15,7 @@ import elte.moneyshare.view.viewholder.MemberViewHolder
 import elte.moneyshare.viewmodel.GroupViewModel
 import elte.moneyshare.visible
 
-class MembersRecyclerViewAdapter(private val context: Context, private val groupData: GroupData, private val Model : GroupViewModel): RecyclerView.Adapter<MemberViewHolder>()  {
+class MembersRecyclerViewAdapter(private val context: Context, private val groupData: GroupData, private val model : GroupViewModel): RecyclerView.Adapter<MemberViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemberViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_member, parent, false)
@@ -46,7 +46,7 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
             holder.memberOwnerTextView.gone()
         }
 
-        if(groupData.creator.id == loggedInUserId && SharedPreferences.isDeleteMemberEnabled) {
+        if (groupData.creator.id == loggedInUserId && model.isDeleteMemberEnabled) {
             holder.removeButton.visible()
         } else {
             holder.removeButton.gone()
@@ -54,50 +54,14 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
 
         holder.removeButton.setOnClickListener()
         {
-            Model.deleteMember(groupData.id ,member.id) { response, error ->
+            model.deleteMember(groupData.id ,member.id) { response, error ->
                 if(error == null) {
                     val index = groupData.members.indexOf(member)
                     notifyItemRemoved(index)
                     groupData.members.removeAt(index)
-                    Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                 } else {
                     DialogManager.showInfoDialog(error, context)
                 }
-            }
-        }
-
-        holder.debitButton.setOnClickListener()
-        {
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle(context.getString(R.string.popup_title))
-            builder.setMessage(context.getString(R.string.popup_message))
-
-            builder.setPositiveButton(context.getString(R.string.yes)) { dialog, which ->
-                if (member.balance < 0) {
-                    Model.doDebitEqualization(groupData.id, loggedInUserId, member.id) { response, error ->
-                        if (error == null) {
-                            val index = groupData.members.indexOf(member)
-                            notifyItemChanged(index)
-                            Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
-                        } else {
-                            DialogManager.showInfoDialog(error, context)
-                        }
-                    }
-                } else if (member.balance > 0) {
-                    Model.doDebitEqualization(groupData.id, member.id, loggedInUserId) { response, error ->
-                        if (error == null) {
-                            val index = groupData.members.indexOf(member)
-                            notifyItemChanged(index)
-                            Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
-                        } else {
-                            DialogManager.showInfoDialog(error, context)
-                        }
-                    }
-                }
-                builder.setNeutralButton(context.getString(R.string.no)) { _, _ ->
-                }
-                val dialog: AlertDialog = builder.create()
-                dialog.show()
             }
         }
     }

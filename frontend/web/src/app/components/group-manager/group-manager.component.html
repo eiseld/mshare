@@ -48,7 +48,8 @@
         <input class="groupNameInput" *ngIf="createGroupAttempt" [(ngModel)]="newGroup" placeholder="név">
         <button class="btn btn-primary" *ngIf="createGroupAttempt" (click)="stopCreateGroup()">Mégse</button>
         <button class="btn btn-danger" *ngIf="createGroupAttempt" (click)="createGroup()">OK</button>
-        <p>{{error}}</p>
+        <div *ngIf="error.length >0" [ngClass]="success ? 'alert alert-success alert-dismissible' : 'alert alert-danger alert-dismissible'">
+          <a href="#" class="close" data-dismiss="alert" (click)="clearErrorMessage()" aria-label="close">&times;</a>{{error}}</div>
       </div>
 
       <app-spending-creator class="spendingCreator" [createSpendingAttempt]="createSpendingAttempt"

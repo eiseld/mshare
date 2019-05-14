@@ -35,8 +35,8 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
     }
 
     override fun postRegisterUser(registrationData: RegistrationData, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.postRegisterUser(registrationData).enqueue(object : Callback<Any> {
-            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+        apiDefinition.postRegisterUser(registrationData).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {
                         completion(response.code().toString(), null)
@@ -47,7 +47,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                 }
             }
 
-            override fun onFailure(call: Call<Any>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 completion(null, onFailureMessage)
             }
         })
@@ -77,9 +77,9 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
     }
 
 
-    override fun putForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.postForgotPassword(ForgottenPasswordData(email)).enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
+    override fun postForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.postForgotPassword(ForgottenPasswordData(email)).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {
                         completion(response.code().toString(), null)
@@ -90,8 +90,8 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                 }
             }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
-               // completion(null, "forgot password error")
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+               completion(null, onFailureMessage)
             }
         })
     }
@@ -195,7 +195,6 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
     }
 
 
-
     //PROFILE
     override fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit) {
         apiDefinition.getProfileGroups().enqueue(object : Callback<ArrayList<GroupInfo>> {
@@ -240,8 +239,8 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
     }
 
     override fun postSpending(newSpending: NewSpending, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.postSpending(newSpending).enqueue(object : Callback<Any> {
-            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+        apiDefinition.postSpending(newSpending).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {
                         completion(response.code().toString(), null)
@@ -252,7 +251,26 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                 }
             }
 
-            override fun onFailure(call: Call<Any>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
+    override fun postSpendingUpdate(spendingUpdate: SpendingUpdate, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.postSpendingUpdate(spendingUpdate).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.message())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 completion(null, onFailureMessage)
             }
         })
@@ -279,8 +297,8 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
     }
 
     override fun putDebitEqualization(groupId: Int, ownId: Int,selectedMember: Int, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.putDebitEqualization(groupId,ownId,selectedMember).enqueue(object : Callback<Any> {
-            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+        apiDefinition.putDebitEqualization(groupId,ownId,selectedMember).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {
                         completion(response.code().toString(), null)
@@ -291,7 +309,27 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                 }
             }
 
-            override fun onFailure(call: Call<Any>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
+    override fun getSearchedUsers(filter: String, completion: (response: ArrayList<FilteredUserData>?, error: String?) -> Unit) {
+        apiDefinition.getSearchedUsers(filter).enqueue(object : Callback<ArrayList<FilteredUserData>> {
+            override fun onResponse(call: Call<ArrayList<FilteredUserData>>, response: Response<ArrayList<FilteredUserData>>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val filteredUsers = response.body()
+                        completion(filteredUsers, null)
+                    }
+                    else -> {
+                        completion(null, response.message())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<FilteredUserData>>, t: Throwable) {
                 completion(null, onFailureMessage)
             }
         })

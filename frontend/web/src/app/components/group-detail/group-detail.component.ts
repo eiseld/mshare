@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, OnChanges, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
-import { GroupInfo, GroupData, MemberData } from '../group-manager/group-manager.component';
+import { GroupInfo, GroupData, MemberData, Debt } from '../group-manager/group-manager.component';
 import { Spending, DebtorData } from '../spending-creator/spending-creator.component'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -14,9 +14,11 @@ export class GroupDetailComponent implements OnChanges {
   @Input() groupData: GroupData;
   @Input() spendings: Spending[];
   currentUser : MemberData;
+  personalizedDebts : Debt[];
+  personalizedDebtsCount : number;
   sortedMembers: MemberData[] = [];
   calculatedSpendings: CalculatedSpending[]=[];
-  pages={groupMemberDetails:0,groupSpendingDetails:1,groupManageMembers:2};
+  pages={groupMemberDetails:0,groupSpendingDetails:1,groupManageMembers:2,groupDebtDetails:3};
   selectedPage=this.pages.groupMemberDetails;
   @Output() startSpendingCreation = new EventEmitter();
   @Output() startSpendingModification = new EventEmitter();
@@ -41,6 +43,7 @@ export class GroupDetailComponent implements OnChanges {
     }
     else
       this.showPage(this.selectedPage);
+    
   }
 
   getCurrentUser(){
@@ -50,7 +53,9 @@ export class GroupDetailComponent implements OnChanges {
       })
     };
     this.http.get<any>(`${environment.API_URL}/profile/`, httpOptions).subscribe(
-      data => { this.currentUser=data; },
+      data => {
+        this.currentUser=data;
+      },
       error => {}
     );
   }
@@ -80,7 +85,7 @@ export class GroupDetailComponent implements OnChanges {
     this.startCreateSpending();
   }
 
-  selectedMember: MemberData = null;
+  selectedDebt: Debt = null;
 
   calcGroupSpending(){
     if(this.calculatedSpendings!=undefined){
@@ -107,17 +112,17 @@ export class GroupDetailComponent implements OnChanges {
         'Content-Type': 'application/json'
       })
     };
-    this.http.delete(`${environment.API_URL}/group/${groupid}/members/remove/${id}`, httpOptions)
+    this.http.post(`${environment.API_URL}/group/${groupid}/members/remove/${id}`, httpOptions)
       .subscribe(data => {this.updateSelectedGroupEvent.next()}, error => { });
   }
 
-  selectMember(memberData : MemberData){
-    this.selectedMember=memberData;
+  selectMember(debt : Debt){
+    this.selectedDebt=debt;
   }
 
   unselectMember(){
-    this.selectedMember=undefined;
-    this.selectedPage = this.pages.groupMemberDetails;
+    this.selectedDebt=undefined;
+    this.getOptimized();
   }
 
   ngOnInit() {
@@ -135,6 +140,33 @@ export class GroupDetailComponent implements OnChanges {
   updateSelectedGroup(){
     this.updateSelectedGroupEvent.next();
   }
+
+  getOptimized() {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    
+    this.http.get<Debt[]>(`${environment.API_URL}/spending/${this.groupData.id}/optimised`, httpOptions)
+    .subscribe(result => {
+      this.personalizedDebts = <Debt[]>result.map(x=><Debt>{
+        optimisedDebtAmount: this.shouldFlip(x) ? x.optimisedDebtAmount : -x.optimisedDebtAmount,
+        debtor: this.shouldFlip(x) ? x.debtor : x.creditor,
+        creditor: this.shouldFlip(x) ? x.creditor :x.debtor
+      });
+      this.personalizedDebts = this.personalizedDebts.filter(
+        x => x.creditor.id == this.currentUser.id || x.debtor.id == this.currentUser.id
+      );
+      this.personalizedDebts = this.personalizedDebts.sort((x, y) =>Math.abs(y.optimisedDebtAmount) -  Math.abs(x.optimisedDebtAmount));
+      this.personalizedDebtsCount = this.personalizedDebts.length;
+      this.showPage(this.pages.groupDebtDetails);
+    },error => { console.log(error); } );
+  }
+  shouldFlip(d: Debt){
+    return this.currentUser.id == d.creditor.id;
+  }
+
 }
 
 export class CalculatedSpending{

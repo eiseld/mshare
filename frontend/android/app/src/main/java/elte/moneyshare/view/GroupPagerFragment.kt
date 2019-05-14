@@ -37,25 +37,40 @@ class GroupPagerFragment : Fragment() {
 
         val item = menu.findItem(R.id.menuSearch)
         val searchView = SearchView((context as MainActivity).supportActionBar!!.themedContext)
-        MenuItemCompat.setShowAsAction(item,MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItemCompat.SHOW_AS_ACTION_IF_ROOM)
+        MenuItemCompat.setShowAsAction(
+            item,
+            MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItemCompat.SHOW_AS_ACTION_IF_ROOM
+        )
         MenuItemCompat.setActionView(item, searchView)
+        searchResultsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                val adapter = SearchResultsRecyclerViewAdapter(context!!, newText, groupId!!, viewModel)
-                searchResultsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                searchResultsRecyclerView?.adapter = adapter
+                var filteredUsersSize = 0
+                if (newText.length > 3) {
+                    viewModel.getSearchedUsers(newText) { filteredUsers, error ->
+                        filteredUsers?.let {
+                            filteredUsersSize = it.size
+                            val adapter = SearchResultsRecyclerViewAdapter(context!!, it, groupId!!, viewModel)
+                            searchResultsRecyclerView?.adapter = adapter
+                        }
 
-                if(newText.equals("")){
+                        if (filteredUsersSize > 0) {
+                            searchResultsRecyclerView?.visible()
+                            tabLayout?.invisible()
+                        } else {
+                            searchResultsRecyclerView?.invisible()
+                            tabLayout?.visible()
+                        }
+                    }
+                } else {
                     searchResultsRecyclerView?.invisible()
                     tabLayout?.visible()
-                } else {
-                    searchResultsRecyclerView?.visible()
-                    tabLayout?.invisible()
                 }
+
                 return false
             }
         })
@@ -78,6 +93,7 @@ class GroupPagerFragment : Fragment() {
                 groupId?.let {
                     args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
                 }
+                args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value, -1)
                 fragment.arguments = args
                 (context as MainActivity).supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
@@ -90,15 +106,12 @@ class GroupPagerFragment : Fragment() {
             }
 
             R.id.removeMember -> {
-                //viewModel.isDeleteMemberEnabled = !viewModel.isDeleteMemberEnabled
-                SharedPreferences.isDeleteMemberEnabled = !SharedPreferences.isDeleteMemberEnabled
-                val fragment = GroupPagerFragment()
-                val args = Bundle()
-                groupId?.let {
-                    args.putInt(FragmentDataKeys.GROUP_PAGER_FRAGMENT.value, it)
-                }
-                fragment.arguments = args
-                (context as MainActivity).supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
+                viewModel.isDeleteMemberEnabled = !viewModel.isDeleteMemberEnabled
+
+                //TODO REPLACE TO ENUM KEY
+                (childFragmentManager.fragments[0] as MembersFragment).adapter.notifyDataSetChanged()
+                tabLayout.getTabAt(0)?.select()
+
                 return true
             }
             R.id.myDebts -> {
@@ -108,7 +121,8 @@ class GroupPagerFragment : Fragment() {
                     args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
                 }
                 fragment.arguments = args
-                (context as MainActivity).supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
+                (context as MainActivity).supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
                 return true
             }
             else ->

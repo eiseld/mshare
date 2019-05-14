@@ -38,7 +38,7 @@ class BillsFragment : Fragment() {
             groupId?.let { groupId ->
                 viewModel.getSpendings(groupId) { bills, error ->
                     if (bills != null) {
-                        val adapter = BillsRecyclerViewAdapter(it, bills)
+                        val adapter = BillsRecyclerViewAdapter(it, bills, groupId)
                         billsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         billsRecyclerView.adapter = adapter
                     } else {

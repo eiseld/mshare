@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { MemberData, GroupData } from '../group-manager/group-manager.component';
+import { MemberData, GroupData, Debt } from '../group-manager/group-manager.component';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class DebtSettleComponent implements OnInit {
   @Input() groupData:GroupData;
-  @Input() selectedMember:MemberData;
+  @Input() selectedDebt:Debt;
   @Output() stopSettleDebtEvent = new EventEmitter();
   @Output() updateSelectedGroupEvent = new EventEmitter();
   error:string="";
@@ -25,7 +25,7 @@ export class DebtSettleComponent implements OnInit {
   }
 
   unselectMember(){
-    this.selectedMember=null;
+    this.selectedDebt=null;
     this.stopSettleDebtEvent.emit();
   }
 
@@ -42,15 +42,15 @@ export class DebtSettleComponent implements OnInit {
     this.http.get<any>(`${environment.API_URL}/profile/`,
       httpOptions).subscribe(
         data => {
-          if(this.selectedMember.balance<0){
-            this.http.post<any>(`${environment.API_URL}/group/${this.groupData.id}/settledebt/${data.id}/${this.selectedMember.id}`,
+          if(this.selectedDebt.optimisedDebtAmount<0){
+            this.http.post<any>(`${environment.API_URL}/group/${this.groupData.id}/settledebt/${data.id}/${this.selectedDebt.debtor.id}`,
             {}, httpOptions).subscribe(
               data => {this.updateSelectedGroup(); this.unselectMember();},
               error => {this.error="Sikertelen a tartozás rendezése!"}
             );
           }
-          else if(this.selectedMember.balance>0){
-            this.http.post<any>(`${environment.API_URL}/group/${this.groupData.id}/settledebt/${this.selectedMember.id}/${data.id}`,{},
+          else if(this.selectedDebt.optimisedDebtAmount>0){
+            this.http.post<any>(`${environment.API_URL}/group/${this.groupData.id}/settledebt/${this.selectedDebt.debtor.id}/${data.id}`,{},
             httpOptions).subscribe(
               data => {this.updateSelectedGroup(); this.unselectMember();},
               error => {this.error="Sikertelen a tartozás rendezése!"}
