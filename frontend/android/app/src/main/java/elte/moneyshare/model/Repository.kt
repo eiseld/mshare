@@ -34,8 +34,8 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
     }
 
     override fun postRegisterUser(registrationData: RegistrationData, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.postRegisterUser(registrationData).enqueue(object : Callback<Any> {
-            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+        apiDefinition.postRegisterUser(registrationData).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {
                         completion(response.code().toString(), null)
@@ -46,7 +46,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                 }
             }
 
-            override fun onFailure(call: Call<Any>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 completion(null, onFailureMessage)
             }
         })
@@ -76,8 +76,8 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
 
 
     override fun postForgotPassword(email: String, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.postForgotPassword(ForgottenPasswordData(email)).enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
+        apiDefinition.postForgotPassword(ForgottenPasswordData(email)).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {
                         completion(response.code().toString(), null)
@@ -88,7 +88,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                 }
             }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                completion(null, onFailureMessage)
             }
         })

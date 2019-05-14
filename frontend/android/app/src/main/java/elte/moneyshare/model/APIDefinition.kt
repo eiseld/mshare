@@ -13,7 +13,7 @@ interface APIDefinition {
     fun putLoginUser(@Body loginCred: LoginCred): Call<LoginResponse>
 
     @POST("test/api//Auth/register")
-    fun postRegisterUser(@Body registrationData: RegistrationData): Call<Any>
+    fun postRegisterUser(@Body registrationData: RegistrationData): Call<ResponseBody>
 
     @GET("test/api/Profile")
     fun getUserId(): Call<UserData>
@@ -48,7 +48,7 @@ interface APIDefinition {
     fun getProfileGroups(): Call<ArrayList<GroupInfo>>
 
     @POST("test/api/profile/password/forgot")
-    fun postForgotPassword(@Body email: ForgottenPasswordData): Call<String>
+    fun postForgotPassword(@Body email: ForgottenPasswordData): Call<ResponseBody>
 
 
     //SPENDING
