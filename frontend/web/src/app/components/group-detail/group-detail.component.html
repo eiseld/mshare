@@ -75,7 +75,7 @@
     <ul>
       <li (click)='selectMember(debt)' *ngFor="let debt of personalizedDebts">
         {{debt.debtor.name}}
-        <span *ngIf="debt.optimisedDebtAmount < 0"> tartzol neki: {{0 - debt.optimisedDebtAmount | currency}} </span>
+        <span *ngIf="debt.optimisedDebtAmount < 0"> tartozol neki: {{0 - debt.optimisedDebtAmount | currency}} </span>
         <span *ngIf="debt.optimisedDebtAmount == 0"> rendezett </span>
         <span *ngIf="debt.optimisedDebtAmount > 0"> tartozik neked: {{debt.optimisedDebtAmount | currency}} </span>
       </li>
