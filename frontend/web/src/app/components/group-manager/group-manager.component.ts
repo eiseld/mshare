@@ -222,6 +222,9 @@ export class GroupManagerComponent implements OnInit {
       this.error = 'A megadott felhasználó nem létezik!';
     }
   }
+public clearErrorMessage(){
+    this.error = '';
+}
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
