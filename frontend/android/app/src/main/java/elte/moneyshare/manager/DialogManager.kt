@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.view.WindowManager
+import elte.moneyshare.R
 import elte.moneyshare.view.ConfirmationDialogView
 import elte.moneyshare.view.InfoDialogView
 
@@ -15,7 +16,8 @@ object DialogManager {
     fun showInfoDialog(message: String?, context: Context?, positiveAction: () -> Unit = {}) {
         if (context == null) return
 
-        infoAlertDialog?.dismiss()
+        showDialog(message, context, positiveAction)
+        /*infoAlertDialog?.dismiss()
         infoAlertDialog = AlertDialog.Builder(context).create()
 
         val infoDialog = InfoDialogView(context)
@@ -34,7 +36,18 @@ object DialogManager {
 
         // if (!(context as Activity).isFinishing) {
         infoAlertDialog?.show()
-        // }
+        // }*/
+    }
+
+    fun showDialog(message: String?, context: Context, positiveAction: () -> Unit = {}) {
+        infoAlertDialog?.dismiss()
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(message)
+
+        builder.setPositiveButton(context.getString(R.string.yes)) { _, _ -> positiveAction()}
+
+        infoAlertDialog = builder.create()
+        infoAlertDialog?.show()
     }
 
     private var confirmationAlertDialog: AlertDialog? = null
