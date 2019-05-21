@@ -12,6 +12,7 @@ import elte.moneyshare.view.Adapter.GroupsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_groups.*
 import elte.moneyshare.R
+import elte.moneyshare.manager.DialogManager
 
 class GroupsFragment : Fragment() {
 
@@ -49,18 +50,19 @@ class GroupsFragment : Fragment() {
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupsViewModel::class.java)
 
-            viewModel.getGroups { groups, error ->
-                if (groups != null) {
-                    val adapter = GroupsRecyclerViewAdapter(it, groups)
+            viewModel.getProfileGroups { groupsInfo, error ->
+                if (groupsInfo != null) {
+                    val adapter = GroupsRecyclerViewAdapter(it, groupsInfo)
                     groupsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     groupsRecyclerView.adapter = adapter
                 } else {
-                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                    DialogManager.showInfoDialog(error, context)
                 }
             }
         }
     }
 
+    //livedata would be better to observe changes on data
     override fun onResume() {
         super.onResume()
         getGroups()

@@ -93,25 +93,34 @@ namespace MShare_ASP.Services{
         public async Task UpdatePassword(PasswordUpdate passwordUpdate){
             var user = await _context.Users
                 .Include(x => x.EmailTokens)
-                .FirstOrDefaultAsync(x => 
-                    x.Email == passwordUpdate.Email && 
-                    x.EmailTokens.Any(y => 
-                        y.Token == passwordUpdate.Token && 
-                        y.TokenType == DaoEmailToken.Type.Password));
+                .FirstOrDefaultAsync(x => x.Email == passwordUpdate.Email);
 
             if (user == null)
                 throw new Exceptions.ResourceNotFoundException("user");
-            
+
+            var emailToken = user.EmailTokens.FirstOrDefault(y =>
+                                y.Token == passwordUpdate.Token &&
+                                y.TokenType == DaoEmailToken.Type.Password);
+
+            if (emailToken == null)
+                throw new Exceptions.ResourceGoneException("token");
+
+            if (emailToken.ExpirationDate < _timeService.UtcNow)
+                    throw new Exceptions.BusinessException("token_expired");
 
             using (var transaction = _context.Database.BeginTransaction()){
                 try{
-
+                    var previousPassword = user.Password;
                     user.Password = Hasher.GetHash(passwordUpdate.Password);
 
-                    if (await _context.SaveChangesAsync() != 1)
+                    if (previousPassword != user.Password && await _context.SaveChangesAsync() != 1)
                         throw new Exceptions.DatabaseException("password_not_saved");
 
-                    await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, user.DisplayName, user.Email, "Elfelejtett jelszó", $"A mai napon jelszava megváltoztatásra került!");
+                    _context.EmailTokens.Remove(emailToken);
+                    if (await _context.SaveChangesAsync() != 1)
+                        throw new Exceptions.DatabaseException("token_deletion_failed");
+
+                    await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, user.DisplayName, user.Email, "Jelszó változtatás", $"A mai napon jelszava megváltoztatásra került!");
 
                     transaction.Commit();
                 }

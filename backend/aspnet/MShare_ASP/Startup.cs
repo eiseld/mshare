@@ -81,6 +81,8 @@ namespace MShare_ASP {
                 c.AddSecurityRequirement(security);
                 var filePath = System.IO.Path.Combine(System.AppContext.BaseDirectory, "MShare_ASP.xml");
                 c.IncludeXmlComments(filePath);
+
+                c.CustomSchemaIds(x => x.FullName);
             });
 
             services.AddSingleton<Conf.IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<Conf.EmailConfiguration>());
@@ -96,6 +98,8 @@ namespace MShare_ASP {
             services.AddTransient<IGroupService, GroupService>();
             services.AddTransient<ITimeService, TimeService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ISpendingService, SpendingService>();
+            services.AddTransient<ILoggingService, LoggingService>();
 
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("MShareSettings")["SecretKey"]);
             services.AddAuthentication(x => {

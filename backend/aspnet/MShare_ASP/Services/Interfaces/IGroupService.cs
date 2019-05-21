@@ -15,26 +15,30 @@ namespace MShare_ASP.Services{
         /// <summary>
         /// Converts DaoGroup to GroupData
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="daoGroup"></param>
-        API.Response.GroupData ToGroupData(DaoGroup daoGroup);
+        Task<API.Response.GroupData> ToGroupData(long userId, DaoGroup daoGroup);
 
         /// <summary>
         /// Converts list of DaoGroup to list of GroupData
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="daoGroups"></param>
-        IList<API.Response.GroupData> ToGroupData(IList<DaoGroup> daoGroups);
+        IList<API.Response.GroupData> ToGroupData(long userId, IList<DaoGroup> daoGroups);
 
         /// <summary>
         /// Converts DaoGroup to GroupInfo
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="daoGroup"></param>
-        API.Response.GroupInfo ToGroupInfo(DaoGroup daoGroup);
+        Task<API.Response.GroupInfo> ToGroupInfo(long userId, DaoGroup daoGroup);
 
         /// <summary>
         /// Converts list of DaoGroup to list of GroupInfo
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="daoGroups"></param>
-        IList<API.Response.GroupInfo> ToGroupInfo(IList<DaoGroup> daoGroups);
+        IList<API.Response.GroupInfo> ToGroupInfo(long userId, IList<DaoGroup> daoGroups);
 
         /// <summary>
         /// Gets all groups
@@ -59,8 +63,8 @@ namespace MShare_ASP.Services{
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="groupId"></param>
-        /// <param name="member"></param>
-        Task RemoveMember(long userId, long groupId, RemoveMember member);
+        /// <param name="memberId"></param>
+        Task RemoveMember(long userId, long groupId, long memberId);
 
         /// <summary>
         /// Creates a new group
@@ -69,5 +73,13 @@ namespace MShare_ASP.Services{
         /// <param name="newGroup"></param>
         Task CreateGroup(long userId, NewGroup newGroup);
 
-    }
+		Task<IList<API.Response.FilteredUserData>> InviteUserFilter(string part);
+
+		Task<IList<DaoHistory>> GetGroupHistory(long groupid);
+
+		Task AddMember(long userId, long groupId, long memberId);
+
+		Task DebtSettlement(long userId, long lenderId, long groupId);
+
+	}
 }

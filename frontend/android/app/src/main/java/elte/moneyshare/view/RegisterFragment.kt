@@ -13,6 +13,7 @@ import android.util.Patterns
 
 import elte.moneyshare.R
 import elte.moneyshare.entity.RegistrationData
+import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.viewmodel.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
 
@@ -32,22 +33,25 @@ class RegisterFragment : Fragment() {
         val uppercaseRegex = """[A-Z]""".toRegex()
         val lowercaseRegex = """[a-z]""".toRegex()
         val numberRegex    = """[0-9]""".toRegex()
-        if(txt.length <6)
-        {
-            pwdError = "Minimum length = 6\n"
+        context?.let {
+            if(txt.length <6)
+            {
+                pwdError = it.getString(R.string.minimum_characters).plus('\n')
+            }
+            if(!txt.contains(uppercaseRegex))
+            {
+                pwdError = pwdError.plus(it.getString(R.string.uppercase_required).plus('\n'))
+            }
+            if(!txt.contains(lowercaseRegex))
+            {
+                pwdError = pwdError.plus(it.getString(R.string.lowercase_required).plus('\n'))
+            }
+            if(!txt.contains(numberRegex))
+            {
+                pwdError = pwdError.plus(it.getString(R.string.number_required).plus('\n'))
+            }
         }
-        if(!txt.contains(uppercaseRegex))
-        {
-            pwdError = pwdError.plus("At least 1 uppercase character is required\n")
-        }
-        if(!txt.contains(lowercaseRegex))
-        {
-            pwdError = pwdError.plus("At least 1 lowercase character is required\n")
-        }
-        if(!txt.contains(numberRegex))
-        {
-            pwdError = pwdError.plus("At least 1 number is required")
-        }
+
         return pwdError
     }
 
@@ -66,16 +70,15 @@ class RegisterFragment : Fragment() {
             ) { response, error ->
                 if (error == null) {
                     if(response == "201") {
-                        Toast.makeText(context, "Successful registration!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context?.getString(R.string.successful_registration), Toast.LENGTH_SHORT).show()
                         activity?.supportFragmentManager?.beginTransaction()
                             ?.replace(R.id.frame_container, LoginFragment())?.commit()
                     }
-                    else
-                    {
+                    else {
                         Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    DialogManager.showInfoDialog(error, context)
                 }
             }
         }
@@ -96,7 +99,7 @@ class RegisterFragment : Fragment() {
                     passwordEditText.error = pwdError
                     registerButton.isClickable = false
                 } else if (txt != txtAgain) {
-                    passwordEditText.error = "Passwords not matching"
+                    passwordEditText.error = context?.getString(R.string.password_not_matching)
                     registerButton.isClickable = false
                 } else {
                     passwordEditText.error = null
@@ -123,7 +126,7 @@ class RegisterFragment : Fragment() {
                 }
                 else if(txt != txtAgain)
                 {
-                    passwordAgainEditText.error = "Passwords not matching"
+                    passwordAgainEditText.error = context?.getString(R.string.password_not_matching)
                     registerButton.isClickable = false
                 }
                 else {
@@ -146,12 +149,12 @@ class RegisterFragment : Fragment() {
                 var emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
                 if(!emailValid)
                 {
-                    emailEditText.error = "Email format is not correct"
+                    emailEditText.error = context?.getString(R.string.email_not_correct)
                     registerButton.isClickable = false
                 }
                 else if(email != emailAgain)
                 {
-                    emailEditText.error = "Emails not matching"
+                    emailEditText.error = context?.getString(R.string.email_not_matching)
                     registerButton.isClickable = false
                 }
                 else {
@@ -174,12 +177,12 @@ class RegisterFragment : Fragment() {
                 var emailValid = Patterns.EMAIL_ADDRESS.matcher(emailAgain).matches()
                 if(!emailValid)
                 {
-                    emailAgainEditText.error = "Email format is not correct"
+                    emailAgainEditText.error = context?.getString(R.string.email_not_correct)
                     registerButton.isClickable = false
                 }
                 else if(email != emailAgain)
                 {
-                    emailAgainEditText.error = "Emails not matching"
+                    emailAgainEditText.error = context?.getString(R.string.email_not_matching)
                     registerButton.isClickable = false
                 }
                 else {

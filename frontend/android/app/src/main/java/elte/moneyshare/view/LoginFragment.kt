@@ -8,10 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import elte.moneyshare.SharedPreferences
 
 import elte.moneyshare.R
+import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.showAsDialog
 import elte.moneyshare.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 
 class LoginFragment : Fragment() {
 
@@ -21,7 +25,6 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
@@ -31,24 +34,23 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         loginButton.setOnClickListener {
-            //viewModel.postLoginUser("test1@test.hu", "default") { response, error ->
-            viewModel.postLoginUser(emailEditText.text.toString(), passwordEditText.text.toString()) { response, error ->
+            val email = emailEditText.text.toString()
+            val password = passwordEditText.text.toString()
+            //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
+            viewModel.putLoginUser(email, password) { response, error ->
                 if(error == null) {
-                    Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
-                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    DialogManager.showInfoDialog(error, context)
                 }
-            }
-
-            viewModel.getUsers { users, error ->
-                Log.d("LoginFragment:", "users: $users")
             }
         }
 
         registrationButton.setOnClickListener {
             activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, RegisterFragment())?.addToBackStack(null)?.commit()
         }
-
+        forgottenPasswordButton.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, ForgotPasswordFragment())?.addToBackStack(null)?.commit()
+        }
     }
 }

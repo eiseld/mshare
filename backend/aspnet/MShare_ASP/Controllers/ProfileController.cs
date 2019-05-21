@@ -75,7 +75,7 @@ namespace MShare_ASP.Controllers {
         [HttpGet]
         [Route("groups")]
         public async Task<ActionResult<IList<API.Response.GroupInfo>>> GetGroups(){
-            return Ok(GroupService.ToGroupInfo(await GroupService.GetGroupsOfUser(GetCurrentUserID())));
+            return Ok(GroupService.ToGroupInfo(GetCurrentUserID(), await GroupService.GetGroupsOfUser(GetCurrentUserID())));
         }
 
         /// <summary>
@@ -86,10 +86,7 @@ namespace MShare_ASP.Controllers {
         [HttpGet]
         [Route("{fromGroup}")]
         public async Task<ActionResult<API.Response.MemberData>> GetMemberData(long fromGroup){
-            return Ok(
-                GroupService.ToGroupData(await GroupService.GetGroupOfUser(GetCurrentUserID(), fromGroup))
-                .Members.Single(x => x.Id == GetCurrentUserID())
-                );
+            return Ok((await GroupService.ToGroupData(GetCurrentUserID(), await GroupService.GetGroupOfUser(GetCurrentUserID(), fromGroup))).Members.Single(x => x.Id == GetCurrentUserID()));
         }
 
     }

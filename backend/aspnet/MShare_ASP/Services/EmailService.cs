@@ -11,9 +11,11 @@ namespace MShare_ASP.Services {
 
         private MailboxAddress _senderAddr;
         private Configurations.IEmailConfiguration _emailConf;
+        private Configurations.IURIConfiguration _uriConf;
 
-        public EmailService(Configurations.IEmailConfiguration emailConf) {
+        public EmailService(Configurations.IEmailConfiguration emailConf, Configurations.IURIConfiguration uriConf) {
             _emailConf = emailConf;
+            _uriConf = uriConf;
             _senderAddr = new MailboxAddress(_emailConf.Name, _emailConf.Address);
         }
 
@@ -22,10 +24,12 @@ namespace MShare_ASP.Services {
             msg.From.Add(_senderAddr);
             msg.To.Add(new MailboxAddress(name, targetEmail));
             msg.Subject = subject;
-            msg.Body = new TextPart(TextFormat.Plain) {
-                Text = message
-            };
 
+            msg.Body = new TextPart(TextFormat.Html)
+            {
+                Text = $"<html><h1><img src='{_uriConf.URIForEndUsers}/assets/MoneyShareLogo_128px.png' alt='MoneyShare logo'></img> MoneyShare</h1><p>{message}</p> </html>"
+            };
+ 
             using (var client = new SmtpClient()) {
                 client.ServerCertificateValidationCallback = (s, c, ch, e) => true;
 
