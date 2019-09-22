@@ -56,8 +56,7 @@ namespace MShare_ASP.API.Request
             RuleFor(x => x.Debt)
                 .NotEmpty()
                 .GreaterThan(0)
-                //.When(x => x.Debt != null)
-                .WithMessage("Debt should not be 0, either don't add debtor to list or if you want to use auto generated values, don't pass 'Debt' field in!");
+                .WithMessage("Debt should not be 0");
         }
     }
 

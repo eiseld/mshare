@@ -23,7 +23,7 @@ namespace MShare_ASP.API.Request
     public class PasswordUpdateValidator : AbstractValidator<PasswordUpdate>
     {
 
-        /// <summary>Initializese the validator object</summary>
+        /// <summary>Initializes the validator object</summary>
         public PasswordUpdateValidator()
         {
             RuleFor(x => x.Email)

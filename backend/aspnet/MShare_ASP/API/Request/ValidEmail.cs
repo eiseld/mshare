@@ -16,7 +16,7 @@ namespace MShare_ASP.API.Request
     public class EmailValidator : AbstractValidator<ValidEmail>
     {
 
-        /// <summary>Initializese the validator object</summary>
+        /// <summary>Initializes the validator object</summary>
         public EmailValidator()
         {
             RuleFor(x => x.Email)

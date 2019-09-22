@@ -19,7 +19,7 @@ namespace MShare_ASP.API.Request
     public class LoginCredentialsValidator : AbstractValidator<LoginCredentials>
     {
 
-        /// <summary>Initializese the validator object</summary>
+        /// <summary>Initializes the validator object</summary>
         public LoginCredentialsValidator()
         {
             RuleFor(x => x.Email)

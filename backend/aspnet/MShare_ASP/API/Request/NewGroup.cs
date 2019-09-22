@@ -16,7 +16,7 @@ namespace MShare_ASP.API.Request
     public class NewGroupValidator : AbstractValidator<NewGroup>
     {
 
-        /// <summary>Initializese the validator object</summary>
+        /// <summary>Initializes the validator object</summary>
         public NewGroupValidator()
         {
             RuleFor(x => x.Name)

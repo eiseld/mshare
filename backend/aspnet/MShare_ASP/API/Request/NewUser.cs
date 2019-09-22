@@ -23,7 +23,7 @@ namespace MShare_ASP.API.Request
     public class NewUserValidator : AbstractValidator<NewUser>
     {
 
-        /// <summary>Initializese the validator object</summary>
+        /// <summary>Initializes the validator object</summary>
         public NewUserValidator()
         {
             RuleFor(x => x.Email)
