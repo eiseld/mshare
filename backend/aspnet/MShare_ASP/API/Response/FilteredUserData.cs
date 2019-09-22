@@ -1,28 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace MShare_ASP.API.Response
+﻿namespace MShare_ASP.API.Response
 {
-	public class FilteredUserData
-	{
 
-		/// <summary>
-		/// Id of the user
-		/// </summary>
-		public long Id { get; set; }
+    /// <summary>The user data that can be displayed to anybody</summary>
+    public class FilteredUserData
+    {
 
-		/// <summary>
-		/// DisplayName of the user
-		/// </summary>
-		public string DisplayName { get; set; }
+        /// <summary>Id of the user</summary>
+        public long Id { get; set; }
 
-		/// <summary>
-		/// Email of the user
-		/// </summary>
-		public string Email { get; set; }
+        /// <summary>DisplayName of the user</summary>
+        public string DisplayName { get; set; }
 
-	}
-
+        /// <summary>Email of the user</summary>
+        public string Email { get; set; }
+    }
 }

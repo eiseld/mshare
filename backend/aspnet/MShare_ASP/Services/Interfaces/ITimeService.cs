@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace MShare_ASP.Services{
+namespace MShare_ASP.Services
+{
 
-    internal interface ITimeService {
+    /// <summary>Time related services</summary>
+    internal interface ITimeService
+    {
+
+        /// <summary>Gets current time</summary>
         DateTime UtcNow { get; }
     }
 }

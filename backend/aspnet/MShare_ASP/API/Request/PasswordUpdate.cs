@@ -1,40 +1,31 @@
 ﻿using FluentValidation;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace MShare_ASP.API.Request {
-    /// <summary>
-    /// Represents a PasswordUpdate request
-    /// </summary>
-    public class PasswordUpdate {
-        /// <summary>
-        /// Email of the user as in SMTP standard
-        /// </summary>
+namespace MShare_ASP.API.Request
+{
+
+    /// <summary>Represents a PasswordUpdate request</summary>
+    public class PasswordUpdate
+    {
+
+        /// <summary>Email of the user as in SMTP standard</summary>
         public String Email { get; set; }
 
-        /// <summary>
-        /// Name to be displayed
-        /// </summary>
+        /// <summary>Reset token</summary>
         public String Token { get; set; }
 
-        /// <summary>
-        /// Unhashed password
-        /// </summary>
+        /// <summary>Unhashed password</summary>
         public String Password { get; set; }
     }
 
-    /// <summary>
-    /// Validator object for NewUser data class
-    /// </summary>
-    public class PasswordUpdateValidator : AbstractValidator<PasswordUpdate> {
+    /// <summary>Validator object for PasswordUpdate data class</summary>
+    public class PasswordUpdateValidator : AbstractValidator<PasswordUpdate>
+    {
 
-        /// <summary>
-        /// Initializese the validator object
-        /// </summary>
-        public PasswordUpdateValidator() {
-
+        /// <summary>Initializese the validator object</summary>
+        public PasswordUpdateValidator()
+        {
             RuleFor(x => x.Email)
                 .EmailAddress();
 

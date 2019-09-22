@@ -1,39 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace MShare_ASP.API.Response
+{
 
-namespace MShare_ASP.API.Response {
+    /// <summary>Describes a group's minimal data</summary>
+    public class GroupInfo
+    {
 
-    /// <summary>
-    /// Describes a group's minimal data
-    /// </summary>
-    public class GroupInfo{
-
-        /// <summary>
-        /// Id of the group
-        /// </summary>
+        /// <summary>Id of the group</summary>
         public long Id { get; set; }
 
-        /// <summary>
-        /// Name of the group
-        /// </summary>
+        /// <summary>Name of the group</summary>
         public string Name { get; set; }
 
-        /// <summary>
-        /// Name of the creator
-        /// </summary>
+        /// <summary>Name of the creator</summary>
         public string Creator { get; set; }
 
-        /// <summary>
-        /// Number of members
-        /// </summary>
+        /// <summary>Number of members</summary>
         public int MemberCount { get; set; }
 
-        /// <summary>
-        /// User balance in the view of the group
-        /// </summary>
+        /// <summary>User balance in the view of the group</summary>
         public long MyCurrentBalance { get; set; }
-
     }
 }
