@@ -78,7 +78,7 @@ namespace MShare_ASP.Services
                     var emailToken = new DaoEmailToken()
                     {
                         TokenType = DaoEmailToken.Type.Validation,
-                        ExpirationDate = TimeService.UtcNow.AddSeconds(10),
+                        ExpirationDate = TimeService.UtcNow.AddDays(1),
                         Token = random.RandomString(40)
                     };
 

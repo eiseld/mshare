@@ -53,7 +53,7 @@ namespace MShare_ASP.Controllers
         public async Task<ActionResult<GroupInfo>> GetGroupInfo(long groupId)
         {
             var userId = GetCurrentUserID();
-            var groupInfo = GroupService.ToGroupInfo(userId, await GroupService.GetGroupOfUser(userId, groupId));
+            var groupInfo = await GroupService.ToGroupInfo(userId, await GroupService.GetGroupOfUser(userId, groupId));
             return Ok(groupInfo);
         }
 
@@ -129,34 +129,34 @@ namespace MShare_ASP.Controllers
         }
 
         /// <summary>Gets the group history</summary>
-        /// <param name="groupid">Id of the group</param>
+        /// <param name="groupId">Id of the group</param>
         /// <response code="200">Successfully returned group history</response>
         /// <response code="403">Forbidden: 'not_group_member'</response>
         /// <response code="404">Not found: 'group'</response>
         [HttpGet()]
-        [Route("{groupid}/history")]
-        public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory(long groupid)
+        [Route("{groupId}/history")]
+        public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory(long groupId)
         {
             //TODO DaoHistory should not go out make response and converter function
-            var groupHistory = await GroupService.GetGroupHistory(GetCurrentUserID(), groupid);
+            var groupHistory = await GroupService.GetGroupHistory(GetCurrentUserID(), groupId);
             return Ok(groupHistory);
         }
 
 
         /// <summary>Settles a debt</summary>
-        /// <param name="debtorid">Id of the debtor</param>
-        /// <param name="lenderid">Id of the lender</param>
-        /// <param name="groupid">Id of the group</param>
+        /// <param name="debtorId">Id of the debtor</param>
+        /// <param name="lenderId">Id of the lender</param>
+        /// <param name="groupId">Id of the group</param>
         /// <response code="200">Successfully settled debt</response>
         /// <response code="403">Forbidden: 'not_group_member', 'lender_not_member'</response>
         /// <response code="404">Not found: 'group'</response>
         /// <response code="409">Conflict: 'debt_already_payed'</response>
         /// <response code="410">Gone: 'debt'</response>
         /// <response code="500">Internal error: 'debt_not_settled'</response>
-        [HttpPost("{groupid}/settledebt/{debterid}/{lenderid}")]
-        public async Task<ActionResult> DebtSettlement(long debtorid, long lenderid, long groupid)
+        [HttpPost("{groupId}/settledebt/{debtorId}/{lenderId}")]
+        public async Task<ActionResult> DebtSettlement(long debtorId, long lenderId, long groupId)
         {
-            await SpendingService.DebtSettlement(GetCurrentUserID(), debtorid, lenderid, groupid);
+            await SpendingService.DebtSettlement(GetCurrentUserID(), debtorId, lenderId, groupId);
             return Ok();
         }
     }

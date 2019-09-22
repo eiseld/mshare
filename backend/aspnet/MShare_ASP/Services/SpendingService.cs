@@ -165,6 +165,9 @@ namespace MShare_ASP.Services
 
         public async Task<IList<DaoOptimizedDebt>> GetOptimizedDebtForGroup(long userId, long groupId)
         {
+            //Security check
+            await GroupService.GetGroupOfUser(userId, groupId);
+
             return await Context.OptimizedDebt.Where(x => x.GroupId == groupId)
                 .Include(x => x.UserOwed)
                 .Include(x => x.UserOwes)
