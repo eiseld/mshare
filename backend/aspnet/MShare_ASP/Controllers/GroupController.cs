@@ -1,147 +1,163 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using MShare_ASP.API.Response;
 using MShare_ASP.Services;
-using MShare_ASP.Services.Exceptions;
 
-namespace MShare_ASP.Controllers {
+namespace MShare_ASP.Controllers
+{
 
-    /// <summary>
-    /// GroupController is responsible for Group related actions
-    /// </summary>
+    /// <summary>GroupController is responsible for Group related actions</summary>
     [Route("[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
-    public class GroupController : BaseController {
+    public class GroupController : BaseController
+    {
 
         private IGroupService GroupService { get; }
+        private ISpendingService SpendingService { get; }
 
-        /// <summary>
-        /// Initializes the GroupController
-        /// </summary>
-        /// <param name="groupService"></param>
-        public GroupController(IGroupService groupService){
+
+        /// <summary>Initializes the GroupController</summary>
+        public GroupController(IGroupService groupService, ISpendingService spendingService)
+        {
             GroupService = groupService;
+            SpendingService = spendingService;
         }
 
-
 #if DEBUG
-        /// <summary>
-        /// Lists all groups (use only for testing)
-        /// </summary>
+        /// <summary>Lists all groups (DEBUG ONLY)</summary>
         /// <response code="200">Successfully returned all groups</response>
-        /// <response code="500">Internal error, probably database related</response>
+        /// <response code="403">Forbidden: 'not_group_member'</response>
+        /// <response code="404">Not found: 'group'</response>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IList<API.Response.GroupData>>> Get() {
-            return Ok(GroupService.ToGroupData(1,await GroupService.GetGroups()));
+        public async Task<ActionResult<IList<GroupData>>> Get()
+        {
+            //TODO This will fail if user with id 1 not in all group
+            var groupData = GroupService.ToGroupData(1, await GroupService.GetGroups());
+            return Ok(groupData);
         }
 #endif
 
-
-        /// <summary>
-        /// Gets the basic information of the given group
-        /// </summary>
+        /// <summary>Gets the basic information of the given group</summary>
         /// <param name="groupId">Id of the group</param>
         /// <response code="200">Successfully returned basic information of the group</response>
-        /// <response code="404">Resource not found: 'group_not_found'</response>
-        /// <response code="500">Internal error, probably database related</response>
+        /// <response code="403">Forbidden: 'not_group_member'</response>
+        /// <response code="404">Not found: 'group'</response>
         [HttpGet]
         [Route("{groupId}/info")]
-        public async Task<ActionResult<API.Response.GroupInfo>> GetGroupInfo(long groupId) {
-            return Ok(GroupService.ToGroupInfo(GetCurrentUserID(), await GroupService.GetGroupOfUser(GetCurrentUserID(), groupId)));
+        public async Task<ActionResult<GroupInfo>> GetGroupInfo(long groupId)
+        {
+            var userId = GetCurrentUserID();
+            var groupInfo = await GroupService.ToGroupInfo(userId, await GroupService.GetGroupOfUser(userId, groupId));
+            return Ok(groupInfo);
         }
 
-
-        /// <summary>
-        /// Gets the full information of the given group
-        /// </summary>
+        /// <summary>Gets the full information of the given group</summary>
         /// <param name="groupId">Id of the group</param>
         /// <response code="200">Successfully returned full information of the group</response>
-        /// <response code="404">Resource not found: 'group_not_found'</response>
-        /// <response code="500">Internal error, probably database related</response>
+        /// <response code="403">Forbidden: 'not_group_member'</response>
+        /// <response code="404">Not found: 'group'</response>
         [HttpGet]
         [Route("{groupId}/data")]
-        public async Task<ActionResult<API.Response.GroupData>> GetGroupData(long groupId){
-            return Ok(await GroupService.ToGroupData(GetCurrentUserID(), await GroupService.GetGroupOfUser(GetCurrentUserID(), groupId)));
+        public async Task<ActionResult<GroupData>> GetGroupData(long groupId)
+        {
+            var userId = GetCurrentUserID();
+            var groupData = await GroupService.ToGroupData(userId, await GroupService.GetGroupOfUser(userId, groupId));
+            return Ok(groupData);
         }
 
-		/// <summary>
-		/// Removes a member from a group
-		/// </summary>
-		/// <param name="groupId">Id of the group</param>
-		/// <param name="memberId">Id of the member to be added</param>
-		/// <response code="404">Resource not found: 'group_not_found'</response>
-		/// <response code="403">Resource forbidden: 'not_group_creator'</response>
-		/// <response code="410">Resource gone: 'member_not_found'</response>
-		/// <response code="500">Internal error: 'group_not_added'</response>
-		[HttpPost]
-		[Route("{groupId}/members/add/{memberId}")]
-		public async Task<ActionResult> AddMember(long groupId, long memberId)
-		{
-			await GroupService.AddMember(GetCurrentUserID(), groupId, memberId);
-			return Ok();
-		}
+        /// <summary>Adds a member to a group</summary>
+        /// <param name="groupId">Id of the group</param>
+        /// <param name="memberId">Id of the new member</param>
+        /// <response code="200">Successfully added member to group</response>
+        /// <response code="403">Forbidden: 'not_group_member', 'not_group_creator'</response>
+        /// <response code="404">Not found: 'group'</response>
+        /// <response code="409">Conflict: 'user_already_member'</response>
+        /// <response code="500">Internal error: 'group_member_not_added'</response>
+        [HttpPost]
+        [Route("{groupId}/members/add/{memberId}")]
+        public async Task<ActionResult> AddMember(long groupId, long memberId)
+        {
+            await GroupService.AddMember(GetCurrentUserID(), groupId, memberId);
+            return Ok();
+        }
 
-
-		/// <summary>
-		/// Removes a member from a group
-		/// </summary>
-		/// <param name="groupId">Id of the group</param>
-		/// <param name="memberId">Id of the member to be removed</param>
-		/// <response code="404">Resource not found: 'group_not_found'</response>
-		/// <response code="403">Resource forbidden: 'not_group_creator'</response>
-		/// <response code="410">Resource gone: 'member_not_found'</response>
-		/// <response code="500">Internal error: 'group_not_removed'</response>
-		[HttpPost]
+        /// <summary>Removes a member from a group</summary>
+        /// <param name="groupId">Id of the group</param>
+        /// <param name="memberId">Id of the member to be removed</param>
+        /// <response code="200">Successfully added member to group</response>
+        /// <response code="403">Forbidden: 'not_group_member', 'not_group_creator'</response>
+        /// <response code="404">Not found: 'group', 'member'</response>
+        /// <response code="409">Conflict: 'remove_creator'</response>
+        /// <response code="500">Internal error: 'group_member_not_removed'</response>
+        [HttpPost]
         [Route("{groupId}/members/remove/{memberId}")]
-        public async Task<ActionResult> RemoveMember(long groupId, long memberId){
+        public async Task<ActionResult> RemoveMember(long groupId, long memberId)
+        {
             await GroupService.RemoveMember(GetCurrentUserID(), groupId, memberId);
             return Ok();
         }
 
-
-        /// <summary>
-        /// Creates a group
-        /// </summary>
+        /// <summary>Creates a group</summary>
         /// <param name="newGroup">The new group to be created</param>
-        /// <response code="409">Business exception: 'name_taken'</response>
+        /// <response code="200">Successfully created group</response>
+        /// <response code="400">Possible request body validation failure</response>
+        /// <response code="409">Conflict: 'name_taken'</response>
         /// <response code="500">Internal error: 'group_not_created'</response>
         [HttpPost]
         [Route("create")]
-        public async Task<ActionResult> Create([FromBody] API.Request.NewGroup newGroup) {
+        public async Task<ActionResult> Create([FromBody] API.Request.NewGroup newGroup)
+        {
             await GroupService.CreateGroup(GetCurrentUserID(), newGroup);
             return Ok();
         }
 
+        /// <summary>Gets users that match the filter</summary>
+        /// <param name="filter">The filter term</param>
+        /// <response code="200">Successfully returned filtered users</response>
 		[HttpGet()]
         [Route("searchinallusers/{filter}")]
-		public async Task<ActionResult<IList<API.Response.FilteredUserData>>> GetFilteredUsers(string filter)
-		{
-			return Ok(await GroupService.InviteUserFilter(filter));
-		}
+        public async Task<ActionResult<IList<FilteredUserData>>> GetFilteredUsers(string filter)
+        {
+            var filteredUsers = await GroupService.GetFilteredUsers(filter);
+            return Ok(filteredUsers);
+        }
 
-		[HttpGet()]
-        [Route("{groupid}/history")]
-		public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory(long groupid)
-		{
-			return Ok(await GroupService.GetGroupHistory(groupid));
-		}
+        /// <summary>Gets the group history</summary>
+        /// <param name="groupId">Id of the group</param>
+        /// <response code="200">Successfully returned group history</response>
+        /// <response code="403">Forbidden: 'not_group_member'</response>
+        /// <response code="404">Not found: 'group'</response>
+        [HttpGet()]
+        [Route("{groupId}/history")]
+        public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory(long groupId)
+        {
+            //TODO DaoHistory should not go out make response and converter function
+            var groupHistory = await GroupService.GetGroupHistory(GetCurrentUserID(), groupId);
+            return Ok(groupHistory);
+        }
 
-		[HttpPost("{groupid}/settledebt/{userid}/{lenderid}")]
-		public async Task<ActionResult> DebtSettlement(long userid, long lenderid, long groupid)
-		{
-            if (GetCurrentUserID() != userid && GetCurrentUserID() != lenderid)
-                throw new ResourceForbiddenException("user_not_debtor_or_lender");
-			await GroupService.DebtSettlement(userid, lenderid, groupid);
-			return Ok();
-		}
-		
-	}
+
+        /// <summary>Settles a debt</summary>
+        /// <param name="debtorId">Id of the debtor</param>
+        /// <param name="lenderId">Id of the lender</param>
+        /// <param name="groupId">Id of the group</param>
+        /// <response code="200">Successfully settled debt</response>
+        /// <response code="403">Forbidden: 'not_group_member', 'lender_not_member'</response>
+        /// <response code="404">Not found: 'group'</response>
+        /// <response code="409">Conflict: 'debt_already_payed'</response>
+        /// <response code="410">Gone: 'debt'</response>
+        /// <response code="500">Internal error: 'debt_not_settled'</response>
+        [HttpPost("{groupId}/settledebt/{debtorId}/{lenderId}")]
+        public async Task<ActionResult> DebtSettlement(long debtorId, long lenderId, long groupId)
+        {
+            await SpendingService.DebtSettlement(GetCurrentUserID(), debtorId, lenderId, groupId);
+            return Ok();
+        }
+    }
 }

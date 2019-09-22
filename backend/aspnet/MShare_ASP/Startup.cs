@@ -16,49 +16,48 @@ using Conf = MShare_ASP.Configurations;
 using MShare_ASP.Utils;
 using MShare_ASP.Middlewares;
 
-namespace MShare_ASP {
-    /// <summary>
-    /// Startup for the servcer
-    /// </summary>
-    public class Startup {
-        /// <summary>
-        /// Initializes a new startup with a configuration
-        /// </summary>
-        /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration) {
+namespace MShare_ASP
+{
+
+    /// <summary>Startup for the servcer</summary>
+    public class Startup
+    {
+
+        /// <summary>Initializes a new startup with a configuration</summary>
+        public Startup(IConfiguration configuration)
+        {
             Configuration = configuration;
         }
 
-        /// <summary>
-        /// Configuration of this server
-        /// </summary>
+        /// <summary>Configuration of this server</summary>
         public IConfiguration Configuration { get; }
 
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container. 
-        /// </summary>
-        /// <param name="services"></param>
-        public void ConfigureServices(IServiceCollection services) {
-
-
+        /// <summary>This method gets called by the runtime. Use this method to add services to the container. </summary>
+        public void ConfigureServices(IServiceCollection services)
+        {
             services
-                .AddMvcCore(options => {
+                .AddMvcCore(options =>
+                {
                     options.ReturnHttpNotAcceptable = false;
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddApiExplorer()
                 .AddJsonFormatters()
-                .AddJsonOptions(options => {
+                .AddJsonOptions(options =>
+                {
                     options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
                 })
                 .AddAuthorization()
-                .AddFluentValidation(fv => {
+                .AddFluentValidation(fv =>
+                {
                     fv.RegisterValidatorsFromAssemblyContaining<API.Request.LoginCredentialsValidator>();
                     fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
                 });
 
-            services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
                     Title = "MShare API",
                     Version = "v1",
                     Description = "API for use from Web and Android",
@@ -70,7 +69,8 @@ namespace MShare_ASP {
                 {
                     {"Bearer", new string[] { }},
                 };
-                c.AddSecurityDefinition("Bearer", new ApiKeyScheme {
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
                     In = "header",
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
@@ -85,14 +85,19 @@ namespace MShare_ASP {
                 c.CustomSchemaIds(x => x.FullName);
             });
 
-            services.AddSingleton<Conf.IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<Conf.EmailConfiguration>());
-            services.AddSingleton<Conf.IJWTConfiguration>(Configuration.GetSection("JWTConfiguration").Get<Conf.JWTConfiguration>());
-            services.AddSingleton<Conf.IURIConfiguration>(Configuration.GetSection("URIConfiguration").Get<Conf.URIConfiguration>());
+            services.AddSingleton<Conf.IEmailConfiguration>(Configuration.GetSection("EmailConfiguration")
+                .Get<Conf.EmailConfiguration>());
+
+            services.AddSingleton<Conf.IJWTConfiguration>(Configuration.GetSection("JWTConfiguration")
+                .Get<Conf.JWTConfiguration>());
+
+            services.AddSingleton<Conf.IURIConfiguration>(Configuration.GetSection("URIConfiguration")
+                .Get<Conf.URIConfiguration>());
 
             services.AddDbContext<MshareDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("MySqlSrvConnection"))
             );
-            
+
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IGroupService, GroupService>();
@@ -102,14 +107,17 @@ namespace MShare_ASP {
             services.AddTransient<ILoggingService, LoggingService>();
 
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("MShareSettings")["SecretKey"]);
-            services.AddAuthentication(x => {
+            services.AddAuthentication(x =>
+            {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(x => {
+            .AddJwtBearer(x =>
+            {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters {
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
@@ -120,21 +128,19 @@ namespace MShare_ASP {
 
         }
 
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
+        /// <summary>This method gets called by the runtime. Use this method to configure the HTTP request pipeline.</summary>
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
 
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
             else
                 app.UseHsts();
-            
+
             app.UseSwagger();
 
-            app.UseSwaggerUI(c => {
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("swagger/v1/swagger.json", "My api v1");
                 c.RoutePrefix = "";
             });
@@ -145,5 +151,4 @@ namespace MShare_ASP {
             app.UseAuthentication();
         }
     }
-
 }

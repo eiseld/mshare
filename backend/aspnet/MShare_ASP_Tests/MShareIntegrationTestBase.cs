@@ -7,18 +7,15 @@ using MShare_ASP.Data;
 using MShare_ASP.Services;
 using MShare_ASP_Tests.Boilerplate;
 using MShare_ASP_Tests.Mocks;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace MShare_ASP_Tests {
     public class MShareIntegrationTestBase
     : IClassFixture<WebApplicationFactory<MShare_ASP.Startup>> {
-        private readonly WebApplicationFactory<MShare_ASP.Startup> _factory;
+        private WebApplicationFactory<MShare_ASP.Startup> Factory { get; }
 
         public MShareIntegrationTestBase(WebApplicationFactory<MShare_ASP.Startup> factory) {
-            _factory = factory.WithWebHostBuilder(config => {
+            Factory = factory.WithWebHostBuilder(config => {
                 config.ConfigureServices(services => {
                     services.AddDbContext<MshareDbContext>(options => {
                         options.UseInMemoryDatabase(databaseName: "mshare");
@@ -54,7 +51,7 @@ namespace MShare_ASP_Tests {
         }
 
         public System.Net.Http.HttpClient CreateClient() {
-            return _factory.CreateClient();
+            return Factory.CreateClient();
         }
     }
 }
