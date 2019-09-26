@@ -1,2 +1,2 @@
-docker exec -i mshare-mysql mysqldump --events --routines --triggers --user=root --password=ilovescrum mshare > data.sql
+docker exec -i mshare-mysql mysqldump --user=root --password=ilovescrum --events --routines --triggers --tab="/data/" --fields-terminated-by="," --lines-terminated-by="\r\n" mshare > ./dump/dbevents.sql
 PAUSE
