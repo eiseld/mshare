@@ -1,2 +1,2 @@
-1,forgotten_psw
-2,validate_email
+1	forgotten_psw
+2	validate_email

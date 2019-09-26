@@ -1,2 +1,2 @@
-1,Drinking group - everyone,1
-2,Elvis & Elivia,13
+1	Drinking group - everyone	1
+2	Elvis & Elivia	13
