@@ -27,12 +27,12 @@ namespace MShare_ASP.Services
             msg.To.Add(new MailboxAddress(name, targetEmail));
             msg.Subject = subject;
 
-            msg.Body = new TextPart(TextFormat.Html)
+            msg.Body = new TextPart(format)
             {
-                Text = $"<html><h1><img src='{UriConf.URIForEndUsers}/assets/MoneyShareLogo_128px.png' alt='MoneyShare logo'></img> MoneyShare</h1><p>{message}</p> </html>"
+                Text = message
             };
-
-            using (var client = new SmtpClient())
+             
+            using (var client = new SmtpClient()) 
             {
                 client.ServerCertificateValidationCallback = (s, c, ch, e) => true;
 

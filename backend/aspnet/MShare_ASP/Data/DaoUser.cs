@@ -32,6 +32,11 @@ namespace MShare_ASP.Data
         [Column("creation_date")]
         public DateTime CreationDate { get; set; }
 
+        /// <summary>Currently set language of the user</summary>
+        [EnumDataType(typeof(DaoLangTypes.Type))]
+        [Column("lang")]
+        public DaoLangTypes.Type Lang { get; set; }
+
         /// <summary>All email tokens associated with user</summary>
         public IEnumerable<DaoEmailToken> EmailTokens { get; set; }
 

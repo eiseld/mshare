@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MShare_ASP.Data;
 using System;
 using System.Linq;
 
@@ -17,6 +18,9 @@ namespace MShare_ASP.API.Request
 
         /// <summary>Unhashed password</summary>
         public String Password { get; set; }
+
+        /// <summary> 2 character representation of the language </summary>
+        public DaoLangTypes.Type Lang { get; set; }
     }
 
     /// <summary>Validator object for NewUser data class</summary>
@@ -42,6 +46,9 @@ namespace MShare_ASP.API.Request
                 .NotEmpty()
                 .MaximumLength(32);
 
+            RuleFor(x => x.Lang)
+                .IsInEnum()
+                .WithMessage("Specified language is not supported by the server");
         }
     }
 }

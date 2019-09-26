@@ -14,7 +14,7 @@ namespace MShare_ASP.Services
         /// <exception cref="BusinessException">["not_verified"]</exception>
         /// <exception cref="ResourceForbiddenException">["invalid_credentials"]</exception>
         /// <returns>Valid JWT or null</returns>
-        string Login(LoginCredentials credentials);
+        Task<string> Login(LoginCredentials credentials);
 
         /// <summary>Registers a new user to the database</summary>
         /// <exception cref="BusinessException">["email_taken"]</exception>
