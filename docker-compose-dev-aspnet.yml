@@ -1,16 +1,9 @@
-version: '3.6'
+version: "3.6"
+
 services:
-
- aspnet:
-  build: 
-   dockerfile: Dockerfile-aspnet-live
-  environment:
-    ASPNETCORE_ENVIRONMENT: 'Development'
-  volumes:
-  - /backend/aspnet/MShare_ASP:/app
-  ports:
-  - '8081:8081'
-
- apache:
-  build:
-   dockerfile: Dockerfile-apache-dev
+  aspnet:
+    build: ./backend/aspnet/MShare_ASP
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+    ports:
+      - "8081:8081"
