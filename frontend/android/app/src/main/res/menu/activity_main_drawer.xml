@@ -6,7 +6,7 @@
     <group android:checkableBehavior="single">
         <item
                 android:id="@+id/navProfile"
-                android:icon="@android:drawable/ic_menu_manage"
+                android:icon="@android:drawable/ic_menu_info_details"
                 android:title="Profile" />
         <item
                 android:id="@+id/navHome"

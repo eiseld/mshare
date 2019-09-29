@@ -32,6 +32,10 @@ interface RepositoryInterface {
     //PROFILE
     fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit)
 
+    fun getProfile(completion: (response: UserData?, error: String?) -> Unit)
+
+    //TODO impl updateProfile
+    fun updateProfile(completion: (response: UserData, error: String?) -> Unit)
 
     //SPENDING
     fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit)

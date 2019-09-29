@@ -80,4 +80,6 @@
     <string name="press_back_again_to_exit">Kilépéshez nyomja meg mégegyszer</string>
     <string name="menu_groups">Csoportok</string>
     <string name="menu_settings">Beállítások</string>
+    <string name="modify">módosítás</string>
+    <string name="save">Mentés</string>
 </resources>
