@@ -12,5 +12,8 @@ namespace MShare_ASP.API.Response
 
         /// <summary>Max 32 length name of the user</summary>
         public String Name { get; set; }
-    }
+
+		/// <summary>Bank account number of the user</summary>
+		public String BankAccountNumber { get; set; }
+	}
 }

@@ -50,7 +50,8 @@ namespace MShare_ASP.Services
             return new UserData()
             {
                 Id = daoUser.Id,
-                Name = daoUser.DisplayName
+                Name = daoUser.DisplayName,
+				BankAccountNumber = daoUser.BankAccountNumber
             };
         }
 
@@ -152,7 +153,33 @@ namespace MShare_ASP.Services
                     throw;
                 }
             }
-        }
+		}
+		public async Task UpdateBankAccoutNumber(BankAccountNumberUpdate bankAccountNumberUpdate)
+		{
+			var daoUser = await GetUser(bankAccountNumberUpdate.Email);
+			/*
+			using (var transaction = Context.Database.BeginTransaction())
+			{
+				try
+				{
 
-    }
+					daoUser.BankAccountNumber = bankAccountNumberUpdate.BankAccountNumber;
+
+					if (await Context.SaveChangesAsync() != 1)
+						throw new DatabaseException("bank_account_number_not_saved");
+
+					await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Text, daoUser.DisplayName, daoUser.Email, "Bankszámlaszám változtatás", $"A mai napon fiókjához tartozó bankszámlaszáma megváltoztatásra került!");
+
+					transaction.Commit();
+				}
+				catch
+				{
+					transaction.Rollback();
+					throw;
+				}
+			}
+			*/
+		}
+
+	}
 }

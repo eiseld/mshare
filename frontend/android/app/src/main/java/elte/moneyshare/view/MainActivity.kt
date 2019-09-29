@@ -81,6 +81,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.navSettings -> {
 
             }
+            R.id.navProfile -> {
+
+            }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
