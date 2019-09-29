@@ -22,6 +22,34 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+    }
+    /**
+     * The `initWith` property allows you to copy configurations from other build types,
+     * then configure only the settings you want to change. This one copies the debug build
+     * type, and then changes the manifest placeholder and application ID.
+     */
+    flavorDimensions "version"
+    productFlavors {
+        local {
+            applicationId "elte.moneyshare.local"
+            buildConfigField "String", "BASE_URL", '"127.0.0.1:8080"'
+            resValue "string", "app_name", "Money Share Local"
+        }
+        staging {
+            applicationId "elte.moneyshare.test"
+            buildConfigField "String", "BASE_URL", '"http://remote.alerant.hu/test/"'
+            resValue "string", "app_name", "Money Share (test)"
+        }
+        production {
+            applicationId "elte.moneyshare"
+            buildConfigField "String", "BASE_URL", '"http://remote.alerant.hu/"'
+            resValue "string", "app_name", "Money Share"
+        }
     }
 }
 

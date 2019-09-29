@@ -7,7 +7,7 @@
         <item
                 android:id="@+id/navProfile"
                 android:icon="@android:drawable/ic_menu_manage"
-                android:title="Profile" />
+                android:title="@string/profile" />
         <item
                 android:id="@+id/navHome"
                 android:icon="@android:drawable/ic_menu_sort_by_size"
