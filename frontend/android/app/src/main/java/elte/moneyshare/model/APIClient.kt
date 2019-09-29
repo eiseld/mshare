@@ -2,6 +2,7 @@ package elte.moneyshare.model
 
 import android.content.Context
 import com.google.gson.GsonBuilder
+import elte.moneyshare.BuildConfig
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import okhttp3.Headers
@@ -20,7 +21,7 @@ object APIClient {
     private lateinit var repository: Repository
 
     fun init(context: Context) {
-        baseUrlValue = context.getString(R.string.base_url_value)
+        baseUrlValue = BuildConfig.BASE_URL
         accessTokenKey = context.getString(R.string.access_token_key)
         val onFailureMessage = context.resources.getString(R.string.on_failure_message)
 
