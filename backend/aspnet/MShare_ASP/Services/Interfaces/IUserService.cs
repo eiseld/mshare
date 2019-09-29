@@ -37,5 +37,10 @@ namespace MShare_ASP.Services
         /// <exception cref="ResourceGoneException">["token_invalid_or_expired"]</exception>
         /// <exception cref="ResourceNotFoundException">["user"]</exception>
         Task UpdatePassword(PasswordUpdate passwordUpdate);
-    }
+
+		/// <summary>Updates the bank account number of the user</summary>
+		/// <exception cref="DatabaseException">["bank_account_number_not_saved"]</exception>
+		/// <exception cref="ResourceNotFoundException">["user"]</exception>
+		Task UpdateBankAccoutNumber(BankAccountNumberUpdate bankAccountNumberUpdate);
+	}
 }
