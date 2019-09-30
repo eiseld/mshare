@@ -23,7 +23,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }

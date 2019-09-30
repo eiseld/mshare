@@ -12,6 +12,8 @@ import elte.moneyshare.SharedPreferences
 
 import elte.moneyshare.R
 import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.util.showAsDialog
 import elte.moneyshare.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -41,7 +43,7 @@ class LoginFragment : Fragment() {
                 if(error == null) {
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
-                    DialogManager.showInfoDialog(error, context)
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.AUTH_LOGIN).toString(), context)
                 }
             }
         }

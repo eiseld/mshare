@@ -82,4 +82,62 @@
     <string name="press_back_again_to_exit">Please click BACK again to exit</string>
     <string name="menu_groups">Groups</string>
     <string name="menu_settings">Settings</string>
+
+    <!-- API responses -->
+
+    <!-- Authorization -->
+    <string name="api_auth_register_200">Successfully returned all users! You should not be able to see this!</string>
+    <string name="api_auth_register_201">Successful registration!</string>
+    <string name="api_auth_register_409">This email is already registered!</string>
+
+    <string name="api_auth_validate_200">Successful validation!</string>
+    <string name="api_auth_validate_410">The validation email is expired, please register again!</string>
+
+    <string name="api_auth_login_200">Successful login!</string>
+    <string name="api_auth_login_403">Invalid credentials!</string>
+    <string name="api_auth_login_409">This email is not yet validated!</string>
+
+    <!-- Groups -->
+    <string name="api_groups_403">Getting info about the group failed! You\'re not a member!</string>
+    <string name="api_groups_404">Getting info about the group failed! Group not found!</string>
+
+    <string name="api_groups_add_member_200">Member successfully added to the group!</string>
+    <string name="api_groups_add_member_409">This member is already in the group!</string>
+
+    <string name="api_groups_create_group_200">Group successfully created!</string>
+    <string name="api_groups_create_group_409">This group name is already in use!</string>
+
+    <string name="api_groups_settle_debt_200">Debt successfully settled!</string>
+    <string name="api_groups_settle_debt_409">Error! This debt is already settled!</string>
+    <string name="api_groups_settle_debt_410">Error! Debt cannot be found!</string>
+
+    <!-- Profile -->
+    <string name="api_profile_403">Error! You\'re not a member of this group!</string>
+    <string name="api_profile_404">Error! Group not found!</string>
+
+    <string name="api_profile_password_reset_200">Password reset email successfully sent!</string>
+
+    <string name="api_profile_password_update_200">Password updated successfully!</string>
+    <string name="api_profile_password_update_410">The password reset link is expired!</string>
+
+    <string name="api_profile_language_update_200">Language successfully updated!</string>
+
+    <!-- Spending -->
+    <string name="api_spending_403">Getting info about the spending failed! You\'re not a member!</string>
+    <string name="api_spending_404">Getting info about the spending failed! Group not found!</string>
+
+    <string name="api_spending_create_200">Spending successfully created!</string>
+    <string name="api_spending_create_409">Spending cannot be created! One of the debtors are not member of the group!</string>
+
+    <string name="api_spending_update_200">Spending successfully updated!</string>
+    <string name="api_spending_update_409">Spending cannot be updated! One of the debtors are not member of the group!</string>
+
+    <!-- Common -->
+    <string name="api_common_400">Sending the request to the server failed!</string>
+    <string name="api_common_500">Internal error! Try again later!</string>
+    <string name="api_error_common">Something bad happened! Try again later!</string>
+
+
+
+
 </resources>
