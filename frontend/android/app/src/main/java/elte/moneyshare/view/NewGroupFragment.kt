@@ -10,6 +10,8 @@ import android.widget.Toast
 
 import elte.moneyshare.R
 import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_groupcreation.*
 
@@ -38,7 +40,7 @@ class NewGroupFragment : Fragment() {
                     Toast.makeText(context, getString(R.string.group_created), Toast.LENGTH_SHORT).show()
                     activity?.supportFragmentManager?.popBackStackImmediate()
                 } else {
-                    DialogManager.showInfoDialog(error, context)
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS_CREATE,context), context)
                 }
             }
         }

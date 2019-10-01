@@ -11,6 +11,8 @@ import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.GroupData
 import elte.moneyshare.gone
 import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.viewholder.MemberViewHolder
 import elte.moneyshare.viewmodel.GroupViewModel
 import elte.moneyshare.visible
@@ -60,7 +62,7 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
                     notifyItemRemoved(index)
                     groupData.members.removeAt(index)
                 } else {
-                    DialogManager.showInfoDialog(error, context)
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                 }
             }
         }
