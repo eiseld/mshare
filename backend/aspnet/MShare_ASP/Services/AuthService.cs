@@ -112,7 +112,7 @@ namespace MShare_ASP.Services
                         Title = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_SUBJECT),
                         PreHeader = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_PREHEADER),
                         Hero = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_HERO),
-                        Greeting = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_FORGOTPSW_BODY_GREETING, newUser.DisplayName),
+                        Greeting = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, newUser.DisplayName),
                         Intro = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_BODY_INTRO),
                         EmailDisclaimer = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_BODY_DISCLAIMER),
                         Cheers = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),

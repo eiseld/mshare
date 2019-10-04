@@ -24,8 +24,8 @@ namespace MShare_ASP
         public static string EMAIL_FORGOTPSW_BODY_BUTTON { get; } = nameof(EMAIL_FORGOTPSW_BODY_BUTTON);
         /// <summary>You requested the forgotten email or didn't you</summary>
         public static string EMAIL_FORGOTPSW_BODY_DISCLAIMER { get; } = nameof(EMAIL_FORGOTPSW_BODY_DISCLAIMER);
-        /// <summary>Greetings for forgotten password email (hello {0}, hi {0}, etc)</summary>
-        public static string EMAIL_FORGOTPSW_BODY_GREETING { get; } = nameof(EMAIL_FORGOTPSW_BODY_GREETING);
+        /// <summary>Greetings for casual email (hello {0}, hi {0}, etc)</summary>
+        public static string EMAIL_CASUAL_BODY_GREETING { get; } = nameof(EMAIL_CASUAL_BODY_GREETING);
         /// <summary>Introduction part of the forgotten password email</summary>
         public static string EMAIL_FORGOTPSW_BODY_INTRO { get; } = nameof(EMAIL_FORGOTPSW_BODY_INTRO);
         /// <summary>Subject of forgotten password email</summary>
@@ -47,6 +47,30 @@ namespace MShare_ASP
         public static string EMAIL_REGISTER_BODY_INTRO { get; } = nameof(EMAIL_REGISTER_BODY_INTRO);
         /// <summary>You requested the forgotten email or didn't you</summary>
         public static string EMAIL_REGISTER_BODY_DISCLAIMER { get; } = nameof(EMAIL_REGISTER_BODY_DISCLAIMER);
+        /// <summary>Subject of the email one receives when they are added to a group</summary>
+        public static string EMAIL_ADDEDTOGROUP_SUBJECT { get; } = nameof(EMAIL_ADDEDTOGROUP_SUBJECT);
+        /// <summary>Preheader of the email one receives when they are added to a group</summary>
+        public static string EMAIL_ADDEDTOGROUP_PREHEADER { get; } = nameof(EMAIL_ADDEDTOGROUP_PREHEADER);
+        /// <summary>Hero of the email one receives when they are added to a group</summary>
+        public static string EMAIL_ADDEDTOGROUP_HERO { get; } = nameof(EMAIL_ADDEDTOGROUP_HERO);
+        /// <summary>
+        /// Introduction of the email one receives when they are added to a group, has two parameters 
+        /// {0}: inviter's name
+        /// {1}: group name
+        /// </summary>
+        public static string EMAIL_ADDEDTOGROUP_BODY_INTRO { get; } = nameof(EMAIL_ADDEDTOGROUP_BODY_INTRO);
+        /// <summary>Why one got the email (when they are added to a group)</summary>
+        public static string EMAIL_ADDEDTOGROUP_BODY_DISCLAIMER { get; } = nameof(EMAIL_ADDEDTOGROUP_BODY_DISCLAIMER);
+        /// <summary>Subject of the email that you get when your password has been changed</summary>
+        public static string EMAIL_PASSWORDCHANGED_SUBJECT { get; } = nameof(EMAIL_PASSWORDCHANGED_SUBJECT);
+        /// <summary>Preheader of the email that you get when your password has been changed</summary>
+        public static string EMAIL_PASSWORDCHANGED_PREHEADER { get; } = nameof(EMAIL_PASSWORDCHANGED_PREHEADER);
+        /// <summary>Hero of the email that you get when your password has been changed</summary>
+        public static string EMAIL_PASSWORDCHANGED_HERO { get; } = nameof(EMAIL_PASSWORDCHANGED_HERO);
+        /// <summary>Introduction of the email that you get when your password has been changed</summary>
+        public static string EMAIL_PASSWORDCHANGED_BODY_INTRO { get; } = nameof(EMAIL_PASSWORDCHANGED_BODY_INTRO);
+        /// <summary>Why one got the email (when their password has been changed)</summary>
+        public static string EMAIL_PASSWORDCHANGED_BODY_DISCLAIMER { get; } = nameof(EMAIL_PASSWORDCHANGED_BODY_DISCLAIMER);
     }
     /// <summary>Extension class for IStringLocalizer</summary>
     public static class IStringLocalizerExtensions

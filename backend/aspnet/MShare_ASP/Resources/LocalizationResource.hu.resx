@@ -117,32 +117,65 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="EMAIL_ADDEDTOGROUP_BODY_DISCLAIMER" xml:space="preserve">
+    <value>Ha nem szeretnél a csoport tagja lenni, kérlek használd a csoport elhagyása funkciót az MShare - MoneyShare alkalmazásban.</value>
+  </data>
+  <data name="EMAIL_ADDEDTOGROUP_BODY_INTRO" xml:space="preserve">
+    <value>{0} hozzáadott a "{1}" nevű csoporthoz.</value>
+  </data>
+  <data name="EMAIL_ADDEDTOGROUP_HERO" xml:space="preserve">
+    <value>Hozzáadtak egy csoporthoz</value>
+  </data>
+  <data name="EMAIL_ADDEDTOGROUP_PREHEADER" xml:space="preserve">
+    <value>Hozzáadtak egy csoporthoz az MShare - MoneyShare alkalmazásban.</value>
+  </data>
+  <data name="EMAIL_ADDEDTOGROUP_SUBJECT" xml:space="preserve">
+    <value>MShare - Hozzáadtak egy csoporthoz</value>
+  </data>
   <data name="EMAIL_CASUAL_BODY_CHEERS" xml:space="preserve">
     <value>Üdv,</value>
+  </data>
+  <data name="EMAIL_CASUAL_BODY_GREETING" xml:space="preserve">
+    <value>Kedves {0},</value>
   </data>
   <data name="EMAIL_FOOTER_BADBUTTON" xml:space="preserve">
     <value>Ha problémáid lennének a gombra kattintással, akkor másold be a böngésződ címsorába az alábbi linket:</value>
   </data>
   <data name="EMAIL_FORGOTPSW_BODY_BUTTON" xml:space="preserve">
-    <value>Jelszó változtatás</value>
+    <value>Jelszó megváltoztatása!</value>
   </data>
   <data name="EMAIL_FORGOTPSW_BODY_DISCLAIMER" xml:space="preserve">
     <value>Ha nem te kérted a jelszó változtatást, akkor hagyd figyelmen kívül ezt az üzenetet. A link / gomb csak 24 óráig érvényes.</value>
-  </data>
-  <data name="EMAIL_FORGOTPSW_BODY_GREETING" xml:space="preserve">
-    <value>Kedves {0},</value>
   </data>
   <data name="EMAIL_FORGOTPSW_BODY_INTRO" xml:space="preserve">
     <value>Jelszó változtatást kértél a MShare - MoneyShare felhasználódhoz. Kattints a gombra a jelszó megváltoztatásához.</value>
   </data>
   <data name="EMAIL_FORGOTPSW_HERO" xml:space="preserve">
-    <value>Jelszóváltoztatás</value>
+    <value>Elfelejtett jelszó</value>
   </data>
   <data name="EMAIL_FORGOTPSW_PREHEADER" xml:space="preserve">
-    <value>Jelszóváltoztatás MShare - MoneyShare felhasználói fiókhoz</value>
+    <value>Jelszóváltoztatás MShare - MoneyShare felhasználói fiókhoz.</value>
   </data>
   <data name="EMAIL_FORGOTPSW_SUBJECT" xml:space="preserve">
     <value>MShare - Jelszó változtatás</value>
+  </data>
+  <data name="EMAIL_PASSWORDCHANGED_BODY_DISCLAIMER" xml:space="preserve">
+    <value>Ha nem te változtattad meg a jelszavad, kérlek nézd át a felhasználód bejelentkezési információit, illetve futtass egy víruskeresést!</value>
+  </data>
+  <data name="EMAIL_PASSWORDCHANGED_BODY_INTRO" xml:space="preserve">
+    <value>A jelszavad mai napon megváltozott!</value>
+  </data>
+  <data name="EMAIL_PASSWORDCHANGED_HERO" xml:space="preserve">
+    <value>Jelszó megváltozott</value>
+  </data>
+  <data name="EMAIL_PASSWORDCHANGED_PREHEADER" xml:space="preserve">
+    <value>Az MShare - MoneyShare felhasználód jelszava megváltozott.</value>
+  </data>
+  <data name="EMAIL_PASSWORDCHANGED_SUBJECT" xml:space="preserve">
+    <value>MShare - Jelszó megváltozott</value>
+  </data>
+  <data name="EMAIL_REGISTER_BODY_BUTTON" xml:space="preserve">
+    <value>Regisztráció megerősítése!</value>
   </data>
   <data name="EMAIL_REGISTER_BODY_DISCLAIMER" xml:space="preserve">
     <value>Ha nem te regisztráltál hagyd figyelmen kívül ezt az üzenetet. A link / gomb csak 24 óráig érvényes.</value>

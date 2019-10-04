@@ -67,5 +67,35 @@
         <member name="P:EmailTemplates.ViewModels.EmailButtonViewModel.Url">
             <summary>Url that this button direct to when clicked</summary>
         </member>
+        <member name="T:EmailTemplates.ViewModels.InformationViewModel">
+            <summary>ViewModel for a confirmation type email</summary>
+        </member>
+        <member name="P:EmailTemplates.ViewModels.InformationViewModel.Title">
+            <summary>Title of the page</summary>
+        </member>
+        <member name="P:EmailTemplates.ViewModels.InformationViewModel.PreHeader">
+            <summary>PreHeader for this email</summary>
+        </member>
+        <member name="P:EmailTemplates.ViewModels.InformationViewModel.Hero">
+            <summary>Hero at the top of this email</summary>
+        </member>
+        <member name="P:EmailTemplates.ViewModels.InformationViewModel.EmailDisclaimer">
+            <summary>Disclaimers in the footer</summary>
+        </member>
+        <member name="P:EmailTemplates.ViewModels.InformationViewModel.Greeting">
+            <summary>Greeting for the reader</summary>
+        </member>
+        <member name="P:EmailTemplates.ViewModels.InformationViewModel.Intro">
+            <summary>First paragraph</summary>
+        </member>
+        <member name="P:EmailTemplates.ViewModels.InformationViewModel.Cheers">
+            <summary>Greeting at the end</summary>
+        </member>
+        <member name="P:EmailTemplates.ViewModels.InformationViewModel.MShareTeam">
+            <summary>Team name</summary>
+        </member>
+        <member name="P:EmailTemplates.ViewModels.InformationViewModel.SiteBaseUrl">
+            <summary>Base URL for the website for static resources</summary>
+        </member>
     </members>
 </doc>

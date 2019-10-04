@@ -117,7 +117,7 @@ namespace MShare_ASP.Services
                         Title = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_SUBJECT),
                         PreHeader = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_PREHEADER),
                         Hero = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_HERO),
-                        Greeting = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_BODY_GREETING, daoUser.DisplayName),
+                        Greeting = Localizer.GetString(lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, daoUser.DisplayName),
                         Intro = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_BODY_INTRO),
                         EmailDisclaimer = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_BODY_DISCLAIMER),
                         Cheers = Localizer.GetString(lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
@@ -126,7 +126,7 @@ namespace MShare_ASP.Services
                         SiteBaseUrl = $"{UriConf.URIForEndUsers}",
                         Button = new EmailButtonViewModel()
                         {
-                            Url = $"{UriConf.URIForEndUsers}/account/confirm/{emailToken.Token}",
+                            Url = $"{UriConf.URIForEndUsers}/reset?token={emailToken.Token}",
                             Text = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_BODY_BUTTON)
                         }
                     };
@@ -173,7 +173,20 @@ namespace MShare_ASP.Services
                     if (await Context.SaveChangesAsync() != 1)
                         throw new DatabaseException("token_deletion_failed");
 
-                    await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Text, daoUser.DisplayName, daoUser.Email, "Jelszó változtatás", $"A mai napon jelszava megváltoztatásra került!");
+                    var model = new InformationViewModel()
+                    {
+                        Title = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_SUBJECT),
+                        PreHeader = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_PREHEADER),
+                        Hero = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_HERO),
+                        Greeting = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, daoUser.DisplayName),
+                        Intro = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_BODY_INTRO),
+                        EmailDisclaimer = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_BODY_DISCLAIMER),
+                        Cheers = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
+                        MShareTeam = Localizer.GetString(daoUser.Lang, LocalizationResource.MSHARE_TEAM),
+                        SiteBaseUrl = $"{UriConf.URIForEndUsers}"
+                    };
+                    var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
+                    await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, daoUser.DisplayName, daoUser.Email, Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_SUBJECT), htmlBody);
 
                     transaction.Commit();
                 } catch
