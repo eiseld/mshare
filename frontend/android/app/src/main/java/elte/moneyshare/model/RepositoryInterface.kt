@@ -35,7 +35,7 @@ interface RepositoryInterface {
     fun getProfile(completion: (response: UserData?, error: String?) -> Unit)
 
     //TODO impl updateProfile
-    fun updateProfile(id: Int, bankAccountNumber: String?, completion: (response: String?, error: String?) -> Unit)
+    fun updateProfile(bankAccountNumberUpdate: BankAccountNumberUpdate, completion: (response: UserData?, error: String?) -> Unit)
 
     //SPENDING
     fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit)

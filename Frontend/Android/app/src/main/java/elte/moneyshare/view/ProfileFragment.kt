@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import elte.moneyshare.R
+import elte.moneyshare.SharedPreferences
 import elte.moneyshare.enable
+import elte.moneyshare.entity.BankAccountNumberUpdate
 import elte.moneyshare.entity.UserData
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.viewmodel.LoginViewModel
@@ -42,7 +44,7 @@ class ProfileFragment : Fragment() {
         saveButton.setOnClickListener {
             val accountNumber = accountEditText.text.toString()
 
-            viewModel.updateProfile(UserData(0,"name", accountNumber)) { response, error ->
+            viewModel.updateProfile(BankAccountNumberUpdate(SharedPreferences.userId, accountNumber)) { response, error ->
                 if(error == null) {
 
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, ProfileFragment())?.commit()

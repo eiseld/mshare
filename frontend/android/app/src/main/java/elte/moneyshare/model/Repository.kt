@@ -237,12 +237,13 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
     }
 
     //TODO IMPL UPDATE
-    override fun updateProfile(id : Int, bankAccountNumber : String?, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.postBankAccountNumber(id, bankAccountNumber).enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+    override fun updateProfile(bankAccountNumberUpdate: BankAccountNumberUpdate, completion: (response: UserData?, error: String?) -> Unit) {
+        apiDefinition.postBankAccountNumber(bankAccountNumberUpdate).enqueue(object : Callback<UserData> {
+            override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 when (response?.code()) {
                     in (200..300) -> {
-                        completion(response.code().toString(), null)
+                        val userData = response.body()
+                        completion(userData, null)
                     }
                     else -> {
                         completion(null, response.message())
@@ -250,7 +251,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                 }
             }
 
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+            override fun onFailure(call: Call<UserData>, t: Throwable) {
                 completion(null, onFailureMessage)
             }
         })

@@ -52,7 +52,7 @@ interface APIDefinition {
 
     //TODO IMPL UPDATE
     @POST("api/profile/bankAccountNumber/update")
-    fun postBankAccountNumber(@Body id: Int, bankAccountNumber: String?): Call<ResponseBody>
+    fun postBankAccountNumber(@Body bankAccountNumber: BankAccountNumberUpdate): Call<UserData>
 
     @POST("api/profile/password/forgot")
     fun postForgotPassword(@Body email: ForgottenPasswordData): Call<ResponseBody>

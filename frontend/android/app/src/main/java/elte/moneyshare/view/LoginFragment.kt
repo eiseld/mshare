@@ -36,8 +36,8 @@ class LoginFragment : Fragment() {
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
-            //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
-            viewModel.putLoginUser(email, password) { response, error ->
+            viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
+            //viewModel.putLoginUser(email, password) { response, error ->
                 if(error == null) {
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
