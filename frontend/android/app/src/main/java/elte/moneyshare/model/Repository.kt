@@ -246,12 +246,31 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(userData, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
 
             override fun onFailure(call: Call<UserData>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
+    override fun updateLang(lang: String, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.updateLang(lang).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.code().toString())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 completion(null, onFailureMessage)
             }
         })

@@ -57,6 +57,9 @@ interface APIDefinition {
     @POST("api/profile/password/forgot")
     fun postForgotPassword(@Body email: ForgottenPasswordData): Call<ResponseBody>
 
+    @PUT("test/api/Profile/lang")
+    fun updateLang(@Body lang: String): Call<ResponseBody>
+
     //SPENDING
     @GET("api/Spending/{id}")
     fun getSpendings(@Path("id") groupId: Int): Call<ArrayList<SpendingData>>
