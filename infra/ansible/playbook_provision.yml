@@ -1,0 +1,155 @@
+---
+- hosts: "{{ variable_host | default('alerant') }}"
+  roles:
+    - { role: geerlingguy.apache}
+  vars:
+    private_key_file: id_rsa_mshare
+    public_key_file: id_rsa_mshare.pub
+    ansible_user: "{{ variable_user | default('horvathpeter') }}"
+    docker_compose_version: 1.24.1
+    jenkins_hostname: localhost/jenkins
+    apache_mods_enabled:
+      - rewrite.load
+      - ssl.load
+      - proxy.load
+      - proxy_http.load
+    apache_create_vhosts: true
+    apache_remove_default_vhost: true
+    apache_vhosts:
+    - servername: "mshare_server"
+      serveralias: "remote.alerant.hu"
+      extra_parameters: |
+        ProxyPass /jenkins http://localhost:8080/jenkins nocanon
+        ProxyPassReverse /jenkins http://localhost:8080/jenkins
+        ProxyPass /test http://localhost:8081/ nocanon
+        ProxyPassReverse /test http://localhost:8081
+        ProxyPass / http://localhost:8082/ nocanon
+        ProxyPassReverse / http://localhost:8082
+        ProxyRequests     Off
+        AllowEncodedSlashes NoDecode
+
+
+  become: true
+
+  tasks:
+    - name: Install required system packages
+      apt: 
+        name: "{{ packages }}"
+        state: latest
+        update_cache: yes
+      vars:
+        packages: 
+        - aptitude
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - python3-pip
+        - virtualenv
+        - python3-setuptools
+        - openjdk-8-jdk
+
+    - name: Add Docker apt key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+
+    - name: Install Docker Module for Python
+      pip:
+        name: 
+          - docker
+          - docker-compose
+
+    - name: Add Jenkins apt repository key.
+      apt_key:
+        url: "http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key"
+        state: present
+
+    - name: Add Jenkins apt repository.
+      apt_repository:
+        repo: "deb http://pkg.jenkins-ci.org/debian binary/"
+        state: present
+        update_cache: true
+
+    - name: Ensure Jenkins is installed.
+      apt:
+        name: jenkins
+        state: present
+        update_cache: yes
+
+    - name: Make sure we have a 'wheel' group
+      group:
+        name: wheel
+        state: present
+
+    - name: Allow 'wheel' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Add Jenkins user to wheel group
+      user: name=jenkins groups=wheel append=yes state=present createhome=yes
+
+    - name: Ensure Jenkins is started and runs on startup.
+      service: name=jenkins state=started enabled=yes
+
+    - name: Add key to authorized keys
+      authorized_key:
+        user: "{{ ansible_user }}"
+        state: present
+        key: "{{ lookup('file', 'ssh/{{ public_key_file }}') }}"
+    - name: Ensure .ssh directory exists.
+      file: 
+        dest: /var/lib/jenkins/.ssh
+        mode: 0700 
+        owner: jenkins
+        state: directory
+    - name: Install ssh key for jenkins
+      copy: 
+        src: ssh/{{ private_key_file }}
+        dest: /var/lib/jenkins/.ssh/{{ private_key_file }}
+        mode: 0600
+        owner: jenkins
+
+    - name: Ensure docker deamon is running
+      service:
+        name: docker
+        state: started
+      become: true
+
+    - name: Create a directory for sources
+      file:
+        path: /opt/src
+        state: directory
+        mode: '0755'
+
+    - name: Clone mshare
+      git:
+        repo: https://github.com/eiseld/mshare
+        dest: /opt/src/git/
+        version: Develop
+
+#    - name: Create and start prod services
+#      docker_compose:
+#        project_src: /opt/src/local/infra/docker/
+#        files:
+#          - docker-compose-prod.yml
+#      register: output
+#
+#    - name: Create and start test services
+#      docker_compose:
+#        project_src: /opt/src/local/infra/docker/
+#        files:
+#          - docker-compose-test.yml
+#      register: output

@@ -1,0 +1,15 @@
+---
+- hosts: "{{ variable_host | default('alerant') }}"
+  vars:
+    public_key_file: id_rsa.pub
+    ansible_user: vagrant
+    docker_compose_version: 1.24.1
+
+  become: true
+
+  tasks:
+    - name: Save jenkins config to local
+      synchronize:
+        mode: pull
+        dest: ./backup/
+        src: /var/lib/jenkins
