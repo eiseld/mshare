@@ -1,6 +1,9 @@
 package elte.moneyshare.model
 
 import elte.moneyshare.entity.*
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.http.Body
 
 interface RepositoryInterface {
 
@@ -31,6 +34,8 @@ interface RepositoryInterface {
 
     //PROFILE
     fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit)
+
+    fun updateLang(lang: String, completion: (response: String?, error: String?) -> Unit)
 
 
     //SPENDING
