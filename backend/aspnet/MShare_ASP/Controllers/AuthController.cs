@@ -72,9 +72,9 @@ namespace MShare_ASP.Controllers
         /// <response code="409">Conflict: 'not_verified'</response>
         [HttpPut()]
         [Route("login")]
-        public ActionResult<JWTToken> Login([FromBody] API.Request.LoginCredentials loginCred)
+        public async Task<ActionResult<JWTToken>> Login([FromBody] API.Request.LoginCredentials loginCred)
         {
-            var token = AuthService.Login(loginCred);
+            var token = await AuthService.Login(loginCred);
             return Ok(new JWTToken()
             {
                 Token = token

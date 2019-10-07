@@ -96,6 +96,8 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
+
+
     //GROUP
     override fun getGroupInfo(groupId: Int, completion: (response: GroupInfo?, error: String?) -> Unit) {
         apiDefinition.getGroupInfo(groupId).enqueue(object : Callback<GroupInfo> {

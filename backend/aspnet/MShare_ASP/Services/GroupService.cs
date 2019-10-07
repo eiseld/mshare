@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EmailTemplates;
+using EmailTemplates.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
+using MShare_ASP.Configurations;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
 
@@ -14,6 +18,9 @@ namespace MShare_ASP.Services
     {
         private MshareDbContext Context { get; }
         private IEmailService EmailService { get; }
+        private IURIConfiguration UriConf { get; }
+        private IRazorViewToStringRenderer Renderer { get; }
+        private IStringLocalizer<LocalizationResource> Localizer { get; }
 
         private async Task<long> GetDebtSum(long userId, long groupId)
         {
@@ -30,13 +37,17 @@ namespace MShare_ASP.Services
                 .Where(x => x.UserOwesId == userId)
                 .Sum(x => x.OweAmount);
 
+
             return credit - debt;
         }
 
-        public GroupService(MshareDbContext context, IEmailService emailService)
+        public GroupService(MshareDbContext context, IEmailService emailService, IURIConfiguration uriConf, IStringLocalizer<LocalizationResource> localizer, IRazorViewToStringRenderer renderer)
         {
             Context = context;
             EmailService = emailService;
+            UriConf = uriConf;
+            Renderer = renderer;
+            Localizer = localizer;
         }
 
         public async Task<GroupData> ToGroupData(long userId, DaoGroup daoGroup)
@@ -220,7 +231,21 @@ namespace MShare_ASP.Services
             {
                 var groupCreator = Context.Users.FirstOrDefault(x => x.Id == userId);
                 var newMember = Context.Users.FirstOrDefault(x => x.Id == memberId);
-                await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newMember.DisplayName, newMember.Email, "MShare: Hozzáadva a(z) '" + daoGroup.Name + "' csoporthoz", groupCreator.DisplayName + " hozzáadott az alábbi csoporthoz: " + daoGroup.Name + ".");
+
+                var model = new InformationViewModel()
+                {
+                    Title = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT),
+                    PreHeader = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_PREHEADER),
+                    Hero = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_HERO),
+                    Greeting = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, newMember.DisplayName),
+                    Intro = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_BODY_INTRO, groupCreator.DisplayName, daoGroup.Name),
+                    EmailDisclaimer = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_BODY_DISCLAIMER),
+                    Cheers = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
+                    MShareTeam = Localizer.GetString(newMember.Lang, LocalizationResource.MSHARE_TEAM),
+                    SiteBaseUrl = $"{UriConf.URIForEndUsers}"
+                };
+                var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
+                await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, newMember.DisplayName, newMember.Email, Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT), htmlBody);
             }
         }
 

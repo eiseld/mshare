@@ -4,8 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MShare_ASP.API.Request;
+using MShare_ASP.Data;
 using MShare_ASP.Services;
 using MShare_ASP.API.Response;
+using Google.Protobuf.WellKnownTypes;
 
 namespace MShare_ASP.Controllers
 {
@@ -28,15 +31,15 @@ namespace MShare_ASP.Controllers
         }
 
         /// <summary>Sends password reset email to the given email address</summary>
-        /// <param name="email">Valid email address</param>
+        /// <param name="forgotPasswordRequest">Valid email address and a language</param>
         /// <response code="200">Successfully sent password reset email (ALWAYS RETURNS THIS)</response>
         /// <response code="400">Possible request body validation failure</response>
         [HttpPost]
         [Route("password/forgot")]
         [AllowAnonymous]
-        public async Task<ActionResult> ForgotPassword([FromBody] API.Request.ValidEmail email)
+        public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordRequest forgotPasswordRequest)
         {
-            await UserService.SendForgotPasswordMail(email);
+            await UserService.SendForgotPasswordMail(forgotPasswordRequest.Email, forgotPasswordRequest.Lang);
             return Ok();
         }
 
@@ -107,6 +110,18 @@ namespace MShare_ASP.Controllers
             var groupData = await GroupService.ToGroupData(userId, await GroupService.GetGroupOfUser(userId, fromGroup));
             var memberData = groupData.Members.Single(member => member.Id == userId);
             return Ok(memberData);
+        }
+
+        /// <summary>Updates the language of the current user</summary>
+        /// <param name="newLanguage">New language of the user</param>
+        /// <response code="200">Successfully updated language</response>
+        /// <response code="500">Update failed: 'lang_update_failed'</response>
+        [HttpPut]
+        [Route("lang")]
+        public async Task<IActionResult> SetLang([FromBody] SetLang newLanguage)
+        {
+            await UserService.UpdateLang(GetCurrentUserID(), newLanguage);
+            return Ok();
         }
     }
 }

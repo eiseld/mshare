@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using MShare_ASP;
+using MShare_ASP.Data;
 using MShare_ASP_Tests.Boilerplate;
 using Xunit;
 
@@ -41,7 +42,8 @@ namespace MShare_ASP_Tests.IntegrationTests {
             var response = await client.PostJsonAsync("/auth/register", new MShare_ASP.API.Request.NewUser() {
                 DisplayName = "Test",
                 Email = "test@test.hu",
-                Password = "Default0"
+                Password = "Default0",
+                Lang = DaoLangTypes.Type.EN
             });
             response.EnsureSuccessStatusCode();
         }

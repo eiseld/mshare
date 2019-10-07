@@ -15,6 +15,9 @@ using FluentValidation.AspNetCore;
 using Conf = MShare_ASP.Configurations;
 using MShare_ASP.Utils;
 using MShare_ASP.Middlewares;
+using System.Linq;
+using System;
+using EmailTemplates;
 
 namespace MShare_ASP
 {
@@ -52,7 +55,9 @@ namespace MShare_ASP
                 {
                     fv.RegisterValidatorsFromAssemblyContaining<API.Request.LoginCredentialsValidator>();
                     fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
-                });
+                })
+                .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization(); ;
 
             services.AddSwaggerGen(c =>
             {
@@ -62,6 +67,8 @@ namespace MShare_ASP
                     Version = "v1",
                     Description = "API for use from Web and Android",
                 });
+
+                c.DescribeAllEnumsAsStrings();
 
                 c.DocumentFilter<APIPrefixFilter>();
 
@@ -105,6 +112,28 @@ namespace MShare_ASP
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISpendingService, SpendingService>();
             services.AddTransient<ILoggingService, LoggingService>();
+            services.AddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
+
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedLanguages = System.Enum.GetNames(typeof(DaoLangTypes.Type));
+                var supportedCultures = supportedLanguages.Select(x => new System.Globalization.CultureInfo(x)).ToArray();
+
+                options.DefaultRequestCulture =
+                new Microsoft.AspNetCore.Localization.RequestCulture(culture: DaoLangTypes.Type.EN.ToString(), uiCulture: DaoLangTypes.Type.EN.ToString());
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+
+                /*
+                 * WE PROBABLY WANT TO USE LOCALIZATION WITHCULTURE OPTION AND NOT INJECT A NEW REQUEST TO DB EVERY TIME WE NEED A STRING!!
+                 */
+
+                //options.RequestCultureProviders.Insert(0, new Microsoft.AspNetCore.Localization.CustomRequestCultureProvider(async context =>
+                //{
+                //    return new Microsoft.AspNetCore.Localization.ProviderCultureResult("en");
+                //}));
+            });
 
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("MShareSettings")["SecretKey"]);
             services.AddAuthentication(x =>
@@ -137,6 +166,7 @@ namespace MShare_ASP
             else
                 app.UseHsts();
 
+            app.UseStaticFiles();
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -145,6 +175,7 @@ namespace MShare_ASP
                 c.RoutePrefix = "";
             });
 
+            app.UseRequestLocalization();
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
             app.UseMvc();
