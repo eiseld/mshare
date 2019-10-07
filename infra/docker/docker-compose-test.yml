@@ -1,0 +1,43 @@
+version: "3.6"
+
+networks:
+  default:
+    name: docker_test
+
+volumes:
+  mysql_test:
+  mysql_dev:
+
+services:
+
+  test_mysql:
+    container_name: mshare-mysql-test
+    build: ../../backend/database
+    environment:
+      MYSQL_DATABASE: mshare
+      MYSQL_ROOT_PASSWORD: ilovescrum
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - "3306"
+    volumes:
+      - mysql_test:/var/lib/mysql
+      - ./dump:/dump
+
+  test_aspnet:
+    container_name: test_aspnet
+    build: ../../backend/aspnet/MShare_ASP
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Test"
+    ports:
+      - "8081"
+
+  test_proxy:
+    container_name: test_proxy
+    build: 
+      context: '../../frontend/web'
+      dockerfile: Dockerfile-apache-test
+    depends_on:
+      - test_aspnet
+    ports:
+      - '8081:80'

@@ -555,6 +555,6 @@ SSLRandomSeed connect builtin
     #CustomLog ${APACHE_LOG_DIR}/access.log combined
     ProxyPreserveHost On
     ProxyRequests Off
-    ProxyPass /api/ http://mshare-aspnet-test:8081/
-    ProxyPassReverse /api/ http://mshare-aspnet-test:8081/
+    ProxyPass /api/ http://test_aspnet:8081/
+    ProxyPassReverse /api/ http://test_aspnet:8081/
 </VirtualHost>
