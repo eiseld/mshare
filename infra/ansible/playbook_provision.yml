@@ -19,6 +19,7 @@
     - servername: "mshare_server"
       serveralias: "remote.alerant.hu"
       extra_parameters: |
+        ProxyPass /file/ !
         ProxyPass /jenkins http://localhost:8080/jenkins nocanon
         ProxyPassReverse /jenkins http://localhost:8080/jenkins
         ProxyPass /test http://localhost:8081/ nocanon
@@ -48,6 +49,7 @@
         - virtualenv
         - python3-setuptools
         - openjdk-8-jdk
+        - unzip
 
     - name: Add Docker apt key
       apt_key:
@@ -101,6 +103,61 @@
     - name: Add Jenkins user to wheel group
       user: name=jenkins groups=wheel append=yes state=present createhome=yes
 
+    - name: Download Android SDK
+      get_url:
+        url: https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
+        dest: /tmp/android.zip
+
+    - name: Make opt dir for user
+      file:
+        path: /opt/adt/ 
+        state: directory 
+        mode: 0777
+
+    - name: Create Android SDK directory
+      file:
+        path: /opt/adt/android-sdk-linux
+        state: directory
+        owner: jenkins
+        group: jenkins
+
+    - name: Unarchive a file that needs to be downloaded (added in 2.0)
+      unarchive:
+        src: https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip 
+        dest: /opt/adt/android-sdk-linux
+        remote_src: yes
+        owner: jenkins
+        group: jenkins
+
+    - name: Chown files
+      file:
+        path: /opt/adt/android-sdk-linux
+        recurse: yes 
+        state: directory
+        owner: jenkins
+        group: jenkins
+
+    - name: Install Android SDK
+      shell: yes | ./android update sdk
+      args:
+        chdir: /opt/adt/android-sdk-linux/tools 
+      become: yes
+      become_user: jenkins
+
+    - name: Create bashrc for jenkins user
+      file:
+        path: "/var/lib/jenkins/.bashrc"
+        state: touch
+        owner: jenkins
+
+    - name: Configure Android SDK paths
+      action: lineinfile dest=/var/lib/jenkins/.bashrc line="{{ item }}"
+      with_items:
+      - 'export ANDROID_HOME=/opt/adt/android-sdk-linux'
+      - 'export ANDROID_TOOLS=$ANDROID_HOME/tools/'
+      - 'export ANDROID_PLATFORM_TOOLS=$ANDROID_HOME/platform-tools/'
+      - 'export PATH=$PATH:$ANDROID_TOOLS:$ANDROID_PLATFORM_TOOLS'
+
     - name: Ensure Jenkins is started and runs on startup.
       service: name=jenkins state=started enabled=yes
 
@@ -139,6 +196,11 @@
         repo: https://github.com/eiseld/mshare
         dest: /opt/src/git/
         version: Develop
+    
+    - name: Create directory for android files
+      file:
+        path: /var/www/html/file/android/
+        state: directory
 
 #    - name: Create and start prod services
 #      docker_compose:
