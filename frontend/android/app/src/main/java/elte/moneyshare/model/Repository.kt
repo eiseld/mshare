@@ -23,7 +23,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -42,7 +42,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -85,7 +85,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -106,7 +106,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(groupInfo, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -126,7 +126,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(groupData, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -145,7 +145,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -164,7 +164,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -183,7 +183,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -205,7 +205,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(groupsInfo, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -267,7 +267,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(spendings, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -286,7 +286,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -305,7 +305,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -325,7 +325,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(debtData, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -344,7 +344,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -364,7 +364,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(filteredUsers, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -406,7 +406,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(users, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }

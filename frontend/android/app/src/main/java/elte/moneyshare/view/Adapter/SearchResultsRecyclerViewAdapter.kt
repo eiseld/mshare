@@ -11,6 +11,8 @@ import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
 import elte.moneyshare.entity.FilteredUserData
 import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.GroupPagerFragment
 import elte.moneyshare.view.MainActivity
 import elte.moneyshare.view.viewholder.SearchResultViewHolder
@@ -45,7 +47,7 @@ class SearchResultsRecyclerViewAdapter(private val context: Context, private val
                     (context as MainActivity).onBackPressed()
                     Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                 } else {
-                    DialogManager.showInfoDialog(error, context)
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS_ADD_MEMBER,context), context)
                 }
             })
         }

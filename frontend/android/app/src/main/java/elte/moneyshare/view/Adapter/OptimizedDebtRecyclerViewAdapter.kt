@@ -12,6 +12,8 @@ import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.OptimizedDebtData
 import elte.moneyshare.gone
 import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.viewholder.OptimizedDebtViewHolder
 import elte.moneyshare.viewmodel.GroupViewModel
 import elte.moneyshare.visible
@@ -85,7 +87,7 @@ class OptimizedDebtRecyclerViewAdapter(
                         }
                         Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                     } else {
-                        DialogManager.showInfoDialog(error, context)
+                        DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                     }
                 }
             }

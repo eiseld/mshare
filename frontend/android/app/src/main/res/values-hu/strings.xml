@@ -82,4 +82,58 @@
     <string name="modify">módosítás</string>
     <string name="save">Mentés</string>
     <string name="profile">Profil</string>
+
+    <!-- API responses -->
+
+    <!-- Authorization -->
+    <string name="api_auth_register_200">A felhasználók átvitele sikeresen megtörtént! Ezt nem kéne látnod mert debug verzió:D</string>
+    <string name="api_auth_register_201">Sikeres regisztráció!</string>
+    <string name="api_auth_register_409">Ez az email már regisztrálva van!</string>
+
+    <string name="api_auth_validate_200">Sikeres megerősítés!</string>
+    <string name="api_auth_validate_410">A megerősítő email lejárt, kérem regisztrálj újra!</string>
+
+    <string name="api_auth_login_200">Sikeres bejelentkezés!</string>
+    <string name="api_auth_login_403">Sikertelen bejelentkezés! Rossz email, jelszó páros</string>
+    <string name="api_auth_login_409">Ez az email még nincs megerősítve!</string>
+
+    <!-- Groups -->
+    <string name="api_groups_403">Nem sikerült lekérdezni a csoport adatait! Nem vagy tagja a csoportnak!</string>
+    <string name="api_groups_404">Nem sikerült lekérdezni a csoport adatait! A csoport nem található!</string>
+
+    <string name="api_groups_add_member_200">Tag sikeresen hozzáadva a csoporthoz!</string>
+    <string name="api_groups_add_member_409">Ez a tag már benne van a csoportban!</string>
+
+    <string name="api_groups_create_group_200">Csoport létrehozása sikeres!</string>
+    <string name="api_groups_create_group_409">EZ a csoportnév már használatban van!</string>
+
+    <string name="api_groups_settle_debt_200">Tartozás sikeresen rendezve!</string>
+    <string name="api_groups_settle_debt_409">Hiba! Ez a tartozás már rendezve van!</string>
+    <string name="api_groups_settle_debt_410">Hiba! Tartozás nem található!</string>
+
+    <!-- Profile -->
+    <string name="api_profile_403">Hiba! Nem vagy ennek a csoportnak a tagja!</string>
+    <string name="api_profile_404">Hiba! Nem található a csoport!</string>
+
+    <string name="api_profile_password_reset_200">Jelszó visszaállító email sikeresen kiküldve!</string>
+
+    <string name="api_profile_password_update_200">Jelszó sikeresen frissítve!</string>
+    <string name="api_profile_password_update_410">The password reset link is expired!</string>
+
+    <string name="api_profile_language_update_200">Nyelvbeállítás sikeresen frissítve!</string>
+
+    <!-- Spending -->
+    <string name="api_spending_403">Nem sikerült lekérdezni a költés adatait! Nem vagy tagja a csoportnak!</string>
+    <string name="api_spending_404">Nem sikerült lekérdezni a költés adatait! A csoport nem található!</string>
+
+    <string name="api_spending_create_200">Költés sikeresen létrehozva!</string>
+    <string name="api_spending_create_409">A költést nem lehetett létrehozni! Az egyik adós nem tagja a csoportnak!</string>
+
+    <string name="api_spending_update_200">Költés sikeresen frissítve!</string>
+    <string name="api_spending_update_409">A költést nem lehetett frissíteni! Az egyik adós nem tagja a csoportnak!</string>
+
+    <string name="api_common_400">A kérés nem sikerült a szerver felé!</string>
+    <string name="api_common_500">Belső hiba! Próbálkozz később!</string>
+    <string name="api_error_common">Valami hiba történt! Próbálkozz később!</string>
+
 </resources>
