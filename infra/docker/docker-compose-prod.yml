@@ -11,7 +11,7 @@ volumes:
 services:
 
   prod_mysql:
-    container_name: prod_mysql
+    container_name: mshare-mysql
     build: ../../backend/database
     environment:
       MYSQL_DATABASE: mshare
