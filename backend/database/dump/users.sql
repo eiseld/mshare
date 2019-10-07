@@ -27,6 +27,7 @@ CREATE TABLE `users` (
   `display_name` varchar(32) NOT NULL,
   `creation_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `lang` tinyint(3) unsigned DEFAULT '1',
+  `bank_account_number` char(24) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   KEY `lang_enum` (`lang`),

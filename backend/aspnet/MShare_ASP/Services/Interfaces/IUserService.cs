@@ -44,5 +44,10 @@ namespace MShare_ASP.Services
         /// <exception cref="DatabaseException">["lang_update_failed"]</exception>
         /// <returns></returns>
         Task UpdateLang(long userId, SetLang language);
-    }
+
+		/// <summary>Updates the bank account number of the user</summary>
+		/// <exception cref="DatabaseException">["bank_account_number_not_saved"]</exception>
+		/// <exception cref="ResourceNotFoundException">["user"]</exception>
+		Task UpdateBankAccoutNumber(BankAccountNumberUpdate bankAccountNumberUpdate);
+	}
 }
