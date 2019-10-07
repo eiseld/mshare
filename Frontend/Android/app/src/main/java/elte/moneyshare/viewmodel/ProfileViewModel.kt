@@ -18,15 +18,15 @@ class ProfileViewModel : ViewModel() {
         }
     }
 
-    //TODO IMPL
-    fun updateProfile(bankAccountNumberUpdate: BankAccountNumberUpdate,  completion: (response: UserData , error: String?) -> Unit) {
+    fun updateProfile(
+        bankAccountNumberUpdate: BankAccountNumberUpdate,
+        completion: (response: UserData?, error: String?) -> Unit
+    ) {
         APIClient.getRepository().updateProfile(bankAccountNumberUpdate) { response, error ->
-            {
-                if (error == null) {
-                    //completion(response, null)
-                } else {
-                    //completion(null, error)
-                }
+            if (error == null) {
+                completion(response, null)
+            } else {
+                completion(null, error)
             }
         }
     }

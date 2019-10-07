@@ -46,9 +46,7 @@ class ProfileFragment : Fragment() {
 
             viewModel.updateProfile(BankAccountNumberUpdate(SharedPreferences.userId, accountNumber)) { response, error ->
                 if(error == null) {
-
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, ProfileFragment())?.commit()
-
                 } else {
                     DialogManager.showInfoDialog(error, context)
                 }
