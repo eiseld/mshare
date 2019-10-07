@@ -47,9 +47,15 @@ interface APIDefinition {
     @GET("api/Profile/groups")
     fun getProfileGroups(): Call<ArrayList<GroupInfo>>
 
+    @GET("api/Profile")
+    fun getProfile(): Call<UserData>
+
+    //TODO IMPL UPDATE
+    @POST("api/profile/bankAccountNumber/update")
+    fun postBankAccountNumber(@Body bankAccountNumber: BankAccountNumberUpdate): Call<UserData>
+
     @POST("api/profile/password/forgot")
     fun postForgotPassword(@Body email: ForgottenPasswordData): Call<ResponseBody>
-
 
     //SPENDING
     @GET("api/Spending/{id}")

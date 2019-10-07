@@ -2,5 +2,6 @@ package elte.moneyshare.entity
 
 data class UserData (
     var id: Int,
-    var name: String? = null
+    var name: String? = null,
+    var bankAccountNumber: String? = null
 )

@@ -26,6 +26,7 @@ CREATE TABLE `users` (
   `password` char(64) NOT NULL,
   `display_name` varchar(32) NOT NULL,
   `creation_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `bank_account_number` char(24) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

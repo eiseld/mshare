@@ -81,4 +81,7 @@
     <string name="press_back_again_to_exit">Please click BACK again to exit</string>
     <string name="menu_groups">Groups</string>
     <string name="menu_settings">Settings</string>
+    <string name="modify">módosítás</string>
+    <string name="save">Mentés</string>
+    <string name="profile">Profil</string>
 </resources>

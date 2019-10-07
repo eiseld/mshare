@@ -81,6 +81,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.navSettings -> {
 
             }
+            R.id.navProfile -> {
+            supportFragmentManager.beginTransaction().replace(R.id.frame_container, ProfileFragment()).commit()
+            }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true

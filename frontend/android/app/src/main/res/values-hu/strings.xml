@@ -1,5 +1,4 @@
 <resources>
-    <string name="base_url_value" translatable="false">http://remote.alerant.hu/</string>
     <string name="access_token_key" translatable="false">Authorization</string>
 
     <string name="email_sent">Elküldtük a megadott levélre a jelszó változtatáshoz szükséges linket, kérem kattintson rá!</string>
@@ -80,4 +79,7 @@
     <string name="press_back_again_to_exit">Kilépéshez nyomja meg mégegyszer</string>
     <string name="menu_groups">Csoportok</string>
     <string name="menu_settings">Beállítások</string>
+    <string name="modify">módosítás</string>
+    <string name="save">Mentés</string>
+    <string name="profile">Profil</string>
 </resources>

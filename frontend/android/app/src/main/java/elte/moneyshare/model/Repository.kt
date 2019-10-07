@@ -216,6 +216,46 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
+    override fun getProfile(completion: (response: UserData?, error: String?) -> Unit) {
+        apiDefinition.getProfile().enqueue(object : Callback<UserData> {
+            override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val userData = response.body()
+                        completion(userData, null)
+                    }
+                    else -> {
+                        completion(null, response.message())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<UserData>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
+    //TODO IMPL UPDATE
+    override fun updateProfile(bankAccountNumberUpdate: BankAccountNumberUpdate, completion: (response: UserData?, error: String?) -> Unit) {
+        apiDefinition.postBankAccountNumber(bankAccountNumberUpdate).enqueue(object : Callback<UserData> {
+            override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val userData = response.body()
+                        completion(userData, null)
+                    }
+                    else -> {
+                        completion(null, response.message())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<UserData>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
 
     //SPENDING
     override fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit) {

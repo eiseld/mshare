@@ -54,12 +54,27 @@ namespace MShare_ASP.Controllers
         {
             await UserService.UpdatePassword(passwordUpdate);
             return Ok();
-        }
+		}
 
-        /// <summary>Gets the name and id of the signed in user</summary>
-        /// <response code="200">Successfully returned user data</response>
-        /// <response code="404">Not found: 'user'</response>
-        [HttpGet]
+		/// <summary>Set the given bank account number for the user with the given email address</summary> 
+		/// <param name="bankAccountNumberUpdate">Bank account update information</param>
+		/// <response code="200">Successfully updated bank account number</response>
+		/// <response code="400">Possible request body validation failure</response>
+		/// <response code="404">Not found: 'user'</response>
+		/// <response code="500">Internal error: 'bank_account_number_not_saved'</response>
+		[HttpPost]
+		[Route("bankAccountNumber/update")]
+		[AllowAnonymous]
+		public async Task<ActionResult> UpdateBankAccountNumber([FromBody] API.Request.BankAccountNumberUpdate bankAccountNumberUpdate)
+		{
+			await UserService.UpdateBankAccoutNumber(bankAccountNumberUpdate);
+			return Ok();
+		}
+
+		/// <summary>Gets the name and id of the signed in user</summary>
+		/// <response code="200">Successfully returned user data</response>
+		/// <response code="404">Not found: 'user'</response>
+		[HttpGet]
         public async Task<ActionResult<UserData>> Get()
         {
             var userData = UserService.ToUserData(await UserService.GetUser(GetCurrentUserID()));
