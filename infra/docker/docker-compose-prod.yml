@@ -25,7 +25,7 @@ services:
 
   prod_aspnet:
     container_name: prod_aspnet
-    build: ../../backend/aspnet/MShare_ASP
+    build: ../../backend/aspnet/
     environment:
       ASPNETCORE_ENVIRONMENT: "Production"
     ports:
