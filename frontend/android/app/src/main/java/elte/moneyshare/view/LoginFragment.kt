@@ -39,6 +39,7 @@ class LoginFragment : Fragment() {
                 if(error == null) {
                     val intent = Intent(context, MainActivity::class.java)
                     startActivity(intent)
+                    activity?.finish()
                     //activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.AUTH_LOGIN,context), context)
