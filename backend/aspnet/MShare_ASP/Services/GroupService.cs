@@ -60,13 +60,15 @@ namespace MShare_ASP.Services
                 {
                     Id = daoGroup.CreatorUserId,
                     Name = daoGroup.CreatorUser.DisplayName,
-                    Balance = await GetDebtSum(userId, daoGroup.Id)
+                    Balance = await GetDebtSum(userId, daoGroup.Id),
+                    BankAccountNumber = daoGroup.CreatorUser.BankAccountNumber ?? ""
                 },
                 Members = daoGroup.Members.Select(async daoUsersGroupsMap => new MemberData()
                 {
                     Id = daoUsersGroupsMap.UserId,
                     Name = daoUsersGroupsMap.User.DisplayName,
-                    Balance = await GetDebtSum(daoUsersGroupsMap.UserId, daoGroup.Id)
+                    Balance = await GetDebtSum(daoUsersGroupsMap.UserId, daoGroup.Id),
+                    BankAccountNumber = daoUsersGroupsMap.User.BankAccountNumber ?? ""
                 }).Select(x => x.Result).ToList(),
                 MyCurrentBalance = await GetDebtSum(userId, daoGroup.Id)
             };

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
@@ -43,9 +44,9 @@ namespace MShare_ASP.Services
         /// <returns></returns>
         Task UpdateLang(long userId, SetLang language);
 
-		/// <summary>Updates the bank account number of the user</summary>
-		/// <exception cref="DatabaseException">["bank_account_number_not_saved"]</exception>
-		/// <exception cref="ResourceNotFoundException">["user"]</exception>
-		Task UpdateBankAccoutNumber(BankAccountNumberUpdate bankAccountNumberUpdate);
+        /// <summary>Updates the bank account number of the user</summary>
+        /// <exception cref="DatabaseException">["account_number_update_failed"]</exception>
+        /// <exception cref="ResourceNotFoundException">["user"]</exception>
+        Task UpdateBankAccoutNumber(long userId, String accountNumber);
 	}
 }

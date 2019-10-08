@@ -15,5 +15,5 @@ namespace MShare_ASP.API.Response
 
 		/// <summary>Bank account number of the user</summary>
 		public String BankAccountNumber { get; set; }
-	}
+    }
 }

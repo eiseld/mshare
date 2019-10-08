@@ -15,5 +15,8 @@ namespace MShare_ASP.API.Response
 
         /// <summary>Member balance in the view of the group</summary>
         public long Balance { get; set; }
+
+        /// <summary>Bank account number of the member</summary>
+        public String BankAccountNumber { get; set; }
     }
 }

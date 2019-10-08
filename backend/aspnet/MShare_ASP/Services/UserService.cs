@@ -59,7 +59,7 @@ namespace MShare_ASP.Services
             {
                 Id = daoUser.Id,
                 Name = daoUser.DisplayName,
-				BankAccountNumber = daoUser.BankAccountNumber
+				BankAccountNumber = daoUser.BankAccountNumber ?? ""
             };
         }
 
@@ -212,31 +212,14 @@ namespace MShare_ASP.Services
         }
     
 		
-		public async Task UpdateBankAccoutNumber(BankAccountNumberUpdate bankAccountNumberUpdate)
+		public async Task UpdateBankAccoutNumber(long userId, String accountNumber)
 		{
-			var daoUser = await GetUser(bankAccountNumberUpdate.Email);
-			/*
-			using (var transaction = Context.Database.BeginTransaction())
-			{
-				try
-				{
+            var daoUser = await GetUser(userId);
 
-					daoUser.BankAccountNumber = bankAccountNumberUpdate.BankAccountNumber;
+            daoUser.BankAccountNumber = accountNumber;
 
-					if (await Context.SaveChangesAsync() != 1)
-						throw new DatabaseException("bank_account_number_not_saved");
-
-					await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Text, daoUser.DisplayName, daoUser.Email, "Bankszámlaszám változtatás", $"A mai napon fiókjához tartozó bankszámlaszáma megváltoztatásra került!");
-
-					transaction.Commit();
-				}
-				catch
-				{
-					transaction.Rollback();
-					throw;
-				}
-			}
-			*/
+            if (await Context.SaveChangesAsync() != 1)
+                throw new DatabaseException("account_number_update_failed");
 		}
 
 	}

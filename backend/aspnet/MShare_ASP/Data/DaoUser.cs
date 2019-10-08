@@ -39,6 +39,7 @@ namespace MShare_ASP.Data
 
         /// <summary>All email tokens associated with user</summary>
         public IEnumerable<DaoEmailToken> EmailTokens { get; set; }
+
 		/// <summary>Bank account number of the user</summary>
 		[Column("bank_account_number")]
 		public String BankAccountNumber { get; set; }

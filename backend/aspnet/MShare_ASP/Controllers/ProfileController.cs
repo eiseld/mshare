@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MShare_ASP.API.Request;
-using MShare_ASP.Data;
 using MShare_ASP.Services;
 using MShare_ASP.API.Response;
-using Google.Protobuf.WellKnownTypes;
 
 namespace MShare_ASP.Controllers
 {
@@ -59,18 +57,17 @@ namespace MShare_ASP.Controllers
             return Ok();
 		}
 
-		/// <summary>Set the given bank account number for the user with the given email address</summary> 
-		/// <param name="bankAccountNumberUpdate">Bank account update information</param>
-		/// <response code="200">Successfully updated bank account number</response>
-		/// <response code="400">Possible request body validation failure</response>
-		/// <response code="404">Not found: 'user'</response>
-		/// <response code="500">Internal error: 'bank_account_number_not_saved'</response>
-		[HttpPost]
-		[Route("bankAccountNumber/update")]
-		[AllowAnonymous]
-		public async Task<ActionResult> UpdateBankAccountNumber([FromBody] API.Request.BankAccountNumberUpdate bankAccountNumberUpdate)
+        /// <summary>Set the given bank account number for the loged in user</summary> 
+        /// <param name="bankAccountNumberUpdate">Bank account update information</param>
+        /// <response code="200">Successfully updated bank account number</response>
+        /// <response code="400">Possible request body validation failure</response>
+        /// <response code="404">Not found: 'user'</response>
+        /// <response code="500">Internal error: 'account_number_update_failed'</response>
+        [HttpPost]
+		[Route("bankaccountnumber/update")]
+		public async Task<ActionResult> UpdateBankAccountNumber([FromBody] BankAccountNumberUpdate bankAccountNumberUpdate)
 		{
-			await UserService.UpdateBankAccoutNumber(bankAccountNumberUpdate);
+            await UserService.UpdateBankAccoutNumber(GetCurrentUserID(), bankAccountNumberUpdate.BankAccountNumber);
 			return Ok();
 		}
 
