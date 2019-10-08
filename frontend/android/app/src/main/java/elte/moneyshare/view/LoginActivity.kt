@@ -1,13 +1,16 @@
 package elte.moneyshare.view
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.widget.Toast
 import elte.moneyshare.R
+import elte.moneyshare.SharedPreferences
 import elte.moneyshare.viewmodel.GroupsViewModel
+import java.util.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -17,6 +20,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        updateLang(SharedPreferences.lang)
+
         setContentView(R.layout.activity_login)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -25,6 +30,13 @@ class LoginActivity : AppCompatActivity() {
             .commit()
 
         groupsViewModel = ViewModelProviders.of(this).get(GroupsViewModel::class.java)
+    }
+
+    fun updateLang(lang: String){
+        val dm = resources.displayMetrics
+        val conf = resources.configuration
+        conf.setLocale(Locale(lang))
+        resources.updateConfiguration(conf, dm)
     }
 
     override fun onBackPressed() {
@@ -42,5 +54,11 @@ class LoginActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    fun refresh() {
+        finish()
+        val refresh = Intent(this, LoginActivity::class.java)
+        startActivity(refresh)
     }
 }

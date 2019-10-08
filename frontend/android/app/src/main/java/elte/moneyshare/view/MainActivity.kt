@@ -1,6 +1,7 @@
 package elte.moneyshare.view
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.NavigationView
@@ -17,6 +18,8 @@ import elte.moneyshare.SharedPreferences
 import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import java.util.*
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -25,6 +28,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        updateLang(SharedPreferences.lang)
 
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -79,7 +84,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 supportFragmentManager.beginTransaction().replace(R.id.frame_container, GroupsFragment()).commit()
             }
             R.id.navSettings -> {
-
+                supportFragmentManager.beginTransaction().replace(R.id.frame_container, SettingsFragment()).commit()
             }
             R.id.navProfile -> {
             supportFragmentManager.beginTransaction().replace(R.id.frame_container, ProfileFragment()).commit()
@@ -87,6 +92,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun updateLang(lang: String){
+        val dm = resources.displayMetrics
+        val conf = resources.configuration
+        conf.setLocale(Locale(lang))
+        resources.updateConfiguration(conf, dm)
+    }
+
+    fun refresh() {
+        finish()
+        val refresh = Intent(this, LoginActivity::class.java)
+        startActivity(refresh)
     }
 
     override fun onBackPressed() {

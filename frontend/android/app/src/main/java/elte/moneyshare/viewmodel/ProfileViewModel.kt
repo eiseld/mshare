@@ -30,4 +30,14 @@ class ProfileViewModel : ViewModel() {
             }
         }
     }
+
+    fun updateLang(lang: String, completion: (response: String?, error: String?) -> Unit) {
+        APIClient.getRepository().updateLang(lang) { response, error ->
+            if (error == null) {
+                completion(response, null)
+            } else {
+                completion(null, error)
+            }
+        }
+    }
 }

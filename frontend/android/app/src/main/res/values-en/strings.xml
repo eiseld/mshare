@@ -139,4 +139,7 @@
     <string name="api_common_500">Internal error! Try again later!</string>
     <string name="api_error_common">Something bad happened! Try again later!</string>
     <string name="welcome">Welcome!</string>
+    <string name="hu">hu</string>
+    <string name="en">en</string>
+    <string name="select_lang">Select language</string>
 </resources>

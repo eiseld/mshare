@@ -79,5 +79,24 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"/>
 
+    <Button
+            android:id="@+id/huButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hu"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/enButton"
+            android:layout_margin="12dp" />
+
+    <Button
+            android:id="@+id/enButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/en"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_margin="12dp" />
 
 </android.support.constraint.ConstraintLayout>
