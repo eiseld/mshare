@@ -1,0 +1,141 @@
+<resources>
+    <string name="base_url_value" translatable="false">http://remote.alerant.hu/</string>
+    <string name="access_token_key" translatable="false">Authorization</string>
+
+    <string name="email_sent">Elküldtük a megadott levélre a jelszó változtatáshoz szükséges linket, kérem kattintson rá!</string>
+    <string name="login">Belépés</string>
+    <string name="forgotten_password">Elfelejtett jelszó</string>
+    <string name="register">Regisztráció</string>
+    <string name="registration">Regisztráció</string>
+    <string name="send_email">Email küldése</string>
+
+    <!-- Registration messages -->
+    <string name="username">Felahsználónév</string>
+    <string name="password">Jelszó</string>
+    <string name="password_again">Jelszó újra</string>
+    <string name="email">Email cím</string>
+    <string name="emailAgain">Email cím újra</string>
+    <string name="back">Vissza</string>
+    <string name="minimum_characters">Legalább 6 karaktert tartalmazzon</string>
+    <string name="uppercase_required">Legalább egy nagybetűs karaktert tartalmazzon</string>
+    <string name="lowercase_required">Legalább egy kisbetűs karaktert tartalmazzon</string>
+    <string name="number_required">Legalább egy számot tartalmazzon</string>
+    <string name="password_not_matching">Nem egyeznek a jelszavak</string>
+    <string name="email_not_matching">Nem egyeznek az emailek</string>
+    <string name="email_not_correct">Nem megfelelő az email formátum</string>
+    <string name="successful_registration">Sikeres regisztráció!</string>
+
+    <!-- Popup mesages -->
+    <string name="popup_title">Tartozás rendezése</string>
+    <string name="popup_message_to_you">Biztos vagy %1$s %2$d Ft tartozásának feléd irányuló kiegyelnítésében?</string>
+    <string name="popup_message_from_you">Biztos vagy a %1$d Ft tartozásod rendezésében %2$s felé?</string>
+
+    <!-- Shared messages -->
+    <string name="yes">Igen</string>
+    <string name="no">Nem</string>
+
+    <string name="settle">Rendez</string>
+
+
+    <!-- GROUPS -->
+    <string name="create_group">Csoport létrehozása</string>
+    <string name="group_name">Csoport neve</string>
+    <string name="group_members">(%1$d)</string>
+    <string name="group_owe">Tartozásod \n %1$d Ft</string>
+    <string name="group_owned">Neked tartoznak \n %1$d Ft</string>
+    <string name="group_settled_up">Kiegyenlítve</string>
+
+    <string name="bill_money">%1$d Ft</string>
+
+    <string name="add_member">Tag meghívása</string>
+    <string name="remove_member">Tag eltávolítása</string>
+    <string name="add_spending">Költés megadása</string>
+
+    <string name="event_name">Esemény neve</string>
+    <string name="spending">Költés</string>
+    <string name="add">Hozzáadás</string>
+    <string name="select_members">Tagok kiválasztása</string>
+    <string name="my_balance">Egyenlegem:</string>
+    <string name="next">Következő</string>
+    <string name="must_be_bigger_than_0">Nagyobbna kell lennie mint 0</string>
+    <string name="cannot_be_empty">Nem lehet üres</string>
+    <string name="max_spending_limit">Max megmaradt összeg %1$d Ft</string>
+
+    <string name="my_debts">Saját tartozásaim</string>
+    <string name="filtered_users">%1$s - %2$s</string>
+    <string name="select_members_missing">Jelöljön ki tagokat</string>
+
+    <string name="modify_spending">Költés módosítása</string>
+    <string name="confirm_spending_modification">Biztosan módosítani szeretnéd ezt a költést?</string>
+    <string name="modify_cancelled">Költés módosítás megszakítva</string>
+    <string name="ok">Ok</string>
+
+    <string name="on_failure_message">Hálózati hiba!</string>
+    <string name="group_created">Csoport létrehozva!</string>
+
+    <string name="navigation_drawer_open">Navigációs ablak kinyitása</string>
+    <string name="navigation_drawer_close">Navigációs ablak bezárása</string>
+    <string name="action_settings">Beállítások</string>
+
+    <string name="press_back_again_to_exit">Kilépéshez nyomja meg mégegyszer</string>
+    <string name="menu_groups">Csoportok</string>
+    <string name="menu_settings">Beállítások</string>
+
+    <string name="modify">módosítás</string>
+    <string name="save">Mentés</string>
+    <string name="profile">Profil</string>
+
+    <!-- API responses -->
+
+    <!-- Authorization -->
+    <string name="api_auth_register_200">A felhasználók átvitele sikeresen megtörtént! Ezt nem kéne látnod mert debug verzió:D</string>
+    <string name="api_auth_register_201">Sikeres regisztráció!</string>
+    <string name="api_auth_register_409">Ez az email már regisztrálva van!</string>
+
+    <string name="api_auth_validate_200">Sikeres megerősítés!</string>
+    <string name="api_auth_validate_410">A megerősítő email lejárt, kérem regisztrálj újra!</string>
+
+    <string name="api_auth_login_200">Sikeres bejelentkezés!</string>
+    <string name="api_auth_login_403">Sikertelen bejelentkezés! Rossz email, jelszó páros</string>
+    <string name="api_auth_login_409">Ez az email még nincs megerősítve!</string>
+
+    <!-- Groups -->
+    <string name="api_groups_403">Nem sikerült lekérdezni a csoport adatait! Nem vagy tagja a csoportnak!</string>
+    <string name="api_groups_404">Nem sikerült lekérdezni a csoport adatait! A csoport nem található!</string>
+
+    <string name="api_groups_add_member_200">Tag sikeresen hozzáadva a csoporthoz!</string>
+    <string name="api_groups_add_member_409">Ez a tag már benne van a csoportban!</string>
+
+    <string name="api_groups_create_group_200">Csoport létrehozása sikeres!</string>
+    <string name="api_groups_create_group_409">EZ a csoportnév már használatban van!</string>
+
+    <string name="api_groups_settle_debt_200">Tartozás sikeresen rendezve!</string>
+    <string name="api_groups_settle_debt_409">Hiba! Ez a tartozás már rendezve van!</string>
+    <string name="api_groups_settle_debt_410">Hiba! Tartozás nem található!</string>
+
+    <!-- Profile -->
+    <string name="api_profile_403">Hiba! Nem vagy ennek a csoportnak a tagja!</string>
+    <string name="api_profile_404">Hiba! Nem található a csoport!</string>
+
+    <string name="api_profile_password_reset_200">Jelszó visszaállító email sikeresen kiküldve!</string>
+
+    <string name="api_profile_password_update_200">Jelszó sikeresen frissítve!</string>
+    <string name="api_profile_password_update_410">The password reset link is expired!</string>
+
+    <string name="api_profile_language_update_200">Nyelvbeállítás sikeresen frissítve!</string>
+
+    <!-- Spending -->
+    <string name="api_spending_403">Nem sikerült lekérdezni a költés adatait! Nem vagy tagja a csoportnak!</string>
+    <string name="api_spending_404">Nem sikerült lekérdezni a költés adatait! A csoport nem található!</string>
+
+    <string name="api_spending_create_200">Költés sikeresen létrehozva!</string>
+    <string name="api_spending_create_409">A költést nem lehetett létrehozni! Az egyik adós nem tagja a csoportnak!</string>
+
+    <string name="api_spending_update_200">Költés sikeresen frissítve!</string>
+    <string name="api_spending_update_409">A költést nem lehetett frissíteni! Az egyik adós nem tagja a csoportnak!</string>
+
+    <string name="api_common_400">A kérés nem sikerült a szerver felé!</string>
+    <string name="api_common_500">Belső hiba! Próbálkozz később!</string>
+    <string name="api_error_common">Valami hiba történt! Próbálkozz később!</string>
+
+</resources>
