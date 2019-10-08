@@ -1,6 +1,7 @@
 package elte.moneyshare.view
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -36,7 +37,9 @@ class LoginFragment : Fragment() {
             viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
             //viewModel.putLoginUser(email, password) { response, error ->
                 if(error == null) {
-                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
+                    val intent = Intent(context, MainActivity::class.java)
+                    startActivity(intent)
+                    //activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.AUTH_LOGIN,context), context)
                 }

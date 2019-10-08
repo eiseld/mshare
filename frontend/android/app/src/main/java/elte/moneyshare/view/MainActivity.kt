@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //supportActionBar?.setLogo(R.mipmap.ic_launcher)
         //supportActionBar?.setDisplayUseLogoEnabled(true)
 
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container, LoginFragment()).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container, GroupsFragment()).commit()
 
         groupsViewModel = ViewModelProviders.of(this).get(GroupsViewModel::class.java)
     }
