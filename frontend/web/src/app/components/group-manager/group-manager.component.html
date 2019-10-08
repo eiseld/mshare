@@ -1,0 +1,83 @@
+<div class="page-container">
+  <div class="group-manager-wrapper">
+    <nav class="sidebar-nav col-md-2 d-none d-md-block">
+      <div class="sidebar">
+        <h3 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Csoportok</span>
+          <a class="d-flex align-items-center text-muted" *ngIf="!createGroupAttempt" (click)="startCreateGroup()">
+            <svg xmlns=" http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="feather feather-plus-circle">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="16"></line>
+              <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+            <i class="fas fa-plus"></i>
+          </a>
+        </h3>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item" *ngFor="let groupInfo of groupInfos">
+            <a (click)=selectGroup(groupInfo) class="nav-link sidebar-nav-link">
+              <h5 class="sidebar-heading justify-content-between align-items-center px-3 mt-4 mb-2 text-muted">
+                {{groupInfo.name}} ({{groupInfo.memberCount}})
+              </h5>
+              <h6 class="sidebar-heading justify-content-between align-items-center px-3 mt-4 mb-2 text-muted">
+                Létrehozta: {{groupInfo.creator}}
+              </h6>
+              <h6 class="sidebar-heading justify-content-between align-items-center px-3 mt-4 mb-2 text-muted">
+                Egyenleg: <span *ngIf="">{{groupInfo.myCurrentBalance | currency}}</span>
+                <span
+                  [ngClass]="{'negative-balance': groupInfo.myCurrentBalance < 0, 'positive-balance': groupInfo.myCurrentBalance >= 0}">
+                  {{groupInfo.myCurrentBalance | currency}}
+                </span>
+              </h6>
+            </a>
+            <div class="sidebar-heading align-items-center sidebar-action-button">
+              <button *ngIf="groupInfo.creator === currentUser.name" class="btn btn-secondary"
+                (click)="open(content, groupInfo)">Új felhasználó hozzáadása</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </nav>
+
+    <div id="content" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+      <div class="createGroupDiv">
+        <input class="groupNameInput" *ngIf="createGroupAttempt" [(ngModel)]="newGroup" placeholder="név">
+        <button class="btn btn-primary" *ngIf="createGroupAttempt" (click)="stopCreateGroup()">Mégse</button>
+        <button class="btn btn-danger" *ngIf="createGroupAttempt" (click)="createGroup()">OK</button>
+        <div *ngIf="error.length >0" [ngClass]="success ? 'alert alert-success alert-dismissible' : 'alert alert-danger alert-dismissible'">
+          <a href="#" class="close" data-dismiss="alert" (click)="clearErrorMessage()" aria-label="close">&times;</a>{{error}}</div>
+      </div>
+
+      <app-spending-creator class="spendingCreator" [createSpendingAttempt]="createSpendingAttempt"
+        [spendingForGroupData]="spendingForGroupData" [spending]="modifiableSpending"
+        [modifySpendingAttempt]="modifySpendingAttempt" (createSpendingAttemptStop)="stopCreateSpendingAttempt()"
+        (updateSelectedGroupEvent)='updateSelectedGroup()'></app-spending-creator>
+
+      <app-group-detail class="groupDetail" [groupData]="selectedGroup" [spendings]="selectedGroupSpendings"
+        (startSpendingCreation)="startCreateSpending($event)" (startSpendingModification)="startModifySpending($event)"
+        (updateSelectedGroupEvent)='updateSelectedGroup()'></app-group-detail>
+      <div class="clear"></div>
+
+
+      <ng-template #content let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Add user to the selected group</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding-bottom: 100px;">
+          <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="selectedUser"
+            [ngbTypeahead]="search" (keyup)="onKeyDown($event)" />
+        </div>
+        <button type="button" class="btn btn-outline-dark"
+          (click)="stringToUser();modal.close('Save click')">Save</button>
+      </ng-template>
+
+    </div>
+  </div>
+</div>
