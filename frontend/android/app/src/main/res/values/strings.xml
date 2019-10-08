@@ -137,5 +137,6 @@
     <string name="api_common_400">A kérés nem sikerült a szerver felé!</string>
     <string name="api_common_500">Belső hiba! Próbálkozz később!</string>
     <string name="api_error_common">Valami hiba történt! Próbálkozz később!</string>
+    <string name="welcome">Üdvözöljük!</string>
 
 </resources>

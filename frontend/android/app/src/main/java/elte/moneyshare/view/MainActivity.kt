@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.navHome -> {
-
+                supportFragmentManager.beginTransaction().replace(R.id.frame_container, GroupsFragment()).commit()
             }
             R.id.navSettings -> {
 
