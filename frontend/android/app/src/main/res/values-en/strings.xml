@@ -46,6 +46,8 @@
     <string name="my_balance">My balance: </string>
     <string name="my_debts">My debts</string>
 
+    <string name="member_owe">You owe \n %1$d Ft</string>
+    <string name="member_owed">He/She owes \n %1$d Ft</string>
 
     <string name="bill_money">%1$d Ft</string>
 
