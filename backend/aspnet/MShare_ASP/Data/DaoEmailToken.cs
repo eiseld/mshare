@@ -5,16 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MShare_ASP.Data
 {
-
     /// <summary>Data Access Object for EmailToken</summary>
     [Table("email_tokens", Schema = "mshare")]
     public class DaoEmailToken
     {
-
         /// <summary>Determines the type of an email</summary>
         public enum Type
         {
-
             /// <summary>Used for password related (e.g. forgotten password) emails</summary>
             Password = 1,
 

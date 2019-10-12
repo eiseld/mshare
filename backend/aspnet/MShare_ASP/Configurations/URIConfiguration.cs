@@ -2,11 +2,9 @@
 
 namespace MShare_ASP.Configurations
 {
-
     /// <summary>URI related configurations go here</summary>
     public interface IURIConfiguration
     {
-
         /// <summary>URI that the end user sees (like in an email)</summary>
         String URIForEndUsers { get; }
 
@@ -16,7 +14,6 @@ namespace MShare_ASP.Configurations
 
     internal class URIConfiguration : IURIConfiguration
     {
-
         public String URIForEndUsers { get; set; }
 
         public String SwaggerProxyUri { get; set; }

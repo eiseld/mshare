@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using MShare_ASP.API.Request;
+﻿using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
-
     /// <summary>User related services</summary>
     public interface IUserService
     {
-
         /// <summary>Converts user data from internal to facing</summary>
         UserData ToUserData(DaoUser daoUser);
 
@@ -24,8 +22,10 @@ namespace MShare_ASP.Services
         Task<DaoUser> GetUser(long userId);
 
 #if DEBUG
+
         /// <summary>Gets all user (DEBUG ONLY)</summary>
         Task<IList<DaoUser>> GetUsers();
+
 #endif
 
         /// <summary>Sends the forgotten password email to the user</summary>
@@ -48,5 +48,5 @@ namespace MShare_ASP.Services
         /// <exception cref="DatabaseException">["account_number_update_failed"]</exception>
         /// <exception cref="ResourceNotFoundException">["user"]</exception>
         Task UpdateBankAccoutNumber(long userId, String accountNumber);
-	}
+    }
 }

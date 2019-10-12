@@ -1,10 +1,8 @@
 ﻿namespace MShare_ASP.API.Response
 {
-
     /// <summary>Describes a group's minimal data</summary>
     public class GroupInfo
     {
-
         /// <summary>Id of the group</summary>
         public long Id { get; set; }
 

@@ -3,12 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MShare_ASP.Data
 {
-
     /// <summary>Data Access Object for EmailToken</summary>
     [Table("optimized_debt", Schema = "mshare")]
     public class DaoOptimizedDebt
     {
-
         /// <summary>Foreign key to the group</summary>
         [Column("group_id")]
         public long GroupId { get; set; } = 0;

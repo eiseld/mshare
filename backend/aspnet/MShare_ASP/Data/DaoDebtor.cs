@@ -3,12 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MShare_ASP.Data
 {
-
     /// <summary>Data Access Object for Debtors</summary>
     [Table("debtors", Schema = "mshare")]
     public class DaoDebtor
     {
-
         /// <summary>Id of the spending's id associated with this debt</summary>
         [Column("spending_id")]
         public long SpendingId { get; set; }

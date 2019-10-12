@@ -3,15 +3,12 @@ using System.Linq;
 
 namespace MShare_ASP.API.Request
 {
-
     /// <summary>Describes the structure of the request for creating a new spending</summary>
     public class NewSpending
     {
-
         /// <summary>Debtor structure that should be added for this Spending</summary>
         public class Debtor
         {
-
             /// <summary>Id of the debtor</summary>
             public long DebtorId { get; set; }
 
@@ -39,7 +36,6 @@ namespace MShare_ASP.API.Request
     /// <summary>Validator object for NewSpending's Debtor subclass</summary>
     public class NewSpending_DebtorValidator : AbstractValidator<NewSpending.Debtor>
     {
-
         /// <summary>Initializes the validator object</summary>
         public NewSpending_DebtorValidator()
         {
@@ -56,7 +52,6 @@ namespace MShare_ASP.API.Request
     /// <summary>Validator object for NewUser data class</summary>
     public class NewSpendingValidator : AbstractValidator<NewSpending>
     {
-
         /// <summary>Initializes the validator object</summary>
         public NewSpendingValidator()
         {

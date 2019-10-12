@@ -6,12 +6,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MShare_ASP.Data
 {
-
     /// <summary>Data Access Object for Group</summary>
     [Table("groups", Schema = "mshare")]
     public class DaoGroup
     {
-
         /// <summary>Primary key for Group</summary>
         [Key]
         [Column("id")]

@@ -1,10 +1,4 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using EmailTemplates;
+﻿using EmailTemplates;
 using EmailTemplates.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -14,6 +8,12 @@ using MShare_ASP.Configurations;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
 using MShare_ASP.Utils;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
@@ -41,7 +41,8 @@ namespace MShare_ASP.Services
             random = new Random();
         }
 
-        public async Task<string> Login(LoginCredentials credentials) {
+        public async Task<string> Login(LoginCredentials credentials)
+        {
             string hashedPassword = Hasher.GetHash(credentials.Password);
             var usr = Context.Users
                 .Include(x => x.EmailTokens)

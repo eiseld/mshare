@@ -4,12 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MShare_ASP.Data
 {
-
     /// <summary>Data Access Object for History</summary>
     [Table("history", Schema = "mshare")]
     public class DaoHistory
     {
-
         /// <summary>Primary key of the history</summary>
         [Key]
         [Column("id")]

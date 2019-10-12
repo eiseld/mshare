@@ -1,23 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MShare_ASP.API.Request;
-using MShare_ASP.Services;
 using MShare_ASP.API.Response;
+using MShare_ASP.Services;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Controllers
 {
-
     /// <summary>Profile controller contains information the currently logged in active user</summary>
     [Route("[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class ProfileController : BaseController
     {
-
         private IGroupService GroupService { get; }
         private IUserService UserService { get; }
 
@@ -41,7 +39,7 @@ namespace MShare_ASP.Controllers
             return Ok();
         }
 
-        /// <summary>Set the given password for the user with the given email address if the reset token is still valid</summary> 
+        /// <summary>Set the given password for the user with the given email address if the reset token is still valid</summary>
         /// <param name="passwordUpdate">Password update information</param>
         /// <response code="200">Successfully updated password</response>
         /// <response code="400">Possible request body validation failure</response>
@@ -55,26 +53,26 @@ namespace MShare_ASP.Controllers
         {
             await UserService.UpdatePassword(passwordUpdate);
             return Ok();
-		}
+        }
 
-        /// <summary>Set the given bank account number for the loged in user</summary> 
+        /// <summary>Set the given bank account number for the loged in user</summary>
         /// <param name="bankAccountNumberUpdate">Bank account update information</param>
         /// <response code="200">Successfully updated bank account number</response>
         /// <response code="400">Possible request body validation failure</response>
         /// <response code="404">Not found: 'user'</response>
         /// <response code="500">Internal error: 'account_number_update_failed'</response>
         [HttpPost]
-		[Route("bankaccountnumber/update")]
-		public async Task<ActionResult> UpdateBankAccountNumber([FromBody] BankAccountNumberUpdate bankAccountNumberUpdate)
-		{
+        [Route("bankaccountnumber/update")]
+        public async Task<ActionResult> UpdateBankAccountNumber([FromBody] BankAccountNumberUpdate bankAccountNumberUpdate)
+        {
             await UserService.UpdateBankAccoutNumber(GetCurrentUserID(), bankAccountNumberUpdate.BankAccountNumber);
-			return Ok();
-		}
+            return Ok();
+        }
 
-		/// <summary>Gets the name and id of the signed in user</summary>
-		/// <response code="200">Successfully returned user data</response>
-		/// <response code="404">Not found: 'user'</response>
-		[HttpGet]
+        /// <summary>Gets the name and id of the signed in user</summary>
+        /// <response code="200">Successfully returned user data</response>
+        /// <response code="404">Not found: 'user'</response>
+        [HttpGet]
         public async Task<ActionResult<UserData>> Get()
         {
             var userData = UserService.ToUserData(await UserService.GetUser(GetCurrentUserID()));

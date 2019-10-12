@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EmailTemplates;
+﻿using EmailTemplates;
 using EmailTemplates.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -10,7 +7,9 @@ using MShare_ASP.API.Response;
 using MShare_ASP.Configurations;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
-
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
@@ -36,7 +35,6 @@ namespace MShare_ASP.Services
             var debt = daoOptimizedDebts
                 .Where(x => x.UserOwesId == userId)
                 .Sum(x => x.OweAmount);
-
 
             return credit - debt;
         }
@@ -97,6 +95,7 @@ namespace MShare_ASP.Services
         }
 
 #if DEBUG
+
         public async Task<IList<DaoGroup>> GetGroups()
         {
             return await Context.Groups
@@ -104,6 +103,7 @@ namespace MShare_ASP.Services
                 .Include(x => x.CreatorUser)
                 .ToListAsync();
         }
+
 #endif
 
         public async Task<IList<DaoGroup>> GetGroupsOfUser(long userId)
@@ -214,7 +214,6 @@ namespace MShare_ASP.Services
             if (daoGroup.CreatorUserId != userId)
                 throw new ResourceForbiddenException("not_group_creator");
 
-
             if (daoGroup.Members.Any(x => x.UserId == memberId))
             {
                 throw new BusinessException("user_already_member");
@@ -250,6 +249,5 @@ namespace MShare_ASP.Services
                 await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, newMember.DisplayName, newMember.Email, Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT), htmlBody);
             }
         }
-
     }
 }

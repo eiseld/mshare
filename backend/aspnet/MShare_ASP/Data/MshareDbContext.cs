@@ -3,11 +3,9 @@ using MShare_ASP.Utils;
 
 namespace MShare_ASP.Data
 {
-
     /// <summary>Db Context for all data in MShare</summary>
     public class MshareDbContext : DbContext
     {
-
         /// <summary>User informations</summary>
         public DbSet<DaoUser> Users { get; set; }
 
@@ -39,12 +37,10 @@ namespace MShare_ASP.Data
         public MshareDbContext(DbContextOptions<MshareDbContext> options) :
             base(options)
         {
-
             this.ConfigureLogging(s =>
             {
                 System.Console.WriteLine(s);
             }, LoggingCategories.All);
-
         }
 
         /// <summary>Database rules that can only be solved with fluid notation (data annotations don't work)</summary>

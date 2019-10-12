@@ -2,11 +2,9 @@
 
 namespace MShare_ASP.API.Response
 {
-
     /// <summary>Facing Data for a specific spending</summary>
     public class SpendingData
     {
-
         /// <summary>Id of the spending</summary>
         public long Id { get; set; }
 

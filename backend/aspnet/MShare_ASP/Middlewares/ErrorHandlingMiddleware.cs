@@ -7,11 +7,9 @@ using Ex = MShare_ASP.Services.Exceptions;
 
 namespace MShare_ASP.Middlewares
 {
-
     /// <summary>All thrown (and uncaught) exceptions bubble here</summary>
     public class ErrorHandlingMiddleware
     {
-
         private readonly RequestDelegate next;
 
         /// <summary>Initializes the middleware, runs "before" requests, next ecapsulates the request</summary>
@@ -54,7 +52,7 @@ namespace MShare_ASP.Middlewares
             var errorMessage = new
             {
                 errors = new Object[] { ex.Message }
-#if DEBUG 
+#if DEBUG
                 ,
                 stackTrace = ex.StackTrace.ToString(),
                 innerException = ex.InnerException?.Message

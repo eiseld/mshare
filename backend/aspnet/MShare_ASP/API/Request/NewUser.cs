@@ -5,11 +5,9 @@ using System.Linq;
 
 namespace MShare_ASP.API.Request
 {
-
     /// <summary>Represents a new user to be registered</summary>
     public class NewUser
     {
-
         /// <summary>Email of the user as in SMTP standard</summary>
         public String Email { get; set; }
 
@@ -26,7 +24,6 @@ namespace MShare_ASP.API.Request
     /// <summary>Validator object for NewUser data class</summary>
     public class NewUserValidator : AbstractValidator<NewUser>
     {
-
         /// <summary>Initializes the validator object</summary>
         public NewUserValidator()
         {

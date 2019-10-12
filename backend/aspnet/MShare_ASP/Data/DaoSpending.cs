@@ -5,12 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MShare_ASP.Data
 {
-
     /// <summary>Data Access Object for Spendings</summary>
     [Table("spendings", Schema = "mshare")]
     public class DaoSpending
     {
-
         /// <summary>Unique Id of this spending</summary>
         [Key]
         [Column("id")]

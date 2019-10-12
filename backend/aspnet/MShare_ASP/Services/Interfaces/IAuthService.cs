@@ -1,15 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
-using MShare_ASP.API.Request;
+﻿using MShare_ASP.API.Request;
 using MShare_ASP.Services.Exceptions;
+using System;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
-
     /// <summary>Authentication related services</summary>
     public interface IAuthService
     {
-
         /// <summary>Checks the credentials of the user and signs him in.</summary>
         /// <exception cref="BusinessException">["not_verified"]</exception>
         /// <exception cref="ResourceForbiddenException">["invalid_credentials"]</exception>

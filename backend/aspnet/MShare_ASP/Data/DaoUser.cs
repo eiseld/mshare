@@ -5,12 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MShare_ASP.Data
 {
-
     /// <summary>Data Access Object for User</summary>
     [Table("users", Schema = "mshare")]
     public class DaoUser
     {
-
         /// <summary>Primary key of the user</summary>
         [Key]
         [Column("id")]
@@ -40,9 +38,9 @@ namespace MShare_ASP.Data
         /// <summary>All email tokens associated with user</summary>
         public IEnumerable<DaoEmailToken> EmailTokens { get; set; }
 
-		/// <summary>Bank account number of the user</summary>
-		[Column("bank_account_number")]
-		public String BankAccountNumber { get; set; }
+        /// <summary>Bank account number of the user</summary>
+        [Column("bank_account_number")]
+        public String BankAccountNumber { get; set; }
 
         /// <summary>All groups associated with user</summary>
         public IEnumerable<DaoUsersGroupsMap> Groups { get; set; }

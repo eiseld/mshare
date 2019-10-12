@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MShare_ASP.Data
@@ -21,6 +20,7 @@ namespace MShare_ASP.Data
         {
             /// <summary>English</summary>
             EN = 1,
+
             /// <summary>Hungarian</summary>
             HU = 2
         }

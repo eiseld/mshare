@@ -3,12 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MShare_ASP.Data
 {
-
     /// <summary>Data Access Object for Settlements</summary>
     [Table("settlements", Schema = "mshare")]
     public class DaoSettlement
     {
-
         /// <summary>Unique Id of this settlement</summary>
         [Key]
         [Column("id")]

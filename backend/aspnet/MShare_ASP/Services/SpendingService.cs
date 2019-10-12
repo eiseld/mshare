@@ -1,12 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
 using MShare_ASP.Utils;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
@@ -92,7 +92,6 @@ namespace MShare_ASP.Services
             await Context.SaveChangesAsync();
             //save results
         }
-
 
         public SpendingService(MshareDbContext context, IUserService userService, IGroupService groupService)
         {

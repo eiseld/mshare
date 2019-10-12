@@ -2,11 +2,9 @@
 
 namespace MShare_ASP.API.Response
 {
-
     /// <summary>Describes the group member's data</summary>
     public class MemberData
     {
-
         /// <summary>Id of the member</summary>
         public long Id { get; set; }
 

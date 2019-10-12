@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using MimeKit;
 using MimeKit.Text;
 using MShare_ASP.Configurations;
+using System;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
@@ -31,8 +31,8 @@ namespace MShare_ASP.Services
             {
                 Text = message
             };
-             
-            using (var client = new SmtpClient()) 
+
+            using (var client = new SmtpClient())
             {
                 client.ServerCertificateValidationCallback = (s, c, ch, e) => true;
 

@@ -5,7 +5,6 @@ namespace MShare_ASP
 {
     internal class Program
     {
-
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();

@@ -5,14 +5,12 @@ using System.Security.Claims;
 
 namespace MShare_ASP.Controllers
 {
-
     /// <summary>
     /// Every custom controller should inherit from this BaseController
     /// NOTE! Do not confuse this with `ControllerBase`
     /// </summary>
     public class BaseController : ControllerBase
     {
-
         /// <summary>Initializes a BaseController</summary>
         public BaseController() { }
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EmailTemplates;
+﻿using EmailTemplates;
 using EmailTemplates.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
@@ -12,10 +8,13 @@ using MShare_ASP.Configurations;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
 using MShare_ASP.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
-
     internal class UserService : IUserService
     {
         private MshareDbContext Context { get; }
@@ -59,7 +58,7 @@ namespace MShare_ASP.Services
             {
                 Id = daoUser.Id,
                 Name = daoUser.DisplayName,
-				BankAccountNumber = daoUser.BankAccountNumber ?? ""
+                BankAccountNumber = daoUser.BankAccountNumber ?? ""
             };
         }
 
@@ -82,6 +81,7 @@ namespace MShare_ASP.Services
         }
 
 #if DEBUG
+
         public async Task<IList<DaoUser>> GetUsers()
         {
             return await Context.Users
@@ -89,6 +89,7 @@ namespace MShare_ASP.Services
                 .Include(x => x.Groups).ThenInclude(x => x.User)
                 .Include(x => x.Groups).ThenInclude(x => x.Group).ToListAsync();
         }
+
 #endif
 
         public async Task SendForgotPasswordMail(string email, DaoLangTypes.Type lang)
@@ -111,7 +112,6 @@ namespace MShare_ASP.Services
 
                     if (await Context.SaveChangesAsync() != 1)
                         throw new DatabaseException("token_not_saved");
-
 
                     var model = new ConfirmationViewModel()
                     {
@@ -210,17 +210,15 @@ namespace MShare_ASP.Services
                     throw new DatabaseException("lang_update_failed");
             }
         }
-    
-		
-		public async Task UpdateBankAccoutNumber(long userId, String accountNumber)
-		{
+
+        public async Task UpdateBankAccoutNumber(long userId, String accountNumber)
+        {
             var daoUser = await GetUser(userId);
 
             daoUser.BankAccountNumber = accountNumber;
 
             if (await Context.SaveChangesAsync() != 1)
                 throw new DatabaseException("account_number_update_failed");
-		}
-
-	}
+        }
+    }
 }

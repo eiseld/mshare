@@ -1,21 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MShare_ASP.Services;
 using MShare_ASP.API.Response;
+using MShare_ASP.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Controllers
 {
-
     /// <summary>Controller is responsible for anything spending related, e.g. adding a new spending to a group, updating, deleting it</summary>
     [Route("[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class SpendingController : BaseController
     {
-
         private ISpendingService SpendingService { get; }
 
         /// <summary>Initializes the SpendingController</summary>

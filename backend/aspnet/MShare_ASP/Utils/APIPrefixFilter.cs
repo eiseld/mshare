@@ -1,13 +1,11 @@
-﻿using Swashbuckle.AspNetCore.Swagger;
+﻿using MShare_ASP.Configurations;
+using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using MShare_ASP.Configurations;
 
 namespace MShare_ASP.Utils
 {
-
     internal class APIPrefixFilter : IDocumentFilter
     {
-
         private IURIConfiguration UriConf { get; }
 
         public APIPrefixFilter(IURIConfiguration uriConf)

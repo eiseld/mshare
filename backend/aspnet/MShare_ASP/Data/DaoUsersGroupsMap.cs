@@ -2,12 +2,10 @@
 
 namespace MShare_ASP.Data
 {
-
     /// <summary>Junction table for Users and Groups many-to-many connection</summary>
     [Table("users_groups_map", Schema = "mshare")]
     public class DaoUsersGroupsMap
     {
-
         /// <summary>Composite key of this table</summary>
         [Column("user_id")]
         public long UserId { get; set; }

@@ -1,19 +1,14 @@
 ﻿using FluentValidation;
-using MShare_ASP.Utils;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace MShare_ASP.API.Request
 {
-
     /// <summary>Describes the structure of the request for updating an existing spending</summary>
     public class SpendingUpdate
     {
-
         /// <summary>Debtor structure that should be added for this Spending</summary>
         public class Debtor
         {
-
             /// <summary>Id of the debtor</summary>
             public long DebtorId { get; set; }
 
@@ -24,6 +19,7 @@ namespace MShare_ASP.API.Request
             /// </summary>
             public long? Debt { get; set; }
         }
+
         /// <summary>Group id of the spending to be added to</summary>
         public long GroupId { get; set; }
 
@@ -46,7 +42,6 @@ namespace MShare_ASP.API.Request
     /// <summary>Validator object for SpendingUpdate's Debtor subclass</summary>
     public class SpendingUpdate_DebtorValidator : AbstractValidator<SpendingUpdate.Debtor>
     {
-
         /// <summary>Initializes the validator object</summary>
         public SpendingUpdate_DebtorValidator()
         {
@@ -63,7 +58,6 @@ namespace MShare_ASP.API.Request
     /// <summary>Validator object for SpendingUpdate data class</summary>
     public class SpendingUpdateValidator : AbstractValidator<SpendingUpdate>
     {
-
         /// <summary>Initializes the validator object</summary>
         public SpendingUpdateValidator()
         {

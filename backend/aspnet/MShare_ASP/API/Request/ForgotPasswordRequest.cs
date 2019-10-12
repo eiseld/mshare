@@ -4,7 +4,6 @@ using System;
 
 namespace MShare_ASP.API.Request
 {
-
     /// <summary>Represents an Email</summary>
     public class ForgotPasswordRequest
     {
@@ -18,7 +17,6 @@ namespace MShare_ASP.API.Request
     /// <summary>Validator object for Email class</summary>
     public class ForgotPasswordRequestValidator : AbstractValidator<ForgotPasswordRequest>
     {
-
         /// <summary>Initializes the validator object</summary>
         public ForgotPasswordRequestValidator()
         {

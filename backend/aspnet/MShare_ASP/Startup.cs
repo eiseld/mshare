@@ -1,31 +1,28 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using EmailTemplates;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MShare_ASP.Data;
-using Microsoft.EntityFrameworkCore;
-using MShare_ASP.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using MShare_ASP.Data;
+using MShare_ASP.Middlewares;
+using MShare_ASP.Services;
+using MShare_ASP.Utils;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
-using System.Text;
-using FluentValidation.AspNetCore;
-using Conf = MShare_ASP.Configurations;
-using MShare_ASP.Utils;
-using MShare_ASP.Middlewares;
 using System.Linq;
-using System;
-using EmailTemplates;
+using System.Text;
+using Conf = MShare_ASP.Configurations;
 
 namespace MShare_ASP
 {
-
     /// <summary>Startup for the servcer</summary>
     public class Startup
     {
-
         /// <summary>Initializes a new startup with a configuration</summary>
         public Startup(IConfiguration configuration)
         {
@@ -154,13 +151,11 @@ namespace MShare_ASP
                 };
             });
             System.Console.WriteLine(Configuration.GetSection("MShareSettings")["UrlForUsers"]);
-
         }
 
         /// <summary>This method gets called by the runtime. Use this method to configure the HTTP request pipeline.</summary>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
             else

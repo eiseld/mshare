@@ -1,10 +1,8 @@
 ﻿namespace MShare_ASP.Configurations
 {
-
     /// <summary>Configurations for an email account</summary>
     public interface IEmailConfiguration
     {
-
         /// <summary>Name of the account (e.g. Mshare Noreply)</summary>
         string Name { get; }
 
@@ -23,7 +21,6 @@
 
     internal class EmailConfiguration : IEmailConfiguration
     {
-
         public string Name { get; set; }
 
         public string Address { get; set; }

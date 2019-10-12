@@ -1,25 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using MShare_ASP.API.Response;
 using MShare_ASP.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Controllers
 {
-
     /// <summary>GroupController is responsible for Group related actions</summary>
     [Route("[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class GroupController : BaseController
     {
-
         private IGroupService GroupService { get; }
         private ISpendingService SpendingService { get; }
-
 
         /// <summary>Initializes the GroupController</summary>
         public GroupController(IGroupService groupService, ISpendingService spendingService)
@@ -29,6 +26,7 @@ namespace MShare_ASP.Controllers
         }
 
 #if DEBUG
+
         /// <summary>Lists all groups (DEBUG ONLY)</summary>
         /// <response code="200">Successfully returned all groups</response>
         /// <response code="403">Forbidden: 'not_group_member'</response>
@@ -41,6 +39,7 @@ namespace MShare_ASP.Controllers
             var groupData = GroupService.ToGroupData(1, await GroupService.GetGroups());
             return Ok(groupData);
         }
+
 #endif
 
         /// <summary>Gets the basic information of the given group</summary>
@@ -141,7 +140,6 @@ namespace MShare_ASP.Controllers
             var groupHistory = await GroupService.GetGroupHistory(GetCurrentUserID(), groupId);
             return Ok(groupHistory);
         }
-
 
         /// <summary>Settles a debt</summary>
         /// <param name="debtorId">Id of the debtor</param>
