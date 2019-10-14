@@ -5,13 +5,13 @@ namespace MShare_ASP.Utils
 {
     internal class SpendingOptimizer
     {
-        private long[,] owes;
+        private long[][] balanceMatrix;
         private int usercount;
 
-        public SpendingOptimizer(long[,] owes, int usercount)
+        public SpendingOptimizer(long[][] balanceMatrix)
         {
-            this.owes = owes;
-            this.usercount = usercount;
+            this.balanceMatrix = balanceMatrix;
+            this.usercount = balanceMatrix.Length;
         }
 
         public void Optimize()
@@ -20,27 +20,26 @@ namespace MShare_ASP.Utils
             ReduceTransfers();
         }
 
-        public long[,] GetResult()
+        public long[][] GetResult()
         {
-            return owes;
+            return balanceMatrix;
         }
 
         private void RemoveCycle()
         {
-            int n = usercount;
-            bool[] visited = new bool[n];
-            bool[] stack = new bool[n];
+            bool[] visited = new bool[usercount];
+            bool[] stack = new bool[usercount];
             bool foundcycle = true;
             while (foundcycle)
             {
                 foundcycle = false;
-                for (int i = 0; i < n; i++)
+                for (int i = 0; i < usercount; i++)
                 {
                     visited[i] = false;
                     stack[i] = false;
                 }
                 Stack<int> Path = new Stack<int>();
-                for (int i = 0; i < n && !foundcycle; i++)
+                for (int i = 0; i < usercount && !foundcycle; i++)
                 {
                     Path.Clear();
                     Path.Push(i);
@@ -50,9 +49,9 @@ namespace MShare_ASP.Utils
                         int[] cyclepath = Path.ToArray();
                         for (int j = 0; j < Path.Count - 1; j++)
                         {
-                            owes[cyclepath[j + 1], cyclepath[j]] -= cu;
+                            balanceMatrix[cyclepath[j + 1]][cyclepath[j]] -= cu;
                         }
-                        owes[cyclepath[0], cyclepath[Path.Count - 1]] -= cu;
+                        balanceMatrix[cyclepath[0]][cyclepath[Path.Count - 1]] -= cu;
                         foundcycle = true;
                     }
                 }
@@ -66,7 +65,7 @@ namespace MShare_ASP.Utils
             for (int i = 0; i < usercount; i++)
             {
                 Path.Push(i);
-                if (owes[v, i] > 0)
+                if (balanceMatrix[v][i] > 0)
                 {
                     long cu = 0;
                     bool visitedi = visited[i];
@@ -76,7 +75,7 @@ namespace MShare_ASP.Utils
                     }
                     if (visitedi == false && cu > 0)
                     {
-                        return Math.Min(cu, owes[v, i]);
+                        return Math.Min(cu, balanceMatrix[v][i]);
                     } else if (stack[i])
                     {
                         Path.Pop();
@@ -93,7 +92,7 @@ namespace MShare_ASP.Utils
                             while (tmp.Count != 0)
                                 Path.Push(tmp.Pop());
                         }
-                        return owes[v, i];
+                        return balanceMatrix[v][i];
                     }
                 }
                 Path.Pop();
@@ -116,7 +115,7 @@ namespace MShare_ASP.Utils
                     neighbors[i] = 0;
                     for (int j = 0; j < n; j++)
                     {
-                        if (owes[j, i] > 0)
+                        if (balanceMatrix[j][i] > 0)
                         {
                             neighbors[i] += 1;
                         }
@@ -132,7 +131,7 @@ namespace MShare_ASP.Utils
                             Topological.Push(i);
                             for (int j = 0; j < n; j++)
                             {
-                                if (owes[i, j] > 0)
+                                if (balanceMatrix[i][j] > 0)
                                 {
                                     neighbors[j] -= 1;
                                 }
@@ -161,15 +160,15 @@ namespace MShare_ASP.Utils
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        if (owes[TopologicalArray[i], j] > 0)
+                        if (balanceMatrix[TopologicalArray[i]][j] > 0)
                         {
                             if (len[j] < len[TopologicalArray[i]] + 1)
                             {
                                 if (cost[TopologicalArray[i]] == -1)
                                 {
-                                    cost[j] = owes[TopologicalArray[i], j];
+                                    cost[j] = balanceMatrix[TopologicalArray[i]][j];
                                 } else
-                                    cost[j] = Math.Min(cost[TopologicalArray[i]], owes[TopologicalArray[i], j]);
+                                    cost[j] = Math.Min(cost[TopologicalArray[i]], balanceMatrix[TopologicalArray[i]][j]);
                                 len[j] = len[TopologicalArray[i]] + 1;
                                 parent[j] = TopologicalArray[i];
                             }
@@ -196,10 +195,10 @@ namespace MShare_ASP.Utils
                     int curr = max_ind;
                     while (parent[curr] != -1)
                     {
-                        owes[parent[curr], curr] -= max_save_per;
+                        balanceMatrix[parent[curr]][curr] -= max_save_per;
                         curr = parent[curr];
                     }
-                    owes[curr, max_ind] += max_save_per;
+                    balanceMatrix[curr][max_ind] += max_save_per;
                 }
             }
         }

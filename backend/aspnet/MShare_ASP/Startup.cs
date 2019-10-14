@@ -108,6 +108,7 @@ namespace MShare_ASP
             services.AddTransient<ITimeService, TimeService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISpendingService, SpendingService>();
+            services.AddTransient<IOptimizedService, OptimizedService>();
             services.AddTransient<ILoggingService, LoggingService>();
             services.AddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
 
