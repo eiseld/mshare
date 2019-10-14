@@ -34,6 +34,12 @@ class LoginFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        if(SharedPreferences.stayLoggedIn)
+        {
+            val intent = Intent(context, MainActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
+        }
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         loginButton.setOnClickListener {
@@ -42,6 +48,11 @@ class LoginFragment : Fragment() {
             viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
                 //    viewModel.putLoginUser(email, password) { response, error ->
                 if (error == null) {
+                    if(stayLoggedInCheckBox.isChecked)
+                    {
+                        SharedPreferences.stayLoggedIn = true
+                    }
+
                     val intent = Intent(context, MainActivity::class.java)
                     startActivity(intent)
                     activity?.finish()

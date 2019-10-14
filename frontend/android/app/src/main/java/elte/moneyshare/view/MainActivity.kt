@@ -92,6 +92,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             supportFragmentManager.beginTransaction().replace(R.id.frame_container, ProfileFragment())
                 ?.addToBackStack(null)?.commit()
             }
+            R.id.navLogout ->
+            {
+                SharedPreferences.stayLoggedIn = false
+                supportFragmentManager.beginTransaction().replace(R.id.frame_container, LoginFragment()).commit()
+            }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
