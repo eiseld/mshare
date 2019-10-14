@@ -35,9 +35,9 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
         holder.memberNameTextView.text = member.name
 
         if (member.balance < 0) {
-            holder.memberBalanceTextView.text = String.format(context.getString(R.string.group_owned), member.balance)
+            holder.memberBalanceTextView.text = String.format(context.getString(R.string.member_owed), member.balance)
         } else if (member.balance > 0) {
-            holder.memberBalanceTextView.text = String.format(context.getString(R.string.group_owe), member.balance)
+            holder.memberBalanceTextView.text = String.format(context.getString(R.string.member_owe), member.balance)
         } else {
             holder.memberBalanceTextView.text = context.getString(R.string.group_settled_up)
         }
