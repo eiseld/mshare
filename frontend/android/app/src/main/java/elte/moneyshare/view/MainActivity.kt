@@ -81,13 +81,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.navHome -> {
-                supportFragmentManager.beginTransaction().replace(R.id.frame_container, GroupsFragment()).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.frame_container, GroupsFragment())
+                    ?.addToBackStack(null)?.commit()
             }
             R.id.navSettings -> {
-                supportFragmentManager.beginTransaction().replace(R.id.frame_container, SettingsFragment()).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.frame_container, SettingsFragment())
+                    ?.addToBackStack(null)?.commit()
             }
             R.id.navProfile -> {
-            supportFragmentManager.beginTransaction().replace(R.id.frame_container, ProfileFragment()).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.frame_container, ProfileFragment())
+                ?.addToBackStack(null)?.commit()
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
