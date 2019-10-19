@@ -25,6 +25,7 @@
     <string name="email_not_matching">Emails not matching</string>
     <string name="email_not_correct">Email format is not correct</string>
     <string name="successful_registration">Successful registration!</string>
+    <string name="relog_error">Something went wrong, please log in again!</string>
 
     <!-- Popup mesages -->
     <string name="popup_title">Debt settlement</string>

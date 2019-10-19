@@ -12,6 +12,7 @@ import elte.moneyshare.view.Adapter.GroupsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_groups.*
 import elte.moneyshare.R
+import elte.moneyshare.SharedPreferences
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
@@ -58,6 +59,12 @@ class GroupsFragment : Fragment() {
                     groupsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     groupsRecyclerView.adapter = adapter
                 } else {
+                    if(SharedPreferences.stayLoggedIn)
+                    {
+                        SharedPreferences.stayLoggedIn = false
+                        DialogManager.showInfoDialog(context?.getString(R.string.relog_error).toString(),context)
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, LoginFragment())?.addToBackStack(null)?.commit()
+                    }
                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                 }
             }

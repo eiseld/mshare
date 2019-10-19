@@ -19,6 +19,7 @@ import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import java.util.*
+import kotlin.system.exitProcess
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -95,7 +96,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.navLogout ->
             {
                 SharedPreferences.stayLoggedIn = false
-                supportFragmentManager.beginTransaction().replace(R.id.frame_container, LoginFragment()).commit()
+                //supportFragmentManager.beginTransaction().replace(R.id.frame_container, LoginFragment()).commit()
+                this.finish()
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
