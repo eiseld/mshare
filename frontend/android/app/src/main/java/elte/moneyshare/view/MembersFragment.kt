@@ -17,6 +17,8 @@ import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_members.*
 import elte.moneyshare.entity.GroupData
 import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 
 
 class MembersFragment : Fragment() {
@@ -60,7 +62,7 @@ class MembersFragment : Fragment() {
                         membersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         membersRecyclerView.adapter = adapter
                     } else {
-                        DialogManager.showInfoDialog(error, context)
+                        DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                     }
                 }
             }

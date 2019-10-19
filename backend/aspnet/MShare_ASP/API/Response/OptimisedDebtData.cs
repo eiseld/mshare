@@ -1,10 +1,8 @@
 namespace MShare_ASP.API.Response
 {
-
     /// <summary> Describes an optimal debt</summary>
     public class OptimisedDebtData
     {
-
         /// <summary>Id of the Debtor</summary>
         public UserData Debtor { get; set; }
 

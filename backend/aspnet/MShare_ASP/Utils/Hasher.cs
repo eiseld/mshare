@@ -4,11 +4,9 @@ using System.Text;
 
 namespace MShare_ASP.Utils
 {
-
     /// <summary>Hashing algorithms</summary>
     public static class Hasher
     {
-
         /// <summary>Returns the sha256 of the given string</summary>
         public static string GetHash(string value)
         {

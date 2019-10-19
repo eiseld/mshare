@@ -1,24 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using EmailTemplates;
+using EmailTemplates.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
 using MShare_ASP.Configurations;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
 using MShare_ASP.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
-
     internal class UserService : IUserService
     {
         private MshareDbContext Context { get; }
         private IURIConfiguration UriConf { get; }
         private IEmailService EmailService { get; }
         private ITimeService TimeService { get; }
+        private IRazorViewToStringRenderer Renderer { get; }
+        private IStringLocalizer<LocalizationResource> Localizer { get; }
+
         private readonly Random random;
 
         /// <summary>Gets user with given email</summary>
@@ -36,12 +41,14 @@ namespace MShare_ASP.Services
             return daoUser;
         }
 
-        public UserService(MshareDbContext context, ITimeService timeService, IEmailService emailService, Configurations.IURIConfiguration uriConf)
+        public UserService(MshareDbContext context, ITimeService timeService, IEmailService emailService, IURIConfiguration uriConf, IStringLocalizer<LocalizationResource> localizer, IRazorViewToStringRenderer renderer)
         {
             Context = context;
             TimeService = timeService;
             EmailService = emailService;
             UriConf = uriConf;
+            Renderer = renderer;
+            Localizer = localizer;
             random = new Random();
         }
 
@@ -50,7 +57,8 @@ namespace MShare_ASP.Services
             return new UserData()
             {
                 Id = daoUser.Id,
-                Name = daoUser.DisplayName
+                Name = daoUser.DisplayName,
+                BankAccountNumber = daoUser.BankAccountNumber ?? ""
             };
         }
 
@@ -73,6 +81,7 @@ namespace MShare_ASP.Services
         }
 
 #if DEBUG
+
         public async Task<IList<DaoUser>> GetUsers()
         {
             return await Context.Users
@@ -80,15 +89,16 @@ namespace MShare_ASP.Services
                 .Include(x => x.Groups).ThenInclude(x => x.User)
                 .Include(x => x.Groups).ThenInclude(x => x.Group).ToListAsync();
         }
+
 #endif
 
-        public async Task SendForgotPasswordMail(ValidEmail email)
+        public async Task SendForgotPasswordMail(string email, DaoLangTypes.Type lang)
         {
             using (var transaction = Context.Database.BeginTransaction())
             {
                 try
                 {
-                    var daoUser = await GetUser(email.Email);
+                    var daoUser = await GetUser(email);
 
                     var emailToken = new DaoEmailToken()
                     {
@@ -103,7 +113,28 @@ namespace MShare_ASP.Services
                     if (await Context.SaveChangesAsync() != 1)
                         throw new DatabaseException("token_not_saved");
 
-                    await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Text, daoUser.DisplayName, email.Email, "Elfelejtett jelszó", $"Jelszó megváltoztatásához kattintson ide: {UriConf.URIForEndUsers}/reset?token={emailToken.Token}");
+                    var model = new ConfirmationViewModel()
+                    {
+                        Title = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_SUBJECT),
+                        PreHeader = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_PREHEADER),
+                        Hero = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_HERO),
+                        Greeting = Localizer.GetString(lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, daoUser.DisplayName),
+                        Intro = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_BODY_INTRO),
+                        EmailDisclaimer = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_BODY_DISCLAIMER),
+                        Cheers = Localizer.GetString(lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
+                        BadButton = Localizer.GetString(lang, LocalizationResource.EMAIL_FOOTER_BADBUTTON),
+                        MShareTeam = Localizer.GetString(lang, LocalizationResource.MSHARE_TEAM),
+                        SiteBaseUrl = $"{UriConf.URIForEndUsers}",
+                        Button = new EmailButtonViewModel()
+                        {
+                            Url = $"{UriConf.URIForEndUsers}/reset?token={emailToken.Token}",
+                            Text = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_BODY_BUTTON)
+                        }
+                    };
+                    var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/ConfirmationHtml.cshtml", model);
+
+                    await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, daoUser.DisplayName, email, Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_SUBJECT), htmlBody);
+
                     transaction.Commit();
                 } catch
                 {
@@ -143,7 +174,20 @@ namespace MShare_ASP.Services
                     if (await Context.SaveChangesAsync() != 1)
                         throw new DatabaseException("token_deletion_failed");
 
-                    await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Text, daoUser.DisplayName, daoUser.Email, "Jelszó változtatás", $"A mai napon jelszava megváltoztatásra került!");
+                    var model = new InformationViewModel()
+                    {
+                        Title = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_SUBJECT),
+                        PreHeader = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_PREHEADER),
+                        Hero = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_HERO),
+                        Greeting = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, daoUser.DisplayName),
+                        Intro = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_BODY_INTRO),
+                        EmailDisclaimer = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_BODY_DISCLAIMER),
+                        Cheers = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
+                        MShareTeam = Localizer.GetString(daoUser.Lang, LocalizationResource.MSHARE_TEAM),
+                        SiteBaseUrl = $"{UriConf.URIForEndUsers}"
+                    };
+                    var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
+                    await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, daoUser.DisplayName, daoUser.Email, Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_SUBJECT), htmlBody);
 
                     transaction.Commit();
                 } catch
@@ -154,5 +198,27 @@ namespace MShare_ASP.Services
             }
         }
 
+        public async Task UpdateLang(long userId, SetLang language)
+        {
+            var user = await GetUser(userId);
+
+            if (user.Lang != language.Lang)
+            {
+                user.Lang = language.Lang;
+
+                if (await Context.SaveChangesAsync() != 1)
+                    throw new DatabaseException("lang_update_failed");
+            }
+        }
+
+        public async Task UpdateBankAccoutNumber(long userId, String accountNumber)
+        {
+            var daoUser = await GetUser(userId);
+
+            daoUser.BankAccountNumber = accountNumber;
+
+            if (await Context.SaveChangesAsync() != 1)
+                throw new DatabaseException("account_number_update_failed");
+        }
     }
 }

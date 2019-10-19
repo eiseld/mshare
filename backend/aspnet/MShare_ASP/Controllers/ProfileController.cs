@@ -1,22 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MShare_ASP.Services;
+using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
+using MShare_ASP.Services;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Controllers
 {
-
     /// <summary>Profile controller contains information the currently logged in active user</summary>
     [Route("[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class ProfileController : BaseController
     {
-
         private IGroupService GroupService { get; }
         private IUserService UserService { get; }
 
@@ -28,19 +27,19 @@ namespace MShare_ASP.Controllers
         }
 
         /// <summary>Sends password reset email to the given email address</summary>
-        /// <param name="email">Valid email address</param>
+        /// <param name="forgotPasswordRequest">Valid email address and a language</param>
         /// <response code="200">Successfully sent password reset email (ALWAYS RETURNS THIS)</response>
         /// <response code="400">Possible request body validation failure</response>
         [HttpPost]
         [Route("password/forgot")]
         [AllowAnonymous]
-        public async Task<ActionResult> ForgotPassword([FromBody] API.Request.ValidEmail email)
+        public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordRequest forgotPasswordRequest)
         {
-            await UserService.SendForgotPasswordMail(email);
+            await UserService.SendForgotPasswordMail(forgotPasswordRequest.Email, forgotPasswordRequest.Lang);
             return Ok();
         }
 
-        /// <summary>Set the given password for the user with the given email address if the reset token is still valid</summary> 
+        /// <summary>Set the given password for the user with the given email address if the reset token is still valid</summary>
         /// <param name="passwordUpdate">Password update information</param>
         /// <response code="200">Successfully updated password</response>
         /// <response code="400">Possible request body validation failure</response>
@@ -53,6 +52,20 @@ namespace MShare_ASP.Controllers
         public async Task<ActionResult> UpdatePassword([FromBody] API.Request.PasswordUpdate passwordUpdate)
         {
             await UserService.UpdatePassword(passwordUpdate);
+            return Ok();
+        }
+
+        /// <summary>Set the given bank account number for the loged in user</summary>
+        /// <param name="bankAccountNumberUpdate">Bank account update information</param>
+        /// <response code="200">Successfully updated bank account number</response>
+        /// <response code="400">Possible request body validation failure</response>
+        /// <response code="404">Not found: 'user'</response>
+        /// <response code="500">Internal error: 'account_number_update_failed'</response>
+        [HttpPost]
+        [Route("bankaccountnumber/update")]
+        public async Task<ActionResult> UpdateBankAccountNumber([FromBody] BankAccountNumberUpdate bankAccountNumberUpdate)
+        {
+            await UserService.UpdateBankAccoutNumber(GetCurrentUserID(), bankAccountNumberUpdate.BankAccountNumber);
             return Ok();
         }
 
@@ -92,6 +105,18 @@ namespace MShare_ASP.Controllers
             var groupData = await GroupService.ToGroupData(userId, await GroupService.GetGroupOfUser(userId, fromGroup));
             var memberData = groupData.Members.Single(member => member.Id == userId);
             return Ok(memberData);
+        }
+
+        /// <summary>Updates the language of the current user</summary>
+        /// <param name="newLanguage">New language of the user</param>
+        /// <response code="200">Successfully updated language</response>
+        /// <response code="500">Update failed: 'lang_update_failed'</response>
+        [HttpPut]
+        [Route("lang")]
+        public async Task<IActionResult> SetLang([FromBody] SetLang newLanguage)
+        {
+            await UserService.UpdateLang(GetCurrentUserID(), newLanguage);
+            return Ok();
         }
     }
 }

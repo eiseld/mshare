@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MShare_ASP.API.Response;
 using MShare_ASP.Services;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Controllers
 {
-
     /// <summary>Authentication controller responseible for logging users in and registering new users.</summary>
     [Route("[controller]")]
     [ApiController]
     public class AuthController : BaseController
     {
-
         private IAuthService AuthService { get; }
         private IUserService UserService { get; }
 
@@ -26,6 +24,7 @@ namespace MShare_ASP.Controllers
         }
 
 #if DEBUG
+
         /// <summary>Lists all users (DEBUG ONLY)</summary>
         /// <response code="200">Successfully returned all users</response>
         [HttpGet]
@@ -34,6 +33,7 @@ namespace MShare_ASP.Controllers
             var userData = UserService.ToUserData(await UserService.GetUsers());
             return Ok(userData);
         }
+
 #endif
 
         /// <summary>Register a new user</summary>
@@ -72,9 +72,9 @@ namespace MShare_ASP.Controllers
         /// <response code="409">Conflict: 'not_verified'</response>
         [HttpPut()]
         [Route("login")]
-        public ActionResult<JWTToken> Login([FromBody] API.Request.LoginCredentials loginCred)
+        public async Task<ActionResult<JWTToken>> Login([FromBody] API.Request.LoginCredentials loginCred)
         {
-            var token = AuthService.Login(loginCred);
+            var token = await AuthService.Login(loginCred);
             return Ok(new JWTToken()
             {
                 Token = token

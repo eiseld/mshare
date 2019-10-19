@@ -1,14 +1,13 @@
 ﻿using FluentValidation;
+using MShare_ASP.Data;
 using System;
 using System.Linq;
 
 namespace MShare_ASP.API.Request
 {
-
     /// <summary>Represents a new user to be registered</summary>
     public class NewUser
     {
-
         /// <summary>Email of the user as in SMTP standard</summary>
         public String Email { get; set; }
 
@@ -17,12 +16,14 @@ namespace MShare_ASP.API.Request
 
         /// <summary>Unhashed password</summary>
         public String Password { get; set; }
+
+        /// <summary> 2 character representation of the language </summary>
+        public DaoLangTypes.Type Lang { get; set; }
     }
 
     /// <summary>Validator object for NewUser data class</summary>
     public class NewUserValidator : AbstractValidator<NewUser>
     {
-
         /// <summary>Initializes the validator object</summary>
         public NewUserValidator()
         {
@@ -42,6 +43,9 @@ namespace MShare_ASP.API.Request
                 .NotEmpty()
                 .MaximumLength(32);
 
+            RuleFor(x => x.Lang)
+                .IsInEnum()
+                .WithMessage("Specified language is not supported by the server");
         }
     }
 }

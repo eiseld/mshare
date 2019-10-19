@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using MShare_ASP.API.Request;
+﻿using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
-
     /// <summary>Group related services</summary>
     public interface IGroupService
     {
-
         /// <summary>Converts group data from internal to facing</summary>
         /// <exception cref="ResourceNotFoundException">["group"]</exception>
         /// <exception cref="ResourceForbiddenException">["not_group_member"]</exception>
@@ -33,8 +31,10 @@ namespace MShare_ASP.Services
         IList<GroupInfo> ToGroupInfo(long userId, IList<DaoGroup> daoGroups);
 
 #if DEBUG
+
         /// <summary>Gets all group (DEBUG ONLY)</summary>
         Task<IList<DaoGroup>> GetGroups();
+
 #endif
 
         /// <summary>Gets all group of the user</summary>
@@ -48,13 +48,13 @@ namespace MShare_ASP.Services
         /// <summary>Removes a member from a group</summary>
         /// <exception cref="ResourceNotFoundException">["group", "member"]</exception>
         /// <exception cref="ResourceForbiddenException">["not_group_member", "not_group_creator"]</exception>
-        /// <exception cref="BusinessException">["remove_creator"]</exception> 
-        /// <exception cref="DatabaseException">["group_member_not_removed"]</exception> 
+        /// <exception cref="BusinessException">["remove_creator"]</exception>
+        /// <exception cref="DatabaseException">["group_member_not_removed"]</exception>
         Task RemoveMember(long userId, long groupId, long memberId);
 
         /// <summary>Creates a new group</summary>
-        /// <exception cref="BusinessException">["name_taken"]</exception> 
-        /// <exception cref="DatabaseException">["group_not_created"]</exception> 
+        /// <exception cref="BusinessException">["name_taken"]</exception>
+        /// <exception cref="DatabaseException">["group_not_created"]</exception>
         Task CreateGroup(long userId, NewGroup newGroup);
 
         /// <summary>Match username or email with filterTerm</summary>
@@ -69,7 +69,7 @@ namespace MShare_ASP.Services
         /// <exception cref="ResourceNotFoundException">["group"]</exception>
         /// <exception cref="ResourceForbiddenException">["not_group_member", "not_group_creator"]</exception>
         /// <exception cref="BusinessException">["user_already_member"]</exception>
-        /// <exception cref="DatabaseException">["group_member_not_added"]</exception> 
+        /// <exception cref="DatabaseException">["group_member_not_added"]</exception>
 		Task AddMember(long userId, long groupId, long memberId);
     }
 }

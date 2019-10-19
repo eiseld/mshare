@@ -18,6 +18,8 @@ import elte.moneyshare.entity.NewSpending
 import elte.moneyshare.entity.SpendingUpdate
 import elte.moneyshare.invisible
 import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.Adapter.SelectMembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import elte.moneyshare.viewmodel.GroupsViewModel
@@ -75,10 +77,12 @@ class AddSpendingFragment : Fragment() {
                                         adapter.notifyDataSetChanged()
                                     }
                                 }
+                                else
+                                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING, context), context)
                             }
                         }
                     } else {
-                        DialogManager.showInfoDialog(error, context)
+                        DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                     }
                 }
             }
@@ -156,7 +160,7 @@ class AddSpendingFragment : Fragment() {
                     if (error == null) {
                         (context as MainActivity).onBackPressed()
                     } else {
-                        DialogManager.showInfoDialog(error, context)
+                        DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING_UPDATE,context), context)
                     }
                 }
             }
@@ -175,7 +179,7 @@ class AddSpendingFragment : Fragment() {
                     if (error == null) {
                         (context as MainActivity).onBackPressed()
                     } else {
-                        DialogManager.showInfoDialog(error, context)
+                        DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING_CREATE,context), context)
                     }
                 }
             }

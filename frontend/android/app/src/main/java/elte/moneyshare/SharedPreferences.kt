@@ -3,6 +3,7 @@ package elte.moneyshare
 import android.content.Context
 import android.content.SharedPreferences
 import elte.moneyshare.entity.User
+import java.util.*
 
 object SharedPreferences {
 
@@ -14,6 +15,8 @@ object SharedPreferences {
     private val USER_ID = "user_id"
     private val USER_NAME = "user_name"
     private val USER_EMAIL = "user_email"
+
+    private val LANG = "lang"
 
     private val DELETE_MEMBER_ENABLED = "delete_member_enabled"
 
@@ -68,6 +71,19 @@ object SharedPreferences {
         set(email) {
             with(sharedPreferences.edit()) {
                 putString(USER_EMAIL, email)
+                apply()
+            }
+        }
+
+    //todo should be enum
+    var lang : String
+        get() = sharedPreferences.getString(
+            LANG,
+            if (Locale.getDefault().language == Locale("en").language) "EN" else "HU"
+        ) ?: "HU"
+        set(lang) {
+            with(sharedPreferences.edit()) {
+                putString(LANG, lang)
                 apply()
             }
         }

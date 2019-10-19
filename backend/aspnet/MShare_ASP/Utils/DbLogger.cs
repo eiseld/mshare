@@ -1,13 +1,12 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace MShare_ASP.Utils
 {
-
     internal enum LoggingCategories
     {
         All = 0,
@@ -47,14 +46,15 @@ namespace MShare_ASP.Utils
             }
         }
     }
-    class LogProvider : ILoggerProvider
-    {
 
+    internal class LogProvider : ILoggerProvider
+    {
         //volatile to allow the configuration to be switched without locking
         public volatile LoggingConfiguration Configuration;
-        static bool DefaultFilter(string CategoryName, LogLevel level) => true;
 
-        static ConcurrentDictionary<Type, LogProvider> providers = new ConcurrentDictionary<Type, LogProvider>();
+        private static bool DefaultFilter(string CategoryName, LogLevel level) => true;
+
+        private static ConcurrentDictionary<Type, LogProvider> providers = new ConcurrentDictionary<Type, LogProvider>();
 
         public static void CreateOrModifyLoggerForDbContext(Type DbContextType,
                                                             ILoggerFactory loggerFactory,
@@ -74,7 +74,6 @@ namespace MShare_ASP.Utils
             {
                 provider.Configuration = new LoggingConfiguration(logger, filter ?? DefaultFilter);
             }
-
         }
 
         public class LoggingConfiguration
@@ -84,10 +83,10 @@ namespace MShare_ASP.Utils
                 this.logger = logger;
                 this.filter = filter;
             }
+
             public readonly Action<string> logger;
             public readonly Func<string, LogLevel, bool> filter;
         }
-
 
         private LogProvider(Action<string> logger, Func<string, LogLevel, bool> filter)
         {
@@ -99,18 +98,21 @@ namespace MShare_ASP.Utils
             return new Logger(categoryName, this);
         }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+        }
 
         private class Logger : ILogger
         {
+            private readonly string categoryName;
+            private readonly LogProvider provider;
 
-            readonly string categoryName;
-            readonly LogProvider provider;
             public Logger(string categoryName, LogProvider provider)
             {
                 this.provider = provider;
                 this.categoryName = categoryName;
             }
+
             public bool IsEnabled(LogLevel logLevel)
             {
                 return true;
@@ -119,7 +121,7 @@ namespace MShare_ASP.Utils
             public void Log<TState>(LogLevel logLevel, EventId eventId, TState state,
                                     Exception exception, Func<TState, Exception, string> formatter)
             {
-                //grab a reference to the current logger settings for consistency, 
+                //grab a reference to the current logger settings for consistency,
                 //and to eliminate the need to block a thread reconfiguring the logger
                 var config = provider.Configuration;
                 if (config.filter(categoryName, logLevel))

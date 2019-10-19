@@ -13,6 +13,8 @@ import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_groups.*
 import elte.moneyshare.R
 import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 
 class GroupsFragment : Fragment() {
 
@@ -44,8 +46,8 @@ class GroupsFragment : Fragment() {
             }
             else -> return super.onOptionsItemSelected(item)
         }
-    }
 
+    }
     fun getGroups() {
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupsViewModel::class.java)
@@ -56,7 +58,7 @@ class GroupsFragment : Fragment() {
                     groupsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     groupsRecyclerView.adapter = adapter
                 } else {
-                    DialogManager.showInfoDialog(error, context)
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                 }
             }
         }

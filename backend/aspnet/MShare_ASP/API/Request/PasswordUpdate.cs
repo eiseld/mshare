@@ -4,11 +4,9 @@ using System.Linq;
 
 namespace MShare_ASP.API.Request
 {
-
     /// <summary>Represents a PasswordUpdate request</summary>
     public class PasswordUpdate
     {
-
         /// <summary>Email of the user as in SMTP standard</summary>
         public String Email { get; set; }
 
@@ -22,7 +20,6 @@ namespace MShare_ASP.API.Request
     /// <summary>Validator object for PasswordUpdate data class</summary>
     public class PasswordUpdateValidator : AbstractValidator<PasswordUpdate>
     {
-
         /// <summary>Initializes the validator object</summary>
         public PasswordUpdateValidator()
         {

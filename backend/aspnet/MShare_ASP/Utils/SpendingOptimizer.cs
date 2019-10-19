@@ -5,7 +5,6 @@ namespace MShare_ASP.Utils
 {
     internal class SpendingOptimizer
     {
-
         private long[,] owes;
         private int usercount;
 
@@ -25,13 +24,12 @@ namespace MShare_ASP.Utils
         {
             return owes;
         }
-        
+
         private void RemoveCycle()
         {
             int n = usercount;
             bool[] visited = new bool[n];
             bool[] stack = new bool[n];
-            int[] parent = new int[n];
             bool foundcycle = true;
             while (foundcycle)
             {
@@ -40,7 +38,6 @@ namespace MShare_ASP.Utils
                 {
                     visited[i] = false;
                     stack[i] = false;
-                    parent[i] = -1;
                 }
                 Stack<int> Path = new Stack<int>();
                 for (int i = 0; i < n && !foundcycle; i++)
@@ -48,8 +45,6 @@ namespace MShare_ASP.Utils
                     Path.Clear();
                     Path.Push(i);
                     long cu = CycleUtil(i, visited, stack, Path);
-                    // if(cu == 0)
-                    //     for (; ;) { };   
                     if (cu > 0)
                     {
                         int[] cyclepath = Path.ToArray();
@@ -58,13 +53,6 @@ namespace MShare_ASP.Utils
                             owes[cyclepath[j + 1], cyclepath[j]] -= cu;
                         }
                         owes[cyclepath[0], cyclepath[Path.Count - 1]] -= cu;
-                        Console.WriteLine("Middle owed: ");
-                        for (int ii = 0; ii < usercount; ii++)
-                        {
-                            for (int j = 0; j < usercount; j++)
-                                Console.Write(owes[ii, j] + " ");
-                            Console.WriteLine();
-                        }
                         foundcycle = true;
                     }
                 }
@@ -80,8 +68,6 @@ namespace MShare_ASP.Utils
                 Path.Push(i);
                 if (owes[v, i] > 0)
                 {
-                    if (v == i)
-                    { }
                     long cu = 0;
                     bool visitedi = visited[i];
                     if (visitedi == false)
@@ -171,7 +157,6 @@ namespace MShare_ASP.Utils
                     parent[i] = -1;
                     len[i] = 0;
                 }
-                //cost[TopologicalArray[0]] = 0;
                 for (int i = 0; i < TopologicalArray.Length; i++)
                 {
                     for (int j = 0; j < n; j++)

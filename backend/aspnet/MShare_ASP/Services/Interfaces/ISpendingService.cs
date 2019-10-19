@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using MShare_ASP.API.Request;
+﻿using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
-
     /// <summary>Spending related services</summary>
     public interface ISpendingService
     {
-
         /// <summary>Converts spending data from internal to facing</summary>
         SpendingData ToSpendingData(DaoSpending daoSpending);
 

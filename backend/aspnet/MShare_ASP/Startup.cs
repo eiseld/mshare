@@ -1,28 +1,28 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using EmailTemplates;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MShare_ASP.Data;
-using Microsoft.EntityFrameworkCore;
-using MShare_ASP.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using MShare_ASP.Data;
+using MShare_ASP.Middlewares;
+using MShare_ASP.Services;
+using MShare_ASP.Utils;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using FluentValidation.AspNetCore;
 using Conf = MShare_ASP.Configurations;
-using MShare_ASP.Utils;
-using MShare_ASP.Middlewares;
 
 namespace MShare_ASP
 {
-
     /// <summary>Startup for the servcer</summary>
     public class Startup
     {
-
         /// <summary>Initializes a new startup with a configuration</summary>
         public Startup(IConfiguration configuration)
         {
@@ -52,7 +52,9 @@ namespace MShare_ASP
                 {
                     fv.RegisterValidatorsFromAssemblyContaining<API.Request.LoginCredentialsValidator>();
                     fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
-                });
+                })
+                .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization(); ;
 
             services.AddSwaggerGen(c =>
             {
@@ -62,6 +64,8 @@ namespace MShare_ASP
                     Version = "v1",
                     Description = "API for use from Web and Android",
                 });
+
+                c.DescribeAllEnumsAsStrings();
 
                 c.DocumentFilter<APIPrefixFilter>();
 
@@ -105,6 +109,28 @@ namespace MShare_ASP
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISpendingService, SpendingService>();
             services.AddTransient<ILoggingService, LoggingService>();
+            services.AddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
+
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedLanguages = System.Enum.GetNames(typeof(DaoLangTypes.Type));
+                var supportedCultures = supportedLanguages.Select(x => new System.Globalization.CultureInfo(x)).ToArray();
+
+                options.DefaultRequestCulture =
+                new Microsoft.AspNetCore.Localization.RequestCulture(culture: DaoLangTypes.Type.EN.ToString(), uiCulture: DaoLangTypes.Type.EN.ToString());
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+
+                /*
+                 * WE PROBABLY WANT TO USE LOCALIZATION WITHCULTURE OPTION AND NOT INJECT A NEW REQUEST TO DB EVERY TIME WE NEED A STRING!!
+                 */
+
+                //options.RequestCultureProviders.Insert(0, new Microsoft.AspNetCore.Localization.CustomRequestCultureProvider(async context =>
+                //{
+                //    return new Microsoft.AspNetCore.Localization.ProviderCultureResult("en");
+                //}));
+            });
 
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("MShareSettings")["SecretKey"]);
             services.AddAuthentication(x =>
@@ -125,18 +151,17 @@ namespace MShare_ASP
                 };
             });
             System.Console.WriteLine(Configuration.GetSection("MShareSettings")["UrlForUsers"]);
-
         }
 
         /// <summary>This method gets called by the runtime. Use this method to configure the HTTP request pipeline.</summary>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
             else
                 app.UseHsts();
 
+            app.UseStaticFiles();
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -145,6 +170,7 @@ namespace MShare_ASP
                 c.RoutePrefix = "";
             });
 
+            app.UseRequestLocalization();
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
             app.UseMvc();

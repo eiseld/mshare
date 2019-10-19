@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
 import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.Adapter.OptimizedDebtRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_my_debts.*
@@ -41,7 +43,7 @@ class DebtsFragment : Fragment() {
                         debtsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         debtsRecyclerView.adapter = adapter
                     } else {
-                        DialogManager.showInfoDialog(error, context)
+                        DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                     }
                 }
             }
