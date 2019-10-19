@@ -13,17 +13,23 @@ namespace MShare_ASP.Data
         [Column("id")]
         public long Id { get; set; }
 
-        /// <summary>Associated group</summary>
-        [Column("groupid")]
-        public long GroupId { get; set; }
-
         /// <summary>History creator</summary>
-        [Column("userid")]
+        [Column("acting_user_id")]
         public long UserId { get; set; }
 
         /// <summary>Date of the history</summary>
         [Column("date")]
         public DateTime? Date { get; set; }
+
+        /// <summary>Type of this history</summary>
+        [EnumDataType(typeof(DaoLogType.Type))]
+        [Column("type")]
+        public DaoLogType.Type Type { get; set; }
+
+        /// <summary>SubType of this history</summary>
+        [EnumDataType(typeof(DaoLogSubType.Type))]
+        [Column("subtype")]
+        public DaoLogSubType.Type Lang { get; set; }
 
         /// <summary>Log that belongs to this history</summary>
         [Column("log")]
