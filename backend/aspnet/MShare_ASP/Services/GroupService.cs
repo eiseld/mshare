@@ -146,7 +146,8 @@ namespace MShare_ASP.Services
             if (daoMember == null)
                 throw new ResourceNotFoundException("member");
 
-            var delCount = 0;
+            if (await GetDebtSum(memberId, groupId) != 0)
+                throw new BusinessException("todo");
 
             var daoDebtors = Context.Spendings
                 .Include(x => x.Debtors).ThenInclude(x => x.Debtor)
@@ -154,17 +155,16 @@ namespace MShare_ASP.Services
                 .Select(x => x.Debtors.SingleOrDefault(y => y.DebtorUserId == memberId))
                 .Where(x => x != null);
 
+            //todo optimise spending
+
             foreach (var daoDebtor in daoDebtors)
             {
                 Context.Debtors.Remove(daoDebtor);
-                ++delCount;
             }
 
             Context.UsersGroupsMap.Remove(daoMember);
-            ++delCount;
 
-            if (await Context.SaveChangesAsync() != delCount)
-                throw new DatabaseException("group_member_not_removed");
+            await Context.SaveChangesAsync();
         }
 
         public async Task CreateGroup(long userId, NewGroup newGroup)

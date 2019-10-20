@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using MShare_ASP.API.Request;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
     /// <summary>Optimized debt related services</summary>
-    interface IOptimizedService
+    public interface IOptimizedService
     {
-
 #if DEBUG
 
         /// <summary>Recalculate the optimal debt for all groups (DEBUG ONLY)</summary>
@@ -16,19 +17,16 @@ namespace MShare_ASP.Services
 
 #endif
 
-        /// <summary>Todo</summary>
+        /// <summary>Updates OptimizedDebts after removing a member</summary>
         Task OptimizeForRemoveMember(long groupId);
 
-        /// <summary>Todo</summary>
-        Task OptimizeForAddSpending(long groupId);
+        /// <summary>Updates OptimizedDebts after adding a new spending</summary>
+        Task OptimizeForNewSpending(long userId, NewSpending newSpending);
 
-        /// <summary>Todo</summary>
-        Task OptimizeForModifySpending(long groupId);
+        /// <summary>Updates OptimizedDebts after updating a spending</summary>
+        Task OptimizeForUpdateSpending(long groupId, long creditorId, Dictionary<long, long> oldDebts, Dictionary<long, long> newDebts);
 
-        /// <summary>Todo</summary>
-        Task OptimizeForRemoveSpending(long groupId);
-
-        /// <summary>Todo</summary>
-        Task OptimizeForSettling(long groupId);
+        /// <summary>Updates OptimizedDebts after a settlement</summary>
+        Task OptimizeForSettling(long groupId, long creditorId, long debtorId);
     }
 }
