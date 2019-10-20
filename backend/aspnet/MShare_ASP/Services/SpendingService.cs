@@ -1,9 +1,13 @@
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
 using MShare_ASP.Utils;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +19,7 @@ namespace MShare_ASP.Services
         private MshareDbContext Context { get; }
         private IUserService UserService { get; }
         private IGroupService GroupService { get; }
+        private IHistoryService HistoryService { get; }
 
         /// <summary>Runs optimization algotithm for debt</summary>
         /// <exception cref="ResourceNotFoundException">["group"]</exception>
@@ -93,11 +98,12 @@ namespace MShare_ASP.Services
             //save results
         }
 
-        public SpendingService(MshareDbContext context, IUserService userService, IGroupService groupService)
+        public SpendingService(MshareDbContext context, IUserService userService, IGroupService groupService, IHistoryService historyService)
         {
             Context = context;
             UserService = userService;
             GroupService = groupService;
+            HistoryService = historyService;
         }
 
         public SpendingData ToSpendingData(DaoSpending daoSpending)
@@ -230,10 +236,68 @@ namespace MShare_ASP.Services
             {
                 try
                 {
+                    var oldName = currentSpending.Name;
+                    var oldMoney = currentSpending.MoneyOwed;
+
                     currentSpending.Name = spendingUpdate.Name;
                     currentSpending.MoneyOwed = spendingUpdate.MoneySpent;
 
+                    dynamic historyEntry = new System.Dynamic.ExpandoObject();
+
+                    if (oldName != spendingUpdate.Name)
+                    {
+                        historyEntry.oldName = oldName;
+                        historyEntry.newName = spendingUpdate.Name;
+                    }
+                    if (oldMoney != spendingUpdate.MoneySpent)
+                    {
+                        historyEntry.oldMoney = oldMoney;
+                        historyEntry.newMoney = spendingUpdate.MoneySpent;
+                    }
+
                     Context.Debtors.RemoveRange(currentSpending.Debtors);
+                    var removedDebtors = currentSpending.Debtors
+                                        .Select(x => x.DebtorUserId)
+                                        .Except(spendingUpdate.Debtors.Select(x => x.DebtorId))
+                                        .Join(currentSpending.Debtors.Select(x => (x.Debt, x.DebtorUserId)),
+                                            (oldD) => oldD,
+                                            (newD) => newD.DebtorUserId,
+                                            (id, olddebt) => new
+                                            {
+                                                id = id,
+                                                debt = olddebt.Debt
+                                            });
+                    if (removedDebtors.Any())
+                        historyEntry.removedDebts = removedDebtors;
+                    var addedDebtors = spendingUpdate.Debtors
+                                        .Select(x => x.DebtorId)
+                                        .Except(currentSpending.Debtors.Select(x => x.DebtorUserId))
+                                        .Join(spendingUpdate.Debtors.Select(x => (x.Debt, x.DebtorId)),
+                                            (oldD) => oldD,
+                                            (newD) => newD.DebtorId,
+                                            (id, olddebt) => new
+                                            {
+                                                id = id,
+                                                debt = olddebt.Debt
+                                            });
+                    if (addedDebtors.Any())
+                        historyEntry.addedDebts = addedDebtors;
+
+                    var updatedDebts = spendingUpdate.Debtors
+                                        .Select(x => (x.Debt, x.DebtorId))
+                                        .Join(currentSpending.Debtors.Select(x => (x.Debt, x.DebtorUserId)),
+                                        (oldD) => oldD.DebtorId,
+                                        (newD) => newD.DebtorUserId,
+                                        (newdebt, olddebt) => new
+                                        {
+                                            id = olddebt.DebtorUserId, // should be same as newdebt.DebtorUserId!
+                                            oldDebt = olddebt.Debt,
+                                            newDebt = newdebt.Debt
+                                        })
+                                        .Where(x => x.oldDebt != x.newDebt);
+                    if (updatedDebts.Any())
+                        historyEntry.updatedDebts = updatedDebts;
+
                     var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
                     {
                         Spending = currentSpending,
@@ -247,10 +311,13 @@ namespace MShare_ASP.Services
                         throw new DatabaseException("spending_not_updated");
                     }
 
+                    await HistoryService.LogHistory(userId, currentSpending.Id, DaoLogType.Type.UPDATE, DaoLogSubType.Type.SPENDING, historyEntry);
+
                     await OptimizeSpendingForGroup(userId, spendingUpdate.GroupId);
 
                     transaction.Commit();
-                } catch
+                }
+                catch
                 {
                     transaction.Rollback();
                     throw;
@@ -297,7 +364,8 @@ namespace MShare_ASP.Services
                     await OptimizeSpendingForGroup(userId, groupId);
 
                     transaction.Commit();
-                } catch
+                }
+                catch
                 {
                     transaction.Rollback();
                     throw;

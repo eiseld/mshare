@@ -108,7 +108,7 @@ namespace MShare_ASP
             services.AddTransient<ITimeService, TimeService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ISpendingService, SpendingService>();
-            services.AddTransient<ILoggingService, LoggingService>();
+            services.AddTransient<IHistoryService, HistoryService>();
             services.AddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");

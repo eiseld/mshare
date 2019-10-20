@@ -19,6 +19,7 @@ namespace MShare_ASP.Services
         private IEmailService EmailService { get; }
         private IURIConfiguration UriConf { get; }
         private IRazorViewToStringRenderer Renderer { get; }
+        private IHistoryService History { get; }
         private IStringLocalizer<LocalizationResource> Localizer { get; }
 
         private async Task<long> GetDebtSum(long userId, long groupId)
@@ -39,13 +40,14 @@ namespace MShare_ASP.Services
             return credit - debt;
         }
 
-        public GroupService(MshareDbContext context, IEmailService emailService, IURIConfiguration uriConf, IStringLocalizer<LocalizationResource> localizer, IRazorViewToStringRenderer renderer)
+        public GroupService(MshareDbContext context, IEmailService emailService, IURIConfiguration uriConf, IStringLocalizer<LocalizationResource> localizer, IRazorViewToStringRenderer renderer, IHistoryService history)
         {
             Context = context;
             EmailService = emailService;
             UriConf = uriConf;
             Renderer = renderer;
             Localizer = localizer;
+            History = history;
         }
 
         public async Task<GroupData> ToGroupData(long userId, DaoGroup daoGroup)
@@ -198,14 +200,6 @@ namespace MShare_ASP.Services
                 .ToListAsync();
         }
 
-        public async Task<IList<DaoHistory>> GetGroupHistory(long userId, long groupId)
-        {
-            var daoGroup = await GetGroupOfUser(userId, groupId);
-
-            return await Context.History
-                .Where(s => s.GroupId == groupId)
-                .ToListAsync();
-        }
 
         public async Task AddMember(long userId, long groupId, long memberId)
         {

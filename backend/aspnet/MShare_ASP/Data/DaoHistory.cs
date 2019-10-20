@@ -16,6 +16,10 @@ namespace MShare_ASP.Data
         /// <summary>History creator</summary>
         [Column("acting_user_id")]
         public long UserId { get; set; }
+        
+        /// <summary>Affected entity id</summary>
+        [Column("affected_id")]
+        public long AffectedId { get; set; }
 
         /// <summary>Date of the history</summary>
         [Column("date")]
@@ -29,7 +33,7 @@ namespace MShare_ASP.Data
         /// <summary>SubType of this history</summary>
         [EnumDataType(typeof(DaoLogSubType.Type))]
         [Column("subtype")]
-        public DaoLogSubType.Type Lang { get; set; }
+        public DaoLogSubType.Type SubType { get; set; }
 
         /// <summary>Log that belongs to this history</summary>
         [Column("log")]
