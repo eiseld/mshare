@@ -186,33 +186,53 @@ namespace MShare_ASP.Services
             if (!newSpending.Debtors.All(x => daoGroup.Members.Any(m => m.UserId == x.DebtorId)))
                 throw new BusinessException("debtor_not_member");
 
-            DaoSpending spending = new DaoSpending()
+            using (var transaction = Context.Database.BeginTransaction())
             {
-                Name = newSpending.Name,
-                MoneyOwed = newSpending.MoneySpent,
-                Group = daoGroup,
-                GroupId = daoGroup.Id,
-                Creditor = await UserService.GetUser(userId),
-                CreditorUserId = userId
-            };
+                try
+                {
+                    DaoSpending spending = new DaoSpending()
+                    {
+                        Name = newSpending.Name,
+                        MoneyOwed = newSpending.MoneySpent,
+                        Group = daoGroup,
+                        GroupId = daoGroup.Id,
+                        Creditor = await UserService.GetUser(userId),
+                        CreditorUserId = userId
+                    };
 
-            var debtors = newSpending.Debtors.Select(x => new DaoDebtor()
-            {
-                Spending = spending,
-                DebtorUserId = x.DebtorId,
-                Debt = x.Debt
-            }).ToList();
+                    var debtors = newSpending.Debtors.Select(x => new DaoDebtor()
+                    {
+                        Spending = spending,
+                        DebtorUserId = x.DebtorId,
+                        Debt = x.Debt
+                    }).ToList();
 
-            spending.Debtors = debtors.ToList();
+                    spending.Debtors = debtors.ToList();
 
-            var insertCount = 1 + spending.Debtors.Count;
+                    var insertCount = 1 + spending.Debtors.Count;
 
-            await Context.Spendings.AddAsync(spending);
+                    await Context.Spendings.AddAsync(spending);
 
-            if (await Context.SaveChangesAsync() != insertCount)
-                throw new DatabaseException("spending_not_inserted");
 
-            await OptimizeSpendingForGroup(userId, newSpending.GroupId);
+                    if (await Context.SaveChangesAsync() != insertCount)
+                        throw new DatabaseException("spending_not_inserted");
+
+                    // Call log AFTER saving, so ID is present
+                    await HistoryService.LogNewSpending(userId, spending);
+
+                    if (await Context.SaveChangesAsync() != 1)
+                        throw new DatabaseException("spending_log_not_inserted");
+
+                    await OptimizeSpendingForGroup(userId, newSpending.GroupId);
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         public async Task UpdateSpending(long userId, SpendingUpdate spendingUpdate)
@@ -236,67 +256,12 @@ namespace MShare_ASP.Services
             {
                 try
                 {
-                    var oldName = currentSpending.Name;
-                    var oldMoney = currentSpending.MoneyOwed;
+                    await HistoryService.LogSpendingUpdate(userId, currentSpending, spendingUpdate);
 
                     currentSpending.Name = spendingUpdate.Name;
                     currentSpending.MoneyOwed = spendingUpdate.MoneySpent;
 
-                    dynamic historyEntry = new System.Dynamic.ExpandoObject();
-
-                    if (oldName != spendingUpdate.Name)
-                    {
-                        historyEntry.oldName = oldName;
-                        historyEntry.newName = spendingUpdate.Name;
-                    }
-                    if (oldMoney != spendingUpdate.MoneySpent)
-                    {
-                        historyEntry.oldMoney = oldMoney;
-                        historyEntry.newMoney = spendingUpdate.MoneySpent;
-                    }
-
                     Context.Debtors.RemoveRange(currentSpending.Debtors);
-                    var removedDebtors = currentSpending.Debtors
-                                        .Select(x => x.DebtorUserId)
-                                        .Except(spendingUpdate.Debtors.Select(x => x.DebtorId))
-                                        .Join(currentSpending.Debtors.Select(x => (x.Debt, x.DebtorUserId)),
-                                            (oldD) => oldD,
-                                            (newD) => newD.DebtorUserId,
-                                            (id, olddebt) => new
-                                            {
-                                                id = id,
-                                                debt = olddebt.Debt
-                                            });
-                    if (removedDebtors.Any())
-                        historyEntry.removedDebts = removedDebtors;
-                    var addedDebtors = spendingUpdate.Debtors
-                                        .Select(x => x.DebtorId)
-                                        .Except(currentSpending.Debtors.Select(x => x.DebtorUserId))
-                                        .Join(spendingUpdate.Debtors.Select(x => (x.Debt, x.DebtorId)),
-                                            (oldD) => oldD,
-                                            (newD) => newD.DebtorId,
-                                            (id, olddebt) => new
-                                            {
-                                                id = id,
-                                                debt = olddebt.Debt
-                                            });
-                    if (addedDebtors.Any())
-                        historyEntry.addedDebts = addedDebtors;
-
-                    var updatedDebts = spendingUpdate.Debtors
-                                        .Select(x => (x.Debt, x.DebtorId))
-                                        .Join(currentSpending.Debtors.Select(x => (x.Debt, x.DebtorUserId)),
-                                        (oldD) => oldD.DebtorId,
-                                        (newD) => newD.DebtorUserId,
-                                        (newdebt, olddebt) => new
-                                        {
-                                            id = olddebt.DebtorUserId, // should be same as newdebt.DebtorUserId!
-                                            oldDebt = olddebt.Debt,
-                                            newDebt = newdebt.Debt
-                                        })
-                                        .Where(x => x.oldDebt != x.newDebt);
-                    if (updatedDebts.Any())
-                        historyEntry.updatedDebts = updatedDebts;
 
                     var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
                     {
@@ -310,8 +275,6 @@ namespace MShare_ASP.Services
                     {
                         throw new DatabaseException("spending_not_updated");
                     }
-
-                    await HistoryService.LogHistory(userId, currentSpending.Id, DaoLogType.Type.UPDATE, DaoLogSubType.Type.SPENDING, historyEntry);
 
                     await OptimizeSpendingForGroup(userId, spendingUpdate.GroupId);
 
@@ -358,7 +321,9 @@ namespace MShare_ASP.Services
 
                     await Context.Settlements.AddAsync(settlement);
 
-                    if (await Context.SaveChangesAsync() != 1)
+                    await HistoryService.LogSettlement(userId, settlement);
+
+                    if (await Context.SaveChangesAsync() != 2)
                         throw new DatabaseException("debt_not_settled");
 
                     await OptimizeSpendingForGroup(userId, groupId);

@@ -165,6 +165,8 @@ namespace MShare_ASP.Services
             Context.UsersGroupsMap.Remove(daoMember);
             ++delCount;
 
+            await History.LogRemoveMember(userId, groupId, memberId);
+
             if (await Context.SaveChangesAsync() != delCount)
                 throw new DatabaseException("group_member_not_removed");
         }
@@ -178,14 +180,34 @@ namespace MShare_ASP.Services
             if (existingGroup != null)
                 throw new BusinessException("name_taken");
 
-            await Context.Groups.AddAsync(new DaoGroup()
+            using (var transaction = Context.Database.BeginTransaction())
             {
-                CreatorUserId = userId,
-                Name = newGroup.Name
-            });
+                try
+                {
+                    var daoGroup = new DaoGroup()
+                    {
+                        CreatorUserId = userId,
+                        Name = newGroup.Name
+                    };
 
-            if (await Context.SaveChangesAsync() != 1)
-                throw new DatabaseException("group_not_created");
+                    await Context.Groups.AddAsync(daoGroup);
+
+
+                    if (await Context.SaveChangesAsync() != 1)
+                        throw new DatabaseException("group_not_created");
+
+                    await History.LogCreateGroup(userId, daoGroup);
+
+                    if (await Context.SaveChangesAsync() != 1)
+                        throw new DatabaseException("group_create_history_not_saved");
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         public async Task<IList<FilteredUserData>> GetFilteredUsers(string filterTerm)
@@ -211,36 +233,48 @@ namespace MShare_ASP.Services
             if (daoGroup.Members.Any(x => x.UserId == memberId))
             {
                 throw new BusinessException("user_already_member");
-            } else
-            {
-                Context.UsersGroupsMap.Add(new DaoUsersGroupsMap()
-                {
-                    UserId = memberId,
-                    GroupId = groupId
-                });
             }
 
-            if (await Context.SaveChangesAsync() != 1)
-                throw new DatabaseException("group_member_not_added");
-            else
+            using (var transaction = Context.Database.BeginTransaction())
             {
-                var groupCreator = Context.Users.FirstOrDefault(x => x.Id == userId);
-                var newMember = Context.Users.FirstOrDefault(x => x.Id == memberId);
-
-                var model = new InformationViewModel()
+                try
                 {
-                    Title = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT),
-                    PreHeader = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_PREHEADER),
-                    Hero = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_HERO),
-                    Greeting = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, newMember.DisplayName),
-                    Intro = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_BODY_INTRO, groupCreator.DisplayName, daoGroup.Name),
-                    EmailDisclaimer = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_BODY_DISCLAIMER),
-                    Cheers = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
-                    MShareTeam = Localizer.GetString(newMember.Lang, LocalizationResource.MSHARE_TEAM),
-                    SiteBaseUrl = $"{UriConf.URIForEndUsers}"
-                };
-                var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
-                await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, newMember.DisplayName, newMember.Email, Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT), htmlBody);
+                    Context.UsersGroupsMap.Add(new DaoUsersGroupsMap()
+                    {
+                        UserId = memberId,
+                        GroupId = groupId
+                    });
+
+                    await History.LogAddMember(userId, groupId, memberId);
+
+                    if (await Context.SaveChangesAsync() != 2)
+                        throw new DatabaseException("group_member_not_added");
+
+                    var groupCreator = Context.Users.FirstOrDefault(x => x.Id == userId);
+                    var newMember = Context.Users.FirstOrDefault(x => x.Id == memberId);
+
+                    var model = new InformationViewModel()
+                    {
+                        Title = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT),
+                        PreHeader = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_PREHEADER),
+                        Hero = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_HERO),
+                        Greeting = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, newMember.DisplayName),
+                        Intro = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_BODY_INTRO, groupCreator.DisplayName, daoGroup.Name),
+                        EmailDisclaimer = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_BODY_DISCLAIMER),
+                        Cheers = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
+                        MShareTeam = Localizer.GetString(newMember.Lang, LocalizationResource.MSHARE_TEAM),
+                        SiteBaseUrl = $"{UriConf.URIForEndUsers}"
+                    };
+                    var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
+                    await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, newMember.DisplayName, newMember.Email, Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT), htmlBody);
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }
         }
     }

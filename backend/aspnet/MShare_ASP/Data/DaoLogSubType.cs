@@ -26,7 +26,13 @@ namespace MShare_ASP.Data
             SETTLEMENT = 2,
 
             /// <summary>Debt - anything that is associated with a debt (creating new debt)</summary>
-            DEBT = 3
+            DEBT = 3,
+
+            /// <summary>Group - anything that modifies the group itself (owner, name, icon, etc)</summary>
+            GROUP = 4,
+
+            /// <summary>Member - when adding / removing members to a group</summary>
+            MEMBER = 5
         }
     }
 }

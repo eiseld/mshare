@@ -1,6 +1,8 @@
-﻿using System;
+﻿using MShare_ASP.Services.Exceptions;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace MShare_ASP.Data
 {
@@ -16,10 +18,33 @@ namespace MShare_ASP.Data
         /// <summary>History creator</summary>
         [Column("acting_user_id")]
         public long UserId { get; set; }
-        
-        /// <summary>Affected entity id</summary>
-        [Column("affected_id")]
-        public long AffectedId { get; set; }
+
+        /// <summary>GroupId</summary>
+        [Column("group_id")]
+        public long? GroupId { get; set; }
+
+        /// <summary>Affected entity ids</summary>
+        [NotMapped]
+        public long[] AffectedIds {
+            get {
+                return __AffectedIs
+                    .Split(",",StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => {
+                        if (long.TryParse(x, out long result))
+                            return result;
+                        else
+                            throw new DatabaseException($"AffectedID list not formatted properly in history table at id: {Id}");
+                    })
+                    .ToArray();
+            }
+            set {
+                __AffectedIs = String.Join(",", value.Select(x => x.ToString()));
+            }
+        }
+
+        /// <summary>Affected entity ids in string format</summary>
+        [Column("affected_ids")]
+        public string __AffectedIs { get; set; }
 
         /// <summary>Date of the history</summary>
         [Column("date")]
