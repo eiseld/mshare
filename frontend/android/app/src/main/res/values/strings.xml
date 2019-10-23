@@ -10,7 +10,7 @@
     <string name="send_email">Email küldése</string>
 
     <!-- Registration messages -->
-    <string name="username">Felahsználónév</string>
+    <string name="username">Megjelenített Név</string>
     <string name="password">Jelszó</string>
     <string name="password_again">Jelszó újra</string>
     <string name="email">Email cím</string>
