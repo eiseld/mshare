@@ -4,17 +4,20 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
+import elte.moneyshare.disable
+import elte.moneyshare.enable
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
-
 
 
 class LoginFragment : Fragment() {
@@ -36,8 +39,8 @@ class LoginFragment : Fragment() {
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
-            //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
-                viewModel.putLoginUser(email, password) { response, error ->
+            viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
+                //    viewModel.putLoginUser(email, password) { response, error ->
                 if (error == null) {
                     val intent = Intent(context, MainActivity::class.java)
                     startActivity(intent)
@@ -52,6 +55,22 @@ class LoginFragment : Fragment() {
                     )
                 }
             }
+        }
+
+        urlEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(text: Editable?) {
+                if (text.isNullOrEmpty()) {
+                    updateUrlButton.disable()
+                } else {
+                    updateUrlButton.enable()
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        })
+        updateUrlButton.setOnClickListener {
+            (activity as LoginActivity).updateUrl(urlEditText.text.toString())
         }
 
         registrationButton.setOnClickListener {
