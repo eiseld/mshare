@@ -11,6 +11,7 @@ object SharedPreferences {
 
     private val ACCESS_TOKEN = "access_token"
     private val USER_LOGGED_IN = "user_logged_in"
+    private val STAY_LOGGED_IN = "stay_logged_in"
 
     private val USER_ID = "user_id"
     private val USER_NAME = "user_name"
@@ -26,8 +27,8 @@ object SharedPreferences {
     //TODO CHECK ACCESS_TOKEN HANDLING TO STILL STORE AFTER APP CLOSED (in APIClient headers creation)
     fun init(context: Context) {
         sharedPreferences = context.getSharedPreferences(prefKey, Context.MODE_PRIVATE)
-        accessToken = ""
-        userId = -1
+        //accessToken = ""
+        //userId = -1
     }
 
     var accessToken: String
@@ -94,6 +95,15 @@ object SharedPreferences {
         {
             with(sharedPreferences.edit()){
                 putBoolean(DELETE_MEMBER_ENABLED,enabled)
+                apply()
+            }
+        }
+    var stayLoggedIn : Boolean
+        get() = sharedPreferences.getBoolean(STAY_LOGGED_IN, false)
+        set(enabled)
+        {
+            with(sharedPreferences.edit()){
+                putBoolean(STAY_LOGGED_IN,enabled)
                 apply()
             }
         }

@@ -8,6 +8,7 @@
     <string name="register">Regisztráció</string>
     <string name="registration">Regisztráció</string>
     <string name="send_email">Email küldése</string>
+    <string name="stay_logged_in">Maradjak bejelentkezve</string>
 
     <!-- Registration messages -->
     <string name="username">Felahsználónév</string>
@@ -24,6 +25,7 @@
     <string name="email_not_matching">Nem egyeznek az emailek!</string>
     <string name="email_not_correct">Nem megfelelő az email formátum!</string>
     <string name="successful_registration">Sikeres regisztráció!</string>
+    <string name="relog_error">Valami hiba történt, jelenkezz be újra!</string>
 
     <!-- Popup mesages -->
     <string name="popup_title">Tartozás rendezése</string>
@@ -144,5 +146,6 @@
     <string name="hu">hu</string>
     <string name="en">en</string>
     <string name="select_lang">Nyelv kiválasztása</string>
+    <string name="menu_logout">Kijelentkezés</string>
 
 </resources>
