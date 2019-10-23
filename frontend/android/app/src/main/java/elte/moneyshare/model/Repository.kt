@@ -4,6 +4,7 @@ package elte.moneyshare.model
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.*
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -238,22 +239,21 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    //TODO IMPL UPDATE
-    override fun updateProfile(bankAccountNumberUpdate: BankAccountNumberUpdate, completion: (response: UserData?, error: String?) -> Unit) {
-        apiDefinition.postBankAccountNumber(bankAccountNumberUpdate).enqueue(object : Callback<UserData> {
-            override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
+    override fun updateProfile(bankAccountNumberUpdate: BankAccountNumberUpdate, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.postBankAccountNumber(bankAccountNumberUpdate).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {
-                        val userData = response.body()
-                        completion(userData, null)
+                        completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.code().toString())
+                        var jsonObject = JSONObject(response.errorBody()?.string());
+                        completion(null, jsonObject.getJSONObject("errors").getJSONArray("BankAccountNumber")[0].toString())
                     }
                 }
             }
 
-            override fun onFailure(call: Call<UserData>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 completion(null, onFailureMessage)
             }
         })
