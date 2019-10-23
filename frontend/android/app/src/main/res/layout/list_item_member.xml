@@ -31,13 +31,27 @@
             android:id="@+id/memberBalanceTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
             android:gravity="end"
             android:text="Balance"
-            android:layout_margin="16dp"
-            app:layout_constraintStart_toEndOf="@id/memberOwnerTextView"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/removeMemberImageButton"
+            app:layout_constraintStart_toEndOf="@id/memberOwnerTextView"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintVertical_bias="0.125" />
+
+    <TextView
+            android:id="@+id/memberBankAccountTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:gravity="end"
+            android:text="@string/bankAccountText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/removeMemberImageButton"
+            app:layout_constraintStart_toEndOf="@id/memberNameTextView"
+            app:layout_constraintTop_toTopOf="@id/memberBalanceTextView"
+            app:layout_constraintVertical_bias="0.125" />
 
     <ImageButton
             android:id="@+id/removeMemberImageButton"

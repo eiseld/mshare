@@ -1,11 +1,10 @@
 package elte.moneyshare.view.Adapter
 
+import android.app.PendingIntent
 import android.content.Context
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.*
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.GroupData
@@ -66,5 +65,8 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
                 }
             }
         }
+
+        holder.memberBankAccountTextView.text = context.getString(R.string.bankAccount, member.bankAccountNumber.substring(0,8), member.bankAccountNumber.substring(8,16), member.bankAccountNumber.substring(16,24));
+
     }
 }

@@ -144,5 +144,7 @@
     <string name="hu">hu</string>
     <string name="en">en</string>
     <string name="select_lang">Nyelv kiválasztása</string>
+    <string name="bankAccountText">Bankszámlaszám</string>
+    <string name="bankAccount">BSz: %1$s-%2$s-%3$s</string>
 
 </resources>
