@@ -215,21 +215,12 @@ namespace MShare_ASP.Services
             await Context.SaveChangesAsync();
         }
 
+#endif
+
         public async Task OptimizeForGroup(long groupId)
         {
             await OptimizeHelper(groupId);
             await Context.SaveChangesAsync();
-        }
-
-#endif
-
-        public async Task OptimizeForRemoveMember(long groupId)
-        {
-            DebtMatrix debtMatrix = await LoadDebtMatrix(groupId);
-
-            //todo
-
-            await SaveDebtMatrix(groupId, debtMatrix);
         }
 
         public async Task OptimizeForNewSpending(long userId, NewSpending newSpending)

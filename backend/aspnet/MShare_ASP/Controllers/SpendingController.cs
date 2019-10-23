@@ -92,17 +92,6 @@ namespace MShare_ASP.Controllers
             return Ok();
         }
 
-        /// <summary>Optimise from ground up for a specific group (DEBUG ONLY)</summary>
-        /// <param name="groupId">Id of the group</param>
-        /// <response code="200">Successful optimisation</response>
-        [HttpPost("optimise/{groupId}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> OptimiseOne(long groupId)
-        {
-            await OptimizedService.OptimizeForGroup(groupId);
-            return Ok();
-        }
-
 #endif
 
     }
