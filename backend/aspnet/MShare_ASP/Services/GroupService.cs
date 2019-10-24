@@ -17,6 +17,7 @@ namespace MShare_ASP.Services
     {
         private MshareDbContext Context { get; }
         private IEmailService EmailService { get; }
+        private IOptimizedService OptimizedService { get; }
         private IURIConfiguration UriConf { get; }
         private IRazorViewToStringRenderer Renderer { get; }
         private IHistoryService History { get; }
@@ -40,10 +41,11 @@ namespace MShare_ASP.Services
             return credit - debt;
         }
 
-        public GroupService(MshareDbContext context, IEmailService emailService, IURIConfiguration uriConf, IStringLocalizer<LocalizationResource> localizer, IRazorViewToStringRenderer renderer, IHistoryService history)
+        public GroupService(MshareDbContext context, IEmailService emailService, IOptimizedService optimizedService, IHistoryService history, IURIConfiguration uriConf, IStringLocalizer<LocalizationResource> localizer, IRazorViewToStringRenderer renderer)
         {
             Context = context;
             EmailService = emailService;
+            OptimizedService = optimizedService;
             UriConf = uriConf;
             Renderer = renderer;
             Localizer = localizer;
@@ -148,27 +150,60 @@ namespace MShare_ASP.Services
             if (daoMember == null)
                 throw new ResourceNotFoundException("member");
 
-            var delCount = 0;
+            //Remove Participated Settlements
 
-            var daoDebtors = Context.Spendings
-                .Include(x => x.Debtors).ThenInclude(x => x.Debtor)
+            var participatedSettlements = Context.Settlements
                 .Where(x => x.GroupId == groupId)
-                .Select(x => x.Debtors.SingleOrDefault(y => y.DebtorUserId == memberId))
-                .Where(x => x != null);
+                .Where(x => x.From == memberId || x.To == memberId)
+                .ToArray();
 
-            foreach (var daoDebtor in daoDebtors)
+            Context.RemoveRange(participatedSettlements);
+
+            // Remove owned Spendings
+
+            var mySpendings = Context.Spendings
+                .Where(x => x.GroupId == groupId)
+                .Where(x => x.CreditorUserId == memberId)
+                .ToArray();
+
+            foreach (var mySpending in mySpendings)
             {
-                Context.Debtors.Remove(daoDebtor);
-                ++delCount;
+                var debtors = Context.Debtors
+                    .Where(x => x.SpendingId == mySpending.Id)
+                    .ToArray();
+
+                Context.RemoveRange(debtors);
+            }
+            Context.RemoveRange(mySpendings);
+
+            // Remove debts
+
+            var myDebts = Context.Debtors
+                .Where(x => x.DebtorUserId == memberId)
+                .Include(x => x.Spending)
+                .ToArray();
+
+            foreach (var myDebt in myDebts)
+            {
+                var spending = myDebt.Spending;
+                spending.MoneyOwed -= myDebt.Debt;
+                if (spending.MoneyOwed == 0)
+                {
+                    Context.Remove(spending);
+                }
             }
 
+            Context.RemoveRange(myDebts);
+
+            //Remove from group
+
             Context.UsersGroupsMap.Remove(daoMember);
-            ++delCount;
 
             await History.LogRemoveMember(userId, groupId, memberId);
 
-            if (await Context.SaveChangesAsync() != delCount)
-                throw new DatabaseException("group_member_not_removed");
+            await Context.SaveChangesAsync();
+
+            await OptimizedService.OptimizeForGroup(groupId);
         }
 
         public async Task CreateGroup(long userId, NewGroup newGroup)
