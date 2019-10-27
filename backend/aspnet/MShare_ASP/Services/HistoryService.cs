@@ -40,9 +40,45 @@ namespace MShare_ASP.Services
         {
             await LogHistory(userId, groupId, new long[] { memberId }, DaoLogType.Type.ADD, DaoLogSubType.Type.MEMBER, null);
         }
-        public async Task LogRemoveMember(long userId, long groupId, long memberId)
+        public async Task LogRemoveMember(long userId, long groupId, long memberId, HashSet<long> affectedUsers, DaoSettlement[] participatedSettlements, DaoSpending[] mySpendings, DaoDebtor[] myDebts)
         {
-            await LogHistory(userId, groupId, new long[] { memberId }, DaoLogType.Type.REMOVE, DaoLogSubType.Type.MEMBER, null);
+            dynamic historyEntry = new ExpandoObject();
+
+            // Removed settlements:
+            if (participatedSettlements.Any())
+                historyEntry.RemovedSettlements = participatedSettlements.Select(x => new
+                {
+                    From = x.From,
+                    To = x.To,
+                    Amount = x.Amount
+                });
+
+            if (mySpendings.Any())
+                historyEntry.RemovedSpendings = mySpendings.Select(x => new
+                {
+                    Name = x.Name,
+                    MoneyOwed = x.MoneyOwed,
+                    Debtors = x.Debtors.Select(d => new
+                    {
+                        DebtorId = d.DebtorUserId,
+                        Debt = d.Debt
+                    })
+                });
+
+            if (myDebts.Any())
+                historyEntry.RemovedDebts = myDebts.Select(x => new
+                {
+                    DebtorId = x.DebtorUserId,
+                    Debt = x.Debt,
+                    SpendingRemovedBecauseOfThis = x.Spending.MoneyOwed == 0 ? (new
+                    {
+                        Name = x.Spending.Name,
+                        CreditorId = x.Spending.CreditorUserId,
+                        MoneyOwed = x.Debt // MoneyOwed = 0, because we removed this member's debt, so moneyowed 'was' the whole debt of this member
+                    }) : null
+                });
+
+            await LogHistory(userId, groupId, affectedUsers.ToArray(), DaoLogType.Type.REMOVE, DaoLogSubType.Type.MEMBER, historyEntry);
         }
         public async Task LogCreateGroup(long userId, DaoGroup newGroup)
         {
@@ -69,7 +105,7 @@ namespace MShare_ASP.Services
             historyEntry.To = daoSettlement.To;
 
             // Log
-            await LogHistory(userId,daoSettlement.GroupId, new long[] { daoSettlement.From, daoSettlement.To }, DaoLogType.Type.CREATE, DaoLogSubType.Type.SETTLEMENT, historyEntry);
+            await LogHistory(userId, daoSettlement.GroupId, new long[] { daoSettlement.From, daoSettlement.To }, DaoLogType.Type.CREATE, DaoLogSubType.Type.SETTLEMENT, historyEntry);
         }
         public async Task LogNewSpending(long userId, DaoSpending newSpending)
         {
@@ -94,7 +130,7 @@ namespace MShare_ASP.Services
             historyEntry.Debtors = debtors;
 
             // Log
-            await LogHistory(userId,newSpending.GroupId, debtors.Select(x => x.id).ToArray(), DaoLogType.Type.CREATE, DaoLogSubType.Type.SPENDING, historyEntry);
+            await LogHistory(userId, newSpending.GroupId, debtors.Select(x => x.id).ToArray(), DaoLogType.Type.CREATE, DaoLogSubType.Type.SPENDING, historyEntry);
         }
         public async Task LogSpendingUpdate(long userId, DaoSpending oldSpending, SpendingUpdate newSpending)
         {
@@ -179,7 +215,7 @@ namespace MShare_ASP.Services
                 Type = type,
                 SubType = subType,
                 SerializedLog = serializedMessage,
-                GroupId = groupId                
+                GroupId = groupId
             };
 
             await Context.AddAsync(historyEntity);

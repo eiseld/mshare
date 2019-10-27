@@ -9,6 +9,7 @@ using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
@@ -150,12 +151,21 @@ namespace MShare_ASP.Services
             if (daoMember == null)
                 throw new ResourceNotFoundException("member");
 
+            var affectedUsers = new HashSet<long>() { memberId };
             //Remove Participated Settlements
 
             var participatedSettlements = Context.Settlements
                 .Where(x => x.GroupId == groupId)
                 .Where(x => x.From == memberId || x.To == memberId)
                 .ToArray();
+
+            affectedUsers.UnionWith(participatedSettlements.Select(x =>
+            {
+                if (x.From == memberId)
+                    return x.To;
+                else
+                    return x.From;
+            }));
 
             Context.RemoveRange(participatedSettlements);
 
@@ -164,6 +174,7 @@ namespace MShare_ASP.Services
             var mySpendings = Context.Spendings
                 .Where(x => x.GroupId == groupId)
                 .Where(x => x.CreditorUserId == memberId)
+                .Include(x => x.Debtors)
                 .ToArray();
 
             foreach (var mySpending in mySpendings)
@@ -171,6 +182,8 @@ namespace MShare_ASP.Services
                 var debtors = Context.Debtors
                     .Where(x => x.SpendingId == mySpending.Id)
                     .ToArray();
+
+                affectedUsers.UnionWith(debtors.Select(x => x.DebtorUserId));
 
                 Context.RemoveRange(debtors);
             }
@@ -182,10 +195,10 @@ namespace MShare_ASP.Services
                 .Where(x => x.DebtorUserId == memberId)
                 .Include(x => x.Spending)
                 .ToArray();
-
             foreach (var myDebt in myDebts)
             {
                 var spending = myDebt.Spending;
+                affectedUsers.Add(spending.CreditorUserId);
                 spending.MoneyOwed -= myDebt.Debt;
                 if (spending.MoneyOwed == 0)
                 {
@@ -199,7 +212,7 @@ namespace MShare_ASP.Services
 
             Context.UsersGroupsMap.Remove(daoMember);
 
-            await History.LogRemoveMember(userId, groupId, memberId);
+            await History.LogRemoveMember(userId, groupId, memberId, affectedUsers, participatedSettlements, mySpendings, myDebts);
 
             await Context.SaveChangesAsync();
 
