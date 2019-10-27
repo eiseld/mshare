@@ -1,9 +1,12 @@
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
-using MShare_ASP.Utils;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,89 +18,16 @@ namespace MShare_ASP.Services
         private MshareDbContext Context { get; }
         private IUserService UserService { get; }
         private IGroupService GroupService { get; }
+        private IHistoryService HistoryService { get; }
+		private IOptimizedService OptimizedService { get; }
 
-        /// <summary>Runs optimization algotithm for debt</summary>
-        /// <exception cref="ResourceNotFoundException">["group"]</exception>
-        /// <exception cref="ResourceForbiddenException">["not_group_member"]</exception>
-        private async Task OptimizeSpendingForGroup(long userId, long groupId)
-        {
-            var daoGroup = await GroupService.GetGroupOfUser(userId, groupId);
-
-            var daoSpendings = await GetSpendingsForGroup(userId, groupId);
-
-            var currentGroupSettleMents = Context.Settlements
-                .Where(x => x.GroupId == groupId);
-
-            Dictionary<int, long> NumberToId = new Dictionary<int, long>();
-            Dictionary<long, int> IdToNumber = new Dictionary<long, int>();
-            {
-                int i = 0;
-                foreach (var MemberId in daoGroup.Members.Select(x => x.UserId))
-                {
-                    NumberToId.Add(i, MemberId);
-                    IdToNumber.Add(MemberId, i);
-                    i++;
-                }
-            }
-
-            int ingroup = NumberToId.Count;
-            long[,] owes = new long[ingroup, ingroup];
-            for (int i = 0; i < ingroup; i++)
-            {
-                var iSpending = daoSpendings.Where(x => x.CreditorUserId == NumberToId[i]);
-                foreach (DaoSpending ds in iSpending)
-                {
-                    foreach (DaoDebtor dd in ds.Debtors)
-                    {
-                        owes[IdToNumber[dd.DebtorUserId], i] += dd.Debt ?? 0;
-                    }
-                }
-            }
-
-            foreach (var settlement in currentGroupSettleMents)
-            {
-                if (daoGroup.Members.Any(x => x.UserId == settlement.From) && daoGroup.Members.Any(x => x.UserId == settlement.To))
-                {
-                    owes[IdToNumber[settlement.To], IdToNumber[settlement.From]] += settlement.Amount;
-                }
-            }
-
-            for (int i = 0; i < ingroup; i++)
-            {
-                owes[i, i] = 0;
-            }
-
-            var Optimizer = new SpendingOptimizer(owes, ingroup);
-            Optimizer.Optimize();
-            owes = Optimizer.GetResult();
-            var oldOptimized = await Context.OptimizedDebt.Where(x => x.GroupId == groupId).ToListAsync();
-            Context.OptimizedDebt.RemoveRange(oldOptimized);
-            for (int i = 0; i < ingroup; i++)
-            {
-                for (int j = 0; j < ingroup; j++)
-                {
-                    if (owes[i, j] > 0)
-                    {
-                        DaoOptimizedDebt optdebt = new DaoOptimizedDebt()
-                        {
-                            GroupId = groupId,
-                            UserOwesId = NumberToId[i],
-                            UserOwedId = NumberToId[j],
-                            OweAmount = owes[i, j]
-                        };
-                        await Context.OptimizedDebt.AddAsync(optdebt);
-                    }
-                }
-            }
-            await Context.SaveChangesAsync();
-            //save results
-        }
-
-        public SpendingService(MshareDbContext context, IUserService userService, IGroupService groupService)
+        public SpendingService(MshareDbContext context, IUserService userService, IGroupService groupService, IOptimizedService optimizedService, IHistoryService historyService)
         {
             Context = context;
             UserService = userService;
             GroupService = groupService;
+            OptimizedService = optimizedService;
+            HistoryService = historyService;
         }
 
         public SpendingData ToSpendingData(DaoSpending daoSpending)
@@ -117,7 +47,7 @@ namespace MShare_ASP.Services
                 {
                     Id = daoDebtor.DebtorUserId,
                     Name = daoDebtor.Debtor.DisplayName,
-                    Debt = daoDebtor.Debt.Value
+                    Debt = daoDebtor.Debt
                 }).ToList()
             };
         }
@@ -180,33 +110,45 @@ namespace MShare_ASP.Services
             if (!newSpending.Debtors.All(x => daoGroup.Members.Any(m => m.UserId == x.DebtorId)))
                 throw new BusinessException("debtor_not_member");
 
-            DaoSpending spending = new DaoSpending()
+            using (var transaction = Context.Database.BeginTransaction())
             {
-                Name = newSpending.Name,
-                MoneyOwed = newSpending.MoneySpent,
-                Group = daoGroup,
-                GroupId = daoGroup.Id,
-                Creditor = await UserService.GetUser(userId),
-                CreditorUserId = userId
-            };
+                try
+                {
+                    DaoSpending spending = new DaoSpending()
+                    {
+                        Name = newSpending.Name,
+                        MoneyOwed = newSpending.MoneySpent,
+                        CreditorUserId = userId,
+                        GroupId = daoGroup.Id,
+                        Creditor = await UserService.GetUser(userId),
+                        Group = daoGroup
+                    };
 
-            var debtors = newSpending.Debtors.Select(x => new DaoDebtor()
-            {
-                Spending = spending,
-                DebtorUserId = x.DebtorId,
-                Debt = x.Debt
-            }).ToList();
+                    spending.Debtors = newSpending.Debtors.Select(x => new DaoDebtor()
+                    {
+                        Spending = spending,
+                        DebtorUserId = x.DebtorId,
+                        Debt = x.Debt
+                    }).ToList();
 
-            spending.Debtors = debtors.ToList();
+                    await Context.Spendings.AddAsync(spending);
+                    await OptimizedService.OptimizeForNewSpending(userId, newSpending);
 
-            var insertCount = 1 + spending.Debtors.Count;
+                    await Context.SaveChangesAsync();
+                    // Call log AFTER saving, so ID is present
+                    await HistoryService.LogNewSpending(userId, spending);
 
-            await Context.Spendings.AddAsync(spending);
+                    await Context.SaveChangesAsync();
 
-            if (await Context.SaveChangesAsync() != insertCount)
-                throw new DatabaseException("spending_not_inserted");
 
-            await OptimizeSpendingForGroup(userId, newSpending.GroupId);
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         public async Task UpdateSpending(long userId, SpendingUpdate spendingUpdate)
@@ -226,36 +168,30 @@ namespace MShare_ASP.Services
             if (currentSpending.CreditorUserId != userId)
                 throw new ResourceForbiddenException("not_creditor");
 
-            using (var transaction = Context.Database.BeginTransaction())
+            var oldDebts = currentSpending.Debtors
+                .ToDictionary(debtor => debtor.DebtorUserId, debtor => debtor.Debt);
+
+            var newDebts = spendingUpdate.Debtors
+                .ToDictionary(debtor => debtor.DebtorId, debtor => debtor.Debt);
+
+            await HistoryService.LogSpendingUpdate(userId, currentSpending, spendingUpdate);
+
+            currentSpending.Name = spendingUpdate.Name;
+            currentSpending.MoneyOwed = spendingUpdate.MoneySpent;
+
+            Context.Debtors.RemoveRange(currentSpending.Debtors);
+
+            var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
             {
-                try
-                {
-                    currentSpending.Name = spendingUpdate.Name;
-                    currentSpending.MoneyOwed = spendingUpdate.MoneySpent;
+                Spending = currentSpending,
+                DebtorUserId = x.DebtorId,
+                Debt = x.Debt
+            }).ToList();
 
-                    Context.Debtors.RemoveRange(currentSpending.Debtors);
-                    var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
-                    {
-                        Spending = currentSpending,
-                        DebtorUserId = x.DebtorId,
-                        Debt = x.Debt
-                    }).ToList();
-                    currentSpending.Debtors = debtors.ToList();
+            currentSpending.Debtors = debtors.ToList();
 
-                    if (await Context.SaveChangesAsync() == 0)
-                    {
-                        throw new DatabaseException("spending_not_updated");
-                    }
-
-                    await OptimizeSpendingForGroup(userId, spendingUpdate.GroupId);
-
-                    transaction.Commit();
-                } catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
+            await OptimizedService.OptimizeForUpdateSpending(spendingUpdate.GroupId, userId, oldDebts, newDebts);
+            await Context.SaveChangesAsync();
         }
 
         public async Task DebtSettlement(long userId, long debtorId, long lenderId, long groupId)
@@ -268,41 +204,28 @@ namespace MShare_ASP.Services
                                || (userId == debtorId && x.UserId == lenderId)))
                 throw new ResourceForbiddenException("lender_or_debtor_not_member");
 
-            using (var transaction = Context.Database.BeginTransaction())
+            var optDeb = Context.OptimizedDebt
+                .FirstOrDefault(x => x.GroupId == groupId && x.UserOwesId == debtorId && x.UserOwedId == lenderId);
+
+            if (optDeb == null)
+                throw new ResourceGoneException("debt");
+
+            if (optDeb.OweAmount == 0)
+                throw new BusinessException("debt_already_payed");
+
+            DaoSettlement settlement = new DaoSettlement()
             {
-                try
-                {
-                    var optDeb = Context.OptimizedDebt
-                        .FirstOrDefault(x => x.GroupId == groupId && x.UserOwesId == debtorId && x.UserOwedId == lenderId);
+                GroupId = groupId,
+                From = debtorId,
+                To = lenderId,
+                Amount = optDeb.OweAmount
+            };
 
-                    if (optDeb == null)
-                        throw new ResourceGoneException("debt");
+            await Context.Settlements.AddAsync(settlement);
+            await OptimizedService.OptimizeForSettling(groupId, lenderId, debtorId);
+            await HistoryService.LogSettlement(userId, settlement);
 
-                    if (optDeb.OweAmount == 0)
-                        throw new BusinessException("debt_already_payed");
-
-                    DaoSettlement settlement = new DaoSettlement()
-                    {
-                        GroupId = groupId,
-                        From = debtorId,
-                        To = lenderId,
-                        Amount = optDeb.OweAmount
-                    };
-
-                    await Context.Settlements.AddAsync(settlement);
-
-                    if (await Context.SaveChangesAsync() != 1)
-                        throw new DatabaseException("debt_not_settled");
-
-                    await OptimizeSpendingForGroup(userId, groupId);
-
-                    transaction.Commit();
-                } catch
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
+            await Context.SaveChangesAsync();
         }
     }
 }
