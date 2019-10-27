@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using MShare_ASP.API.Request;
 using MShare_ASP.Data;
+using MShare_ASP.Services.Exceptions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -25,10 +26,11 @@ namespace MShare_ASP.Services
                                 .Include(x => x.Members).ThenInclude(x => x.User)
                                 .SingleOrDefaultAsync(x => x.Id == groupId);
 
-            var spendings = await Context.Spendings
-                .Where(x => x.GroupId == groupId)
-                .ToListAsync();
-            var members = daoGroup.Members;
+            if (daoGroup == null)
+                throw new ResourceNotFoundException("group");
+
+            if (!daoGroup.Members.Any(y => y.UserId == userId))
+                throw new ResourceForbiddenException("not_group_member");
 
             return await Context.History
                 .Where(
