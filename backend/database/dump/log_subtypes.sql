@@ -14,31 +14,17 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `history`
+-- Table structure for table `log_subtypes`
 --
 
-DROP TABLE IF EXISTS `history`;
+DROP TABLE IF EXISTS `log_subtypes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `history` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `acting_user_id` bigint(20) unsigned NOT NULL,  
-  `group_id` bigint(20) unsigned,
-  `affected_ids` varchar(400) NOT NULL,
-  `type` tinyint(3) unsigned NOT NULL,
-  `subtype` tinyint(3) unsigned NOT NULL,
-  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `log` text,
-  PRIMARY KEY (`id`),
-  KEY `type_enum` (`type`),
-  KEY `subtype_enum` (`subtype`),
-  KEY `fk_user_mapping` (`acting_user_id`),
-  KEY `fk_history_group` (`group_id`),
-  CONSTRAINT `type_enum` FOREIGN KEY (`type`) REFERENCES `log_types` (`id`),
-  CONSTRAINT `subtype_enum` FOREIGN KEY (`subtype`) REFERENCES `log_subtypes` (`id`),
-  CONSTRAINT `fk_user_mapping` FOREIGN KEY (`acting_user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_history_group` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `log_subtypes` (
+  `id` tinyint(3) unsigned NOT NULL,
+  `subtype_name` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +35,4 @@ CREATE TABLE `history` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-09-25 12:09:15
+-- Dump completed on 2019-10-19 21:28:57

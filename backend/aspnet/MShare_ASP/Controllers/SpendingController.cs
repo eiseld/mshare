@@ -15,11 +15,13 @@ namespace MShare_ASP.Controllers
     public class SpendingController : BaseController
     {
         private ISpendingService SpendingService { get; }
+        private IOptimizedService OptimizedService { get; }
 
         /// <summary>Initializes the SpendingController</summary>
-        public SpendingController(ISpendingService spendingService)
+        public SpendingController(ISpendingService spendingService, IOptimizedService optimizedService)
         {
             SpendingService = spendingService;
+            OptimizedService = optimizedService;
         }
 
         /// <summary>Gets all the spendings associated with a group</summary>
@@ -77,5 +79,20 @@ namespace MShare_ASP.Controllers
             await SpendingService.UpdateSpending(GetCurrentUserID(), spendingUpdate);
             return Ok();
         }
+
+#if DEBUG
+
+        /// <summary>Optimise from ground up for all groups (DEBUG ONLY)</summary>
+        /// <response code="200">Successful optimisation</response>
+        [HttpPost("optimise")]
+        [AllowAnonymous]
+        public async Task<IActionResult> OptimiseAll()
+        {
+            await OptimizedService.OptimizeForAllGroup();
+            return Ok();
+        }
+
+#endif
+
     }
 }

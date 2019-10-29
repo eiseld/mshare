@@ -37,18 +37,18 @@ android {
     productFlavors {
         local {
             applicationId "elte.moneyshare.local"
-            buildConfigField "String", "BASE_URL", '"http://192.168.99.100:8081/"'
-            resValue "string", "app_name", "Money Share Local"
+            buildConfigField "String", "BASE_URL", '"http://157.181.192.13:8081/"'
+            resValue "string", "app_name", "(L) Money Share"
         }
         staging {
             applicationId "elte.moneyshare.test"
             buildConfigField "String", "BASE_URL", '"http://remote.alerant.hu/test/api/"'
-            resValue "string", "app_name", "Money Share (test)"
+            resValue "string", "app_name", "(T) Money Share"
         }
         production {
             applicationId "elte.moneyshare"
             buildConfigField "String", "BASE_URL", '"http://remote.alerant.hu/api/"'
-            resValue "string", "app_name", "Money Share"
+            resValue "string", "app_name", "(P) Money Share"
         }
     }
 }

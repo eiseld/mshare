@@ -17,7 +17,7 @@ namespace MShare_ASP.API.Request
             /// Be aware: the sum of all of the debts, must be equal to MoneySpent!
             /// Note: calculate it client side
             /// </summary>
-            public long? Debt { get; set; }
+            public long Debt { get; set; }
         }
 
         /// <summary>Group id of the spending to be added to</summary>
@@ -79,7 +79,7 @@ namespace MShare_ASP.API.Request
             RuleFor(x => x.Debtors)
                 .NotEmpty()
                 // If we specify all debts it must equal exactly the MoneySpent
-                .Must((args, d) => d.Sum(m => m.Debt ?? 0) == args.MoneySpent)
+                .Must((args, d) => d.Sum(m => m.Debt) == args.MoneySpent)
                     // Only check previous must if all Debts are assigned
                     //.When(x => x.Debtors.Any() && x.Debtors.All(d => d.Debt.HasValue))
                     .WithMessage("Fully specified debts sum is not equal to MoneySpent");

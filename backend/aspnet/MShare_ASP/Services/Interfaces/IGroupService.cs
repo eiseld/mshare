@@ -59,12 +59,7 @@ namespace MShare_ASP.Services
 
         /// <summary>Match username or email with filterTerm</summary>
 		Task<IList<FilteredUserData>> GetFilteredUsers(string filterTerm);
-
-        /// <summary>Gets a group's history</summary>
-        /// <exception cref="ResourceNotFoundException">["group"]</exception>
-        /// <exception cref="ResourceForbiddenException">["not_group_member"]</exception>
-		Task<IList<DaoHistory>> GetGroupHistory(long userId, long groupId);
-
+        
         /// <summary>Adds a user to a group</summary>
         /// <exception cref="ResourceNotFoundException">["group"]</exception>
         /// <exception cref="ResourceForbiddenException">["not_group_member", "not_group_creator"]</exception>

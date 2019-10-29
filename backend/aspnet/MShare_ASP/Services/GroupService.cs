@@ -9,6 +9,7 @@ using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
@@ -17,8 +18,10 @@ namespace MShare_ASP.Services
     {
         private MshareDbContext Context { get; }
         private IEmailService EmailService { get; }
+        private IOptimizedService OptimizedService { get; }
         private IURIConfiguration UriConf { get; }
         private IRazorViewToStringRenderer Renderer { get; }
+        private IHistoryService History { get; }
         private IStringLocalizer<LocalizationResource> Localizer { get; }
 
         private async Task<long> GetDebtSum(long userId, long groupId)
@@ -39,13 +42,15 @@ namespace MShare_ASP.Services
             return credit - debt;
         }
 
-        public GroupService(MshareDbContext context, IEmailService emailService, IURIConfiguration uriConf, IStringLocalizer<LocalizationResource> localizer, IRazorViewToStringRenderer renderer)
+        public GroupService(MshareDbContext context, IEmailService emailService, IOptimizedService optimizedService, IHistoryService history, IURIConfiguration uriConf, IStringLocalizer<LocalizationResource> localizer, IRazorViewToStringRenderer renderer)
         {
             Context = context;
             EmailService = emailService;
+            OptimizedService = optimizedService;
             UriConf = uriConf;
             Renderer = renderer;
             Localizer = localizer;
+            History = history;
         }
 
         public async Task<GroupData> ToGroupData(long userId, DaoGroup daoGroup)
@@ -146,25 +151,72 @@ namespace MShare_ASP.Services
             if (daoMember == null)
                 throw new ResourceNotFoundException("member");
 
-            var delCount = 0;
+            var affectedUsers = new HashSet<long>() { memberId };
+            //Remove Participated Settlements
 
-            var daoDebtors = Context.Spendings
-                .Include(x => x.Debtors).ThenInclude(x => x.Debtor)
+            var participatedSettlements = Context.Settlements
                 .Where(x => x.GroupId == groupId)
-                .Select(x => x.Debtors.SingleOrDefault(y => y.DebtorUserId == memberId))
-                .Where(x => x != null);
+                .Where(x => x.From == memberId || x.To == memberId)
+                .ToArray();
 
-            foreach (var daoDebtor in daoDebtors)
+            affectedUsers.UnionWith(participatedSettlements.Select(x =>
             {
-                Context.Debtors.Remove(daoDebtor);
-                ++delCount;
+                if (x.From == memberId)
+                    return x.To;
+                else
+                    return x.From;
+            }));
+
+            Context.RemoveRange(participatedSettlements);
+
+            // Remove owned Spendings
+
+            var mySpendings = Context.Spendings
+                .Where(x => x.GroupId == groupId)
+                .Where(x => x.CreditorUserId == memberId)
+                .Include(x => x.Debtors)
+                .ToArray();
+
+            foreach (var mySpending in mySpendings)
+            {
+                var debtors = Context.Debtors
+                    .Where(x => x.SpendingId == mySpending.Id)
+                    .ToArray();
+
+                affectedUsers.UnionWith(debtors.Select(x => x.DebtorUserId));
+
+                Context.RemoveRange(debtors);
+            }
+            Context.RemoveRange(mySpendings);
+
+            // Remove debts
+
+            var myDebts = Context.Debtors
+                .Where(x => x.DebtorUserId == memberId)
+                .Include(x => x.Spending)
+                .ToArray();
+            foreach (var myDebt in myDebts)
+            {
+                var spending = myDebt.Spending;
+                affectedUsers.Add(spending.CreditorUserId);
+                spending.MoneyOwed -= myDebt.Debt;
+                if (spending.MoneyOwed == 0)
+                {
+                    Context.Remove(spending);
+                }
             }
 
-            Context.UsersGroupsMap.Remove(daoMember);
-            ++delCount;
+            Context.RemoveRange(myDebts);
 
-            if (await Context.SaveChangesAsync() != delCount)
-                throw new DatabaseException("group_member_not_removed");
+            //Remove from group
+
+            Context.UsersGroupsMap.Remove(daoMember);
+
+            await History.LogRemoveMember(userId, groupId, memberId, affectedUsers, participatedSettlements, mySpendings, myDebts);
+
+            await Context.SaveChangesAsync();
+
+            await OptimizedService.OptimizeForGroup(groupId);
         }
 
         public async Task CreateGroup(long userId, NewGroup newGroup)
@@ -176,14 +228,34 @@ namespace MShare_ASP.Services
             if (existingGroup != null)
                 throw new BusinessException("name_taken");
 
-            await Context.Groups.AddAsync(new DaoGroup()
+            using (var transaction = Context.Database.BeginTransaction())
             {
-                CreatorUserId = userId,
-                Name = newGroup.Name
-            });
+                try
+                {
+                    var daoGroup = new DaoGroup()
+                    {
+                        CreatorUserId = userId,
+                        Name = newGroup.Name
+                    };
 
-            if (await Context.SaveChangesAsync() != 1)
-                throw new DatabaseException("group_not_created");
+                    await Context.Groups.AddAsync(daoGroup);
+
+
+                    if (await Context.SaveChangesAsync() != 1)
+                        throw new DatabaseException("group_not_created");
+
+                    await History.LogCreateGroup(userId, daoGroup);
+
+                    if (await Context.SaveChangesAsync() != 1)
+                        throw new DatabaseException("group_create_history_not_saved");
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         public async Task<IList<FilteredUserData>> GetFilteredUsers(string filterTerm)
@@ -198,14 +270,6 @@ namespace MShare_ASP.Services
                 .ToListAsync();
         }
 
-        public async Task<IList<DaoHistory>> GetGroupHistory(long userId, long groupId)
-        {
-            var daoGroup = await GetGroupOfUser(userId, groupId);
-
-            return await Context.History
-                .Where(s => s.GroupId == groupId)
-                .ToListAsync();
-        }
 
         public async Task AddMember(long userId, long groupId, long memberId)
         {
@@ -217,36 +281,48 @@ namespace MShare_ASP.Services
             if (daoGroup.Members.Any(x => x.UserId == memberId))
             {
                 throw new BusinessException("user_already_member");
-            } else
-            {
-                Context.UsersGroupsMap.Add(new DaoUsersGroupsMap()
-                {
-                    UserId = memberId,
-                    GroupId = groupId
-                });
             }
 
-            if (await Context.SaveChangesAsync() != 1)
-                throw new DatabaseException("group_member_not_added");
-            else
+            using (var transaction = Context.Database.BeginTransaction())
             {
-                var groupCreator = Context.Users.FirstOrDefault(x => x.Id == userId);
-                var newMember = Context.Users.FirstOrDefault(x => x.Id == memberId);
-
-                var model = new InformationViewModel()
+                try
                 {
-                    Title = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT),
-                    PreHeader = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_PREHEADER),
-                    Hero = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_HERO),
-                    Greeting = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, newMember.DisplayName),
-                    Intro = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_BODY_INTRO, groupCreator.DisplayName, daoGroup.Name),
-                    EmailDisclaimer = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_BODY_DISCLAIMER),
-                    Cheers = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
-                    MShareTeam = Localizer.GetString(newMember.Lang, LocalizationResource.MSHARE_TEAM),
-                    SiteBaseUrl = $"{UriConf.URIForEndUsers}"
-                };
-                var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
-                await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, newMember.DisplayName, newMember.Email, Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT), htmlBody);
+                    Context.UsersGroupsMap.Add(new DaoUsersGroupsMap()
+                    {
+                        UserId = memberId,
+                        GroupId = groupId
+                    });
+
+                    await History.LogAddMember(userId, groupId, memberId);
+
+                    if (await Context.SaveChangesAsync() != 2)
+                        throw new DatabaseException("group_member_not_added");
+
+                    var groupCreator = Context.Users.FirstOrDefault(x => x.Id == userId);
+                    var newMember = Context.Users.FirstOrDefault(x => x.Id == memberId);
+
+                    var model = new InformationViewModel()
+                    {
+                        Title = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT),
+                        PreHeader = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_PREHEADER),
+                        Hero = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_HERO),
+                        Greeting = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, newMember.DisplayName),
+                        Intro = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_BODY_INTRO, groupCreator.DisplayName, daoGroup.Name),
+                        EmailDisclaimer = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_BODY_DISCLAIMER),
+                        Cheers = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
+                        MShareTeam = Localizer.GetString(newMember.Lang, LocalizationResource.MSHARE_TEAM),
+                        SiteBaseUrl = $"{UriConf.URIForEndUsers}"
+                    };
+                    var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
+                    await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, newMember.DisplayName, newMember.Email, Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT), htmlBody);
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }
         }
     }

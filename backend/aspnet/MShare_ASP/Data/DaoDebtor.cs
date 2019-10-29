@@ -17,7 +17,7 @@ namespace MShare_ASP.Data
 
         /// <summary>Debt of this debtor</summary>
         [Column("debt")]
-        public long? Debt { get; set; }
+        public long Debt { get; set; }
 
         /// <summary>Spending contained in this junction</summary>
         [ForeignKey("SpendingId")]

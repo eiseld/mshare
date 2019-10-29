@@ -17,12 +17,14 @@ namespace MShare_ASP.Controllers
     {
         private IGroupService GroupService { get; }
         private ISpendingService SpendingService { get; }
+        private IHistoryService HistoryService { get; }
 
         /// <summary>Initializes the GroupController</summary>
-        public GroupController(IGroupService groupService, ISpendingService spendingService)
+        public GroupController(IGroupService groupService, ISpendingService spendingService, IHistoryService historyService)
         {
             GroupService = groupService;
             SpendingService = spendingService;
+            HistoryService = historyService;
         }
 
 #if DEBUG
@@ -137,7 +139,7 @@ namespace MShare_ASP.Controllers
         public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory(long groupId)
         {
             //TODO DaoHistory should not go out make response and converter function
-            var groupHistory = await GroupService.GetGroupHistory(GetCurrentUserID(), groupId);
+            var groupHistory = await HistoryService.GetGroupHistory(GetCurrentUserID(), groupId);
             return Ok(groupHistory);
         }
 
