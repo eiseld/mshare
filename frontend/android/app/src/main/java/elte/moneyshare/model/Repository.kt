@@ -228,7 +228,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(userData, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -247,8 +247,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        var jsonObject = JSONObject(response.errorBody()?.string());
-                        completion(null, jsonObject.getJSONObject("errors").getJSONArray("BankAccountNumber")[0].toString())
+                        completion(null, response.code().toString())
                     }
                 }
             }
