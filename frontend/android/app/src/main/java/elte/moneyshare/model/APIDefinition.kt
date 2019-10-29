@@ -51,7 +51,7 @@ interface APIDefinition {
     fun getProfile(): Call<UserData>
 
     @POST("profile/bankAccountNumber/update")
-    fun postBankAccountNumber(@Body bankAccountNumber: BankAccountNumberUpdate): Call<UserData>
+    fun postBankAccountNumber(@Body bankAccountNumber: BankAccountNumberUpdate): Call<ResponseBody>
 
     @POST("profile/password/forgot")
     fun postForgotPassword(@Body email: ForgottenPasswordData): Call<ResponseBody>

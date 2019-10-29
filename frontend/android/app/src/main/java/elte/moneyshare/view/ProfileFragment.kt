@@ -12,6 +12,8 @@ import elte.moneyshare.enable
 import elte.moneyshare.entity.BankAccountNumberUpdate
 import elte.moneyshare.entity.UserData
 import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.viewmodel.LoginViewModel
 import elte.moneyshare.viewmodel.ProfileViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -48,7 +50,12 @@ class ProfileFragment : Fragment() {
                 if(error == null) {
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, ProfileFragment())?.commit()
                 } else {
-                    DialogManager.showInfoDialog(error, context)
+                    DialogManager.showInfoDialog(
+                        error.convertErrorCodeToString(
+                            Action.PROFILE_UPDATE,
+                            context
+                        ), context
+                    )
                 }
             }
         }

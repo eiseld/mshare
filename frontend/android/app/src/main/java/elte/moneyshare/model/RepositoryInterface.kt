@@ -37,8 +37,7 @@ interface RepositoryInterface {
 
     fun getProfile(completion: (response: UserData?, error: String?) -> Unit)
 
-    //TODO impl updateProfile
-    fun updateProfile(bankAccountNumberUpdate: BankAccountNumberUpdate, completion: (response: UserData?, error: String?) -> Unit)
+    fun updateProfile(bankAccountNumberUpdate: BankAccountNumberUpdate, completion: (response: String?, error: String?) -> Unit)
 
     fun updateLang(lang: String, completion: (response: String?, error: String?) -> Unit)
 

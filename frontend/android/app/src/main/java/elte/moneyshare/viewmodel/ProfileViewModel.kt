@@ -5,6 +5,7 @@ import elte.moneyshare.entity.BankAccountNumberUpdate
 import elte.moneyshare.entity.NewGroup
 import elte.moneyshare.entity.UserData
 import elte.moneyshare.model.APIClient
+import okhttp3.ResponseBody
 
 class ProfileViewModel : ViewModel() {
 
@@ -20,7 +21,7 @@ class ProfileViewModel : ViewModel() {
 
     fun updateProfile(
         bankAccountNumberUpdate: BankAccountNumberUpdate,
-        completion: (response: UserData?, error: String?) -> Unit
+        completion: (response: String?, error: String?) -> Unit
     ) {
         APIClient.getRepository().updateProfile(bankAccountNumberUpdate) { response, error ->
             if (error == null) {
