@@ -16,6 +16,12 @@ class SettingsFragment : Fragment() {
 
     private lateinit var viewModel: ProfileViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Retain this fragment across configuration changes.
+        retainInstance = true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,26 +35,25 @@ class SettingsFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
 
         huButton.setOnClickListener {
-            viewModel.updateLang("HU") { response, error ->
-                if (error == null) {
-                    SharedPreferences.lang = "HU"
-                    (activity as MainActivity).updateLang(SharedPreferences.lang)
-                    (activity as MainActivity).refresh()
-                } else {
-                    DialogManager.showInfoDialog(error, context)
-                }
+            viewModel.updateLang("HU") { _, error ->
+                handleUpdateLangResponse("HU", error)
             }
         }
 
         enButton.setOnClickListener {
-            viewModel.updateLang("EN") { response, error ->
-                if (error == null) {
-                    SharedPreferences.lang = "EN"
-                    (activity as MainActivity).updateLang(SharedPreferences.lang)
-                } else {
-                    DialogManager.showInfoDialog(error, context)
-                }
+            viewModel.updateLang("EN") { _, error ->
+                handleUpdateLangResponse("EN", error)
             }
+        }
+    }
+
+    private fun handleUpdateLangResponse(lang: String, error: String?) {
+        if (error == null) {
+            SharedPreferences.lang = lang
+            (activity as MainActivity).updateLang(SharedPreferences.lang)
+            (activity as MainActivity).refresh()
+        } else {
+            DialogManager.showInfoDialog(error, context)
         }
     }
 }

@@ -260,7 +260,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
     }
 
     override fun updateLang(lang: String, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.updateLang(lang).enqueue(object : Callback<ResponseBody> {
+        apiDefinition.updateLang(Lang(lang)).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {
