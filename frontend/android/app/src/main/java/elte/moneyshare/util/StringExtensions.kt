@@ -1,6 +1,7 @@
 package elte.moneyshare.util
 
 import android.content.Context
+import android.widget.Toast
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.R
 
@@ -14,6 +15,10 @@ enum class Action
 
 fun String?.showAsDialog(context: Context? = null, positiveAction: () -> Unit = {}) {
     if (!this.isNullOrEmpty()) DialogManager.showInfoDialog(this, context, positiveAction)
+}
+
+fun String?.showToast(context: Context, length: Int = Toast.LENGTH_SHORT){
+    if (!this.isNullOrEmpty()) Toast.makeText(context, this, length).show()
 }
 
 fun String?.convertErrorCodeToString(

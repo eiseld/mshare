@@ -8,6 +8,7 @@
     <string name="send_email">Send email</string>
     <string name="register">Register</string>
     <string name="registration">Registration</string>
+    <string name="stay_logged_in">Stay logged in</string>
 
     <!-- Registration messages -->
     <string name="username">Display Name</string>
@@ -24,6 +25,7 @@
     <string name="email_not_matching">Emails not matching</string>
     <string name="email_not_correct">Email format is not correct</string>
     <string name="successful_registration">Successful registration!</string>
+    <string name="relog_error">Something went wrong, please log in again!</string>
 
     <!-- Popup mesages -->
     <string name="popup_title">Debt settlement</string>
@@ -144,9 +146,13 @@
     <string name="hu">hu</string>
     <string name="en">en</string>
     <string name="select_lang">Select language</string>
+
     <string name="bankAccountText">Bank Account</string>
     <string name="bankAccount">BAN: %1$s-%2$s-%3$s</string>
+
     <string name="api_spending_delete_200">Spending successfully deleted!</string>
     <string name="doYouReallyWantToDeleteSpending">Do you really want to delete this spending?</string>
     <string name="spendingSuccessfullyDeleted">Spending successfully deleted!</string>
+
+    <string name="menu_logout">Logout</string>
 </resources>

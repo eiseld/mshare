@@ -18,7 +18,7 @@ namespace MShare_ASP.Data
         DbSet<DaoGroup> Groups { get; set; }
 
         /// <summary>
-        /// History of group transactions
+        /// History of everything
         /// </summary>
         DbSet<DaoHistory> History { get; set; }
 

@@ -7,7 +7,7 @@ class MoneyShareApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        APIClient.init(applicationContext)
+        APIClient.init(baseUrl = null, context = applicationContext){}
         SharedPreferences.init(applicationContext)
     }
 }

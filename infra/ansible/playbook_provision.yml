@@ -24,7 +24,27 @@
         ProxyPassReverse /jenkins http://localhost:8080/jenkins
         ProxyPass /test http://localhost:8081/ nocanon
         ProxyPassReverse /test http://localhost:8081
+        ProxyPass /pr_0 http://localhost:8090/ nocanon
+        ProxyPassReverse /test http://localhost:8090
+        ProxyPass /pr_1 http://localhost:8091/ nocanon
+        ProxyPassReverse /test http://localhost:8091
+        ProxyPass /pr_2 http://localhost:8092/ nocanon
+        ProxyPassReverse /test http://localhost:8092
         ProxyPass / http://localhost:8082/ nocanon
+        ProxyPass /pr_3 http://localhost:8093/ nocanon
+        ProxyPassReverse /test http://localhost:8093
+        ProxyPass /pr_4 http://localhost:8094/ nocanon
+        ProxyPassReverse /test http://localhost:8094
+        ProxyPass /pr_5 http://localhost:8095/ nocanon
+        ProxyPassReverse /test http://localhost:8095
+        ProxyPass /pr_6 http://localhost:8096/ nocanon
+        ProxyPassReverse /test http://localhost:8096
+        ProxyPass /pr_7 http://localhost:8097/ nocanon
+        ProxyPassReverse /test http://localhost:8097
+        ProxyPass /pr_8 http://localhost:8098/ nocanon
+        ProxyPassReverse /test http://localhost:8098
+        ProxyPass /pr_9 http://localhost:8099/ nocanon
+        ProxyPassReverse /test http://localhost:8099
         ProxyPassReverse / http://localhost:8082
         ProxyRequests     Off
         AllowEncodedSlashes NoDecode

@@ -20,8 +20,8 @@ object APIClient {
     private lateinit var apiDefinition: APIDefinition
     private lateinit var repository: Repository
 
-    fun init(context: Context) {
-        baseUrlValue = BuildConfig.BASE_URL
+    fun init(baseUrl: String?, context: Context, completion: (setUrl: String) -> Unit) {
+        baseUrlValue = baseUrl?.let { it } ?: BuildConfig.BASE_URL
         accessTokenKey = context.getString(R.string.access_token_key)
         val onFailureMessage = context.resources.getString(R.string.on_failure_message)
 
@@ -45,6 +45,7 @@ object APIClient {
 
         apiDefinition = retrofit.create(APIDefinition::class.java)
         repository = Repository(apiDefinition, onFailureMessage)
+        completion("connect to: $baseUrlValue")
     }
 
     fun getRepository(): Repository{
