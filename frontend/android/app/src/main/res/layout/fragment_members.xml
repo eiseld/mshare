@@ -8,24 +8,26 @@
         tools:context=".view.MembersFragment">
 
     <TextView
-            android:id="@+id/myBalanceLabelTextView"
+            android:id="@+id/myNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my_balance"
+            android:textStyle="bold"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:padding="12dp"/>
+            android:padding="12dp"
+            tools:text="John Doe" />
 
     <TextView
             android:id="@+id/myBalanceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Balance"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:padding="12dp" />
+            android:padding="12dp"
+            tools:text="+ 100" />
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/membersRecyclerView"

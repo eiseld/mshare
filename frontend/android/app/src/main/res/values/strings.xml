@@ -47,8 +47,8 @@
     <string name="group_owned">Neked tartoznak \n %1$d Ft</string>
     <string name="group_settled_up">Kiegyenlítve</string>
 
-    <string name="member_owe">Tartozásod felé \n %1$d Ft</string>
-    <string name="member_owed">Tartozása feléd \n %1$d Ft</string>
+    <string name="member_owe">- %1$d Ft</string>
+    <string name="member_owed">+ %1$d Ft</string>
 
     <string name="bill_money">%1$d Ft</string>
 
