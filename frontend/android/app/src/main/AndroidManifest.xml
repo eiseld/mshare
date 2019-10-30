@@ -18,9 +18,6 @@
                 android:configChanges="orientation"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>-->
         </activity>
 
         <activity
@@ -30,6 +27,22 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <!-- Support elte.mshare://main/?... like iPhone app -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "elte.mshare:" -->
+                <data
+                        android:scheme="elte.mshare"
+                        android:host="main"
+                        android:path="/confirmRegistration" />
+                <data
+                        android:scheme="elte.mshare"
+                        android:host="main"
+                        android:path="/forgotPassword" />
             </intent-filter>
         </activity>
     </application>
