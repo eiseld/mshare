@@ -25,6 +25,7 @@
     <string name="email_not_matching">Nem egyeznek az emailek!</string>
     <string name="email_not_correct">Nem megfelelő az email formátum!</string>
     <string name="successful_registration">Sikeres regisztráció!</string>
+    <string name="successful_registration_confirmation">Sikeres regisztráció megerősítés!</string>
     <string name="relog_error">Valami hiba történt, jelenkezz be újra!</string>
 
     <!-- Popup mesages -->
@@ -89,6 +90,10 @@
     <string name="modify">módosítás</string>
     <string name="save">Mentés</string>
     <string name="profile">Profil</string>
+
+    <!-- new password -->
+    <string name="new_password">Új jelszó megadása.</string>
+    <string name="confirm_password">Jelszó megerősítése</string>
 
     <!-- API responses -->
 
