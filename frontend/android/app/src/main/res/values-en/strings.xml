@@ -146,4 +146,7 @@
     <string name="select_lang">Select language</string>
     <string name="bankAccountText">Bank Account</string>
     <string name="bankAccount">BAN: %1$s-%2$s-%3$s</string>
+    <string name="api_spending_delete_200">Spending successfully deleted!</string>
+    <string name="doYouReallyWantToDeleteSpending">Do you really want to delete this spending?</string>
+    <string name="spendingSuccessfullyDeleted">Spending successfully deleted!</string>
 </resources>

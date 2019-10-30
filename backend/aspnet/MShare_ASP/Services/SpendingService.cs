@@ -256,9 +256,46 @@ namespace MShare_ASP.Services
                     throw;
                 }
             }
-        }
+		}
 
-        public async Task DebtSettlement(long userId, long debtorId, long lenderId, long groupId)
+		public async Task DeleteSpending(long userId, DeleteSpending spendingData, long groupId)
+		{
+
+			var currentSpending = await Context.Spendings
+											   .Include(x => x.Debtors)
+											  .SingleOrDefaultAsync(x => x.Id == spendingData.Id);
+
+			if (currentSpending == null)
+				throw new ResourceGoneException("spending");
+
+			if (currentSpending.CreditorUserId != userId)
+				throw new ResourceForbiddenException("not_creditor");
+
+			using (var transaction = Context.Database.BeginTransaction())
+			{
+				try
+				{
+
+					Context.Spendings.Remove(currentSpending);
+
+					if (await Context.SaveChangesAsync() == 0)
+					{
+						throw new DatabaseException("spending_not_updated");
+					}
+
+					await OptimizeSpendingForGroup(userId, groupId);
+
+					transaction.Commit();
+				}
+				catch
+				{
+					transaction.Rollback();
+					throw;
+				}
+			}
+		}
+
+		public async Task DebtSettlement(long userId, long debtorId, long lenderId, long groupId)
         {
             if (userId != debtorId && userId != lenderId)
                 throw new ResourceForbiddenException("user_not_in_transaction");

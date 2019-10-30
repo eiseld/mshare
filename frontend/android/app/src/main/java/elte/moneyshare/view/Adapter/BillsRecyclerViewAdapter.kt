@@ -19,12 +19,21 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.Fragment
+import android.view.View
 import elte.moneyshare.*
+import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.AddSpendingFragment
 import elte.moneyshare.view.MainActivity
 import elte.moneyshare.view.NewGroupFragment
 
-class BillsRecyclerViewAdapter(private val context: Context, private val bills: List<SpendingData>, private val groupId : Int) : RecyclerView.Adapter<BillViewHolder>() {
+class BillsRecyclerViewAdapter(
+    private val context: Context,
+    private val bills: MutableList<SpendingData>,
+    private val groupId : Int,
+    private val Model: GroupViewModel
+) : RecyclerView.Adapter<BillViewHolder>() {
 
     private var animationDuration = 300L
 
@@ -42,6 +51,12 @@ class BillsRecyclerViewAdapter(private val context: Context, private val bills: 
         holder.billNameTextView.text = bill.name
         holder.billMoneyTextView.text = String.format(context.getString(R.string.bill_money, bill.moneyOwed))
 
+
+        if(bill.creditor.id == SharedPreferences.userId) {
+            holder.removeBillImageButtonView.visibility = View.VISIBLE
+        } else {
+            holder.removeBillImageButtonView.visibility = View.GONE
+        }
 
         holder.billMembersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayout.VERTICAL, false)
         holder.billMembersRecyclerView.isNestedScrollingEnabled = false
@@ -91,6 +106,31 @@ class BillsRecyclerViewAdapter(private val context: Context, private val bills: 
             showModifyDialog(id)
             return@setOnLongClickListener true
         }
+
+        holder.removeBillImageButtonView.setOnClickListener()
+        {
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage(context.getString(R.string.doYouReallyWantToDeleteSpending))
+
+            builder.setPositiveButton(context.getString(R.string.yes)) { dialog, which ->
+                DialogManager.showInfoDialog(context.getString(R.string.spendingSuccessfullyDeleted), context)
+                Model.deleteSpending(bill, groupId) { response, error ->
+                    if (error == null) {
+                        notifyItemRemoved(position)
+                        bills.removeAt(position)
+                        (context as MainActivity).onBackPressed()
+                    } else {
+                        DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING_DELETE,context), context)
+                    }
+                }
+            }
+
+            builder.setNeutralButton(context.getString(R.string.no)) { _, _ ->
+            }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+
     }
     private fun showModifyDialog(id: Int){
         // Late initialize an alert dialog object
@@ -124,6 +164,7 @@ class BillsRecyclerViewAdapter(private val context: Context, private val bills: 
 
         dialog.show()
     }
+
     private fun modifySpending(id: Int)
     {
         val fragment = AddSpendingFragment()

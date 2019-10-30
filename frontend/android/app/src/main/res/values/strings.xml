@@ -146,5 +146,8 @@
     <string name="select_lang">Nyelv kiválasztása</string>
     <string name="bankAccountText">Bankszámlaszám</string>
     <string name="bankAccount">BSz: %1$s-%2$s-%3$s</string>
+    <string name="api_spending_delete_200">Költés sikeresen törölve!</string>
+    <string name="doYouReallyWantToDeleteSpending">Tényleg törölni szeretnéd ezt a költést?</string>
+    <string name="spendingSuccessfullyDeleted">Költés sikeresen törölve!</string>
 
 </resources>

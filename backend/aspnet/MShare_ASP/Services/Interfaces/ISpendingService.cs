@@ -47,12 +47,20 @@ namespace MShare_ASP.Services
         /// <exception cref="DatabaseException">["spending_not_updated"]</exception>
         Task UpdateSpending(long userId, SpendingUpdate spendingUpdate);
 
-        /// <summary>Settles a debt</summary>
-        /// <exception cref="ResourceNotFoundException">["group"]</exception>
-        /// <exception cref="ResourceForbiddenException">["not_group_member", "lender_not_member"]</exception>
-        /// <exception cref="ResourceGoneException">["debt"]</exception>
-        /// <exception cref="BusinessException">["debt_already_payed"]</exception>
-        /// <exception cref="DatabaseException">["debt_not_settled"]</exception>
-        Task DebtSettlement(long userId, long debtorId, long lenderId, long groupId);
+		/// <summary>Delete a spending from the database</summary>
+		/// <exception cref="ResourceNotFoundException">["group"]</exception>
+		/// <exception cref="ResourceForbiddenException">["not_group_member", "not_creditor"]</exception>
+		/// <exception cref="BusinessException">["debtor_not_member"]</exception>
+		/// <exception cref="ResourceGoneException">["spending"]</exception>
+		/// <exception cref="DatabaseException">["spending_not_deleted"]</exception>
+		Task DeleteSpending(long userId, DeleteSpending spendingData, long groupId);
+
+		/// <summary>Settles a debt</summary>
+		/// <exception cref="ResourceNotFoundException">["group"]</exception>
+		/// <exception cref="ResourceForbiddenException">["not_group_member", "lender_not_member"]</exception>
+		/// <exception cref="ResourceGoneException">["debt"]</exception>
+		/// <exception cref="BusinessException">["debt_already_payed"]</exception>
+		/// <exception cref="DatabaseException">["debt_not_settled"]</exception>
+		Task DebtSettlement(long userId, long debtorId, long lenderId, long groupId);
     }
 }

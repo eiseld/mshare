@@ -66,6 +66,9 @@ interface APIDefinition {
     @POST("Spending/create")
     fun postSpending(@Body newSpending: NewSpending): Call<ResponseBody>
 
+    @POST("Spending/{groupId}/delete")
+    fun deleteSpending(@Body spending: SpendingData, @Path("groupId") groupId: Int): Call<ResponseBody>
+
     @GET("Spending/{groupId}/optimised")
     fun getOptimizedDebt(@Path("groupId") groupId: Int) : Call<ArrayList<OptimizedDebtData>>
 
