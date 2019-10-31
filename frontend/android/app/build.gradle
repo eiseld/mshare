@@ -37,7 +37,7 @@ android {
     productFlavors {
         local {
             applicationId "elte.moneyshare.local"
-            buildConfigField "String", "BASE_URL", '"http://192.168.99.100:8081/"'
+            buildConfigField "String", "BASE_URL", '"http://192.168.116.102:8081/"'
             resValue "string", "app_name", "(L) Money Share"
         }
         staging {
