@@ -28,6 +28,11 @@
     <string name="successful_registration_confirmation">Successful registration confirm!</string>
     <string name="relog_error">Something went wrong, please log in again!</string>
 
+    <!-- new password -->
+    <string name="new_password">Create new password.</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="new_password_updated">New password updated!</string>
+
     <!-- Popup mesages -->
     <string name="popup_title">Debt settlement</string>
     <string name="popup_message_to_you">Are you sure that settle %1$s %2$d Ft debt to you?</string>
@@ -89,10 +94,6 @@
     <string name="modify">modify</string>
     <string name="save">Save</string>
     <string name="profile">Profile</string>
-
-    <!-- new password -->
-    <string name="new_password">Create new password.</string>
-    <string name="confirm_password">Confirm password</string>
 
     <!-- API responses -->
 

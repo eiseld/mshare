@@ -4,7 +4,6 @@ package elte.moneyshare.model
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.*
 import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,10 +34,29 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
+    override fun postValidateRegistration(token: String, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.postValidateRegistration(token).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.code().toString())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
     override fun postRegisterUser(registrationData: RegistrationData, completion: (response: String?, error: String?) -> Unit) {
         apiDefinition.postRegisterUser(registrationData).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                when (response?.code()) {
+                when (response.code()) {
                     in (200..300) -> {
                         completion(response.code().toString(), null)
                     }
@@ -241,6 +259,25 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
 
     override fun updateProfile(bankAccountNumberUpdate: BankAccountNumberUpdate, completion: (response: String?, error: String?) -> Unit) {
         apiDefinition.postBankAccountNumber(bankAccountNumberUpdate).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.code().toString())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
+    override fun postPasswordUpdate(passwordUpdate: PasswordUpdate, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.postPasswordUpdate(passwordUpdate).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {

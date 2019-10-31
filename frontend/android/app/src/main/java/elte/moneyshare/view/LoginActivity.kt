@@ -7,19 +7,23 @@ import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.widget.Toast
+import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.model.APIClient
+import elte.moneyshare.util.showAsDialog
 import elte.moneyshare.util.showToast
-import elte.moneyshare.viewmodel.GroupsViewModel
+import elte.moneyshare.viewmodel.LoginViewModel
 import java.util.*
 
 
 class LoginActivity : AppCompatActivity() {
 
     private var isBackPressedOnce = false
-    private lateinit var groupsViewModel: GroupsViewModel
+    private lateinit var loginViewModel: LoginViewModel
+    private val CONFIRM_REGISTRATION = "confirmregistration"
+    private val FORGOT_PASSWORD = "forgotpassword"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,17 +37,33 @@ class LoginActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, LoginFragment())
             .commit()
 
-        groupsViewModel = ViewModelProviders.of(this).get(GroupsViewModel::class.java)
+        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
+        handleDeepLinkIntent()
+    }
+
+    private fun handleDeepLinkIntent() {
         val data = this.intent.data
         if (data != null && data.isHierarchical) {
-            when (data.encodedSchemeSpecificPart) {
-                "//main/confirmRegistration" -> {
-                    DialogManager.showInfoDialog(getString(R.string.successful_registration_confirmation), baseContext)
+            val intentData = data.encodedSchemeSpecificPart.split(regex = Regex("/"), limit = 4)
+            val intentFrom = intentData[2]
+            val sentToken = intentData[3]
+            when (intentFrom) {
+                CONFIRM_REGISTRATION -> {
+                    loginViewModel.postValidateRegistration(sentToken) { _, error ->
+                        if (error == null) {
+                            DialogManager.showInfoDialog(getString(R.string.successful_registration_confirmation), baseContext)
+                        } else {
+                            error.showAsDialog(this)
+                        }
+                    }
                 }
-                "//main/forgotPassword" -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.frame_container, NewPasswordFragment()).addToBackStack(null)
-                        .commit()
+                FORGOT_PASSWORD -> {
+                    val fragment = NewPasswordFragment()
+                    val args = Bundle()
+                    args.putString(FragmentDataKeys.NEW_PASSWORD_TOKEN.value, sentToken)
+                    fragment.arguments = args
+                    supportFragmentManager.beginTransaction().replace(R.id.frame_container, fragment).addToBackStack(null).commit()
                 }
             }
         }

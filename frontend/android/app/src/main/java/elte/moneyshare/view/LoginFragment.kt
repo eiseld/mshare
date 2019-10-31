@@ -58,12 +58,7 @@ class LoginFragment : Fragment() {
                     activity?.finish()
                     //activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
-                    DialogManager.showInfoDialog(
-                        error.convertErrorCodeToString(
-                            Action.AUTH_LOGIN,
-                            context
-                        ), context
-                    )
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.AUTH_LOGIN, context), context)
                 }
             }
         }
