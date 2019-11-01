@@ -1,6 +1,5 @@
 package elte.moneyshare.view.Adapter
 
-import android.app.PendingIntent
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -33,12 +32,12 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
 
         holder.memberNameTextView.text = member.name
 
-        if (member.balance < 0) {
-            holder.memberBalanceTextView.text = String.format(context.getString(R.string.member_owed), member.balance)
-        } else if (member.balance > 0) {
-            holder.memberBalanceTextView.text = String.format(context.getString(R.string.member_owe), member.balance)
-        } else {
-            holder.memberBalanceTextView.text = context.getString(R.string.group_settled_up)
+        when {
+            member.balance < 0 -> holder.memberBalanceTextView.text =
+                String.format(context.getString(R.string.member_owed), member.balance)
+            member.balance > 0 -> holder.memberBalanceTextView.text =
+                String.format(context.getString(R.string.member_owe), member.balance)
+            else -> holder.memberBalanceTextView.text = "0"
         }
 
         if (groupData.creator.id == member.id) {

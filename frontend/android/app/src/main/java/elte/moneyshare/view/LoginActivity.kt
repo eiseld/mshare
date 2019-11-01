@@ -14,6 +14,7 @@ import elte.moneyshare.util.showToast
 import elte.moneyshare.viewmodel.GroupsViewModel
 import java.util.*
 
+
 class LoginActivity : AppCompatActivity() {
 
     private var isBackPressedOnce = false
@@ -32,6 +33,16 @@ class LoginActivity : AppCompatActivity() {
             .commit()
 
         groupsViewModel = ViewModelProviders.of(this).get(GroupsViewModel::class.java)
+
+        val data = this.intent.data
+        if (data != null && data.isHierarchical) {
+            when (this.intent.dataString) {
+                "//main/confirmRegistration" -> {
+                }
+                "//main/forgotPassword" -> {
+                }
+            }
+        }
     }
 
     fun updateUrl(baseUrl: String){
