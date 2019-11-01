@@ -57,7 +57,7 @@ interface APIDefinition {
     fun postForgotPassword(@Body email: ForgottenPasswordData): Call<ResponseBody>
 
     @PUT("Profile/lang")
-    fun updateLang(@Body lang: String): Call<ResponseBody>
+    fun updateLang(@Body lang: Lang): Call<ResponseBody>
 
     //SPENDING
     @GET("Spending/{id}")
