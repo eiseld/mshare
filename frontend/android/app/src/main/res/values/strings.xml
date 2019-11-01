@@ -155,4 +155,9 @@
     <string name="spendingSuccessfullyDeleted">Költés sikeresen törölve!</string>
 
     <string name="menu_logout">Kijelentkezés</string>
+    <string name="changePasswordLabel">Jelszó megváltoztatása</string>
+    <string name="oldPasswordTextView">Régi jelszó</string>
+    <string name="newPasswordTextView">Új jelszó</string>
+    <string name="newPasswordAgainTextView">Új jelszó ismét</string>
+    <string name="passwordSuccessfullyChanged">Jelszó sikeresen megváltoztatva!</string>
 </resources>

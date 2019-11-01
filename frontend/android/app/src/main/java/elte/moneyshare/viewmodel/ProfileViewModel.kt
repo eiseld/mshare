@@ -2,6 +2,7 @@ package elte.moneyshare.viewmodel
 
 import android.arch.lifecycle.ViewModel
 import elte.moneyshare.entity.BankAccountNumberUpdate
+import elte.moneyshare.entity.ChangePasswordData
 import elte.moneyshare.entity.NewGroup
 import elte.moneyshare.entity.UserData
 import elte.moneyshare.model.APIClient
@@ -35,6 +36,16 @@ class ProfileViewModel : ViewModel() {
     fun updateLang(lang: String, completion: (response: String?, error: String?) -> Unit) {
         APIClient.getRepository().updateLang(lang) { response, error ->
             if (error == null) {
+                completion(response, null)
+            } else {
+                completion(null, error)
+            }
+        }
+    }
+
+    fun changePassword(changePasswordData: ChangePasswordData, completion: (response: String?, error: String?) -> Unit) {
+        APIClient.getRepository().postChangePassword(changePasswordData.oldPassword, changePasswordData.newPassword) { response, error ->
+            if(error == null) {
                 completion(response, null)
             } else {
                 completion(null, error)

@@ -41,6 +41,8 @@ interface RepositoryInterface {
 
     fun updateLang(lang: String, completion: (response: String?, error: String?) -> Unit)
 
+    fun postChangePassword(oldPassword: String, newPassword: String, completion: (response: String?, error: String?) -> Unit)
+
     //SPENDING
     fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit)
 

@@ -155,4 +155,9 @@
     <string name="spendingSuccessfullyDeleted">Spending successfully deleted!</string>
 
     <string name="menu_logout">Logout</string>
+    <string name="changePasswordLabel">Change Password</string>
+    <string name="oldPasswordTextView">Old Password</string>
+    <string name="newPasswordTextView">New Password</string>
+    <string name="newPasswordAgainTextView">New Password Again</string>
+    <string name="passwordSuccessfullyChanged">Password Successfully Changed!</string>
 </resources>

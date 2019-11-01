@@ -8,9 +8,9 @@ import elte.moneyshare.R
 enum class Action
 {
     AUTH_REGISTER, AUTH_VALIDATE, AUTH_LOGIN,
-    GROUPS,GROUPS_ADD_MEMBER, GROUPS_CREATE,GROUPS_SETTLE,
-    PROFILE,PROFILE_RESET,PROFILE_UPDATE,PROFILE_LANGUAGE,
-    SPENDING, SPENDING_CREATE,SPENDING_UPDATE, SPENDING_DELETE
+    GROUPS, GROUPS_ADD_MEMBER, GROUPS_CREATE, GROUPS_SETTLE,
+    PROFILE, PROFILE_RESET,PROFILE_UPDATE, PROFILE_LANGUAGE,
+    SPENDING, SPENDING_CREATE, SPENDING_UPDATE, SPENDING_DELETE, CHANGE_PASSWORD
 }
 
 fun String?.showAsDialog(context: Context? = null, positiveAction: () -> Unit = {}) {
@@ -43,6 +43,7 @@ fun String?.convertErrorCodeToString(
             Action.SPENDING_CREATE -> context?.getString(R.string.api_profile_language_update_200).toString()
             Action.SPENDING_UPDATE -> context?.getString(R.string.api_profile_language_update_200).toString()
             Action.SPENDING_DELETE -> context?.getString(R.string.api_spending_delete_200).toString()
+            Action.CHANGE_PASSWORD -> context?.getString(R.string.passwordSuccessfullyChanged).toString()
             else -> "aa"
         }
         "201" -> when(action)
