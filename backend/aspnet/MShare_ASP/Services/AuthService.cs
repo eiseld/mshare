@@ -122,7 +122,7 @@ namespace MShare_ASP.Services
                         SiteBaseUrl = $"{UriConf.URIForEndUsers}",
                         Button = new EmailButtonViewModel()
                         {
-                            Url = $"{UriConf.URIForEndUsers}/account/confirm/{emailToken.Token}",
+                            Url = $"{UriConf.AndroidOpener}confirmregistration/{emailToken.Token}",
                             Text = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_BODY_BUTTON)
                         }
                     };

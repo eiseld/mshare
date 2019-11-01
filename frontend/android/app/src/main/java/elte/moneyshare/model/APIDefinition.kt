@@ -12,7 +12,10 @@ interface APIDefinition {
     @PUT("Auth/login")
     fun putLoginUser(@Body loginCred: LoginCred): Call<LoginResponse>
 
-    @POST("/Auth/register")
+    @POST("Auth/validate/{token}")
+    fun postValidateRegistration(@Path("token") token: String): Call<ResponseBody>
+
+    @POST("Auth/register")
     fun postRegisterUser(@Body registrationData: RegistrationData): Call<ResponseBody>
 
     @GET("Profile")
@@ -59,8 +62,11 @@ interface APIDefinition {
     @POST("profile/password/change")
     fun postChangePassword(@Body changePasswordData: ChangePasswordData): Call<ResponseBody>
 
+    @POST("Profile/password/update")
+    fun postPasswordUpdate(@Body passwordUpdate: PasswordUpdate): Call<ResponseBody>
+
     @PUT("Profile/lang")
-    fun updateLang(@Body lang: String): Call<ResponseBody>
+    fun updateLang(@Body lang: Lang): Call<ResponseBody>
 
     //SPENDING
     @GET("Spending/{id}")

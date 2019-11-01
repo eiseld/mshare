@@ -25,7 +25,13 @@
     <string name="email_not_matching">Nem egyeznek az emailek!</string>
     <string name="email_not_correct">Nem megfelelő az email formátum!</string>
     <string name="successful_registration">Sikeres regisztráció!</string>
+    <string name="successful_registration_confirmation">Sikeres regisztráció megerősítés!</string>
     <string name="relog_error">Valami hiba történt, jelenkezz be újra!</string>
+
+    <!-- new password -->
+    <string name="new_password">Új jelszó megadása.</string>
+    <string name="confirm_password">Jelszó megerősítése</string>
+    <string name="new_password_updated">Az új jelszó sikeresen frissítve!</string>
 
     <!-- Popup mesages -->
     <string name="popup_title">Tartozás rendezése</string>
@@ -47,8 +53,8 @@
     <string name="group_owned">Neked tartoznak \n %1$d Ft</string>
     <string name="group_settled_up">Kiegyenlítve</string>
 
-    <string name="member_owe">Tartozásod felé \n %1$d Ft</string>
-    <string name="member_owed">Tartozása feléd \n %1$d Ft</string>
+    <string name="member_owe">- %1$d Ft</string>
+    <string name="member_owed">+ %1$d Ft</string>
 
     <string name="bill_money">%1$d Ft</string>
 

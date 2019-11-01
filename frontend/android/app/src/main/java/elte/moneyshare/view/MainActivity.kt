@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun refresh() {
         finish()
-        val refresh = Intent(this, LoginActivity::class.java)
+        val refresh = Intent(this, MainActivity::class.java)
         startActivity(refresh)
     }
 
