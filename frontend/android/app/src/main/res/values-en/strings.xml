@@ -160,4 +160,5 @@
     <string name="newPasswordTextView">New Password</string>
     <string name="newPasswordAgainTextView">New Password Again</string>
     <string name="passwordSuccessfullyChanged">Password Successfully Changed!</string>
+    <string name="apiChangePassword403">Password change failed! Password is invalid!</string>
 </resources>

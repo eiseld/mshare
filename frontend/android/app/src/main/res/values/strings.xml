@@ -160,4 +160,5 @@
     <string name="newPasswordTextView">Új jelszó</string>
     <string name="newPasswordAgainTextView">Új jelszó ismét</string>
     <string name="passwordSuccessfullyChanged">Jelszó sikeresen megváltoztatva!</string>
+    <string name="apiChangePassword403">Sikertelen jelszó módosítás! Rossz jelszót adott meg!</string>
 </resources>

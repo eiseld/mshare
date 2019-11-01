@@ -57,6 +57,7 @@ fun String?.convertErrorCodeToString(
             Action.GROUPS -> context?.getString(R.string.api_groups_403).toString()
             Action.PROFILE -> context?.getString(R.string.api_profile_403).toString()
             Action.SPENDING -> context?.getString(R.string.api_spending_403).toString()
+            Action.CHANGE_PASSWORD -> context?.getString(R.string.apiChangePassword403).toString()
             else -> "aa"
         }
         "404" -> when(action)

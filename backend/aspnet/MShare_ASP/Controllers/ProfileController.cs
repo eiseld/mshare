@@ -37,16 +37,28 @@ namespace MShare_ASP.Controllers
         {
             await UserService.SendForgotPasswordMail(forgotPasswordRequest.Email, forgotPasswordRequest.Lang);
             return Ok();
-        }
+		}
 
-        /// <summary>Set the given password for the user with the given email address if the reset token is still valid</summary>
-        /// <param name="passwordUpdate">Password update information</param>
-        /// <response code="200">Successfully updated password</response>
-        /// <response code="400">Possible request body validation failure</response>
-        /// <response code="404">Not found: 'user'</response>
-        /// <response code="410">Gone: 'token_invalid_or_expired'</response>
-        /// <response code="500">Internal error: 'password_not_saved', 'token_deletion_failed'</response>
-        [HttpPost]
+		/// <summary>Changes password of the user</summary>
+		/// <param name="changePassword">Valid passwords, id and a language</param>
+		/// <response code="200">Successfully changed password (ALWAYS RETURNS THIS)</response>
+		/// <response code="400">Possible request body validation failure</response>
+		[HttpPost]
+		[Route("password/change")]
+		public async Task<ActionResult> ChangePassword([FromBody] ChangePassword changePassword)
+		{
+			await UserService.ChangePassword(changePassword);
+			return Ok();
+		}
+
+		/// <summary>Set the given password for the user with the given email address if the reset token is still valid</summary>
+		/// <param name="passwordUpdate">Password update information</param>
+		/// <response code="200">Successfully updated password</response>
+		/// <response code="400">Possible request body validation failure</response>
+		/// <response code="404">Not found: 'user'</response>
+		/// <response code="410">Gone: 'token_invalid_or_expired'</response>
+		/// <response code="500">Internal error: 'password_not_saved', 'token_deletion_failed'</response>
+		[HttpPost]
         [Route("password/update")]
         [AllowAnonymous]
         public async Task<ActionResult> UpdatePassword([FromBody] API.Request.PasswordUpdate passwordUpdate)

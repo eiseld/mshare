@@ -138,10 +138,6 @@ class SettingsFragment : Fragment() {
         })
 
         passwordSaveButton.setOnClickListener {
-            DialogManager.showInfoDialog("Successssss", context);
-        }
-
-        passwordSaveButton.setOnClickListener {
             viewModel.changePassword (
                 changePasswordData = ChangePasswordData(
                     oldPasswordText.text.toString(),
@@ -150,6 +146,9 @@ class SettingsFragment : Fragment() {
             ) { response, error ->
                 if (error == null) {
                     if(response == "200") {
+                        oldPasswordText.setText("")
+                        newPasswordText.setText("")
+                        newPasswordAgainText.setText("")
                         Toast.makeText(context, context?.getString(R.string.passwordSuccessfullyChanged), Toast.LENGTH_SHORT).show()
                     }
                     else {

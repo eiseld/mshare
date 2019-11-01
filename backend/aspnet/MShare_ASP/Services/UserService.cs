@@ -220,5 +220,54 @@ namespace MShare_ASP.Services
             if (await Context.SaveChangesAsync() != 1)
                 throw new DatabaseException("account_number_update_failed");
         }
-    }
+
+		public async Task ChangePassword(ChangePassword changePassword)
+		{
+
+			var daoUser = await Context.Users.SingleOrDefaultAsync(user => user.Id == changePassword.Id);
+
+			using (var transaction = Context.Database.BeginTransaction())
+			{
+				try
+				{
+					var previousPassword = daoUser.Password;
+					var oldPassword = Hasher.GetHash(changePassword.OldPassword);
+
+					var newPassword = Hasher.GetHash(changePassword.NewPassword);
+
+					if (previousPassword != oldPassword)
+						throw new ResourceForbiddenException("invalid_password");
+
+					daoUser.Password = newPassword;
+
+					if(await Context.SaveChangesAsync() != 1)
+						throw new DatabaseException("password_not_saved");
+
+					var model = new InformationViewModel()
+					{
+						Title = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_SUBJECT),
+						PreHeader = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_PREHEADER),
+						Hero = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_HERO),
+						Greeting = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, daoUser.DisplayName),
+						Intro = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_BODY_INTRO),
+						EmailDisclaimer = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_BODY_DISCLAIMER),
+						Cheers = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
+						MShareTeam = Localizer.GetString(daoUser.Lang, LocalizationResource.MSHARE_TEAM),
+						SiteBaseUrl = $"{UriConf.URIForEndUsers}"
+					};
+					var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
+					await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, daoUser.DisplayName, daoUser.Email, Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_SUBJECT), htmlBody);
+
+					transaction.Commit();
+				}
+				catch
+				{
+					transaction.Rollback();
+					throw;
+				}
+			}
+		}
+
+	}
+	
 }
