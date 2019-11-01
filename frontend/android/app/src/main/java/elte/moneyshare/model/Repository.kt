@@ -317,8 +317,8 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    override fun deleteSpending(spending: SpendingData, groupId: Int, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.deleteSpending(spending, groupId).enqueue(object : Callback<ResponseBody> {
+    override fun deleteSpending(spendingId: Int, groupId: Int, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.deleteSpending(spendingId, groupId).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {

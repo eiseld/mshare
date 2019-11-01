@@ -46,7 +46,7 @@ interface RepositoryInterface {
 
     fun postSpending(newSpending: NewSpending, completion: (response: String?, error: String?) -> Unit)
 
-    fun deleteSpending(spending: SpendingData, groupId: Int, completion: (response: String?, error: String?) -> Unit)
+    fun deleteSpending(spendingId: Int, groupId: Int, completion: (response: String?, error: String?) -> Unit)
 
     fun getOptimizedDebt(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit)
 

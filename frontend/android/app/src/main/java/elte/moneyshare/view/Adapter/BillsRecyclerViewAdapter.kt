@@ -114,7 +114,7 @@ class BillsRecyclerViewAdapter(
 
             builder.setPositiveButton(context.getString(R.string.yes)) { dialog, which ->
                 DialogManager.showInfoDialog(context.getString(R.string.spendingSuccessfullyDeleted), context)
-                Model.deleteSpending(bill, groupId) { response, error ->
+                Model.deleteSpending(bill.id, groupId) { response, error ->
                     if (error == null) {
                         notifyItemRemoved(position)
                         bills.removeAt(position)

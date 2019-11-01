@@ -193,12 +193,12 @@ namespace MShare_ASP.Services
 			await Context.SaveChangesAsync();
 		}
 
-		public async Task DeleteSpending(long userId, DeleteSpending spendingData, long groupId)
+		public async Task DeleteSpending(long userId, long spendingId, long groupId)
 		{
 
 			var currentSpending = await Context.Spendings
 											   .Include(x => x.Debtors)
-											  .SingleOrDefaultAsync(x => x.Id == spendingData.Id);
+											  .SingleOrDefaultAsync(x => x.Id == spendingId);
 
 			if (currentSpending == null)
 				throw new ResourceGoneException("spending");
@@ -206,21 +206,14 @@ namespace MShare_ASP.Services
 			if (currentSpending.CreditorUserId != userId)
 				throw new ResourceForbiddenException("not_creditor");
 
-			var affectedUsers = new HashSet<long>() { userId };
-			//Remove Participated Settlements
+			//var affectedUsers = new HashSet<long>() { userId };
 
-			var participatedSettlements = Context.Settlements
-				.Where(x => x.GroupId == groupId)
-				.Where(x => x.From == userId || x.To == userId)
-				.ToArray();
+			var affectedUsers = new HashSet<long>() { currentSpending.Creditor.Id };
 
-			affectedUsers.UnionWith(participatedSettlements.Select(x =>
+			foreach(DaoDebtor debtor in currentSpending.Debtors)
 			{
-				if (x.From == userId)
-					return x.To;
-				else
-					return x.From;
-			}));
+				affectedUsers.Add(debtor.DebtorUserId);
+			}
 
 			using (var transaction = Context.Database.BeginTransaction())
 			{
@@ -229,7 +222,7 @@ namespace MShare_ASP.Services
 
 					Context.Spendings.Remove(currentSpending);
 
-					await HistoryService.LogRemoveSpending(userId, groupId, currentSpending, affectedUsers, participatedSettlements);
+					await HistoryService.LogRemoveSpending(userId, groupId, currentSpending, affectedUsers);
 
 					if (await Context.SaveChangesAsync() == 0)
 					{

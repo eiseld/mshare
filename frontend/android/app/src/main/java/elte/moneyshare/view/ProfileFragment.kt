@@ -36,10 +36,13 @@ class ProfileFragment : Fragment() {
 
         viewModel.getProfile { userData, error ->
             nameTextView.text = userData?.name
-            accountEditText?.setText(userData?.bankAccountNumber)
+            accountEditText?.setText(formatBankAccountNumber(userData?.bankAccountNumber))
         }
 
         modifyButton.setOnClickListener {
+            viewModel.getProfile { userData, error ->
+                accountEditText?.setText(userData?.bankAccountNumber)
+            }
             accountEditText.enable()
         }
 
@@ -58,6 +61,14 @@ class ProfileFragment : Fragment() {
                     )
                 }
             }
+            viewModel.getProfile { userData, error ->
+                accountEditText?.setText(formatBankAccountNumber(userData?.bankAccountNumber))
+            }
         }
     }
+
+    private fun formatBankAccountNumber(bankAccountNumber: String?) : String {
+        return bankAccountNumber?.substring(0, 8) + "-" + bankAccountNumber?.substring(8, 16) + "-" + bankAccountNumber?.substring(16, 24);
+    }
+
 }

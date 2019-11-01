@@ -53,7 +53,7 @@ namespace MShare_ASP.Services
 		/// <exception cref="BusinessException">["debtor_not_member"]</exception>
 		/// <exception cref="ResourceGoneException">["spending"]</exception>
 		/// <exception cref="DatabaseException">["spending_not_deleted"]</exception>
-		Task DeleteSpending(long userId, DeleteSpending spendingData, long groupId);
+		Task DeleteSpending(long userId, long spendingId, long groupId);
 
 		/// <summary>Settles a debt</summary>
 		/// <exception cref="ResourceNotFoundException">["group"]</exception>

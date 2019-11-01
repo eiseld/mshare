@@ -203,24 +203,21 @@ namespace MShare_ASP.Services
             await LogHistory(userId, oldSpending.GroupId, oldSpending.Debtors.Select(x => x.DebtorUserId).Union(newSpending.Debtors.Select(x => x.DebtorId)).ToArray(), DaoLogType.Type.UPDATE, DaoLogSubType.Type.SPENDING, historyEntry);
         }
 
-		public async Task LogRemoveSpending(long userId, long groupId, DaoSpending deletedSpending, HashSet<long> affectedUsers, DaoSettlement[] participatedSettlements)
+		public async Task LogRemoveSpending(long userId, long groupId, DaoSpending deletedSpending, HashSet<long> affectedUsers)
 		{
 			dynamic historyEntry = new ExpandoObject();
 
-			// Modified settlements:
-			if (participatedSettlements.Any())
-			{
-				historyEntry.ModifiedSettlements = participatedSettlements.Select(x => new
-				{
-					From = x.From,
-					To = x.To,
-					Amount = x.Amount
-				});
-			}
-
-			historyEntry.DeletedSpending = deletedSpending;
-
 			// Removed spending
+			historyEntry.DeletedSpending = new
+			{
+				Name = deletedSpending.Name,
+				MoneyOwed = deletedSpending.MoneyOwed,
+				Debtors = deletedSpending.Debtors.Select(d => new
+				{
+					DebtorId = d.DebtorUserId,
+					Debt = d.Debt
+				})
+			};
 
 			await LogHistory(userId, groupId, affectedUsers.ToArray(), DaoLogType.Type.REMOVE, DaoLogSubType.Type.MEMBER, historyEntry);
 		}
