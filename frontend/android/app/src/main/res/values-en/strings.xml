@@ -25,7 +25,13 @@
     <string name="email_not_matching">Emails not matching</string>
     <string name="email_not_correct">Email format is not correct</string>
     <string name="successful_registration">Successful registration!</string>
+    <string name="successful_registration_confirmation">Successful registration confirm!</string>
     <string name="relog_error">Something went wrong, please log in again!</string>
+
+    <!-- new password -->
+    <string name="new_password">Create new password.</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="new_password_updated">New password updated!</string>
 
     <!-- Popup mesages -->
     <string name="popup_title">Debt settlement</string>

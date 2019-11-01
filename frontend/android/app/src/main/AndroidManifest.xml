@@ -23,7 +23,7 @@
         <activity
                 android:name=".view.LoginActivity"
                 android:screenOrientation="portrait"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -37,12 +37,10 @@
                 <!-- Accepts URIs that begin with "elte.mshare:" -->
                 <data
                         android:scheme="elte.mshare"
-                        android:host="main"
-                        android:path="/confirmRegistration" />
+                        android:host="confirmregistration" />
                 <data
                         android:scheme="elte.mshare"
-                        android:host="main"
-                        android:path="/forgotPassword" />
+                        android:host="forgotpassword" />
             </intent-filter>
         </activity>
     </application>

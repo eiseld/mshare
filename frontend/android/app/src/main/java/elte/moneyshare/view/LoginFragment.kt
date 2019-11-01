@@ -9,10 +9,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import elte.moneyshare.R
-import elte.moneyshare.SharedPreferences
-import elte.moneyshare.disable
-import elte.moneyshare.enable
+import elte.moneyshare.*
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
@@ -58,14 +55,17 @@ class LoginFragment : Fragment() {
                     activity?.finish()
                     //activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
-                    DialogManager.showInfoDialog(
-                        error.convertErrorCodeToString(
-                            Action.AUTH_LOGIN,
-                            context
-                        ), context
-                    )
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.AUTH_LOGIN, context), context)
                 }
             }
+        }
+
+        if (BuildConfig.FLAVOR == "local") {
+            urlEditText.visible()
+            updateUrlButton.visible()
+        } else {
+            urlEditText.gone()
+            updateUrlButton.gone()
         }
 
         urlEditText.addTextChangedListener(object : TextWatcher {
