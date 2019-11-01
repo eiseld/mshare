@@ -8,7 +8,7 @@ import elte.moneyshare.model.APIClient
 class NewPasswordViewModel : ViewModel() {
 
     fun putNewPassword(newPassword: String, token: String, completion: (response: String?, error: String?) -> Unit) {
-        SharedPreferences.email?.let {
+        SharedPreferences.forgotPasswordEmail?.let {
             val passwordUpdate = PasswordUpdate(
                 password = newPassword,
                 token = token,

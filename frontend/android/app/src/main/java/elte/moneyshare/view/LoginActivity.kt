@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.widget.Toast
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
@@ -31,8 +30,6 @@ class LoginActivity : AppCompatActivity() {
         updateLang(SharedPreferences.lang)
 
         setContentView(R.layout.activity_login)
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
 
         supportFragmentManager.beginTransaction().replace(R.id.frame_container, LoginFragment())
             .commit()
@@ -52,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
                 CONFIRM_REGISTRATION -> {
                     loginViewModel.postValidateRegistration(sentToken) { _, error ->
                         if (error == null) {
-                            DialogManager.showInfoDialog(getString(R.string.successful_registration_confirmation), baseContext)
+                            DialogManager.showInfoDialog(getString(R.string.successful_registration_confirmation), this)
                         } else {
                             error.showAsDialog(this)
                         }
