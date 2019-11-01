@@ -208,7 +208,7 @@ namespace MShare_ASP.Services
 
 			//var affectedUsers = new HashSet<long>() { userId };
 
-			var affectedUsers = new HashSet<long>() { currentSpending.Creditor.Id };
+			var affectedUsers = new HashSet<long>() { currentSpending.CreditorUserId };
 
 			foreach(DaoDebtor debtor in currentSpending.Debtors)
 			{
