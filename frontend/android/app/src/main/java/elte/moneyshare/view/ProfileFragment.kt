@@ -68,7 +68,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun formatBankAccountNumber(bankAccountNumber: String?) : String {
-        return bankAccountNumber?.substring(0, 8) + "-" + bankAccountNumber?.substring(8, 16) + "-" + bankAccountNumber?.substring(16, 24);
+        if(!((bankAccountNumber == null) || (bankAccountNumber == "")))
+            return bankAccountNumber?.substring(0, 8) + "-" + bankAccountNumber?.substring(8, 16) + "-" + bankAccountNumber?.substring(16, 24);
+        else
+            return "";
     }
 
 }
