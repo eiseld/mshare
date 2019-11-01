@@ -9,10 +9,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import elte.moneyshare.R
-import elte.moneyshare.SharedPreferences
-import elte.moneyshare.disable
-import elte.moneyshare.enable
+import elte.moneyshare.*
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
@@ -45,8 +42,8 @@ class LoginFragment : Fragment() {
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
-            viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
-                //viewModel.putLoginUser(email, password) { _, error ->
+            //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
+            viewModel.putLoginUser(email, password) { _, error ->
                 if (error == null) {
                     if(stayLoggedInCheckBox.isChecked)
                     {
@@ -61,6 +58,14 @@ class LoginFragment : Fragment() {
                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.AUTH_LOGIN, context), context)
                 }
             }
+        }
+
+        if (BuildConfig.FLAVOR == "local") {
+            urlEditText.visible()
+            updateUrlButton.visible()
+        } else {
+            urlEditText.gone()
+            updateUrlButton.gone()
         }
 
         urlEditText.addTextChangedListener(object : TextWatcher {
