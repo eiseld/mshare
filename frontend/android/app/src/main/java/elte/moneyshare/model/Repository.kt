@@ -354,6 +354,25 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
+    override fun deleteSpending(spendingId: Int, groupId: Int, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.deleteSpending(spendingId, groupId).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.code().toString())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
     override fun postSpendingUpdate(spendingUpdate: SpendingUpdate, completion: (response: String?, error: String?) -> Unit) {
         apiDefinition.postSpendingUpdate(spendingUpdate).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

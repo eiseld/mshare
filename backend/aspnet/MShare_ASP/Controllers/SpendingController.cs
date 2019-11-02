@@ -78,7 +78,23 @@ namespace MShare_ASP.Controllers
         {
             await SpendingService.UpdateSpending(GetCurrentUserID(), spendingUpdate);
             return Ok();
-        }
+		}
+
+		/// <summary>Delete a spending based on the given parameters</summary>
+		/// <param name="groupId">Id of the group</param>
+		/// <param name="spendingId">Id of the spending to be deleted</param>
+		/// <response code="200">Successfully deleted spending</response>
+		/// <response code="400">Possible request body validation failure</response>
+		/// <response code="403">Forbidden: 'not_group_member', 'not_creditor'</response>
+		/// <response code="404">Not found: 'group'</response>
+		/// <response code="409">Conflict: 'debtor_not_member'</response>
+		/// <response code="500">Internal error: 'spending_not_deleted'</response>
+		[HttpPost("{groupId}/delete/{spendingId}")]
+		public async Task<IActionResult> Delete(long groupId, long spendingId)
+		{
+			await SpendingService.DeleteSpending(GetCurrentUserID(), spendingId, groupId);
+			return Ok();
+		}
 
 #if DEBUG
 

@@ -10,13 +10,12 @@
             android:id="@+id/memberNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_margin="8dp"
+            android:text="Name"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/memberBankAccountTextView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Name" />
-
+            app:layout_constraintTop_toTopOf="parent" />
     <TextView
             android:id="@+id/memberOwnerTextView"
             android:layout_width="0dp"
@@ -33,27 +32,28 @@
             android:id="@+id/memberBalanceTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="16dp"
+            android:layout_margin="8dp"
             android:gravity="end"
             app:layout_constraintBottom_toTopOf="@+id/memberBankAccountTextView"
             app:layout_constraintEnd_toStartOf="@+id/removeMemberImageButton"
             app:layout_constraintStart_toEndOf="@id/memberOwnerTextView"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
             tools:text="Balance" />
 
     <TextView
             android:id="@+id/memberBankAccountTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="16dp"
-            android:gravity="end"
+            android:layout_margin="8dp"
+            android:gravity="start"
             android:text="@string/bankAccountText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/removeMemberImageButton"
-            app:layout_constraintStart_toStartOf="@+id/memberBalanceTextView"
-            app:layout_constraintTop_toBottomOf="@+id/memberBalanceTextView" />
+            app:layout_constraintStart_toEndOf="@id/memberNameTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/memberBalanceTextView"
+            app:layout_constraintVertical_bias="0.781" />
 
     <ImageButton
             android:id="@+id/removeMemberImageButton"
