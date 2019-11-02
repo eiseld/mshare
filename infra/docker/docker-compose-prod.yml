@@ -28,6 +28,7 @@ services:
     build: ../../backend/aspnet/
     environment:
       ASPNETCORE_ENVIRONMENT: "Production"
+      MSHARE_RUNNING_BEHIND_PROXY: "true"
     ports:
       - "8081"
 
