@@ -3,36 +3,32 @@ package elte.moneyshare.view.Adapter
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.DialogInterface
+import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
 import android.widget.Toast
-import elte.moneyshare.entity.SpendingData
-import elte.moneyshare.view.viewholder.BillViewHolder
-import android.support.v7.app.AlertDialog
-import android.content.DialogInterface
-import elte.moneyshare.viewmodel.GroupViewModel
-import android.arch.lifecycle.ViewModelProviders
-import android.os.Bundle
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.Fragment
-import android.view.View
 import elte.moneyshare.*
+import elte.moneyshare.entity.SpendingData
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.AddSpendingFragment
 import elte.moneyshare.view.MainActivity
-import elte.moneyshare.view.NewGroupFragment
+import elte.moneyshare.view.viewholder.BillViewHolder
+import elte.moneyshare.viewmodel.GroupViewModel
 
 class BillsRecyclerViewAdapter(
     private val context: Context,
     private val bills: MutableList<SpendingData>,
     private val groupId : Int,
-    private val Model: GroupViewModel
+    private val model: GroupViewModel
 ) : RecyclerView.Adapter<BillViewHolder>() {
 
     private var animationDuration = 300L
@@ -114,7 +110,7 @@ class BillsRecyclerViewAdapter(
 
             builder.setPositiveButton(context.getString(R.string.yes)) { dialog, which ->
                 DialogManager.showInfoDialog(context.getString(R.string.spendingSuccessfullyDeleted), context)
-                Model.deleteSpending(bill.id, groupId) { response, error ->
+                model.deleteSpending(bill.id, groupId) { response, error ->
                     if (error == null) {
                         notifyItemRemoved(position)
                         bills.removeAt(position)
