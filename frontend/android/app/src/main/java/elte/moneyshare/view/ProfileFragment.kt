@@ -1,8 +1,11 @@
 package elte.moneyshare.view
 
 import android.arch.lifecycle.ViewModelProviders
+import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +35,8 @@ class ProfileFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        var storedBankAccountNumber: String = ""
+
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
 
         viewModel.getProfile { userData, error ->
@@ -42,9 +47,24 @@ class ProfileFragment : Fragment() {
         modifyButton.setOnClickListener {
             viewModel.getProfile { userData, error ->
                 accountEditText?.setText(userData?.bankAccountNumber)
+                storedBankAccountNumber = accountEditText.text.toString()
+                modifyButton.visibility = View.GONE
+                saveButton.visibility = View.VISIBLE
+                saveButton.isEnabled = false
             }
             accountEditText.enable()
         }
+
+        accountEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                saveButton.isEnabled = accountEditText.text.length == 24 && accountEditText.text.matches("^\\d+$".toRegex()) && !accountEditText.text.toString().equals(storedBankAccountNumber)
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
 
         saveButton.setOnClickListener {
             val accountNumber = accountEditText.text.toString()
@@ -52,6 +72,8 @@ class ProfileFragment : Fragment() {
             viewModel.updateProfile(BankAccountNumberUpdate(SharedPreferences.userId, accountNumber)) { response, error ->
                 if(error == null) {
                     activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, ProfileFragment())?.commit()
+                    modifyButton.visibility = View.VISIBLE
+                    saveButton.visibility = View.GONE
                 } else {
                     DialogManager.showInfoDialog(
                         error.convertErrorCodeToString(
