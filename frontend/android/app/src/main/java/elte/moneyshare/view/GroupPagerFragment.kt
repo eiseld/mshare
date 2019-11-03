@@ -35,6 +35,7 @@ class GroupPagerFragment : Fragment() {
         inflater.inflate(R.menu.menu_group, menu)
         super.onCreateOptionsMenu(menu, inflater)
 
+
         val item = menu.findItem(R.id.menuSearch)
         val searchView = SearchView((context as MainActivity).supportActionBar!!.themedContext)
         MenuItemCompat.setShowAsAction(
@@ -83,6 +84,19 @@ class GroupPagerFragment : Fragment() {
                 searchResultsRecyclerView.invisible()
             }
         }
+
+        val removeMemberItem = menu.findItem(R.id.removeMember)
+        println(viewModel.currentGroupData?.creator?.id)
+
+        groupId?.let {
+            viewModel.getGroupData(it) { groupData, _ ->
+                if(SharedPreferences.userId == groupData?.creator?.id) {
+                    removeMemberItem.isVisible = true
+                }
+            }
+        }
+
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
