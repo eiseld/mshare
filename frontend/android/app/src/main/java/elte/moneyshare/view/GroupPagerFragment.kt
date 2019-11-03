@@ -55,7 +55,7 @@ class GroupPagerFragment : Fragment() {
                     viewModel.getSearchedUsers(newText) { filteredUsers, error ->
                         filteredUsers?.let {
                             filteredUsersSize = it.size
-                            val adapter = SearchResultsRecyclerViewAdapter(context!!, it, groupId!!, viewModel)
+                            val adapter = SearchResultsRecyclerViewAdapter(context!!, it, groupId!!, searchView, viewModel)
                             searchResultsRecyclerView?.adapter = adapter
                         }
 
