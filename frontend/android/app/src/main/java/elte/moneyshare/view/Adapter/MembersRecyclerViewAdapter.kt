@@ -14,6 +14,8 @@ import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.viewholder.MemberViewHolder
 import elte.moneyshare.viewmodel.GroupViewModel
 import elte.moneyshare.visible
+import java.util.*
+import kotlin.math.abs
 
 class MembersRecyclerViewAdapter(private val context: Context, private val groupData: GroupData, private val model : GroupViewModel): RecyclerView.Adapter<MemberViewHolder>()  {
 
@@ -27,6 +29,7 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
     }
 
     override fun onBindViewHolder(holder: MemberViewHolder, position: Int) {
+
         val member = groupData.members[position]
         val loggedInUserId = SharedPreferences.userId
 
@@ -34,14 +37,14 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
 
         when {
             member.balance < 0 -> {
-                holder.memberBalanceTextView.text = String.format(context.getString(R.string.member_owed), member.balance)
+                holder.memberBalanceTextView.text = String.format(context.getString(R.string.member_owed), abs(member.balance))
                 holder.memberBalanceTextView.setTextColor(context.getColor(R.color.colorHooverText))
             }
             member.balance > 0 -> {
-                holder.memberBalanceTextView.text = String.format(context.getString(R.string.member_owe), member.balance)
+                holder.memberBalanceTextView.text = String.format(context.getString(R.string.member_owe), abs(member.balance))
                 holder.memberBalanceTextView.setTextColor(context.getColor(R.color.colorText))
             }
-            else -> holder.memberBalanceTextView.text = "0"
+            else -> holder.memberBalanceTextView.text = context.getString(R.string.group_settled_up)
         }
 
         if (groupData.creator.id == member.id) {
@@ -79,5 +82,6 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
         } else {
             holder.memberBankAccountTextView.text = context.getString(R.string.bank_account_not_set)
         }
+
     }
 }
