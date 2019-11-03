@@ -22,6 +22,10 @@ import kotlinx.android.synthetic.main.fragment_register.*
 class RegisterFragment : Fragment() {
     private lateinit var viewModel: RegisterViewModel
 
+    private var displayNameCorrect: Boolean = false;
+    private var emailCorrect: Boolean = false;
+    private var passwordCorrect: Boolean = false;
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,6 +61,14 @@ class RegisterFragment : Fragment() {
         return pwdError
     }
 
+    fun checkValidity() {
+
+        if(displayNameCorrect && emailCorrect && passwordCorrect ) {
+            registerButton.isEnabled = true
+        }
+
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -86,14 +98,24 @@ class RegisterFragment : Fragment() {
                 }
             }
         }
-        /*passwordEditText.addTextChangedListener(object: TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                val content = s?.text.toString()
-                s?.error = if (content.length >= 6) null else "Minimum length = 6"
+
+        displayNameEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if(displayNameEditText.text.isEmpty()) {
+                    displayNameCorrect = false
+                } else {
+                    displayNameCorrect = true
+                    checkValidity()
+                }
             }
-            override fun beforeTextChanged(s: Editable?) { }
-            override fun onTextChanged(s: Editable?) { }
-        })*/
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
         passwordEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 val txt = passwordEditText.text.toString()
@@ -101,15 +123,16 @@ class RegisterFragment : Fragment() {
                 val pwdError = passwordValidator(txt)
                 if (pwdError.length > 1) {
                     passwordEditText.error = pwdError
-                    registerButton.isClickable = false
+                    passwordCorrect = false
                 } else if (txt != txtAgain) {
                     passwordEditText.error = context?.getString(R.string.password_not_matching)
-                    registerButton.isClickable = false
+                    passwordCorrect = false
                 } else {
                     passwordEditText.error = null
                     passwordAgainEditText.error = null
-                    registerButton.isClickable = true
+                    passwordCorrect = true
                 }
+                checkValidity()
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -123,21 +146,18 @@ class RegisterFragment : Fragment() {
                 val txt = passwordEditText.text.toString()
                 val txtAgain = passwordAgainEditText.text.toString()
                 val pwdError = passwordValidator(txtAgain)
-                if(pwdError.length>1)
-                {
+                if(pwdError.length > 1) {
                     passwordAgainEditText.error = pwdError
-                    registerButton.isClickable = false
-                }
-                else if(txt != txtAgain)
-                {
+                    passwordCorrect = false
+                } else if(txt != txtAgain) {
                     passwordAgainEditText.error = context?.getString(R.string.password_not_matching)
-                    registerButton.isClickable = false
-                }
-                else {
+                    passwordCorrect = false
+                } else {
                     passwordEditText.error = null
                     passwordAgainEditText.error = null
-                    registerButton.isClickable = true
+                    passwordCorrect = true
                 }
+                checkValidity()
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -146,26 +166,24 @@ class RegisterFragment : Fragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         })
+
         emailEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 val email = emailEditText.text.toString()
                 val emailAgain = emailAgainEditText.text.toString()
                 var emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                if(!emailValid)
-                {
+                if(!emailValid) {
                     emailEditText.error = context?.getString(R.string.email_not_correct)
-                    registerButton.isClickable = false
-                }
-                else if(email != emailAgain)
-                {
+                    emailCorrect = false
+                } else if(email != emailAgain) {
                     emailEditText.error = context?.getString(R.string.email_not_matching)
-                    registerButton.isClickable = false
-                }
-                else {
+                    emailCorrect = false
+                } else {
                     emailEditText.error = null
                     emailAgainEditText.error = null
-                    registerButton.isClickable = true
+                    emailCorrect = true
                 }
+                checkValidity()
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -174,6 +192,7 @@ class RegisterFragment : Fragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         })
+
         emailAgainEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 val email = emailEditText.text.toString()
@@ -182,18 +201,19 @@ class RegisterFragment : Fragment() {
                 if(!emailValid)
                 {
                     emailAgainEditText.error = context?.getString(R.string.email_not_correct)
-                    registerButton.isClickable = false
+                    emailCorrect = false
                 }
                 else if(email != emailAgain)
                 {
                     emailAgainEditText.error = context?.getString(R.string.email_not_matching)
-                    registerButton.isClickable = false
+                    emailCorrect = false
                 }
                 else {
                     emailEditText.error = null
                     emailAgainEditText.error = null
-                    registerButton.isClickable = true
+                    emailCorrect = true
                 }
+                checkValidity()
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
