@@ -44,7 +44,6 @@ class MembersFragment : Fragment() {
             groupId?.let { groupId ->
                 viewModel.getGroupData(groupId) { groupData, error ->
                     if (groupData != null) {
-                        //todo have to remove current user from list when use adapter
 
                         val member: Member? = groupData.members.find { it.id == SharedPreferences.userId }
                         groupData.members.remove(member)

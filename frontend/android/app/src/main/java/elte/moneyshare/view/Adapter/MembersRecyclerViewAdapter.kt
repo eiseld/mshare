@@ -69,7 +69,15 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
             }
         }
 
-        holder.memberBankAccountTextView.text = context.getString(R.string.bankAccount, member.bankAccountNumber.substring(0,8), member.bankAccountNumber.substring(8,16), member.bankAccountNumber.substring(16,24));
-
+        if(!member.bankAccountNumber.isEmpty() && member.bankAccountNumber.length == 24) {
+            holder.memberBankAccountTextView.text = context.getString(
+                R.string.bankAccount,
+                member.bankAccountNumber.substring(0, 8),
+                member.bankAccountNumber.substring(8, 16),
+                member.bankAccountNumber.substring(16, 24)
+            )
+        } else {
+            holder.memberBankAccountTextView.text = context.getString(R.string.bank_account_not_set)
+        }
     }
 }
