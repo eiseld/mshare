@@ -138,8 +138,8 @@ class GroupPagerFragment : Fragment() {
         }
 
         if (tabs.isEmpty()) {
-            tabs.add("Members")
-            tabs.add("Bills")
+            context?.getString(R.string.members_tab)?.let { tabs.add(it) }
+            context?.getString(R.string.bills_tab)?.let { tabs.add(it) }
         }
         initViewPager()
     }

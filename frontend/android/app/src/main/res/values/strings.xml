@@ -53,6 +53,9 @@
     <string name="group_owned">Neked tartoznak \n %1$d Ft</string>
     <string name="group_settled_up">Kiegyenlítve</string>
 
+    <string name="members_tab">Tagok</string>
+    <string name="bills_tab">Költések</string>
+
     <string name="member_owe">- %1$d Ft</string>
     <string name="member_owed">+ %1$d Ft</string>
 
