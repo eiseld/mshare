@@ -72,7 +72,9 @@ class RegisterFragment : Fragment() {
             ) { response, error ->
                 if (error == null) {
                     if(response == "201") {
-                        Toast.makeText(context, context?.getString(R.string.successful_registration), Toast.LENGTH_SHORT).show()
+                        DialogManager.showInfoDialog(
+                            context?.getString(R.string.successful_registration), context
+                        )
                         activity?.supportFragmentManager?.beginTransaction()
                             ?.replace(R.id.frame_container, LoginFragment())?.commit()
                     }

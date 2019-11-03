@@ -24,7 +24,7 @@
     <string name="password_not_matching">Nem egyeznek a jelszavak!</string>
     <string name="email_not_matching">Nem egyeznek az emailek!</string>
     <string name="email_not_correct">Nem megfelelő az email formátum!</string>
-    <string name="successful_registration">Sikeres regisztráció!</string>
+    <string name="successful_registration">Sikeres regisztráció! Aktiválja fiókját az email-ben kapott linkkel!</string>
     <string name="relog_error">Valami hiba történt, jelenkezz be újra!</string>
 
     <!-- Popup mesages -->
