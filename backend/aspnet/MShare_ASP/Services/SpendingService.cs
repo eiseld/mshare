@@ -110,6 +110,9 @@ namespace MShare_ASP.Services
             if (!newSpending.Debtors.All(x => daoGroup.Members.Any(m => m.UserId == x.DebtorId)))
                 throw new BusinessException("debtor_not_member");
 
+            if(newSpending.Debtors.Any(x => x.DebtorId == userId))
+                throw new BusinessException("self_debt");
+
             using (var transaction = Context.Database.BeginTransaction())
             {
                 try
