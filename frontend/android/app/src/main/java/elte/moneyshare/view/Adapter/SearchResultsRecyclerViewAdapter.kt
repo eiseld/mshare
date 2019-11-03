@@ -35,7 +35,7 @@ class SearchResultsRecyclerViewAdapter(private val context: Context, private val
         holder.nameEmailTextView.text = String.format(context.getString(R.string.filtered_users), filteredUser.displayName, filteredUser.email)
 
         holder.rootConstraintLayout.setOnClickListener {
-            model.postMember(groupId, filteredUser.id, { response, error ->
+            model.postMember(groupId, filteredUser.id) { response, error ->
                 if(error == null) {
                     val fragment = GroupPagerFragment()
                     val args = Bundle()
@@ -45,11 +45,11 @@ class SearchResultsRecyclerViewAdapter(private val context: Context, private val
                     fragment.arguments = args
                     (context as MainActivity).supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
                     (context as MainActivity).onBackPressed()
-                    Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.member_added_to_group_successfully), Toast.LENGTH_SHORT).show()
                 } else {
                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS_ADD_MEMBER,context), context)
                 }
-            })
+            }
         }
     }
 }

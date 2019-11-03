@@ -171,4 +171,5 @@
     <string name="spending_wrong_balance_sum">A teljes összeget szét kell osztani a költési csoportban!</string>
     <string name="change_bank_account_label">Bankszámla szám módosítása</string>
     <string name="bank_account_not_set">Bankszámla szám még nincs beállítva!</string>
+    <string name="member_added_to_group_successfully">Tag sikeresen hozzáadva a csoporthoz!</string>
 </resources>
