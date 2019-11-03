@@ -1,9 +1,12 @@
 package elte.moneyshare.view.Adapter
 
 import android.content.Context
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.GroupData
@@ -11,13 +14,13 @@ import elte.moneyshare.gone
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
+import elte.moneyshare.view.MembersFragment
 import elte.moneyshare.view.viewholder.MemberViewHolder
 import elte.moneyshare.viewmodel.GroupViewModel
 import elte.moneyshare.visible
-import java.util.*
 import kotlin.math.abs
 
-class MembersRecyclerViewAdapter(private val context: Context, private val groupData: GroupData, private val model : GroupViewModel): RecyclerView.Adapter<MemberViewHolder>()  {
+class MembersRecyclerViewAdapter(private val context: Context, private val groupData: GroupData, private val myBalanceTextView: TextView, private val model : GroupViewModel): RecyclerView.Adapter<MemberViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemberViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_member, parent, false)
@@ -64,8 +67,9 @@ class MembersRecyclerViewAdapter(private val context: Context, private val group
             model.deleteMember(groupData.id ,member.id) { response, error ->
                 if(error == null) {
                     val index = groupData.members.indexOf(member)
-                    notifyItemRemoved(index)
+                    myBalanceTextView.text = (Integer.parseInt(myBalanceTextView.text.toString()) + member.balance).toString()
                     groupData.members.removeAt(index)
+                    notifyItemRemoved(index)
                 } else {
                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                 }

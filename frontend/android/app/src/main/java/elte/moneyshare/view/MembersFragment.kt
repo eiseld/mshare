@@ -50,7 +50,7 @@ class MembersFragment : Fragment() {
 
                         groupDataStored = groupData
 
-                        adapter = MembersRecyclerViewAdapter(it, groupData, viewModel)
+                        adapter = MembersRecyclerViewAdapter(it, groupData, myBalanceTextView, viewModel)
                         member?.let {
                             myNameTextView?.text = it.name
                             myBalanceTextView?.text = it.balance.toString()
