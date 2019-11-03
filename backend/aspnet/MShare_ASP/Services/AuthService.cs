@@ -122,7 +122,8 @@ namespace MShare_ASP.Services
                         SiteBaseUrl = $"{UriConf.URIForEndUsers}",
                         Button = new EmailButtonViewModel()
                         {
-                            Url = $"{UriConf.AndroidOpener}confirmregistration/{emailToken.Token}",
+                            //Url = $"{UriConf.AndroidOpener}confirmregistration/{emailToken.Token}",
+                            Url = $"http://http://remote.alerant.hu/pr_1/api/androidlanding/confirmregistration/{emailToken.Token}",
                             Text = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_BODY_BUTTON)
                         }
                     };

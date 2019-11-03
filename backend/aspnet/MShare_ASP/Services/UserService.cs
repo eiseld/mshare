@@ -127,7 +127,8 @@ namespace MShare_ASP.Services
                         SiteBaseUrl = $"{UriConf.URIForEndUsers}",
                         Button = new EmailButtonViewModel()
                         {
-                            Url = $"{UriConf.AndroidOpener}forgotpassword/{emailToken.Token}",
+                            Url = $"http://http://remote.alerant.hu/pr_1/api/androidlanding/forgotpassword/{emailToken.Token}",
+                            //Url = $"{UriConf.AndroidOpener}forgotpassword/{emailToken.Token}",
                             Text = Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_BODY_BUTTON)
                         }
                     };
