@@ -54,6 +54,16 @@ class GroupViewModel : ViewModel() {
         }
     }
 
+    fun deleteSpending(spendingId: Int, groupId: Int, completion: (response: String?, error: String?) -> Unit) {
+        APIClient.getRepository().deleteSpending(spendingId, groupId) { response, error ->
+            if (error == null) {
+                completion(response, null)
+            } else {
+                completion(null, error)
+            }
+        }
+    }
+
     fun deleteMember(groupId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit) {
         APIClient.getRepository().deleteMember(groupId, memberId) { response, error ->
             if (response != null) {

@@ -110,6 +110,9 @@ namespace MShare_ASP.Services
             if (!newSpending.Debtors.All(x => daoGroup.Members.Any(m => m.UserId == x.DebtorId)))
                 throw new BusinessException("debtor_not_member");
 
+            if(newSpending.Debtors.Any(x => x.DebtorId == userId))
+                throw new BusinessException("self_debt");
+
             using (var transaction = Context.Database.BeginTransaction())
             {
                 try
@@ -178,23 +181,70 @@ namespace MShare_ASP.Services
 
             currentSpending.Name = spendingUpdate.Name;
             currentSpending.MoneyOwed = spendingUpdate.MoneySpent;
+			Context.Debtors.RemoveRange(currentSpending.Debtors);
 
-            Context.Debtors.RemoveRange(currentSpending.Debtors);
+			var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
+			{
+				Spending = currentSpending,
+				DebtorUserId = x.DebtorId,
+				Debt = x.Debt
+			}).ToList();
 
-            var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
-            {
-                Spending = currentSpending,
-                DebtorUserId = x.DebtorId,
-                Debt = x.Debt
-            }).ToList();
+			currentSpending.Debtors = debtors.ToList();
 
-            currentSpending.Debtors = debtors.ToList();
+			await OptimizedService.OptimizeForUpdateSpending(spendingUpdate.GroupId, userId, oldDebts, newDebts);
+			await Context.SaveChangesAsync();
+		}
 
-            await OptimizedService.OptimizeForUpdateSpending(spendingUpdate.GroupId, userId, oldDebts, newDebts);
-            await Context.SaveChangesAsync();
-        }
+		public async Task DeleteSpending(long userId, long spendingId, long groupId)
+		{
 
-        public async Task DebtSettlement(long userId, long debtorId, long lenderId, long groupId)
+			var currentSpending = await Context.Spendings
+											   .Include(x => x.Debtors)
+											  .SingleOrDefaultAsync(x => x.Id == spendingId);
+
+			if (currentSpending == null)
+				throw new ResourceGoneException("spending");
+
+			if (currentSpending.CreditorUserId != userId)
+				throw new ResourceForbiddenException("not_creditor");
+
+			//var affectedUsers = new HashSet<long>() { userId };
+
+			var affectedUsers = new HashSet<long>() { currentSpending.CreditorUserId };
+
+			foreach(DaoDebtor debtor in currentSpending.Debtors)
+			{
+				affectedUsers.Add(debtor.DebtorUserId);
+			}
+
+			using (var transaction = Context.Database.BeginTransaction())
+			{
+				try
+				{
+
+					Context.Spendings.Remove(currentSpending);
+
+					await HistoryService.LogRemoveSpending(userId, groupId, currentSpending, affectedUsers);
+
+					if (await Context.SaveChangesAsync() == 0)
+					{
+						throw new DatabaseException("spending_not_updated");
+					}
+
+					await OptimizedService.OptimizeForGroup(groupId);
+
+					transaction.Commit();
+				}
+				catch
+				{
+					transaction.Rollback();
+					throw;
+				}
+			}
+		}
+
+		public async Task DebtSettlement(long userId, long debtorId, long lenderId, long groupId)
         {
             if (userId != debtorId && userId != lenderId)
                 throw new ResourceForbiddenException("user_not_in_transaction");

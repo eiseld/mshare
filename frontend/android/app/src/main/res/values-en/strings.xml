@@ -25,7 +25,13 @@
     <string name="email_not_matching">Emails not matching</string>
     <string name="email_not_correct">Email format is not correct</string>
     <string name="successful_registration">Successful registration! Activate your profile using the email link!</string>
+    <string name="successful_registration_confirmation">Successful registration confirm!</string>
     <string name="relog_error">Something went wrong, please log in again!</string>
+
+    <!-- new password -->
+    <string name="new_password">Create new password.</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="new_password_updated">New password updated!</string>
 
     <!-- Popup mesages -->
     <string name="popup_title">Debt settlement</string>
@@ -48,8 +54,8 @@
     <string name="my_balance">My balance: </string>
     <string name="my_debts">My debts</string>
 
-    <string name="member_owe">You owe \n %1$d Ft</string>
-    <string name="member_owed">He/She owes \n %1$d Ft</string>
+    <string name="member_owe">- %1$d Ft</string>
+    <string name="member_owed">+ %1$d Ft</string>
 
     <string name="bill_money">%1$d Ft</string>
 
@@ -149,6 +155,10 @@
 
     <string name="bankAccountText">Bank Account</string>
     <string name="bankAccount">BAN: %1$s-%2$s-%3$s</string>
+
+    <string name="api_spending_delete_200">Spending successfully deleted!</string>
+    <string name="doYouReallyWantToDeleteSpending">Do you really want to delete this spending?</string>
+    <string name="spendingSuccessfullyDeleted">Spending successfully deleted!</string>
 
     <string name="menu_logout">Logout</string>
     <string name="api_login_language_validate_410">Specified language is not supported by the server!</string>

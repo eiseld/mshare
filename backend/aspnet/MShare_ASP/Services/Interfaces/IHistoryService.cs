@@ -26,7 +26,9 @@ namespace MShare_ASP.Services
         Task LogAddMember(long userId, long groupId, long memberId);
         /// <summary>Logs the removal of a member from a group and every modified entity that comes with it</summary>
         Task LogRemoveMember(long userId, long groupId, long memberId, HashSet<long> affectedUsers, DaoSettlement[] participatedSettlements, DaoSpending[] mySpendings, DaoDebtor[] myDebts);
-        /// <summary>Logs a new group creation, should be called after a savechanges in transaction, becase it needs the ID of the added group</summary>
-        Task LogCreateGroup(long userId, DaoGroup daoGroup);
+		/// <summary>Logs the removal of a spending from a group</summary>
+		Task LogRemoveSpending(long userId, long groupId, DaoSpending deletedSpending, HashSet<long> affectedUsers);
+		/// <summary>Logs a new group creation, should be called after a savechanges in transaction, becase it needs the ID of the added group</summary>
+		Task LogCreateGroup(long userId, DaoGroup daoGroup);
     }
 }
