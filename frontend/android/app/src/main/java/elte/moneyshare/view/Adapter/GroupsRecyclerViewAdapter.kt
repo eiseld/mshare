@@ -31,9 +31,9 @@ class GroupsRecyclerViewAdapter(private val context: Context, private val groups
         holder.groupOwnerTextView.text = group.creator
         holder.groupMemberCountTextView.text = String.format(context.getString(R.string.group_members), group.memberCount)
 
-        if (group.myCurrentBalance < 0) {
+        if (group.myCurrentBalance > 0) {
             holder.groupBalanceTextView.text = String.format(context.getString(R.string.group_owned), group.myCurrentBalance)
-        } else if (group.myCurrentBalance > 0) {
+        } else if (group.myCurrentBalance < 0) {
             holder.groupBalanceTextView.text = String.format(context.getString(R.string.group_owe), group.myCurrentBalance)
         } else {
             holder.groupBalanceTextView.text = context.getString(R.string.group_settled_up)

@@ -48,7 +48,7 @@
     <string name="create_group">Create group</string>
     <string name="group_name">Group name</string>
     <string name="group_members">(%1$d)</string>
-    <string name="group_owe">Owes\n %1$d Ft</string>
+    <string name="group_owe">You owes\n %1$d Ft</string>
     <string name="group_owned">You are owed \n %1$d Ft</string>
     <string name="group_settled_up">Settled up</string>
     <string name="my_balance">My balance: </string>
