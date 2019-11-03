@@ -44,7 +44,7 @@ object DialogManager {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(message)
 
-        builder.setPositiveButton(context.getString(R.string.yes)) { _, _ -> positiveAction()}
+        builder.setPositiveButton(context.getString(R.string.ok)) { _, _ -> positiveAction()}
 
         infoAlertDialog = builder.create()
         infoAlertDialog?.show()
