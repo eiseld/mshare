@@ -50,6 +50,8 @@
     <string name="group_members">(%1$d)</string>
     <string name="group_owe">You owes\n %1$d Ft</string>
     <string name="group_owned">You are owed \n %1$d Ft</string>
+    <string name="group_owe_to_member">You owes\n%1$d Ft</string>
+    <string name="group_owned_by_member">You are owed\n%1$d Ft</string>
     <string name="group_settled_up">Settled up</string>
     <string name="my_balance">My balance: </string>
     <string name="my_debts">My debts</string>

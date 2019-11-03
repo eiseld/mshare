@@ -49,8 +49,10 @@
     <string name="create_group">Csoport létrehozása</string>
     <string name="group_name">Csoport neve</string>
     <string name="group_members">(%1$d)</string>
-    <string name="group_owe">Tartozásod \n %1$d Ft</string>
-    <string name="group_owned">Neked tartoznak \n %1$d Ft</string>
+    <string name="group_owe">Tartozásod\n%1$d Ft</string>
+    <string name="group_owned">Neked tartoznak\n%1$d Ft</string>
+    <string name="group_owe_to_member">Neki tartozol\n%1$d Ft</string>
+    <string name="group_owned_by_member">Neked tartozik\n%1$d Ft</string>
     <string name="group_settled_up">Kiegyenlítve</string>
 
     <string name="members_tab">Tagok</string>
