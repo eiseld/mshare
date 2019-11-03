@@ -141,6 +141,17 @@ class AddSpendingFragment : Fragment() {
             val debtors: ArrayList<Debtor> = ArrayList()
             val members = (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedMembers
 
+            var sumSpending = 0
+            for(member in members) {
+                sumSpending += member.balance
+            }
+
+            val moneySpend = Integer.valueOf(spendingEditText.editableText.toString())
+            if(sumSpending != moneySpend) {
+                DialogManager.showInfoDialog(getString(R.string.spending_wrong_balance_sum), context)
+                return@setOnClickListener
+            }
+
             for (member in members) {
                 debtors.add(Debtor(
                     debtorId = member.id,
