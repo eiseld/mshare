@@ -151,4 +151,5 @@
     <string name="bankAccount">BAN: %1$s-%2$s-%3$s</string>
 
     <string name="menu_logout">Logout</string>
+    <string name="api_login_language_validate_410">Specified language is not supported by the server!</string>
 </resources>

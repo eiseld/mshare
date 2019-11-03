@@ -151,4 +151,5 @@
     <string name="bankAccount">BSz: %1$s-%2$s-%3$s</string>
 
     <string name="menu_logout">Kijelentkezés</string>
+    <string name="api_login_language_validate_410">A megadott nyelvet nem támogatja a szerver!</string>
 </resources>
