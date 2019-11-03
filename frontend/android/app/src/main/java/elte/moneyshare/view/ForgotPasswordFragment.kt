@@ -33,7 +33,7 @@ class ForgotPasswordFragment : Fragment() {
         forgottenPasswordButton.setOnClickListener {
             viewModel.putForgotPassword(emailEditText.text.toString()) { _, error ->
                 if(error == null) {
-                    context?.let { getString(R.string.email_sent).showToast(it) }
+                    DialogManager.showInfoDialog(getString(R.string.email_sent), context)
                 } else {
                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.PROFILE_RESET,context), context)
                 }
