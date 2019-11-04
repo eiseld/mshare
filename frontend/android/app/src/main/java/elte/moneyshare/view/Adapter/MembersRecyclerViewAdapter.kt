@@ -52,7 +52,10 @@ class MembersRecyclerViewAdapter(
                 holder.memberBalanceTextView.text = String.format(context.getString(R.string.member_owned), abs(member.balance))
                 holder.memberBalanceTextView.setTextColor(context.getColor(R.color.colorText))
             }
-            else -> holder.memberBalanceTextView.text = context.getString(R.string.group_settled_up)
+            else -> {
+                holder.memberBalanceTextView.text = context.getString(R.string.group_settled_up)
+                holder.memberBalanceTextView.setTextColor(context.getColor(R.color.colorText))
+            }
         }
 
         if (groupData.creator.id == member.id) {
