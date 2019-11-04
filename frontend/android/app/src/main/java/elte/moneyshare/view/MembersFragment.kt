@@ -18,9 +18,10 @@ import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.Adapter.MembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_members.*
+import kotlin.math.abs
 
 
-class MembersFragment : Fragment() {
+class MembersFragment : Fragment(), MembersRecyclerViewAdapter.MemberDeletedListener {
 
     private lateinit var viewModel: GroupViewModel
     private lateinit var groupDataStored : GroupData
@@ -35,6 +36,8 @@ class MembersFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_members, container, false)
     }
 
+    private var member: Member? = null
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -45,15 +48,15 @@ class MembersFragment : Fragment() {
                 viewModel.getGroupData(groupId) { groupData, error ->
                     if (groupData != null) {
 
-                        val member: Member? = groupData.members.find { it.id == SharedPreferences.userId }
+                        member = groupData.members.find { it.id == SharedPreferences.userId }
                         groupData.members.remove(member)
 
                         groupDataStored = groupData
 
-                        adapter = MembersRecyclerViewAdapter(it, groupData, myBalanceTextView, viewModel)
-                        member?.let {
-                            myNameTextView?.text = it.name
-                            myBalanceTextView?.text = it.balance.toString()
+                        adapter = MembersRecyclerViewAdapter(it, groupData, viewModel, this)
+                        member?.let { member ->
+                            myNameTextView?.text = member.name
+                            setMyBalance(member.balance)
                         }
 
                         membersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -63,6 +66,27 @@ class MembersFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onDeleted(deletedMemberBalance: Int) {
+        member?.balance?.let {
+            member?.balance = it + deletedMemberBalance
+            setMyBalance(it + deletedMemberBalance)
+        }
+    }
+
+    private fun setMyBalance(balance: Int) {
+        when {
+            balance < 0 -> {
+                myBalanceTextView?.text = String.format(getString(R.string.member_owe), abs(balance))
+                myBalanceTextView?.setTextColor(myBalanceTextView.context.getColor(R.color.colorHooverText))
+            }
+            balance > 0 -> {
+                myBalanceTextView?.text = String.format(getString(R.string.member_owned), abs(balance))
+                myBalanceTextView?.setTextColor(myBalanceTextView.context.getColor(R.color.colorText))
+            }
+            else -> myBalanceTextView?.text = getString(R.string.settled_up)
         }
     }
 

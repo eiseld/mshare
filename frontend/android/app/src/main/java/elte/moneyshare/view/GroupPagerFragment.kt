@@ -3,21 +3,22 @@ package elte.moneyshare.view
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.*
-import elte.moneyshare.view.Adapter.GroupPagerAdapter
-import elte.moneyshare.viewmodel.GroupViewModel
-import kotlinx.android.synthetic.main.fragment_group.*
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
+import android.view.*
 import elte.moneyshare.*
+import elte.moneyshare.view.Adapter.GroupPagerAdapter
 import elte.moneyshare.view.Adapter.SearchResultsRecyclerViewAdapter
+import elte.moneyshare.viewmodel.GroupViewModel
+import kotlinx.android.synthetic.main.fragment_group.*
 
-class GroupPagerFragment : Fragment() {
+class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberInvitedListener {
 
     private var groupId: Int? = null
     private lateinit var pagerAdapter: GroupPagerAdapter
     private lateinit var viewModel: GroupViewModel
+    private lateinit var searchView: SearchView
 
     private var tabs: ArrayList<String> = ArrayList()
 
@@ -35,9 +36,8 @@ class GroupPagerFragment : Fragment() {
         inflater.inflate(R.menu.menu_group, menu)
         super.onCreateOptionsMenu(menu, inflater)
 
-
         val item = menu.findItem(R.id.menuSearch)
-        val searchView = SearchView((context as MainActivity).supportActionBar!!.themedContext)
+        searchView = SearchView((context as MainActivity).supportActionBar!!.themedContext)
         MenuItemCompat.setShowAsAction(
             item,
             MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItemCompat.SHOW_AS_ACTION_IF_ROOM
@@ -55,7 +55,7 @@ class GroupPagerFragment : Fragment() {
                     viewModel.getSearchedUsers(newText) { filteredUsers, error ->
                         filteredUsers?.let {
                             filteredUsersSize = it.size
-                            val adapter = SearchResultsRecyclerViewAdapter(context!!, it, groupId!!, searchView, viewModel)
+                            val adapter = SearchResultsRecyclerViewAdapter(context!!, it, groupId!!, this@GroupPagerFragment, viewModel)
                             searchResultsRecyclerView?.adapter = adapter
                         }
 
@@ -86,7 +86,6 @@ class GroupPagerFragment : Fragment() {
         }
 
         val removeMemberItem = menu.findItem(R.id.removeMember)
-        println(viewModel.currentGroupData?.creator?.id)
 
         groupId?.let {
             viewModel.getGroupData(it) { groupData, _ ->
@@ -95,8 +94,6 @@ class GroupPagerFragment : Fragment() {
                 }
             }
         }
-
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -142,6 +139,11 @@ class GroupPagerFragment : Fragment() {
             else ->
                 return super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onInvited() {
+        searchView.setQuery("", false)
+        searchView.clearFocus()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
