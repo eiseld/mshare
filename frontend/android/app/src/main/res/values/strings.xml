@@ -24,7 +24,7 @@
     <string name="password_not_matching">Nem egyeznek a jelszavak!</string>
     <string name="email_not_matching">Nem egyeznek az emailek!</string>
     <string name="email_not_correct">Nem megfelelő az email formátum!</string>
-    <string name="successful_registration">Sikeres regisztráció!</string>
+    <string name="successful_registration">Sikeres regisztráció! Aktiválja fiókját az email-ben kapott linkkel!</string>
     <string name="successful_registration_confirmation">Sikeres regisztráció megerősítés!</string>
     <string name="relog_error">Valami hiba történt, jelenkezz be újra!</string>
 
@@ -49,12 +49,18 @@
     <string name="create_group">Csoport létrehozása</string>
     <string name="group_name">Csoport neve</string>
     <string name="group_members">(%1$d)</string>
-    <string name="group_owe">Tartozásod \n %1$d Ft</string>
-    <string name="group_owned">Neked tartoznak \n %1$d Ft</string>
+    <string name="group_owe">Tartozásod\n%1$d Ft</string>
+    <string name="group_owned">Neked tartoznak\n%1$d Ft</string>
+    <string name="group_owe_to_member">Neki tartozol\n%1$d Ft</string>
+    <string name="group_owned_by_member">Neked tartozik\n%1$d Ft</string>
     <string name="group_settled_up">Kiegyenlítve</string>
+    <string name="settled_up">Kiegyenlítve</string>
 
+    <string name="members_tab">Tagok</string>
+    <string name="bills_tab">Költések</string>
+
+    <string name="member_owned">+ %1$d Ft</string>
     <string name="member_owe">- %1$d Ft</string>
-    <string name="member_owed">+ %1$d Ft</string>
 
     <string name="bill_money">%1$d Ft</string>
 
@@ -161,4 +167,10 @@
     <string name="spendingSuccessfullyDeleted">Költés sikeresen törölve!</string>
 
     <string name="menu_logout">Kijelentkezés</string>
+    <string name="api_login_language_validate_410">A megadott nyelvet nem támogatja a szerver!</string>
+    <string name="information_dialog_title">Információ</string>
+    <string name="spending_wrong_balance_sum">A teljes összeget szét kell osztani a költési csoportban!</string>
+    <string name="change_bank_account_label">Bankszámla szám módosítása</string>
+    <string name="bank_account_not_set">Bankszámla szám még nincs beállítva!</string>
+    <string name="member_added_to_group_successfully">Tag sikeresen hozzáadva a csoporthoz!</string>
 </resources>

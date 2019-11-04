@@ -3,21 +3,22 @@ package elte.moneyshare.view
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.*
-import elte.moneyshare.view.Adapter.GroupPagerAdapter
-import elte.moneyshare.viewmodel.GroupViewModel
-import kotlinx.android.synthetic.main.fragment_group.*
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
+import android.view.*
 import elte.moneyshare.*
+import elte.moneyshare.view.Adapter.GroupPagerAdapter
 import elte.moneyshare.view.Adapter.SearchResultsRecyclerViewAdapter
+import elte.moneyshare.viewmodel.GroupViewModel
+import kotlinx.android.synthetic.main.fragment_group.*
 
-class GroupPagerFragment : Fragment() {
+class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberInvitedListener {
 
     private var groupId: Int? = null
     private lateinit var pagerAdapter: GroupPagerAdapter
     private lateinit var viewModel: GroupViewModel
+    private lateinit var searchView: SearchView
 
     private var tabs: ArrayList<String> = ArrayList()
 
@@ -36,7 +37,7 @@ class GroupPagerFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
 
         val item = menu.findItem(R.id.menuSearch)
-        val searchView = SearchView((context as MainActivity).supportActionBar!!.themedContext)
+        searchView = SearchView((context as MainActivity).supportActionBar!!.themedContext)
         MenuItemCompat.setShowAsAction(
             item,
             MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItemCompat.SHOW_AS_ACTION_IF_ROOM
@@ -54,7 +55,7 @@ class GroupPagerFragment : Fragment() {
                     viewModel.getSearchedUsers(newText) { filteredUsers, error ->
                         filteredUsers?.let {
                             filteredUsersSize = it.size
-                            val adapter = SearchResultsRecyclerViewAdapter(context!!, it, groupId!!, viewModel)
+                            val adapter = SearchResultsRecyclerViewAdapter(context!!, it, groupId!!, this@GroupPagerFragment, viewModel)
                             searchResultsRecyclerView?.adapter = adapter
                         }
 
@@ -81,6 +82,16 @@ class GroupPagerFragment : Fragment() {
                 searchResultsRecyclerView.visible()
             } else {
                 searchResultsRecyclerView.invisible()
+            }
+        }
+
+        val removeMemberItem = menu.findItem(R.id.removeMember)
+
+        groupId?.let {
+            viewModel.getGroupData(it) { groupData, _ ->
+                if(SharedPreferences.userId == groupData?.creator?.id) {
+                    removeMemberItem.isVisible = true
+                }
             }
         }
     }
@@ -130,6 +141,11 @@ class GroupPagerFragment : Fragment() {
         }
     }
 
+    override fun onInvited() {
+        searchView.setQuery("", false)
+        searchView.clearFocus()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -138,8 +154,8 @@ class GroupPagerFragment : Fragment() {
         }
 
         if (tabs.isEmpty()) {
-            tabs.add("Members")
-            tabs.add("Bills")
+            context?.getString(R.string.members_tab)?.let { tabs.add(it) }
+            context?.getString(R.string.bills_tab)?.let { tabs.add(it) }
         }
         initViewPager()
     }
