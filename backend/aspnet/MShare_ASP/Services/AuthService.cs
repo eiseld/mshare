@@ -122,8 +122,7 @@ namespace MShare_ASP.Services
                         SiteBaseUrl = $"{UriConf.URIForEndUsers}",
                         Button = new EmailButtonViewModel()
                         {
-                            //Url = $"{UriConf.AndroidOpener}confirmregistration/{emailToken.Token}",
-                            Url = $"http://http://remote.alerant.hu/pr_1/api/androidlanding/confirmregistration/{emailToken.Token}",
+                            Url = $"{UriConf.URIForEndUsers}/api/androidlanding/confirmregistration/{emailToken.Token}",
                             Text = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_BODY_BUTTON)
                         }
                     };
@@ -131,7 +130,8 @@ namespace MShare_ASP.Services
                     await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, newUser.DisplayName, newUser.Email, Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_SUBJECT), htmlBody);
 
                     transaction.Commit();
-                } catch
+                }
+                catch
                 {
                     transaction.Rollback();
                     throw;
