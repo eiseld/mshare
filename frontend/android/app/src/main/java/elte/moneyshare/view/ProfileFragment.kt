@@ -1,7 +1,6 @@
 package elte.moneyshare.view
 
 import android.arch.lifecycle.ViewModelProviders
-import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -9,15 +8,11 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import elte.moneyshare.R
-import elte.moneyshare.SharedPreferences
-import elte.moneyshare.enable
+import elte.moneyshare.*
 import elte.moneyshare.entity.BankAccountNumberUpdate
-import elte.moneyshare.entity.UserData
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
-import elte.moneyshare.viewmodel.LoginViewModel
 import elte.moneyshare.viewmodel.ProfileViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
 
@@ -35,7 +30,7 @@ class ProfileFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        var storedBankAccountNumber: String = ""
+        var storedBankAccountNumber = ""
 
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
 
@@ -48,16 +43,17 @@ class ProfileFragment : Fragment() {
             viewModel.getProfile { userData, error ->
                 accountEditText?.setText(userData?.bankAccountNumber)
                 storedBankAccountNumber = accountEditText.text.toString()
-                modifyButton.visibility = View.GONE
-                saveButton.visibility = View.VISIBLE
-                saveButton.isEnabled = false
+                modifyButton.gone()
+                saveButton.visible()
+                saveButton.disable()
             }
             accountEditText.enable()
         }
 
         accountEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                saveButton.isEnabled = accountEditText.text.length == 24 && accountEditText.text.matches("^\\d+$".toRegex()) && !accountEditText.text.toString().equals(storedBankAccountNumber)
+                saveButton.isEnabled =
+                    accountEditText.text.length == 24 && accountEditText.text.matches("^\\d+$".toRegex()) && accountEditText.text.toString() != storedBankAccountNumber
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -90,10 +86,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun formatBankAccountNumber(bankAccountNumber: String?) : String {
-        if(!((bankAccountNumber == null) || (bankAccountNumber == "")))
-            return bankAccountNumber?.substring(0, 8) + "-" + bankAccountNumber?.substring(8, 16) + "-" + bankAccountNumber?.substring(16, 24);
+        if (!((bankAccountNumber.isNullOrEmpty())))
+            return bankAccountNumber.substring(0, 8) + "-" + bankAccountNumber.substring(8, 16) + "-" + bankAccountNumber.substring(16, 24)
         else
-            return "";
+            return ""
     }
 
 }

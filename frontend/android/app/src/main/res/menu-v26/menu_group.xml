@@ -1,9 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/addSpending"
-          android:title="@string/add_spending"
-          app:showAsAction="never"/>
+    <item
+            android:id="@+id/addSpending"
+            android:title="@string/add_spending"
+            app:showAsAction="never" />
 
     <item
             android:id="@+id/removeMember"
@@ -11,9 +12,10 @@
             android:visible="false"
             app:showAsAction="never" />
 
-    <item android:id="@+id/myDebts"
-          android:title="@string/my_debts"
-          app:showAsAction="never"/>
+    <item
+            android:id="@+id/myDebts"
+            android:title="@string/my_debts"
+            app:showAsAction="never" />
 
     <item
             android:id="@+id/menuSearch"

@@ -5,12 +5,11 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import android.util.Patterns
-
 import elte.moneyshare.R
 import elte.moneyshare.entity.RegistrationData
 import elte.moneyshare.manager.DialogManager
@@ -62,11 +61,9 @@ class RegisterFragment : Fragment() {
     }
 
     fun checkValidity() {
-
         if(displayNameCorrect && emailCorrect && passwordCorrect ) {
             registerButton.isEnabled = true
         }
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -222,6 +219,5 @@ class RegisterFragment : Fragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         })
-
     }
 }
