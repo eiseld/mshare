@@ -18,6 +18,7 @@
     <item
             android:id="@+id/menuSearch"
             android:icon="@drawable/ic_add"
+            android:iconTint="@color/color2"
             android:title="@string/add_member"
             app:actionViewClass="android.support.v7.widget.SearchView"
             app:showAsAction="ifRoom|collapseActionView" />
