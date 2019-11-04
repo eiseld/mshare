@@ -2,29 +2,32 @@
 <resources>
     <color name="color1">#F80652</color>
     <color name="color2">#E8F1F8</color>
-    <color name="color3">#ADC4D6</color>
-    <color name="color4">#222F3F</color>
-    <color name="color5">#101C28</color>
+    <color name="color3">#101C28</color>
 
-    <color name="color6">#224499</color>
+    <color name="color4">#1376d4</color>
+    <color name="color5">#004ba1</color>
+    <color name="color6">#62a4ff</color>
 
-
-    <color name="colorPrimary">#1976d2</color>
-    <color name="colorPrimaryDark">#004ba0</color>
+    <color name="colorPrimary">@color/color4</color>
+    <color name="colorPrimaryDark">@color/color5</color>
     <color name="colorAccent">#F80652</color>
 
-    <color name="colorText">@color/color5</color>
+    <color name="colorText">@color/color3</color>
+    <color name="colorTextSecondary">@color/color2</color>
+
+    <color name="colorOnPrimary">@color/color2</color>
+    <color name="colorOnSubBackground">@color/color2</color>
+    <color name="colorOnBackground">@color/color3</color>
 
     <color name="colorErrorText">@color/color1</color>
     <color name="colorHooverText">@color/color1</color>
-    <color name="colorHooverText2">@color/color6</color>
 
     <color name="colorBackground">@color/color2</color>
-    <color name="colorSubBackground">#63a4ff</color>
+    <color name="colorSubBackground">@color/color6</color>
 
     <color name="colorButtonText">@color/color2</color>
-    <color name="colorButtonBackground">@color/color4</color>
+    <color name="colorButtonBackground">@color/color5</color>
 
-    <color name="colorDivider">@color/color5</color>
+    <color name="colorDivider">@color/color3</color>
 
 </resources>

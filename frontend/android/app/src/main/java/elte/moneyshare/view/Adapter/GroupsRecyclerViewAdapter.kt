@@ -2,13 +2,12 @@ package elte.moneyshare.view.Adapter
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
-import elte.moneyshare.entity.Group
+import elte.moneyshare.entity.GroupDataParc
 import elte.moneyshare.entity.GroupInfo
 import elte.moneyshare.view.GroupPagerFragment
 import elte.moneyshare.view.MainActivity
@@ -42,7 +41,7 @@ class GroupsRecyclerViewAdapter(private val context: Context, private val groups
         holder.groupRootLayout.setOnClickListener {
             val fragment = GroupPagerFragment()
             val args = Bundle()
-            args.putInt(FragmentDataKeys.GROUP_PAGER_FRAGMENT.value, group.id)
+            args.putParcelable(FragmentDataKeys.GROUP_PAGER_FRAGMENT.value, GroupDataParc(group.id, group.name))
             fragment.arguments = args
             (context as MainActivity).supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
         }

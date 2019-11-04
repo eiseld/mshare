@@ -18,10 +18,10 @@
         <item name="android:background">@color/colorSubBackground</item>
         <item name="android:elevation">@dimen/elevation_medium</item>
         <item name="tabBackground">@color/colorSubBackground</item>
-        <item name="tabIndicatorColor">@color/color4</item>
+        <item name="tabIndicatorColor">@color/colorPrimaryDark</item>
         <!--<item name="tabTextAppearance">@style/TabTitleText</item>-->
-        <item name="tabSelectedTextColor">@color/colorHooverText2</item>
-        <item name="tabTextColor">@color/colorText</item>
+        <item name="tabSelectedTextColor">@color/colorOnSubBackground</item>
+        <item name="tabTextColor">@color/colorOnSubBackground</item>
     </style>
 
     <style name="Divider">
