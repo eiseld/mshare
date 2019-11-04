@@ -9,8 +9,8 @@
     <color name="color6">#224499</color>
 
 
-    <color name="colorPrimary">#ADC4D6</color>
-    <color name="colorPrimaryDark">#222F3F</color>
+    <color name="colorPrimary">#1976d2</color>
+    <color name="colorPrimaryDark">#004ba0</color>
     <color name="colorAccent">#F80652</color>
 
     <color name="colorText">@color/color5</color>
@@ -20,7 +20,7 @@
     <color name="colorHooverText2">@color/color6</color>
 
     <color name="colorBackground">@color/color2</color>
-    <color name="colorSubBackground">@color/color3</color>
+    <color name="colorSubBackground">#63a4ff</color>
 
     <color name="colorButtonText">@color/color2</color>
     <color name="colorButtonBackground">@color/color4</color>
