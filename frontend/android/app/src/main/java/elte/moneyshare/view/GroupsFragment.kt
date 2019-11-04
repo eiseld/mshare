@@ -6,16 +6,14 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import android.widget.Toast
-
-import elte.moneyshare.view.Adapter.GroupsRecyclerViewAdapter
-import elte.moneyshare.viewmodel.GroupsViewModel
-import kotlinx.android.synthetic.main.fragment_groups.*
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
+import elte.moneyshare.view.Adapter.GroupsRecyclerViewAdapter
+import elte.moneyshare.viewmodel.GroupsViewModel
+import kotlinx.android.synthetic.main.fragment_groups.*
 
 class GroupsFragment : Fragment() {
 
@@ -49,15 +47,16 @@ class GroupsFragment : Fragment() {
         }
 
     }
-    fun getGroups() {
+
+    private fun getGroups() {
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupsViewModel::class.java)
 
             viewModel.getProfileGroups { groupsInfo, error ->
                 if (groupsInfo != null) {
                     val adapter = GroupsRecyclerViewAdapter(it, groupsInfo)
-                    groupsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                    groupsRecyclerView.adapter = adapter
+                    groupsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                    groupsRecyclerView?.adapter = adapter
                 } else {
                     if(SharedPreferences.stayLoggedIn)
                     {

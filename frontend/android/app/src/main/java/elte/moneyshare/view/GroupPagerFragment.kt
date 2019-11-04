@@ -3,15 +3,15 @@ package elte.moneyshare.view
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.*
-import elte.moneyshare.view.Adapter.GroupPagerAdapter
-import elte.moneyshare.viewmodel.GroupViewModel
-import kotlinx.android.synthetic.main.fragment_group.*
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
+import android.view.*
 import elte.moneyshare.*
+import elte.moneyshare.view.Adapter.GroupPagerAdapter
 import elte.moneyshare.view.Adapter.SearchResultsRecyclerViewAdapter
+import elte.moneyshare.viewmodel.GroupViewModel
+import kotlinx.android.synthetic.main.fragment_group.*
 
 class GroupPagerFragment : Fragment() {
 
@@ -86,7 +86,6 @@ class GroupPagerFragment : Fragment() {
         }
 
         val removeMemberItem = menu.findItem(R.id.removeMember)
-        println(viewModel.currentGroupData?.creator?.id)
 
         groupId?.let {
             viewModel.getGroupData(it) { groupData, _ ->
@@ -95,8 +94,6 @@ class GroupPagerFragment : Fragment() {
                 }
             }
         }
-
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
