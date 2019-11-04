@@ -221,17 +221,17 @@ namespace MShare_ASP.Services
 
         public async Task CreateGroup(long userId, NewGroup newGroup)
         {
-            var existingGroup = await Context.Groups
-                .SingleOrDefaultAsync(x => x.CreatorUserId == userId &&
-                    x.Name == newGroup.Name);
-
-            if (existingGroup != null)
-                throw new BusinessException("name_taken");
-
-            using (var transaction = Context.Database.BeginTransaction())
-            {
+            using (var transaction = Context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+            {   
                 try
                 {
+                    var existingGroup = await Context.Groups
+                        .SingleOrDefaultAsync(x => x.CreatorUserId == userId &&
+                            x.Name == newGroup.Name);
+
+                    if (existingGroup != null)
+                        throw new BusinessException("name_taken");
+
                     var daoGroup = new DaoGroup()
                     {
                         CreatorUserId = userId,
