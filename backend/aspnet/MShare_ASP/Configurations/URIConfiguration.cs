@@ -8,6 +8,9 @@ namespace MShare_ASP.Configurations
         /// <summary>URI that the end user sees (like in an email)</summary>
         String URIForEndUsers { get; }
 
+        /// <summary>Opener link for android devices</summary>
+        String AndroidOpener { get; }
+
         /// <summary>Swagger URI to use when behind proxy</summary>
         String SwaggerProxyUri { get; }
     }
@@ -17,5 +20,7 @@ namespace MShare_ASP.Configurations
         public String URIForEndUsers { get; set; }
 
         public String SwaggerProxyUri { get; set; }
+
+        public String AndroidOpener { get; set; }
     }
 }

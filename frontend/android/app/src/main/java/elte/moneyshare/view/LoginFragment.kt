@@ -6,13 +6,11 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import elte.moneyshare.R
-import elte.moneyshare.SharedPreferences
-import elte.moneyshare.disable
-import elte.moneyshare.enable
+import elte.moneyshare.*
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
@@ -23,6 +21,18 @@ import kotlinx.android.synthetic.main.fragment_login.*
 class LoginFragment : Fragment() {
 
     private lateinit var viewModel: LoginViewModel
+
+    fun passwordValidator(txt: String): String {
+        var pwdError = ""
+        context?.let {
+            if(txt.length <6)
+            {
+                pwdError = it.getString(R.string.minimum_characters).plus('\n')
+            }
+        }
+
+        return pwdError
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,11 +52,53 @@ class LoginFragment : Fragment() {
         }
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
+        emailEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                val email = emailEditText.text.toString()
+                val password = passwordEditText.text.toString()
+                var emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
+                if(!emailValid)
+                {
+                    emailEditText.error = context?.getString(R.string.email_not_correct)
+                    loginButton.isEnabled = false
+                } else if (passwordValidator(password).isEmpty()){
+                    emailEditText.error = null
+                    loginButton.isEnabled = true
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
+        passwordEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                val txt = passwordEditText.text.toString()
+                val email = emailEditText.text.toString()
+                val pwdError = passwordValidator(txt)
+                if (pwdError.length > 1) {
+                    passwordEditText.error = pwdError
+                    loginButton.isEnabled = false
+                } else if (Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                    passwordEditText.error = null
+                    loginButton.isEnabled = true
+                }
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
-            viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
-            //viewModel.putLoginUser(email, password) { response, error ->
+            //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
+            viewModel.putLoginUser(email, password) { _, error ->
                 if (error == null) {
                     if(stayLoggedInCheckBox.isChecked)
                     {
@@ -58,14 +110,17 @@ class LoginFragment : Fragment() {
                     activity?.finish()
                     //activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
                 } else {
-                    DialogManager.showInfoDialog(
-                        error.convertErrorCodeToString(
-                            Action.AUTH_LOGIN,
-                            context
-                        ), context
-                    )
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.AUTH_LOGIN, context), context)
                 }
             }
+        }
+
+        if (BuildConfig.FLAVOR == "local") {
+            urlEditText.visible()
+            updateUrlButton.visible()
+        } else {
+            urlEditText.gone()
+            updateUrlButton.gone()
         }
 
         urlEditText.addTextChangedListener(object : TextWatcher {

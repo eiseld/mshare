@@ -16,6 +16,7 @@ object SharedPreferences {
     private val USER_ID = "user_id"
     private val USER_NAME = "user_name"
     private val USER_EMAIL = "user_email"
+    private val FORGOT_PASSWORD_EMAIL = "forgot_password_email"
 
     private val LANG = "lang"
 
@@ -72,6 +73,15 @@ object SharedPreferences {
         set(email) {
             with(sharedPreferences.edit()) {
                 putString(USER_EMAIL, email)
+                apply()
+            }
+        }
+
+    var forgotPasswordEmail: String?
+        get() = sharedPreferences.getString(FORGOT_PASSWORD_EMAIL, "")
+        set(email) {
+            with(sharedPreferences.edit()) {
+                putString(FORGOT_PASSWORD_EMAIL, email)
                 apply()
             }
         }

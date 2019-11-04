@@ -31,14 +31,17 @@
 
     <TextView
             android:id="@+id/debtBalanceTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Balance"
-            app:layout_constraintStart_toEndOf="@id/debtOwnerTextView"
-            app:layout_constraintEnd_toStartOf="@id/solveDebitImageButton"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:gravity="end"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:text="Balance"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/solveDebitImageButton"
+            app:layout_constraintStart_toEndOf="@id/debtNameTextView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:gravity="right" />
 
     <Button
             android:id="@+id/solveDebitImageButton"

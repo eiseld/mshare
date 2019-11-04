@@ -56,7 +56,7 @@ namespace MShare_ASP.Controllers
         /// <response code="400">Possible request body validation failure</response>
         /// <response code="403">Forbidden: 'not_group_member'</response>
         /// <response code="404">Not found: 'group'</response>
-        /// <response code="409">Conflict: 'debtor_not_member'</response>
+        /// <response code="409">Conflict: 'debtor_not_member' 'self_debt'</response>
         /// <response code="500">Internal error: 'spending_not_inserted'</response>
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] API.Request.NewSpending newSpending)

@@ -11,8 +11,8 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "elte.moneyshare"
-        minSdkVersion 24
         targetSdkVersion 27
+        minSdkVersion 23
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -37,7 +37,7 @@ android {
     productFlavors {
         local {
             applicationId "elte.moneyshare.local"
-            buildConfigField "String", "BASE_URL", '"http://192.168.99.100:8081/"'
+            buildConfigField "String", "BASE_URL", '"http://192.168.116.102:8081/"'
             resValue "string", "app_name", "(L) Money Share"
         }
         staging {

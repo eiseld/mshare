@@ -7,18 +7,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
-import elte.moneyshare.entity.Member
-import elte.moneyshare.view.Adapter.MembersRecyclerViewAdapter
-import elte.moneyshare.viewmodel.GroupViewModel
-import kotlinx.android.synthetic.main.fragment_members.*
 import elte.moneyshare.entity.GroupData
+import elte.moneyshare.entity.Member
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
+import elte.moneyshare.view.Adapter.MembersRecyclerViewAdapter
+import elte.moneyshare.viewmodel.GroupViewModel
+import kotlinx.android.synthetic.main.fragment_members.*
 
 
 class MembersFragment : Fragment() {
@@ -45,18 +44,16 @@ class MembersFragment : Fragment() {
             groupId?.let { groupId ->
                 viewModel.getGroupData(groupId) { groupData, error ->
                     if (groupData != null) {
-                        //todo have to remove current user from list when use adapter
 
                         val member: Member? = groupData.members.find { it.id == SharedPreferences.userId }
                         groupData.members.remove(member)
 
                         groupDataStored = groupData
 
-                        adapter = MembersRecyclerViewAdapter(it, groupData, viewModel)
-                        if (member == null) {
-                            myBalanceTextView?.text = "##"
-                        } else {
-                            myBalanceTextView?.text = member.balance.toString()
+                        adapter = MembersRecyclerViewAdapter(it, groupData, myBalanceTextView, viewModel)
+                        member?.let {
+                            myNameTextView?.text = it.name
+                            myBalanceTextView?.text = it.balance.toString()
                         }
 
                         membersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

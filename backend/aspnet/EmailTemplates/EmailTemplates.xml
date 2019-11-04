@@ -4,6 +4,15 @@
         <name>EmailTemplates</name>
     </assembly>
     <members>
+        <member name="T:EmailTemplates.Controllers.AndroidLandingController">
+            <summary>Landing controller for android app</summary>
+        </member>
+        <member name="M:EmailTemplates.Controllers.AndroidLandingController.ChangePassword(System.String)">
+            <summary>Android Landing page for changing password</summary>
+        </member>
+        <member name="M:EmailTemplates.Controllers.AndroidLandingController.ValidateRegistration(System.String)">
+            <summary>Android Landing page for validating registration</summary>
+        </member>
         <member name="T:EmailTemplates.IRazorViewToStringRenderer">
             <summary>Contains rendering functinality for asp.net razor pages</summary>
         </member>
@@ -21,6 +30,15 @@
         </member>
         <member name="M:EmailTemplates.RazorViewToStringRenderer.RenderViewToStringAsync``1(System.String,``0)">
             <summary>Renders the given view to a string</summary>
+        </member>
+        <member name="T:EmailTemplates.ViewModels.AndroidOpenLink">
+            <summary>ViewModel for android link opener</summary>
+        </member>
+        <member name="P:EmailTemplates.ViewModels.AndroidOpenLink.Route">
+            <summary>Middle route for function to open on android with ending slash</summary>
+        </member>
+        <member name="P:EmailTemplates.ViewModels.AndroidOpenLink.Parameter">
+            <summary>Parameters after linkbase</summary>
         </member>
         <member name="T:EmailTemplates.ViewModels.ConfirmationViewModel">
             <summary>ViewModel for a confirmation type email</summary>

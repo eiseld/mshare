@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/memberRootLayout"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/memberRootLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -10,60 +10,72 @@
             android:id="@+id/memberNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="Name"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/memberBankAccountTextView"
+            app:layout_constraintBottom_toTopOf="@+id/memberBankAccountTextView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Name" />
+
     <TextView
             android:id="@+id/memberOwnerTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="(owner)"
-            android:layout_margin="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="6dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/memberNameTextView"
             app:layout_constraintStart_toEndOf="@id/memberNameTextView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="gone"/>
+            app:layout_constraintTop_toTopOf="@+id/memberNameTextView"
+            tools:text="(owner)"
+            tools:visibility="visible" />
 
     <TextView
             android:id="@+id/memberBalanceTextView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="12dp"
             android:gravity="end"
-            android:text="Balance"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/memberNameTextView"
             app:layout_constraintEnd_toStartOf="@+id/removeMemberImageButton"
             app:layout_constraintStart_toEndOf="@id/memberOwnerTextView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="@+id/memberNameTextView"
+            tools:text="Balance" />
 
     <TextView
             android:id="@+id/memberBankAccountTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="4dp"
             android:gravity="start"
             android:text="@string/bankAccountText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/removeMemberImageButton"
-            app:layout_constraintStart_toEndOf="@id/memberNameTextView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/memberBalanceTextView"
-            app:layout_constraintVertical_bias="0.781" />
+            app:layout_constraintTop_toBottomOf="@+id/memberNameTextView" />
 
     <ImageButton
             android:id="@+id/removeMemberImageButton"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:background="@drawable/minus"
-            app:layout_constraintStart_toEndOf="@id/memberBalanceTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/memberBalanceTextView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone" />
+
+    <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintTop_toBottomOf="@id/memberBankAccountTextView"
+            tools:layout_editor_absoluteX="1dp" />
 
 </android.support.constraint.ConstraintLayout>

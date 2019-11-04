@@ -17,14 +17,15 @@
             android:layout_marginTop="12dp"/>
 
     <TextView
-            android:id="@+id/emailTextView"
+            android:id="@+id/changeBankAccountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:layout_marginTop="12dp"
+            android:text="@string/change_bank_account_label"
+            android:textSize="18sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameTextView"
-            android:layout_marginTop="12dp"/>
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
 
     <android.support.v7.widget.AppCompatEditText
@@ -39,31 +40,43 @@
             android:inputType="textEmailAddress"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailTextView" />
+            app:layout_constraintTop_toBottomOf="@id/changeBankAccountTextView" />
 
 
     <Button
             android:id="@+id/modifyButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="12dp"
+            android:enabled="true"
             android:text="@string/modify"
-            app:layout_constraintTop_toBottomOf="@+id/accountEditText"
+            android:visibility="visible"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/accountEditText" />
 
     <Button
             android:id="@+id/saveButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="12dp"
             android:text="@string/save"
-            app:layout_constraintTop_toBottomOf="@+id/modifyButton"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"/>
+            app:layout_constraintTop_toBottomOf="@id/accountEditText" />
+
+    <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintTop_toBottomOf="@id/nameTextView"
+            tools:layout_editor_absoluteX="-3dp" />
 
 </android.support.constraint.ConstraintLayout>
