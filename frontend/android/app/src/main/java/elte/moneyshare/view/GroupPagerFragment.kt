@@ -8,14 +8,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.*
 import elte.moneyshare.*
+import elte.moneyshare.entity.GroupDataParc
 import elte.moneyshare.view.Adapter.GroupPagerAdapter
 import elte.moneyshare.view.Adapter.SearchResultsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_group.*
 
 class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberInvitedListener {
 
     private var groupId: Int? = null
+    private var groupName: String? = null
     private lateinit var pagerAdapter: GroupPagerAdapter
     private lateinit var viewModel: GroupViewModel
     private lateinit var searchView: SearchView
@@ -28,7 +31,8 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        groupId = arguments?.getInt(FragmentDataKeys.GROUP_PAGER_FRAGMENT.value)
+        groupId = arguments?.getParcelable<GroupDataParc>(FragmentDataKeys.GROUP_PAGER_FRAGMENT.value)?.id
+        groupName = arguments?.getParcelable<GroupDataParc>(FragmentDataKeys.GROUP_PAGER_FRAGMENT.value)?.name
         return inflater.inflate(R.layout.fragment_group, container, false)
     }
 
@@ -151,6 +155,11 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
 
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
+        }
+
+        groupName?.let {
+            activity?.actionBar?.title = it
+            toolbar?.setTitle(it)
         }
 
         if (tabs.isEmpty()) {
