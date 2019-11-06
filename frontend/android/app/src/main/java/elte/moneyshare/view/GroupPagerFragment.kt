@@ -157,10 +157,7 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
         }
 
-        groupName?.let {
-            activity?.actionBar?.title = it
-            toolbar?.setTitle(it)
-        }
+        groupName?.let { (activity as MainActivity).toolbar.title = it }
 
         if (tabs.isEmpty()) {
             context?.getString(R.string.members_tab)?.let { tabs.add(it) }
