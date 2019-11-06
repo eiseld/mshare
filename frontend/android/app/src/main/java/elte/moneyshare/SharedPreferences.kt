@@ -3,6 +3,7 @@ package elte.moneyshare
 import android.content.Context
 import android.content.SharedPreferences
 import elte.moneyshare.entity.User
+import java.util.*
 
 object SharedPreferences {
 
@@ -10,10 +11,14 @@ object SharedPreferences {
 
     private val ACCESS_TOKEN = "access_token"
     private val USER_LOGGED_IN = "user_logged_in"
+    private val STAY_LOGGED_IN = "stay_logged_in"
 
     private val USER_ID = "user_id"
     private val USER_NAME = "user_name"
     private val USER_EMAIL = "user_email"
+    private val FORGOT_PASSWORD_EMAIL = "forgot_password_email"
+
+    private val LANG = "lang"
 
     private val DELETE_MEMBER_ENABLED = "delete_member_enabled"
 
@@ -23,8 +28,8 @@ object SharedPreferences {
     //TODO CHECK ACCESS_TOKEN HANDLING TO STILL STORE AFTER APP CLOSED (in APIClient headers creation)
     fun init(context: Context) {
         sharedPreferences = context.getSharedPreferences(prefKey, Context.MODE_PRIVATE)
-        accessToken = ""
-        userId = -1
+        //accessToken = ""
+        //userId = -1
     }
 
     var accessToken: String
@@ -72,12 +77,43 @@ object SharedPreferences {
             }
         }
 
+    var forgotPasswordEmail: String?
+        get() = sharedPreferences.getString(FORGOT_PASSWORD_EMAIL, "")
+        set(email) {
+            with(sharedPreferences.edit()) {
+                putString(FORGOT_PASSWORD_EMAIL, email)
+                apply()
+            }
+        }
+
+    //todo should be enum
+    var lang : String
+        get() = sharedPreferences.getString(
+            LANG,
+            if (Locale.getDefault().language == Locale("en").language) "EN" else "HU"
+        ) ?: "HU"
+        set(lang) {
+            with(sharedPreferences.edit()) {
+                putString(LANG, lang)
+                apply()
+            }
+        }
+
     var isDeleteMemberEnabled : Boolean
         get() = sharedPreferences.getBoolean(DELETE_MEMBER_ENABLED, false)
         set(enabled)
         {
             with(sharedPreferences.edit()){
                 putBoolean(DELETE_MEMBER_ENABLED,enabled)
+                apply()
+            }
+        }
+    var stayLoggedIn : Boolean
+        get() = sharedPreferences.getBoolean(STAY_LOGGED_IN, false)
+        set(enabled)
+        {
+            with(sharedPreferences.edit()){
+                putBoolean(STAY_LOGGED_IN,enabled)
                 apply()
             }
         }

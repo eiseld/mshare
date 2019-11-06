@@ -1,296 +1,281 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
-using MShare_ASP.Utils;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace MShare_ASP.Services {
-    internal class SpendingService : ISpendingService {
-        private MshareDbContext DbContext { get; set; }
-        private ILoggingService _loggingService;
-        public SpendingService(MshareDbContext dbContext, ILoggingService loggingService) {
-            DbContext = dbContext;
-            _loggingService = loggingService;
+namespace MShare_ASP.Services
+{
+    internal class SpendingService : ISpendingService
+    {
+        private MshareDbContext Context { get; }
+        private IUserService UserService { get; }
+        private IGroupService GroupService { get; }
+        private IHistoryService HistoryService { get; }
+		private IOptimizedService OptimizedService { get; }
+
+        public SpendingService(MshareDbContext context, IUserService userService, IGroupService groupService, IOptimizedService optimizedService, IHistoryService historyService)
+        {
+            Context = context;
+            UserService = userService;
+            GroupService = groupService;
+            OptimizedService = optimizedService;
+            HistoryService = historyService;
         }
-        public IList<SpendingData> ToSpendingData(IList<DaoSpending> spendings){
-            return spendings.Select(x => new SpendingData(){
-                Name = x.Name,
-                Creditor = new UserData() {
-                    Id = x.Creditor.Id,
-                    Name = x.Creditor.DisplayName
-                },
-                CreditorUserId = x.CreditorUserId,
-                Id = x.Id,
-                MoneyOwed = x.MoneyOwed,
-                Debtors = x.Debtors.Select(d => new DebtorData(){
 
-                    Id = d.DebtorUserId,
-                    Name = d.Debtor.DisplayName,
-                    Debt = d.Debt.Value
+        public SpendingData ToSpendingData(DaoSpending daoSpending)
+        {
+            return new SpendingData()
+            {
+                Name = daoSpending.Name,
+                Creditor = new UserData()
+                {
+                    Id = daoSpending.Creditor.Id,
+                    Name = daoSpending.Creditor.DisplayName
+                },
+                CreditorUserId = daoSpending.CreditorUserId,
+                Id = daoSpending.Id,
+                MoneyOwed = daoSpending.MoneyOwed,
+                Debtors = daoSpending.Debtors.Select(daoDebtor => new DebtorData()
+                {
+                    Id = daoDebtor.DebtorUserId,
+                    Name = daoDebtor.Debtor.DisplayName,
+                    Debt = daoDebtor.Debt
                 }).ToList()
-            }).ToList();
+            };
         }
 
-        public IList<OptimisedDebtData> ToOptimisedDebtData(IList<DaoOptimizedDebt> optimizedDebts){
-            return optimizedDebts.Select(x => new OptimisedDebtData(){
-                Debtor = new UserData() {
-                    Id = x.UserOwes.Id,
-                    Name = x.UserOwes.DisplayName
+        public IList<SpendingData> ToSpendingData(IList<DaoSpending> daoSpendings)
+        {
+            return daoSpendings.Select(daoSpending => ToSpendingData(daoSpending)).ToList();
+        }
+
+        public OptimisedDebtData ToOptimisedDebtData(DaoOptimizedDebt daoOptimizedDebt)
+        {
+            return new OptimisedDebtData()
+            {
+                Debtor = new UserData()
+                {
+                    Id = daoOptimizedDebt.UserOwes.Id,
+                    Name = daoOptimizedDebt.UserOwes.DisplayName
                 },
-                Creditor = new UserData(){
-                    Id = x.UserOwed.Id,
-                    Name = x.UserOwed.DisplayName
+                Creditor = new UserData()
+                {
+                    Id = daoOptimizedDebt.UserOwed.Id,
+                    Name = daoOptimizedDebt.UserOwed.DisplayName
                 },
-
-                OptimisedDebtAmount = x.OweAmount
-            }).ToList();
+                OptimisedDebtAmount = daoOptimizedDebt.OweAmount
+            };
         }
 
-        public async Task<IList<DaoSpending>> GetSpendingsForGroup(long groupId) {
-            return await DbContext.Spendings
-                            .Where(x => x.GroupId == groupId)
-                            .Include(x => x.Creditor)
-                            .Include(x => x.Debtors).ThenInclude(x => x.Debtor)
-                            .ToListAsync();
+        public IList<OptimisedDebtData> ToOptimisedDebtData(IList<DaoOptimizedDebt> optimizedDebts)
+        {
+            return optimizedDebts.Select(daoOptimizedDebt => ToOptimisedDebtData(daoOptimizedDebt)).ToList();
         }
 
-        public async Task<IList<DaoOptimizedDebt>> GetOptimizedDebtForGroup(long userId, long groupId){
-            //TODO: Missing security checks 
-            await OptimizeSpendingForGroup(groupId);
-            return await DbContext.OptimizedDebt.Where(x => x.GroupId == groupId)
+        public async Task<IList<DaoSpending>> GetSpendingsForGroup(long userId, long groupId)
+        {
+            //Security check
+            await GroupService.GetGroupOfUser(userId, groupId);
+
+            return await Context.Spendings
+                .Include(x => x.Creditor)
+                .Include(x => x.Debtors).ThenInclude(x => x.Debtor)
+                .Where(x => x.GroupId == groupId)
+                .ToListAsync();
+        }
+
+        public async Task<IList<DaoOptimizedDebt>> GetOptimizedDebtForGroup(long userId, long groupId)
+        {
+            //Security check
+            await GroupService.GetGroupOfUser(userId, groupId);
+
+            return await Context.OptimizedDebt.Where(x => x.GroupId == groupId)
                 .Include(x => x.UserOwed)
                 .Include(x => x.UserOwes)
                 .ToListAsync();
         }
 
-        public async Task<long> GetDebtSum(long userId, long groupId){
-            var daoOptimizedDebts =  await GetOptimizedDebtForGroup(userId, groupId);
-
-            var credit = daoOptimizedDebts 
-                .Where(x => x.UserOwedId == userId)  
-                .Sum(x => x.OweAmount);
-
-            var debt = daoOptimizedDebts  
-                .Where(x => x.UserOwesId == userId)
-                .Sum(x => x.OweAmount);
-
-            return credit - debt;
-        }
-
-        public async Task OptimizeSpendingForGroup(long groupId){
-            var currentGroup = await DbContext.Groups
-                                              .Include(x => x.Members)
-                                              .SingleOrDefaultAsync(x => x.Id == groupId);
-            if (currentGroup == null)
-                throw new ResourceGoneException("group_gone");
-
-            var currentGroupSettleMents = DbContext.Settlements.Where(x => x.GroupId == groupId);
-
-            var Spendings = await GetSpendingsForGroup(groupId);
-            Dictionary<int, long> NumberToId = new Dictionary<int, long>();
-            Dictionary<long, int> IdToNumber = new Dictionary<long, int>();
-            {
-                int i = 0;
-                foreach (var MemberId in currentGroup.Members.Select(x => x.UserId))
-                {
-                    NumberToId.Add(i, MemberId);
-                    IdToNumber.Add(MemberId, i);
-                    i++;
-                }
-            }
-
-
-
-
-            int ingroup = NumberToId.Count;
-            long[,] owes = new long[ingroup, ingroup];
-            for (int i = 0; i < ingroup; i++){
-                var iSpending = Spendings.Where(x => x.CreditorUserId == NumberToId[i]);
-                foreach(DaoSpending ds in iSpending){
-                    foreach(DaoDebtor dd in ds.Debtors)
-                    {
-                        owes[IdToNumber[dd.DebtorUserId], i] += dd.Debt??0;
-                    }
-                }
-            }
-
-            foreach (var settlement in currentGroupSettleMents)
-            {
-                if (currentGroup.Members.Any(x => x.UserId == settlement.From) && currentGroup.Members.Any(x => x.UserId == settlement.To))
-                {
-                    owes[IdToNumber[settlement.To], IdToNumber[settlement.From]] += settlement.Amount;
-                }
-            }
-
-            for (int i = 0; i < ingroup; i++)
-            {
-                owes[i, i] = 0;
-            }
-
-            var Optimizer = new SpendingOptimizer(owes, ingroup);
-            Optimizer.Optimize();
-            owes = Optimizer.GetResult();
-            var oldOptimized = await DbContext.OptimizedDebt.Where(x => x.GroupId == groupId).ToListAsync();
-            DbContext.OptimizedDebt.RemoveRange(oldOptimized);
-            for(int i = 0; i < ingroup; i++) {
-                for(int j = 0; j < ingroup; j++) {
-                    if(owes[i,j] > 0){
-                        DaoOptimizedDebt optdebt = new DaoOptimizedDebt() {
-                           GroupId = groupId,
-                           UserOwesId = NumberToId[i],
-                           UserOwedId = NumberToId[j],
-                           OweAmount = owes[i, j]
-                        };
-                        await DbContext.OptimizedDebt.AddAsync(optdebt);
-                    }
-                }
-            }
-            await DbContext.SaveChangesAsync();
-            //save results
-        }
-
-        public async Task CreateNewSpending(NewSpending newSpending, long userId){
-            var currentUser = await DbContext.Users.FindAsync(userId);
-            if (currentUser == null)
-                throw new ResourceGoneException("current_user_gone");
-
-            var currentGroup = await DbContext.Groups
-                                              .Include(x => x.Members)
-                                              .SingleOrDefaultAsync(x => x.Id == newSpending.GroupId);
-
-            if (currentGroup == null)
-                throw new ResourceGoneException("group_gone");
-
-            if (newSpending.Debtors.Any(x => newSpending.Debtors.Count(d => d.DebtorId == x.DebtorId) > 1))
-                throw new BusinessException("duplicate_debtor_id_found");
-
-            if (!currentGroup.Members.Any(x => x.UserId == userId))
-                throw new ResourceForbiddenException("user_not_member");
-
-            if (newSpending.Debtors.Any()
-            && !newSpending.Debtors.All(x => currentGroup.Members.Any(m => m.UserId == x.DebtorId)))
-                throw new BusinessException("not_all_debtors_are_members");
-
-            if (newSpending.Debtors.Any()
-            && !newSpending.Debtors.All(x => DbContext.Users.Find(x.DebtorId) != null))
-                throw new ResourceGoneException("debtor_gone");
-
-
-            DaoSpending spending = new DaoSpending(){
-                Name = newSpending.Name,
-                MoneyOwed = newSpending.MoneySpent,
-                Group = currentGroup,
-                GroupId = currentGroup.Id,
-                Creditor = currentUser,
-                CreditorUserId = currentUser.Id
-            };
-
-            var nonSpecifiedCount = newSpending.Debtors.Any()
-                ? newSpending.Debtors.Count(s => !s.Debt.HasValue)
-                : currentGroup.Members.Count();
-
-            var autoCalculatedIndividualDebt = nonSpecifiedCount == 0
-                ? 0
-                : (newSpending.MoneySpent - newSpending.Debtors.Sum(x => x.Debt ?? 0)) / nonSpecifiedCount;
-
-            var debtors = newSpending.Debtors.Select(x => new DaoDebtor(){
-                Spending = spending,
-                DebtorUserId = x.DebtorId,
-                Debt = x.Debt ?? autoCalculatedIndividualDebt
-            }).ToList();
-
-            // If there were no debtors, populate it from group members
-            if (!debtors.Any()){
-                debtors = currentGroup.Members.Select(x => new DaoDebtor()
-                {
-                    Spending = spending,
-                    DebtorUserId = x.UserId,
-                    Debt = autoCalculatedIndividualDebt
-                }).ToList();
-            }
-
-            spending.Debtors = debtors.ToList();
-
-            var insertCount = 1 + spending.Debtors.Count;
-            await DbContext.Spendings.AddAsync(spending);
-            if (await DbContext.SaveChangesAsync() != insertCount)
-                throw new DatabaseException("spending_not_inserted");
-            
-        }
-
-
-
-        public async Task UpdateSpending(SpendingUpdate spendingUpdate, long userId)
+        public async Task CreateNewSpending(long userId, NewSpending newSpending)
         {
-            var currentUser = await DbContext.Users.FindAsync(userId);
-            if (currentUser == null)
-                throw new ResourceGoneException("current_user_gone");
+            var daoGroup = await GroupService.GetGroupOfUser(userId, newSpending.GroupId);
 
-            var currentGroup = await DbContext.Groups
-                                              .Include(x => x.Members)
-                                              .SingleOrDefaultAsync(x => x.Id == spendingUpdate.GroupId);
+            if (!newSpending.Debtors.All(x => daoGroup.Members.Any(m => m.UserId == x.DebtorId)))
+                throw new BusinessException("debtor_not_member");
 
-            if (currentGroup == null)
-                throw new ResourceGoneException("group_gone");
+            if(newSpending.Debtors.Any(x => x.DebtorId == userId))
+                throw new BusinessException("self_debt");
 
-            if (spendingUpdate.Debtors.Any(x => spendingUpdate.Debtors.Count(d => d.DebtorId == x.DebtorId) > 1))
-                throw new BusinessException("duplicate_debtor_id_found");
-
-            if (!currentGroup.Members.Any(x => x.UserId == userId))
-                throw new ResourceForbiddenException("user_not_member");
-
-            if (spendingUpdate.Debtors.Any()
-            && !spendingUpdate.Debtors.All(x => currentGroup.Members.Any(m => m.UserId == x.DebtorId)))
-                throw new BusinessException("not_all_debtors_are_members");
-
-            if (spendingUpdate.Debtors.Any()
-            && !spendingUpdate.Debtors.All(x => DbContext.Users.Find(x.DebtorId) != null))
-                throw new ResourceGoneException("debtor_gone");
-
-            var currentSpending = await DbContext.Spendings
-                                               .Include(x=>x.Debtors)
-                                              .SingleOrDefaultAsync(x => x.Id==spendingUpdate.Id);
-            
-            if (currentSpending == null)
-                throw new ResourceForbiddenException("spending_gone");
-            
-            if (currentSpending.CreditorUserId != userId)
-                throw new ResourceForbiddenException("user_not_creditor");
-            using (var transaction = DbContext.Database.BeginTransaction()) {
-                try {
-                    await _loggingService.LogForGroup(userId, currentSpending.GroupId, currentSpending);
-
-                    currentSpending.Name = spendingUpdate.Name;
-                    currentSpending.MoneyOwed = spendingUpdate.MoneySpent;
-
-                    DbContext.Debtors.RemoveRange(currentSpending.Debtors);
-                    var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
+            using (var transaction = Context.Database.BeginTransaction())
+            {
+                try
+                {
+                    DaoSpending spending = new DaoSpending()
                     {
-                        Spending = currentSpending,
+                        Name = newSpending.Name,
+                        MoneyOwed = newSpending.MoneySpent,
+                        CreditorUserId = userId,
+                        GroupId = daoGroup.Id,
+                        Creditor = await UserService.GetUser(userId),
+                        Group = daoGroup
+                    };
+
+                    spending.Debtors = newSpending.Debtors.Select(x => new DaoDebtor()
+                    {
+                        Spending = spending,
                         DebtorUserId = x.DebtorId,
                         Debt = x.Debt
                     }).ToList();
-                    currentSpending.Debtors = debtors.ToList();
 
-                    if (await DbContext.SaveChangesAsync() == 0)
-                    {
-                        throw new DatabaseException("spending_not_updated");
-                    }
+                    await Context.Spendings.AddAsync(spending);
+                    await OptimizedService.OptimizeForNewSpending(userId, newSpending);
+
+                    await Context.SaveChangesAsync();
+                    // Call log AFTER saving, so ID is present
+                    await HistoryService.LogNewSpending(userId, spending);
+
+                    await Context.SaveChangesAsync();
+
 
                     transaction.Commit();
-                } catch {
+                }
+                catch
+                {
                     transaction.Rollback();
                     throw;
                 }
             }
         }
 
+        public async Task UpdateSpending(long userId, SpendingUpdate spendingUpdate)
+        {
+            var daoGroup = await GroupService.GetGroupOfUser(userId, spendingUpdate.GroupId);
+
+            if (!spendingUpdate.Debtors.All(x => daoGroup.Members.Any(m => m.UserId == x.DebtorId)))
+                throw new BusinessException("debtor_not_member");
+
+            var currentSpending = await Context.Spendings
+                                               .Include(x => x.Debtors)
+                                              .SingleOrDefaultAsync(x => x.Id == spendingUpdate.Id);
+
+            if (currentSpending == null)
+                throw new ResourceGoneException("spending");
+
+            if (currentSpending.CreditorUserId != userId)
+                throw new ResourceForbiddenException("not_creditor");
+
+            var oldDebts = currentSpending.Debtors
+                .ToDictionary(debtor => debtor.DebtorUserId, debtor => debtor.Debt);
+
+            var newDebts = spendingUpdate.Debtors
+                .ToDictionary(debtor => debtor.DebtorId, debtor => debtor.Debt);
+
+            await HistoryService.LogSpendingUpdate(userId, currentSpending, spendingUpdate);
+
+            currentSpending.Name = spendingUpdate.Name;
+            currentSpending.MoneyOwed = spendingUpdate.MoneySpent;
+			Context.Debtors.RemoveRange(currentSpending.Debtors);
+
+			var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
+			{
+				Spending = currentSpending,
+				DebtorUserId = x.DebtorId,
+				Debt = x.Debt
+			}).ToList();
+
+			currentSpending.Debtors = debtors.ToList();
+
+			await OptimizedService.OptimizeForUpdateSpending(spendingUpdate.GroupId, userId, oldDebts, newDebts);
+			await Context.SaveChangesAsync();
+		}
+
+		public async Task DeleteSpending(long userId, long spendingId, long groupId)
+		{
+
+			var currentSpending = await Context.Spendings
+											   .Include(x => x.Debtors)
+											  .SingleOrDefaultAsync(x => x.Id == spendingId);
+
+			if (currentSpending == null)
+				throw new ResourceGoneException("spending");
+
+			if (currentSpending.CreditorUserId != userId)
+				throw new ResourceForbiddenException("not_creditor");
+
+			//var affectedUsers = new HashSet<long>() { userId };
+
+			var affectedUsers = new HashSet<long>() { currentSpending.CreditorUserId };
+
+			foreach(DaoDebtor debtor in currentSpending.Debtors)
+			{
+				affectedUsers.Add(debtor.DebtorUserId);
+			}
+
+			using (var transaction = Context.Database.BeginTransaction())
+			{
+				try
+				{
+
+					Context.Spendings.Remove(currentSpending);
+
+					await HistoryService.LogRemoveSpending(userId, groupId, currentSpending, affectedUsers);
+
+					if (await Context.SaveChangesAsync() == 0)
+					{
+						throw new DatabaseException("spending_not_updated");
+					}
+
+					await OptimizedService.OptimizeForGroup(groupId);
+
+					transaction.Commit();
+				}
+				catch
+				{
+					transaction.Rollback();
+					throw;
+				}
+			}
+		}
+
+		public async Task DebtSettlement(long userId, long debtorId, long lenderId, long groupId)
+        {
+            if (userId != debtorId && userId != lenderId)
+                throw new ResourceForbiddenException("user_not_in_transaction");
+
+            if (!(await GroupService.GetGroupOfUser(userId, groupId))
+                .Members.Any(x => (userId == lenderId && x.UserId == debtorId)
+                               || (userId == debtorId && x.UserId == lenderId)))
+                throw new ResourceForbiddenException("lender_or_debtor_not_member");
+
+            var optDeb = Context.OptimizedDebt
+                .FirstOrDefault(x => x.GroupId == groupId && x.UserOwesId == debtorId && x.UserOwedId == lenderId);
+
+            if (optDeb == null)
+                throw new ResourceGoneException("debt");
+
+            if (optDeb.OweAmount == 0)
+                throw new BusinessException("debt_already_payed");
+
+            DaoSettlement settlement = new DaoSettlement()
+            {
+                GroupId = groupId,
+                From = debtorId,
+                To = lenderId,
+                Amount = optDeb.OweAmount
+            };
+
+            await Context.Settlements.AddAsync(settlement);
+            await OptimizedService.OptimizeForSettling(groupId, lenderId, debtorId);
+            await HistoryService.LogSettlement(userId, settlement);
+
+            await Context.SaveChangesAsync();
+        }
     }
 }

@@ -1,0 +1,39 @@
+version: '3.6'
+
+networks:
+  prod:
+  test:
+  infra:
+
+volumes:
+  mysql_prod:
+  mysql_dev:
+  jenkins_data:
+  jenkins_home:
+
+services:
+
+  infra_proxy:
+    container_name: infra_proxy
+    build: ../apache/
+    networks:
+      - infra
+      - prod
+      - test
+    ports:
+      - "80:80"
+    volumes:
+      - ../apache/config/httpd.conf:/usr/local/apache2/conf/httpd.conf
+
+#  jenkins:
+#    container_name: infra_jenkins
+#    environment:
+#      - JENKINS_OPTS="--prefix=/jenkins"
+#    build: ../jenkins/
+#    networks:
+#      - infra
+#    ports:
+#      - '8080:8080'
+#    volumes:
+#      - jenkins_data:/jenkins_config
+#      - jenkins_home:/var/jenkins_home

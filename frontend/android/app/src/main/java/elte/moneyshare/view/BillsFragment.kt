@@ -12,6 +12,8 @@ import android.widget.Toast
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
 import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.Adapter.BillsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_bills.*
@@ -38,11 +40,11 @@ class BillsFragment : Fragment() {
             groupId?.let { groupId ->
                 viewModel.getSpendings(groupId) { bills, error ->
                     if (bills != null) {
-                        val adapter = BillsRecyclerViewAdapter(it, bills, groupId)
+                        val adapter = BillsRecyclerViewAdapter(it, bills, groupId, viewModel)
                         billsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         billsRecyclerView.adapter = adapter
                     } else {
-                        DialogManager.showInfoDialog(error, context)
+                        DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING,context), context)
                     }
                 }
             }

@@ -23,7 +23,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -34,15 +34,34 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    override fun postRegisterUser(registrationData: RegistrationData, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.postRegisterUser(registrationData).enqueue(object : Callback<ResponseBody> {
+    override fun postValidateRegistration(token: String, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.postValidateRegistration(token).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                when (response?.code()) {
+                when (response.code()) {
                     in (200..300) -> {
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
+    override fun postRegisterUser(registrationData: RegistrationData, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.postRegisterUser(registrationData).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -85,7 +104,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -95,6 +114,8 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
             }
         })
     }
+
+
 
     //GROUP
     override fun getGroupInfo(groupId: Int, completion: (response: GroupInfo?, error: String?) -> Unit) {
@@ -106,7 +127,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(groupInfo, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -126,7 +147,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(groupData, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -145,7 +166,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -164,7 +185,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -183,7 +204,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -205,7 +226,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(groupsInfo, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -216,6 +237,82 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
+    override fun getProfile(completion: (response: UserData?, error: String?) -> Unit) {
+        apiDefinition.getProfile().enqueue(object : Callback<UserData> {
+            override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        val userData = response.body()
+                        completion(userData, null)
+                    }
+                    else -> {
+                        completion(null, response.code().toString())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<UserData>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
+    override fun updateProfile(bankAccountNumberUpdate: BankAccountNumberUpdate, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.postBankAccountNumber(bankAccountNumberUpdate).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.code().toString())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
+    override fun postPasswordUpdate(passwordUpdate: PasswordUpdate, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.postPasswordUpdate(passwordUpdate).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.code().toString())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
+    override fun updateLang(lang: String, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.updateLang(Lang(lang)).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.code().toString())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
 
     //SPENDING
     override fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit) {
@@ -227,7 +324,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(spendings, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -246,7 +343,26 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
+    override fun deleteSpending(spendingId: Int, groupId: Int, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.deleteSpending(spendingId, groupId).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -265,7 +381,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -285,7 +401,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(debtData, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -304,7 +420,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(response.code().toString(), null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -324,7 +440,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(filteredUsers, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }
@@ -366,7 +482,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         completion(users, null)
                     }
                     else -> {
-                        completion(null, response.message())
+                        completion(null, response.code().toString())
                     }
                 }
             }

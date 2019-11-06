@@ -17,10 +17,30 @@ class LoginViewModel: ViewModel() {
         }
     }
 
+    fun postValidateRegistration(token: String, completion: (response: String?, error: String?) -> Unit) {
+        APIClient.getRepository().postValidateRegistration(token) { response, error ->
+            if (error == null) {
+                completion(response, null)
+            } else {
+                completion(null, error)
+            }
+        }
+    }
+
     fun getUsers(completion: (response: ArrayList<User>?, error: String?) -> Unit) {
         APIClient.getRepository().getUsers { users, error ->
             if (error == null) {
                 completion(users, null)
+            } else {
+                completion(null, error)
+            }
+        }
+    }
+
+    fun updateLang(lang: String, completion: (response: String?, error: String?) -> Unit) {
+        APIClient.getRepository().updateLang(lang) { response, error ->
+            if (error == null) {
+                completion(response, null)
             } else {
                 completion(null, error)
             }

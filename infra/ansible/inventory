@@ -1,0 +1,5 @@
+[local_vagrant_dev_01]
+192.168.50.4 ansible_ssh_port=22 ansible_ssh_user=vagrant 
+
+[alerant]
+remote.alerant.hu ansible_ssh_port=5222 ansible_ssh_user=horvathpeter

@@ -1,75 +1,66 @@
 ﻿using MShare_ASP.API.Request;
+using MShare_ASP.API.Response;
 using MShare_ASP.Data;
-using System;
+using MShare_ASP.Services.Exceptions;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace MShare_ASP.Services {
+namespace MShare_ASP.Services
+{
+    /// <summary>Spending related services</summary>
+    public interface ISpendingService
+    {
+        /// <summary>Converts spending data from internal to facing</summary>
+        SpendingData ToSpendingData(DaoSpending daoSpending);
 
-    /// <summary>
-    /// Spending related services
-    /// </summary>
-    public interface ISpendingService {
+        /// <summary>Converts spending datas from internal to facing</summary>
+        IList<SpendingData> ToSpendingData(IList<DaoSpending> daoSpendings);
 
-        /// <summary>
-        /// Converts spending internal data to facing data
-        /// </summary>
-        /// <param name="spendings"></param>
-        /// <returns></returns>
-        IList<API.Response.SpendingData> ToSpendingData(IList<DaoSpending> spendings);
+        /// <summary>Converts optimizedDebt data from internal to facing</summary>
+        OptimisedDebtData ToOptimisedDebtData(DaoOptimizedDebt daoOptimizedDebt);
 
-        /// <summary>
-        /// Converts optimized debts internal data to facing data
-        /// </summary>
-        /// <param name="optimizedDebts"></param>
-        /// <returns></returns>
-        IList<API.Response.OptimisedDebtData> ToOptimisedDebtData(IList<DaoOptimizedDebt> optimizedDebts);
+        /// <summary>Converts optimizedDebt datas from internal to facing</summary>
+        IList<OptimisedDebtData> ToOptimisedDebtData(IList<DaoOptimizedDebt> daoOptimizedDebts);
 
-        /// <summary>
-        /// Gets all of the spendings with its internal data for a specifis group
-        /// </summary>
-        /// <param name="groupId"></param>
-        Task<IList<DaoSpending>> GetSpendingsForGroup(long groupId);
+        /// <summary>Gets all spending associated with a group</summary>
+        /// <exception cref="ResourceNotFoundException">["group"]</exception>
+        /// <exception cref="ResourceForbiddenException">["not_group_member"]</exception>
+        Task<IList<DaoSpending>> GetSpendingsForGroup(long userId, long groupId);
 
-        /// <summary>
-        /// Creates a new spending in the database
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="groupId"></param>
-        /// <returns></returns>
+        /// <summary>Creates a new spending in the database</summary>
+        /// <exception cref="ResourceNotFoundException">["group"]</exception>
+        /// <exception cref="ResourceForbiddenException">["not_group_member"]</exception>
         Task<IList<DaoOptimizedDebt>> GetOptimizedDebtForGroup(long userId, long groupId);
 
-        /// <summary>
-        /// Get summarised debt of user in group
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="groupId"></param>
-        /// <returns></returns>
-        Task<long> GetDebtSum(long userId, long groupId);
+        /// <summary>Creates a new spending in the database</summary>
+        /// <exception cref="ResourceNotFoundException">["group"]</exception>
+        /// <exception cref="ResourceForbiddenException">["not_group_member"]</exception>
+        /// <exception cref="BusinessException">["debtor_not_member"]</exception>
+        /// <exception cref="DatabaseException">["spending_not_inserted"]</exception>
+        Task CreateNewSpending(long userId, NewSpending newSpending);
 
-        /// <summary>
-        /// Calculate the optimized debts of a group
-        /// </summary>
-        /// <param name="groupId">creator of the spending</param>
-        /// <returns></returns>
-        Task OptimizeSpendingForGroup(long groupId);
+        /// <summary>Updates an existing spending in the database</summary>
+        /// <exception cref="ResourceNotFoundException">["group"]</exception>
+        /// <exception cref="ResourceForbiddenException">["not_group_member", "not_creditor"]</exception>
+        /// <exception cref="BusinessException">["debtor_not_member"]</exception>
+        /// <exception cref="ResourceGoneException">["spending"]</exception>
+        /// <exception cref="DatabaseException">["spending_not_updated"]</exception>
+        Task UpdateSpending(long userId, SpendingUpdate spendingUpdate);
 
-        /// <summary>
-        /// Creates a new spending in the database
-        /// </summary>
-        /// <param name="newSpending">the syntactically validated new spending request</param>
-        /// <param name="userId">creator of the spending</param>
-        /// <returns></returns>
-        Task CreateNewSpending(NewSpending newSpending, long userId);
-        /// <summary>
-        /// Updates an existing spending in the database
-        /// </summary>
-        /// <param name="spendingUpdate">the syntactically validated new spending request</param>
-        /// <param name="userId">creator of the spending</param>
-        /// <returns></returns>
-        Task UpdateSpending(SpendingUpdate spendingUpdate, long userId);
+		/// <summary>Delete a spending from the database</summary>
+		/// <exception cref="ResourceNotFoundException">["group"]</exception>
+		/// <exception cref="ResourceForbiddenException">["not_group_member", "not_creditor"]</exception>
+		/// <exception cref="BusinessException">["debtor_not_member"]</exception>
+		/// <exception cref="ResourceGoneException">["spending"]</exception>
+		/// <exception cref="DatabaseException">["spending_not_deleted"]</exception>
+		Task DeleteSpending(long userId, long spendingId, long groupId);
 
-   
+		/// <summary>Settles a debt</summary>
+		/// <exception cref="ResourceNotFoundException">["group"]</exception>
+		/// <exception cref="ResourceForbiddenException">["not_group_member", "lender_not_member"]</exception>
+		/// <exception cref="ResourceGoneException">["debt"]</exception>
+		/// <exception cref="BusinessException">["debt_already_payed"]</exception>
+		/// <exception cref="DatabaseException">["debt_not_settled"]</exception>
+		Task DebtSettlement(long userId, long debtorId, long lenderId, long groupId);
     }
 }

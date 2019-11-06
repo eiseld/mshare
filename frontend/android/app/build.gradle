@@ -11,8 +11,8 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "elte.moneyshare"
-        minSdkVersion 24
         targetSdkVersion 27
+        minSdkVersion 23
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -21,6 +21,34 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+    }
+    /**
+     * The `initWith` property allows you to copy configurations from other build types,
+     * then configure only the settings you want to change. This one copies the debug build
+     * type, and then changes the manifest placeholder and application ID.
+     */
+    flavorDimensions "version"
+    productFlavors {
+        local {
+            applicationId "elte.moneyshare.local"
+            buildConfigField "String", "BASE_URL", '"http://192.168.0.24:8081/"'
+            resValue "string", "app_name", "(L) Money Share"
+        }
+        staging {
+            applicationId "elte.moneyshare.test"
+            buildConfigField "String", "BASE_URL", '"http://remote.alerant.hu/test/api/"'
+            resValue "string", "app_name", "(T) Money Share"
+        }
+        production {
+            applicationId "elte.moneyshare"
+            buildConfigField "String", "BASE_URL", '"http://remote.alerant.hu/api/"'
+            resValue "string", "app_name", "(P) Money Share"
         }
     }
 }

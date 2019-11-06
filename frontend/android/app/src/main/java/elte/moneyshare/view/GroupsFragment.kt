@@ -6,13 +6,14 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import android.widget.Toast
-
+import elte.moneyshare.R
+import elte.moneyshare.SharedPreferences
+import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.Adapter.GroupsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_groups.*
-import elte.moneyshare.R
-import elte.moneyshare.manager.DialogManager
 
 class GroupsFragment : Fragment() {
 
@@ -44,19 +45,26 @@ class GroupsFragment : Fragment() {
             }
             else -> return super.onOptionsItemSelected(item)
         }
+
     }
 
-    fun getGroups() {
+    private fun getGroups() {
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupsViewModel::class.java)
 
             viewModel.getProfileGroups { groupsInfo, error ->
                 if (groupsInfo != null) {
                     val adapter = GroupsRecyclerViewAdapter(it, groupsInfo)
-                    groupsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                    groupsRecyclerView.adapter = adapter
+                    groupsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                    groupsRecyclerView?.adapter = adapter
                 } else {
-                    DialogManager.showInfoDialog(error, context)
+                    if(SharedPreferences.stayLoggedIn)
+                    {
+                        SharedPreferences.stayLoggedIn = false
+                        DialogManager.showInfoDialog(context?.getString(R.string.relog_error).toString(),context)
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, LoginFragment())?.addToBackStack(null)?.commit()
+                    }
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                 }
             }
         }

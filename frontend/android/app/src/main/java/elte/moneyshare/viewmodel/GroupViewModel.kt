@@ -1,6 +1,7 @@
 package elte.moneyshare.viewmodel
 
 import android.arch.lifecycle.ViewModel
+import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.*
 import elte.moneyshare.model.APIClient
 
@@ -24,6 +25,7 @@ class GroupViewModel : ViewModel() {
     fun getMembersToSpending(id: Int, completion: (members: ArrayList<Member>?, error: String?) -> Unit) {
         APIClient.getRepository().getGroupData(id) { groupData, error ->
             if (groupData != null) {
+                groupData.members.remove(groupData.members.find { it.id == SharedPreferences.userId })
                 for (member in groupData.members) {
                     member.balance = 0
                 }
@@ -46,6 +48,16 @@ class GroupViewModel : ViewModel() {
 
     fun postSpending(newSpending: NewSpending, completion: (response: String?, error: String?) -> Unit) {
         APIClient.getRepository().postSpending(newSpending) { response, error ->
+            if (error == null) {
+                completion(response, null)
+            } else {
+                completion(null, error)
+            }
+        }
+    }
+
+    fun deleteSpending(spendingId: Int, groupId: Int, completion: (response: String?, error: String?) -> Unit) {
+        APIClient.getRepository().deleteSpending(spendingId, groupId) { response, error ->
             if (error == null) {
                 completion(response, null)
             } else {

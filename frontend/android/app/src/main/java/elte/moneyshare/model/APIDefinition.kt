@@ -9,65 +9,82 @@ import retrofit2.http.*
 interface APIDefinition {
 
     //AUTH
-    @PUT("test/api/Auth/login")
+    @PUT("Auth/login")
     fun putLoginUser(@Body loginCred: LoginCred): Call<LoginResponse>
 
-    @POST("test/api//Auth/register")
+    @POST("Auth/validate/{token}")
+    fun postValidateRegistration(@Path("token") token: String): Call<ResponseBody>
+
+    @POST("Auth/register")
     fun postRegisterUser(@Body registrationData: RegistrationData): Call<ResponseBody>
 
-    @GET("test/api/Profile")
+    @GET("Profile")
     fun getUserId(): Call<UserData>
 
     //GROUP
-    @GET("test/api/Group/{groupId}/info")
+    @GET("Group/{groupId}/info")
     fun getGroupInfo(@Path("groupId") groupId: Int): Call<GroupInfo>
 
-    @GET("test/api/Group/{groupId}/data")
+    @GET("Group/{groupId}/data")
     fun getGroupData(@Path("groupId") groupId: Int): Call<GroupData>
 
-    @POST("test/api/Group/create")
+    @POST("Group/create")
     fun postNewGroup(@Body groupName : NewGroup) : Call<ResponseBody>
 
-//    @DELETE ("test/api/Group/{groupId}/members/remove/{memberId}")
+//    @DELETE ("Group/{groupId}/members/remove/{memberId}")
 //    fun deleteMember(@Path("groupId") groupId: Int, @Path("memberId") memberId: Int): Call<ResponseBody>
 
-    @POST ("test/api/Group/{groupId}/members/remove/{memberId}")
+    @POST ("Group/{groupId}/members/remove/{memberId}")
     fun deleteMember(@Path("groupId") groupId: Int, @Path("memberId") memberId: Int): Call<ResponseBody>
 
-    @POST ("test/api/Group/{groupId}/members/add/{memberId}")
+    @POST ("Group/{groupId}/members/add/{memberId}")
     fun postMember(@Path("groupId") groupId: Int, @Path("memberId") memberId: Int): Call<ResponseBody>
 
-    @POST("test/api/group/{groupId}/settledebt/{data}/{selectedMember}")
+    @POST("group/{groupId}/settledebt/{data}/{selectedMember}")
     fun putDebitEqualization(@Path("groupId") groupId: Int,@Path("data") data: Int, @Path("selectedMember") selectedMember: Int): Call<ResponseBody>
 
-    @GET("test/api/Group/searchinallusers/{filter}")
+    @GET("Group/searchinallusers/{filter}")
     fun getSearchedUsers(@Path("filter") filter: String): Call<ArrayList<FilteredUserData>>
 
     //PROFILE
-    @GET("test/api/Profile/groups")
+    @GET("Profile/groups")
     fun getProfileGroups(): Call<ArrayList<GroupInfo>>
 
-    @POST("test/api/profile/password/forgot")
+    @GET("Profile")
+    fun getProfile(): Call<UserData>
+
+    @POST("profile/bankAccountNumber/update")
+    fun postBankAccountNumber(@Body bankAccountNumber: BankAccountNumberUpdate): Call<ResponseBody>
+
+    @POST("profile/password/forgot")
     fun postForgotPassword(@Body email: ForgottenPasswordData): Call<ResponseBody>
 
+    @POST("Profile/password/update")
+    fun postPasswordUpdate(@Body passwordUpdate: PasswordUpdate): Call<ResponseBody>
+
+    @PUT("Profile/lang")
+    fun updateLang(@Body lang: Lang): Call<ResponseBody>
 
     //SPENDING
-    @GET("test/api/Spending/{id}")
+    @GET("Spending/{id}")
     fun getSpendings(@Path("id") groupId: Int): Call<ArrayList<SpendingData>>
 
-    @POST("test/api/Spending/create")
+    @POST("Spending/create")
     fun postSpending(@Body newSpending: NewSpending): Call<ResponseBody>
 
-    @GET("test/api/Spending/{groupId}/optimised")
+    @POST("Spending/{groupId}/delete/{spendingId}")
+    fun deleteSpending(@Path("spendingId") spendingId: Int, @Path("groupId") groupId: Int): Call<ResponseBody>
+
+    @GET("Spending/{groupId}/optimised")
     fun getOptimizedDebt(@Path("groupId") groupId: Int) : Call<ArrayList<OptimizedDebtData>>
 
-    @POST("test/api/Spending/update/")
+    @POST("Spending/update/")
     fun postSpendingUpdate(@Body updatedSpending : SpendingUpdate) : Call<ResponseBody>
 
     //TEST METHOD
-    @GET("test/api/Group/")
+    @GET("Group/")
     fun getGroups(): Call<ArrayList<Group>>
 
-    @GET("test/api/Auth")
+    @GET("Auth")
     fun getUsers(): Call<ArrayList<User>>
 }

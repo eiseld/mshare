@@ -14,6 +14,7 @@ class MemberViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var memberOwnerTextView: TextView = itemView.findViewById(R.id.memberOwnerTextView)
     var memberBalanceTextView: TextView = itemView.findViewById(R.id.memberBalanceTextView)
     var removeButton : ImageButton = itemView.findViewById(R.id.removeMemberImageButton)
+    var memberBankAccountTextView: TextView = itemView.findViewById(R.id.memberBankAccountTextView)
 
 
 }

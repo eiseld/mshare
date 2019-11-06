@@ -1,239 +1,329 @@
-﻿using System;
+﻿using EmailTemplates;
+using EmailTemplates.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using MShare_ASP.API.Request;
+using MShare_ASP.API.Response;
+using MShare_ASP.Configurations;
+using MShare_ASP.Data;
+using MShare_ASP.Services.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using MShare_ASP.API.Request;
-using MShare_ASP.Data;
-using MShare_ASP.Utils;
 
-namespace MShare_ASP.Services {
-    internal class GroupService : IGroupService {
-        private readonly MshareDbContext _context;
-        private ISpendingService _spendingService;
-        private IEmailService _emailService;
-        private ILoggingService _loggingService;
+namespace MShare_ASP.Services
+{
+    internal class GroupService : IGroupService
+    {
+        private MshareDbContext Context { get; }
+        private IEmailService EmailService { get; }
+        private IOptimizedService OptimizedService { get; }
+        private IURIConfiguration UriConf { get; }
+        private IRazorViewToStringRenderer Renderer { get; }
+        private IHistoryService History { get; }
+        private IStringLocalizer<LocalizationResource> Localizer { get; }
 
-        public GroupService(MshareDbContext context, ISpendingService spendingService, IEmailService emailService, ILoggingService loggingService) {
-            _context = context;
-            _spendingService = spendingService;
-            _emailService = emailService;
-            _loggingService = loggingService;
+        private async Task<long> GetDebtSum(long userId, long groupId)
+        {
+            var daoOptimizedDebts = await Context.OptimizedDebt.Where(x => x.GroupId == groupId)
+                .Include(x => x.UserOwed)
+                .Include(x => x.UserOwes)
+                .ToListAsync();
+
+            var credit = daoOptimizedDebts
+                .Where(x => x.UserOwedId == userId)
+                .Sum(x => x.OweAmount);
+
+            var debt = daoOptimizedDebts
+                .Where(x => x.UserOwesId == userId)
+                .Sum(x => x.OweAmount);
+
+            return credit - debt;
         }
 
-        public async Task<API.Response.GroupData> ToGroupData(long userId, DaoGroup daoGroup) {
+        public GroupService(MshareDbContext context, IEmailService emailService, IOptimizedService optimizedService, IHistoryService history, IURIConfiguration uriConf, IStringLocalizer<LocalizationResource> localizer, IRazorViewToStringRenderer renderer)
+        {
+            Context = context;
+            EmailService = emailService;
+            OptimizedService = optimizedService;
+            UriConf = uriConf;
+            Renderer = renderer;
+            Localizer = localizer;
+            History = history;
+        }
 
-            return new API.Response.GroupData() {
+        public async Task<GroupData> ToGroupData(long userId, DaoGroup daoGroup)
+        {
+            return new GroupData()
+            {
                 Id = daoGroup.Id,
                 Name = daoGroup.Name,
-                Creator = new API.Response.MemberData() {
+                Creator = new MemberData()
+                {
                     Id = daoGroup.CreatorUserId,
                     Name = daoGroup.CreatorUser.DisplayName,
-                    Balance = await _spendingService.GetDebtSum(userId, daoGroup.Id)
+                    Balance = await GetDebtSum(userId, daoGroup.Id),
+                    BankAccountNumber = daoGroup.CreatorUser.BankAccountNumber ?? ""
                 },
-                Members =  daoGroup.Members.Select(async daoUsersGroupsMap => new API.Response.MemberData() {
+                Members = daoGroup.Members.Select(async daoUsersGroupsMap => new MemberData()
+                {
                     Id = daoUsersGroupsMap.UserId,
                     Name = daoUsersGroupsMap.User.DisplayName,
-                    Balance = await _spendingService.GetDebtSum(daoUsersGroupsMap.UserId, daoGroup.Id)
+                    Balance = await GetDebtSum(daoUsersGroupsMap.UserId, daoGroup.Id),
+                    BankAccountNumber = daoUsersGroupsMap.User.BankAccountNumber ?? ""
                 }).Select(x => x.Result).ToList(),
-                MyCurrentBalance = await _spendingService.GetDebtSum(userId, daoGroup.Id)
+                MyCurrentBalance = await GetDebtSum(userId, daoGroup.Id)
             };
         }
 
-        public IList<API.Response.GroupData> ToGroupData(long userId, IList<DaoGroup> daoGroups) {
+        public IList<GroupData> ToGroupData(long userId, IList<DaoGroup> daoGroups)
+        {
             return daoGroups.Select(async daoGroup => await ToGroupData(userId, daoGroup)).Select(x => x.Result).ToList();
         }
 
-        public async Task<API.Response.GroupInfo> ToGroupInfo(long userId, DaoGroup daoGroup) {
-            return new API.Response.GroupInfo() {
+        public async Task<GroupInfo> ToGroupInfo(long userId, DaoGroup daoGroup)
+        {
+            return new GroupInfo()
+            {
                 Id = daoGroup.Id,
                 Name = daoGroup.Name,
                 Creator = daoGroup.CreatorUser.DisplayName,
                 MemberCount = daoGroup.Members.Count(),
-                MyCurrentBalance = await _spendingService.GetDebtSum(userId, daoGroup.Id)
+                MyCurrentBalance = await GetDebtSum(userId, daoGroup.Id)
             };
         }
 
-        public IList<API.Response.GroupInfo> ToGroupInfo(long userId, IList<DaoGroup> daoGroups) {
+        public IList<GroupInfo> ToGroupInfo(long userId, IList<DaoGroup> daoGroups)
+        {
             return daoGroups.Select(async daoGroup => await ToGroupInfo(userId, daoGroup)).Select(x => x.Result).ToList();
         }
 
-        public async Task<IList<DaoGroup>> GetGroups() {
-            return await _context.Groups
+#if DEBUG
+
+        public async Task<IList<DaoGroup>> GetGroups()
+        {
+            return await Context.Groups
                 .Include(x => x.Members).ThenInclude(x => x.User)
                 .Include(x => x.CreatorUser)
                 .ToListAsync();
         }
 
-        public async Task<IList<DaoGroup>> GetGroupsOfUser(long userId) {
-            return await _context.Groups
+#endif
+
+        public async Task<IList<DaoGroup>> GetGroupsOfUser(long userId)
+        {
+            return await Context.Groups
                 .Include(x => x.Members).ThenInclude(x => x.User)
                 .Include(x => x.CreatorUser)
                 .Where(x => x.Members.Any(y => y.UserId == userId))
                 .ToListAsync();
         }
 
-        public async Task<DaoGroup> GetGroupOfUser(long userId, long groupId) {
-            var daoGroups = await GetGroupsOfUser(userId);
-            var daoGroup = daoGroups.SingleOrDefault(x => x.Id == groupId);
+        public async Task<DaoGroup> GetGroupOfUser(long userId, long groupId)
+        {
+            var daoGroup = await Context.Groups
+                .Include(x => x.Members).ThenInclude(x => x.User)
+                .Include(x => x.CreatorUser)
+                .SingleOrDefaultAsync(x => x.Id == groupId);
 
             if (daoGroup == null)
-                throw new Exceptions.ResourceNotFoundException("group_not_found");
+                throw new ResourceNotFoundException("group");
+
+            if (!daoGroup.Members.Any(y => y.UserId == userId))
+                throw new ResourceForbiddenException("not_group_member");
 
             return daoGroup;
         }
 
-        public async Task RemoveMember(long userId, long groupId, long memberId) {
-            var group = (await GetGroupsOfUser(userId)).SingleOrDefault(x => x.Id == groupId);
+        public async Task RemoveMember(long userId, long groupId, long memberId)
+        {
+            var daoGroup = await GetGroupOfUser(userId, groupId);
 
-            if (group == null)
-                throw new Exceptions.ResourceNotFoundException("group_not_found");
+            if (daoGroup.CreatorUserId != userId)
+                throw new ResourceForbiddenException("not_group_creator");
 
-            if (group.CreatorUserId != userId)
-                throw new Exceptions.ResourceForbiddenException("user_not_group_creator");
+            if (daoGroup.CreatorUserId == memberId)
+                throw new BusinessException("remove_creator");
 
-            if (group.CreatorUserId == memberId)
-                throw new Exceptions.ResourceForbiddenException("member_group_creator");
-
-            var daoMember = group.Members.FirstOrDefault(x => x.UserId == memberId);
+            var daoMember = daoGroup.Members.SingleOrDefault(x => x.UserId == memberId);
 
             if (daoMember == null)
-                throw new Exceptions.ResourceGoneException("member_not_found");
+                throw new ResourceNotFoundException("member");
 
-            var delCount = 0;
+            var affectedUsers = new HashSet<long>() { memberId };
+            //Remove Participated Settlements
 
-            var daoDebtors = (await _spendingService.GetSpendingsForGroup(groupId))
-               .Select(x =>
-                    x.Debtors.SingleOrDefault(y => y.DebtorUserId == memberId))
-               .Where(x => x != null);
+            var participatedSettlements = Context.Settlements
+                .Where(x => x.GroupId == groupId)
+                .Where(x => x.From == memberId || x.To == memberId)
+                .ToArray();
 
-            foreach (var daoDebtor in daoDebtors) {
-                _context.Debtors.Remove(daoDebtor);
-                ++delCount;
+            affectedUsers.UnionWith(participatedSettlements.Select(x =>
+            {
+                if (x.From == memberId)
+                    return x.To;
+                else
+                    return x.From;
+            }));
+
+            Context.RemoveRange(participatedSettlements);
+
+            // Remove owned Spendings
+
+            var mySpendings = Context.Spendings
+                .Where(x => x.GroupId == groupId)
+                .Where(x => x.CreditorUserId == memberId)
+                .Include(x => x.Debtors)
+                .ToArray();
+
+            foreach (var mySpending in mySpendings)
+            {
+                var debtors = Context.Debtors
+                    .Where(x => x.SpendingId == mySpending.Id)
+                    .ToArray();
+
+                affectedUsers.UnionWith(debtors.Select(x => x.DebtorUserId));
+
+                Context.RemoveRange(debtors);
+            }
+            Context.RemoveRange(mySpendings);
+
+            // Remove debts
+
+            var myDebts = Context.Debtors
+                .Where(x => x.DebtorUserId == memberId)
+                .Include(x => x.Spending)
+                .ToArray();
+            foreach (var myDebt in myDebts)
+            {
+                var spending = myDebt.Spending;
+                affectedUsers.Add(spending.CreditorUserId);
+                spending.MoneyOwed -= myDebt.Debt;
+                if (spending.MoneyOwed == 0)
+                {
+                    Context.Remove(spending);
+                }
             }
 
-            _context.UsersGroupsMap.Remove(daoMember);
-            ++delCount;
+            Context.RemoveRange(myDebts);
 
-            if (await _context.SaveChangesAsync() != delCount)
-                throw new Exceptions.DatabaseException("group_member_not_removed");
+            //Remove from group
+
+            Context.UsersGroupsMap.Remove(daoMember);
+
+            await History.LogRemoveMember(userId, groupId, memberId, affectedUsers, participatedSettlements, mySpendings, myDebts);
+
+            await Context.SaveChangesAsync();
+
+            await OptimizedService.OptimizeForGroup(groupId);
         }
 
-        public async Task CreateGroup(long userId, NewGroup newGroup) {
-            var existingGroup = await _context.Groups
-                .FirstOrDefaultAsync(x =>
-                x.CreatorUserId == userId &&
-                x.Name == newGroup.Name);
+        public async Task CreateGroup(long userId, NewGroup newGroup)
+        {
+            using (var transaction = Context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+            {   
+                try
+                {
+                    var existingGroup = await Context.Groups
+                        .SingleOrDefaultAsync(x => x.CreatorUserId == userId &&
+                            x.Name == newGroup.Name);
 
-            if (existingGroup != null)
-                throw new Exceptions.BusinessException("name_taken");
+                    if (existingGroup != null)
+                        throw new BusinessException("name_taken");
 
-            await _context.Groups.AddAsync(new DaoGroup() {
-                CreatorUserId = userId,
-                Name = newGroup.Name
-            });
+                    var daoGroup = new DaoGroup()
+                    {
+                        CreatorUserId = userId,
+                        Name = newGroup.Name
+                    };
 
-            if (await _context.SaveChangesAsync() != 1)
-                throw new Exceptions.DatabaseException("group_not_created");
-        }
+                    await Context.Groups.AddAsync(daoGroup);
 
-        public async Task<IList<API.Response.FilteredUserData>> InviteUserFilter(string part) {
-            return await _context.Users
-				.Select( e => new API.Response.FilteredUserData { Id = e.Id, DisplayName = e.DisplayName, Email = e.Email } )
-                .Where(s => s.DisplayName.Contains(part) || s.Email.Contains(part))
-                .ToListAsync();
-        }
 
-        public async Task<IList<DaoHistory>> GetGroupHistory(long groupid) {
-            return await _context.History
-                .Where(s => s.GroupId == groupid)
-                .ToListAsync();
-        }
+                    if (await Context.SaveChangesAsync() != 1)
+                        throw new DatabaseException("group_not_created");
 
-        public async Task AddMember(long userId, long groupId, long memberId) {
-            var group = _context.Groups.Include(x => x.Members).SingleOrDefault(s => s.Id == groupId);
+                    await History.LogCreateGroup(userId, daoGroup);
 
-            if (group == null)
-                throw new Exceptions.ResourceNotFoundException("group_not_found");
-
-            if (group.CreatorUserId != userId)
-                throw new Exceptions.ResourceForbiddenException("not_group_creator");
-
-            var daoMember = group.Members.FirstOrDefault(x => x.UserId == memberId);
-
-            if (daoMember != null) {
-                throw new Exceptions.BusinessException("user_already_in_group");
-            } else {
-                _context.UsersGroupsMap.Add(new DaoUsersGroupsMap() {
-                    UserId = memberId,
-                    GroupId = groupId
-                });
-            }
-
-            if (await _context.SaveChangesAsync() != 1)
-                throw new Exceptions.DatabaseException("group_member_not_added");
-            else {
-                var groupCreator = _context.Users.FirstOrDefault(x => x.Id == userId);
-                var newMember = _context.Users.FirstOrDefault(x => x.Id == memberId);
-                await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newMember.DisplayName, newMember.Email, "MShare: Hozzáadva a(z) '" + group.Name + "' csoporthoz", groupCreator.DisplayName + " hozzáadott az alábbi csoporthoz: " + group.Name + ".");
-            }
-        }
-
-        public async Task DebtSettlement(long userId, long lenderId, long groupId) {
-
-            var group = _context.Groups.SingleOrDefault(s => s.Id == groupId);
-
-            if (group == null)
-                throw new Exceptions.ResourceNotFoundException("group_not_found");
-
-            if (group.Members == null)
-                group.Members = new List<DaoUsersGroupsMap>();
-
-            var member = _context.UsersGroupsMap.FirstOrDefault(x => x.UserId == userId && x.GroupId == groupId);
-
-            if (member == null)
-                throw new Exceptions.ResourceForbiddenException("debter_not_group_member");
-
-            member = _context.UsersGroupsMap.FirstOrDefault(x => x.UserId == lenderId && x.GroupId == groupId);
-
-            if (member == null)
-                throw new Exceptions.ResourceForbiddenException("lender_not_group_member");
-
-            using (var transaction = _context.Database.BeginTransaction()) {
-                try {
-                    // Log the previous spending here
-                    var spendings = await _spendingService.GetSpendingsForGroup(groupId);
-                    await _loggingService.LogForGroup(userId, groupId, spendings);
-
-					var optDeb = _context.OptimizedDebt.FirstOrDefault(x => x.GroupId == groupId && x.UserOwesId == userId && x.UserOwedId == lenderId);
-
-					if (optDeb == null)
-						throw new Exceptions.ResourceGoneException("debt_gone");
-
-					if (optDeb.OweAmount == 0)
-						throw new Exceptions.BusinessException("debt_already_payed");
-
-					DaoSettlement settlement = new DaoSettlement()
-					{
-						GroupId = groupId,
-						From = userId,
-						To = lenderId,
-						Amount = optDeb.OweAmount
-					};
-
-					await _context.Settlements.AddAsync(settlement);
-
-					if (await _context.SaveChangesAsync() != 1)
-						throw new Exceptions.DatabaseException("debt_not_settled");
-
-					transaction.Commit();
-                } catch {
+                    if (await Context.SaveChangesAsync() != 1)
+                        throw new DatabaseException("group_create_history_not_saved");
+                    transaction.Commit();
+                }
+                catch
+                {
                     transaction.Rollback();
                     throw;
                 }
             }
         }
 
-    }
+        public async Task<IList<FilteredUserData>> GetFilteredUsers(string filterTerm)
+        {
+            return await Context.Users
+                .Select(e => new FilteredUserData
+                {
+                    Id = e.Id,
+                    DisplayName = e.DisplayName,
+                    Email = e.Email
+                }).Where(s => s.DisplayName.Contains(filterTerm) || s.Email.Contains(filterTerm))
+                .ToListAsync();
+        }
 
+
+        public async Task AddMember(long userId, long groupId, long memberId)
+        {
+            var daoGroup = await GetGroupOfUser(userId, groupId);
+
+            if (daoGroup.CreatorUserId != userId)
+                throw new ResourceForbiddenException("not_group_creator");
+
+            if (daoGroup.Members.Any(x => x.UserId == memberId))
+            {
+                throw new BusinessException("user_already_member");
+            }
+
+            using (var transaction = Context.Database.BeginTransaction())
+            {
+                try
+                {
+                    Context.UsersGroupsMap.Add(new DaoUsersGroupsMap()
+                    {
+                        UserId = memberId,
+                        GroupId = groupId
+                    });
+
+                    await History.LogAddMember(userId, groupId, memberId);
+
+                    if (await Context.SaveChangesAsync() != 2)
+                        throw new DatabaseException("group_member_not_added");
+
+                    var groupCreator = Context.Users.FirstOrDefault(x => x.Id == userId);
+                    var newMember = Context.Users.FirstOrDefault(x => x.Id == memberId);
+
+                    var model = new InformationViewModel()
+                    {
+                        Title = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT),
+                        PreHeader = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_PREHEADER),
+                        Hero = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_HERO),
+                        Greeting = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, newMember.DisplayName),
+                        Intro = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_BODY_INTRO, groupCreator.DisplayName, daoGroup.Name),
+                        EmailDisclaimer = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_BODY_DISCLAIMER),
+                        Cheers = Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
+                        MShareTeam = Localizer.GetString(newMember.Lang, LocalizationResource.MSHARE_TEAM),
+                        SiteBaseUrl = $"{UriConf.URIForEndUsers}"
+                    };
+                    var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
+                    await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, newMember.DisplayName, newMember.Email, Localizer.GetString(newMember.Lang, LocalizationResource.EMAIL_ADDEDTOGROUP_SUBJECT), htmlBody);
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+    }
 }

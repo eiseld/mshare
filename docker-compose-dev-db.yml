@@ -1,0 +1,13 @@
+version: "3.6"
+
+services:
+  mysql:
+    container_name: mshare-mysql
+    build: ./backend/database
+    environment:
+      MYSQL_DATABASE: mshare
+      MYSQL_ROOT_PASSWORD: ilovescrum
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - "3306:3306"

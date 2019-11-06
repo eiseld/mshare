@@ -5,5 +5,6 @@ data class DaoUser (
     var email: String,
     var password: String,
     var displayName: String,
-    var creationDate: String
+    var creationDate: String,
+    var bankAccountNumber: String
 )

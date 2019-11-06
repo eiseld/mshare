@@ -1,0 +1,18 @@
+FROM node:12.10.0-alpine as builder
+
+WORKDIR /usr/src/app
+
+COPY package.json .
+RUN npm install
+
+COPY . .
+
+RUN ["npm","run","buildtest"]
+
+FROM httpd:2.4
+
+COPY ./config/httpd.conf.pr /usr/local/apache2/conf/httpd.conf
+COPY ./config/.htaccess /usr/local/apache2/htdocs/
+ARG ASP_CONTAINER_NAME=pr_aspnet_0
+RUN sed -i s/pr_aspnet/${ASP_CONTAINER_NAME}/g /usr/local/apache2/conf/httpd.conf
+COPY --from=builder /usr/src/app/dist/mshare /usr/local/apache2/htdocs

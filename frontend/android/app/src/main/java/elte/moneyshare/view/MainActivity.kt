@@ -1,6 +1,7 @@
 package elte.moneyshare.view
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.NavigationView
@@ -17,6 +18,9 @@ import elte.moneyshare.SharedPreferences
 import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import java.util.*
+import kotlin.system.exitProcess
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -25,6 +29,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        updateLang(SharedPreferences.lang)
 
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -67,7 +73,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //supportActionBar?.setLogo(R.mipmap.ic_launcher)
         //supportActionBar?.setDisplayUseLogoEnabled(true)
 
-        supportFragmentManager.beginTransaction().replace(R.id.frame_container, LoginFragment()).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.frame_container, GroupsFragment()).commit()
 
         groupsViewModel = ViewModelProviders.of(this).get(GroupsViewModel::class.java)
     }
@@ -76,14 +82,39 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.navHome -> {
-
+                supportFragmentManager.beginTransaction().replace(R.id.frame_container, GroupsFragment())
+                    ?.addToBackStack(null)?.commit()
             }
             R.id.navSettings -> {
-
+                supportFragmentManager.beginTransaction().replace(R.id.frame_container, SettingsFragment())
+                    ?.addToBackStack(null)?.commit()
+            }
+            R.id.navProfile -> {
+            supportFragmentManager.beginTransaction().replace(R.id.frame_container, ProfileFragment())
+                ?.addToBackStack(null)?.commit()
+            }
+            R.id.navLogout ->
+            {
+                SharedPreferences.stayLoggedIn = false
+                //supportFragmentManager.beginTransaction().replace(R.id.frame_container, LoginFragment()).commit()
+                this.finish()
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun updateLang(lang: String){
+        val dm = resources.displayMetrics
+        val conf = resources.configuration
+        conf.setLocale(Locale(lang))
+        resources.updateConfiguration(conf, dm)
+    }
+
+    fun refresh() {
+        finish()
+        val refresh = Intent(this, MainActivity::class.java)
+        startActivity(refresh)
     }
 
     override fun onBackPressed() {

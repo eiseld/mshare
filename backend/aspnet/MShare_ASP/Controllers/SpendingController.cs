@@ -1,99 +1,113 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MShare_ASP.Data;
+using MShare_ASP.API.Response;
 using MShare_ASP.Services;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace MShare_ASP.Controllers {
-    /// <summary>
-    /// Controller is responsible for anything spending related, e.g. adding a new spending to a group, updating, deleting it
-    /// </summary>
+namespace MShare_ASP.Controllers
+{
+    /// <summary>Controller is responsible for anything spending related, e.g. adding a new spending to a group, updating, deleting it</summary>
     [Route("[controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
-    public class SpendingController : BaseController {
+    public class SpendingController : BaseController
+    {
         private ISpendingService SpendingService { get; }
-        /// <summary>
-        /// Initializes the SpendingController
-        /// </summary>
-        /// <param name="spendingService"></param>
-        public SpendingController(ISpendingService spendingService) {
+        private IOptimizedService OptimizedService { get; }
+
+        /// <summary>Initializes the SpendingController</summary>
+        public SpendingController(ISpendingService spendingService, IOptimizedService optimizedService)
+        {
             SpendingService = spendingService;
+            OptimizedService = optimizedService;
         }
 
-        /// <summary>
-        /// Gets all the spendings associated with a group
-        /// </summary>
-        /// <param name="groupId">id of the group</param>
-        /// <returns></returns>
+        /// <summary>Gets all the spendings associated with a group</summary>
+        /// <param name="groupId">Id of the group</param>
+        /// <response code="200">Successfully returned spending data for group</response>
+        /// <response code="403">Forbidden: 'not_group_member'</response>
+        /// <response code="404">Not found: 'group'</response>
         [HttpGet]
         [Route("{groupId}")]
-        public async Task<ActionResult<IList<API.Response.SpendingData>>> GetSpendingData(long groupId) {
-            return Ok(SpendingService.ToSpendingData(await SpendingService.GetSpendingsForGroup(groupId)));
+        public async Task<ActionResult<IList<SpendingData>>> GetSpendingData(long groupId)
+        {
+            var spendingDatas = SpendingService.ToSpendingData(await SpendingService.GetSpendingsForGroup(GetCurrentUserID(), groupId));
+            return Ok(spendingDatas);
         }
 
-        /// <summary>
-        /// Gets the optimized debts for a group
-        /// </summary>
-        /// <param name="groupId">id of the group</param>
-        /// <returns></returns>
+        /// <summary>Gets the optimized debts for a group</summary>
+        /// <param name="groupId">Id of the group</param>
+        /// <response code="200">Successfully returned optimized debts for group</response>
+        /// <response code="403">Forbidden: 'not_group_member'</response>
+        /// <response code="404">Not found: 'group'</response>
         [HttpGet]
         [Route("{groupId}/optimised")]
-        public async Task<ActionResult<IList<API.Response.OptimisedDebtData>>> GetOptimizedDebts(long groupId){
-            return Ok(SpendingService.ToOptimisedDebtData(await SpendingService.GetOptimizedDebtForGroup(GetCurrentUserID(),groupId)));
+        public async Task<ActionResult<IList<OptimisedDebtData>>> GetOptimizedDebts(long groupId)
+        {
+            var optimisedDebtDatas = SpendingService.ToOptimisedDebtData(await SpendingService.GetOptimizedDebtForGroup(GetCurrentUserID(), groupId));
+            return Ok(optimisedDebtDatas);
         }
 
-        /// <summary>
-        /// Creates a new spending from the given parameters
-        /// You should calculate the individual debts on the client side and send the result, the server only validates it
-        /// </summary>
-        /// <param name="newSpending">The new Spending to be added</param>
-        /// <response code="403">Resource forbidden, current user is not a member of this group: 'user_not_member'</response>
-        /// <response code="409">Business exception,
-        /// adding same debtor multiple times: 'duplicate_debtor_id_found',
-        /// invalid debtor id: 'not_all_debtors_are_members'</response>
-        /// <response code="410">Resource gone,
-        /// can't find current user in database: 'current_user_gone',
-        /// can't find given group in database: 'group_gone',
-        /// can't find given debtor in database: 'debtor_gone'</response>
+        /// <summary>Creates a new spending from the given parameters (server only validates debts)</summary>
+        /// <param name="newSpending">The new spending</param>
+        /// <response code="200">Successfully added new spending</response>
+        /// <response code="400">Possible request body validation failure</response>
+        /// <response code="403">Forbidden: 'not_group_member'</response>
+        /// <response code="404">Not found: 'group'</response>
+        /// <response code="409">Conflict: 'debtor_not_member' 'self_debt'</response>
         /// <response code="500">Internal error: 'spending_not_inserted'</response>
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromBody] API.Request.NewSpending newSpending) {
-            await SpendingService.CreateNewSpending(newSpending, GetCurrentUserID());
+        public async Task<IActionResult> Create([FromBody] API.Request.NewSpending newSpending)
+        {
+            await SpendingService.CreateNewSpending(GetCurrentUserID(), newSpending);
             return Ok();
         }
 
-        /// <summary>
-        /// Updates an existing spending from the given parameters
-        /// You should calculate the individual debts on the client side and send the result, the server only validates it
-        /// </summary>
-        /// <param name="spendingUpdate">The updated Spending to be added</param>
-        /// <response code="403">Resource forbidden, current user is not a member of this group: 'user_not_member'</response>
-        /// <response code="409">Business exception,
-        /// adding same debtor multiple times: 'duplicate_debtor_id_found',
-        /// invalid debtor id: 'not_all_debtors_are_members'</response>
-        /// <response code="410">Resource gone,
-        /// can't find current user in database: 'current_user_gone',
-        /// can't find given group in database: 'group_gone',
-        /// can't find given debtor in database: 'debtor_gone'</response>
-        /// <response code="500">Internal error: 'spending_not_inserted'</response>
+        /// <summary>Updates an existing spending from the given parameters (server only validates debts)</summary>
+        /// <param name="spendingUpdate">The updated spending to be added</param>
+        /// <response code="200">Successfully updated new spending</response>
+        /// <response code="400">Possible request body validation failure</response>
+        /// <response code="403">Forbidden: 'not_group_member', 'not_creditor'</response>
+        /// <response code="404">Not found: 'group'</response>
+        /// <response code="409">Conflict: 'debtor_not_member'</response>
+        /// <response code="500">Internal error: 'spending_not_updated'</response>
         [HttpPost("update")]
         public async Task<IActionResult> Update([FromBody] API.Request.SpendingUpdate spendingUpdate)
         {
-            await SpendingService.UpdateSpending(spendingUpdate, GetCurrentUserID());
+            await SpendingService.UpdateSpending(GetCurrentUserID(), spendingUpdate);
+            return Ok();
+		}
+
+		/// <summary>Delete a spending based on the given parameters</summary>
+		/// <param name="groupId">Id of the group</param>
+		/// <param name="spendingId">Id of the spending to be deleted</param>
+		/// <response code="200">Successfully deleted spending</response>
+		/// <response code="400">Possible request body validation failure</response>
+		/// <response code="403">Forbidden: 'not_group_member', 'not_creditor'</response>
+		/// <response code="404">Not found: 'group'</response>
+		/// <response code="409">Conflict: 'debtor_not_member'</response>
+		/// <response code="500">Internal error: 'spending_not_deleted'</response>
+		[HttpPost("{groupId}/delete/{spendingId}")]
+		public async Task<IActionResult> Delete(long groupId, long spendingId)
+		{
+			await SpendingService.DeleteSpending(GetCurrentUserID(), spendingId, groupId);
+			return Ok();
+		}
+
+#if DEBUG
+
+        /// <summary>Optimise from ground up for all groups (DEBUG ONLY)</summary>
+        /// <response code="200">Successful optimisation</response>
+        [HttpPost("optimise")]
+        [AllowAnonymous]
+        public async Task<IActionResult> OptimiseAll()
+        {
+            await OptimizedService.OptimizeForAllGroup();
             return Ok();
         }
-#if DEBUG
-        [Route("test1")]
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult<IList<DaoOptimizedDebt>>> Get() {
-            return Ok(await SpendingService.GetOptimizedDebtForGroup(1,1));
-        }
+
 #endif
 
     }

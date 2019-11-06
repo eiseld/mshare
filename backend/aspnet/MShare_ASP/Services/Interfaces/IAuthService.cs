@@ -1,36 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using MShare_ASP.API.Request;
+using MShare_ASP.Services.Exceptions;
+using System;
 using System.Threading.Tasks;
-using System.IdentityModel.Tokens.Jwt;
 
-namespace MShare_ASP.Services{
-
-    /// <summary>
-    /// Authentication related services
-    /// </summary>
-    public interface IAuthService {
-
-        /// <summary>
-        /// Checks the credentials of the user and signs him in.
-        /// </summary>
-        /// <param name="credentials">Credentials to check</param>
+namespace MShare_ASP.Services
+{
+    /// <summary>Authentication related services</summary>
+    public interface IAuthService
+    {
+        /// <summary>Checks the credentials of the user and signs him in.</summary>
+        /// <exception cref="BusinessException">["not_verified"]</exception>
+        /// <exception cref="ResourceForbiddenException">["invalid_credentials"]</exception>
         /// <returns>Valid JWT or null</returns>
-        string Login(API.Request.LoginCredentials credentials);
+        Task<string> Login(LoginCredentials credentials);
 
-        /// <summary>
-        /// Registers a new user to the database, checks for duplication
-        /// </summary>
-        /// <param name="newUser">The new user data to register</param>
-        /// <returns>true if registration successful</returns>
-        Task<bool> Register(API.Request.NewUser newUser);
+        /// <summary>Registers a new user to the database</summary>
+        /// <exception cref="BusinessException">["email_taken"]</exception>
+        /// <exception cref="DatabaseException">["registration_not_saved"]</exception>
+        Task Register(NewUser newUser);
 
-        /// <summary>
-        /// Validates an email token for registration and updates user state
-        /// </summary>
-        /// <param name="token">Token to validate</param>
-        /// <returns>true if validation successful</returns>
-        Task<bool> Validate(String token);
-
+        /// <summary>Validates an email token for registration</summary>
+        /// <exception cref="DatabaseException">["validation_email_remove_failed"]</exception>
+        /// <exception cref="ResourceGoneException">["token_invalid_or_expired"]</exception>
+        Task ValidateRegistration(String token);
     }
 }

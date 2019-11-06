@@ -1,0 +1,45 @@
+version: "3.6"
+
+networks:
+  default:
+    name: docker_pr
+
+volumes:
+  mysql_pr:
+  mysql_dev:
+
+services:
+
+#  pr_mysql:
+#    container_name: mshare-mysql
+#    build: ../../backend/database
+#    environment:
+#      MYSQL_DATABASE: mshare
+#      MYSQL_ROOT_PASSWORD: ilovescrum
+#    security_opt:
+#      - seccomp:unconfined
+#    ports:
+#      - "3306"
+#    volumes:
+#      - mysql_pr:/var/lib/mysql
+
+  pr_aspnet:
+    container_name: pr_aspnet
+    build: ../../backend/aspnet/
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Test"
+      MSHARE_RUNNING_BEHIND_PROXY: "true"
+    ports:
+      - "8081"
+
+  pr_proxy:
+    container_name: pr_proxy
+    build: 
+      context: '../../frontend/web'
+      dockerfile: Dockerfile-apache-pr
+      args:
+        ASP_CONTAINER_NAME: pr_aspnet
+    depends_on:
+      - pr_aspnet
+    ports:
+      - '${pr_port}:80'

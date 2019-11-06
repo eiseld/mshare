@@ -1,118 +1,157 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EmailTemplates;
+using EmailTemplates.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Microsoft.IdentityModel.Tokens;
+using MShare_ASP.API.Request;
+using MShare_ASP.Configurations;
+using MShare_ASP.Data;
+using MShare_ASP.Services.Exceptions;
+using MShare_ASP.Utils;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using MShare_ASP.API.Request;
-using MShare_ASP.Data;
-using MShare_ASP.Utils;
 
-namespace MShare_ASP.Services {
-    internal class AuthService : IAuthService {
+namespace MShare_ASP.Services
+{
+    internal class AuthService : IAuthService
+    {
+        private IJWTConfiguration JwtConf { get; }
+        private IURIConfiguration UriConf { get; }
+        private IEmailService EmailService { get; }
+        private ITimeService TimeService { get; }
+        private MshareDbContext Context { get; }
+        private IRazorViewToStringRenderer Renderer { get; }
+        private IStringLocalizer<LocalizationResource> Localizer { get; }
 
-        private Configurations.IJWTConfiguration _jwtConf;
-        private Configurations.IURIConfiguration _uriConf;
-        private IEmailService _emailService;
-        private ITimeService _timeService;
-        private MshareDbContext _context;
-        private Random _random;
+        private readonly Random random;
 
-        public AuthService(MshareDbContext context, IEmailService emailService, ITimeService timeService, Configurations.IJWTConfiguration jwtConf, Configurations.IURIConfiguration uriConf) {
-            _emailService = emailService;
-            _timeService = timeService;
-            _context = context;
-            _jwtConf = jwtConf;
-            _uriConf = uriConf;
-            _random = new Random();
+        public AuthService(MshareDbContext context, IEmailService emailService, ITimeService timeService, IJWTConfiguration jwtConf, IURIConfiguration uriConf, IStringLocalizer<LocalizationResource> localizer, IRazorViewToStringRenderer renderer)
+        {
+            Context = context;
+            EmailService = emailService;
+            TimeService = timeService;
+            JwtConf = jwtConf;
+            UriConf = uriConf;
+            Renderer = renderer;
+            Localizer = localizer;
+            random = new Random();
         }
 
-        public string Login(LoginCredentials credentials) {
+        public async Task<string> Login(LoginCredentials credentials)
+        {
             string hashedPassword = Hasher.GetHash(credentials.Password);
-            var usr = _context.Users
-                 .Include(x => x.EmailTokens)
+            var usr = Context.Users
+                .Include(x => x.EmailTokens)
                 .FirstOrDefault(x => x.Email == credentials.Email && x.Password == hashedPassword);
 
             if (usr == null)
-                throw new Exceptions.ResourceForbiddenException("User");
+                throw new ResourceForbiddenException("invalid_credentials");
 
-            if (usr.EmailTokens.Any(x => x.TokenType == DaoEmailToken.Type.Validation)) 
-                throw new Exceptions.BusinessException("not_verified");
+            if (usr.EmailTokens.Any(x => x.TokenType == DaoEmailToken.Type.Validation))
+                throw new BusinessException("not_verified");
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtConf.SecretKey);
-            var tokenDescriptor = new SecurityTokenDescriptor {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
+            var key = Encoding.ASCII.GetBytes(JwtConf.SecretKey);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]{
                     new Claim(ClaimTypes.NameIdentifier, usr.Id.ToString(), ClaimValueTypes.Integer64)
                 }),
-                Expires = _timeService.UtcNow.AddDays(7),
+                Expires = TimeService.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
+            usr.Lang = credentials.Lang;
+            await Context.SaveChangesAsync();
+
             return tokenHandler.WriteToken(token);
         }
 
-        public async Task<bool> Register(NewUser newUser) {
-            var existingUser = await _context.Users.FirstOrDefaultAsync(x => x.Email == newUser.Email);
+        public async Task Register(NewUser newUser)
+        {
+            var existingUser = await Context.Users
+                .FirstOrDefaultAsync(x => x.Email == newUser.Email);
 
             if (existingUser != null)
-                throw new Exceptions.BusinessException("email_taken");
+                throw new BusinessException("email_taken");
 
-            using (var transaction = _context.Database.BeginTransaction()) {
-                try {
-                    var emailToken = new DaoEmailToken() {
+            using (var transaction = Context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var emailToken = new DaoEmailToken()
+                    {
                         TokenType = DaoEmailToken.Type.Validation,
-                        ExpirationDate = _timeService.UtcNow.AddDays(1),
-                        Token = _random.RandomString(40)
+                        ExpirationDate = TimeService.UtcNow.AddDays(1),
+                        Token = random.RandomString(40)
                     };
 
-                    var userToBeInserted = new DaoUser() {
+                    var userToBeInserted = new DaoUser()
+                    {
                         DisplayName = newUser.DisplayName,
                         Email = newUser.Email,
                         Password = Hasher.GetHash(newUser.Password),
                         EmailTokens = new DaoEmailToken[] {
                             emailToken
-                        }
+                        },
+                        Lang = newUser.Lang
                     };
 
-                    await _context.Users.AddAsync(userToBeInserted);
+                    await Context.Users.AddAsync(userToBeInserted);
 
-                    if (await _context.SaveChangesAsync() != 2)
-                        throw new Exceptions.DatabaseException("registration_not_saved");
+                    if (await Context.SaveChangesAsync() != 2)
+                        throw new DatabaseException("registration_not_saved");
 
-                    await _emailService.SendMailAsync(MimeKit.Text.TextFormat.Text, newUser.DisplayName, newUser.Email, "MShare Regisztráció", $"Sikeres regisztráció, az email cím megerősítéséhez kérem kattintson ide: {_uriConf.URIForEndUsers}/account/confirm/{emailToken.Token}");
+                    var model = new ConfirmationViewModel()
+                    {
+                        Title = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_SUBJECT),
+                        PreHeader = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_PREHEADER),
+                        Hero = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_HERO),
+                        Greeting = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, newUser.DisplayName),
+                        Intro = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_BODY_INTRO),
+                        EmailDisclaimer = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_BODY_DISCLAIMER),
+                        Cheers = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
+                        BadButton = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_FOOTER_BADBUTTON),
+                        MShareTeam = Localizer.GetString(newUser.Lang, LocalizationResource.MSHARE_TEAM),
+                        SiteBaseUrl = $"{UriConf.URIForEndUsers}",
+                        Button = new EmailButtonViewModel()
+                        {
+                            Url = $"{UriConf.URIForEndUsers}/api/androidlanding/confirmregistration/{emailToken.Token}",
+                            Text = Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_BODY_BUTTON)
+                        }
+                    };
+                    var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/ConfirmationHtml.cshtml", model);
+                    await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, newUser.DisplayName, newUser.Email, Localizer.GetString(newUser.Lang, LocalizationResource.EMAIL_REGISTER_SUBJECT), htmlBody);
 
                     transaction.Commit();
-                    return true;
-                } catch {
+                }
+                catch
+                {
                     transaction.Rollback();
                     throw;
                 }
             }
         }
 
-        public async Task<bool> Validate(string token) {
-            var emailToken = await _context.EmailTokens.SingleOrDefaultAsync(x => x.Token == token && x.TokenType == DaoEmailToken.Type.Validation);
+        public async Task ValidateRegistration(string token)
+        {
+            var emailToken = await Context.EmailTokens
+                .SingleOrDefaultAsync(x => x.Token == token &&
+                    x.TokenType == DaoEmailToken.Type.Validation);
 
-            if (emailToken == null)
-                throw new Exceptions.ResourceGoneException();
+            if (emailToken == null || emailToken.ExpirationDate < TimeService.UtcNow)
+                throw new ResourceGoneException("token_invalid_or_expired");
 
-            if (emailToken.ExpirationDate < _timeService.UtcNow)
-                throw new Exceptions.BusinessException("token_expired");
+            Context.EmailTokens.Remove(emailToken);
 
-            _context.EmailTokens.Remove(emailToken);
-
-            if (await _context.SaveChangesAsync() != 1) 
-                throw new Exceptions.DatabaseException("validation_email_remove_failed");
-
-            return true;
+            if (await Context.SaveChangesAsync() != 1)
+                throw new DatabaseException("validation_email_remove_failed");
         }
-
     }
 }

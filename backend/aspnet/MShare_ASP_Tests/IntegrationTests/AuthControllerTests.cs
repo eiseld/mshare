@@ -1,27 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 using MShare_ASP;
+using MShare_ASP.Data;
 using MShare_ASP_Tests.Boilerplate;
+using System.Net;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace MShare_ASP_Tests.IntegrationTests {
-    public class AuthControllerTests : MShareIntegrationTestBase {
+namespace MShare_ASP_Tests.IntegrationTests
+{
+    public class AuthControllerTests : MShareIntegrationTestBase
+    {
         public AuthControllerTests(WebApplicationFactory<Startup> factory)
-            : base(factory) {
+            : base(factory)
+        {
         }
-
 
         [Fact]
         // [InlineData("/Privacy")]
         // [InlineData("/Contact")]
-        public async Task GetUsers() {
+        public async Task GetUsers()
+        {
             // Arrange
             System.Net.Http.HttpClient client = CreateClient();
 
@@ -35,13 +33,16 @@ namespace MShare_ASP_Tests.IntegrationTests {
         }
 
         [Fact]
-        public async Task RegisterUsers() {
+        public async Task RegisterUsers()
+        {
             var client = CreateClient();
 
-            var response = await client.PostJsonAsync("/auth/register", new MShare_ASP.API.Request.NewUser() {
+            var response = await client.PostJsonAsync("/auth/register", new MShare_ASP.API.Request.NewUser()
+            {
                 DisplayName = "Test",
                 Email = "test@test.hu",
-                Password = "Default0"
+                Password = "Default0",
+                Lang = DaoLangTypes.Type.EN
             });
             response.EnsureSuccessStatusCode();
         }
@@ -56,10 +57,12 @@ namespace MShare_ASP_Tests.IntegrationTests {
         [InlineData("test@", "Default0")]
         [InlineData("@test.hu", "Default0")]
         [InlineData("test.hu", "Default0")]
-        public async Task RegisterUsers_BadFormat(string email, string password) {
+        public async Task RegisterUsers_BadFormat(string email, string password)
+        {
             var client = CreateClient();
 
-            var response = await client.PostJsonAsync("/auth/register", new MShare_ASP.API.Request.NewUser() {
+            var response = await client.PostJsonAsync("/auth/register", new MShare_ASP.API.Request.NewUser()
+            {
                 DisplayName = email,
                 Email = email,
                 Password = password

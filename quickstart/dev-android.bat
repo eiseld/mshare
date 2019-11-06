@@ -1,0 +1,1 @@
+cmd /k "cd ../ & docker-compose -f docker-compose-dev-db.yml -f docker-compose-dev-aspnet.yml up --build"
