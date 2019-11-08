@@ -15,6 +15,8 @@ namespace MShare_ASP.Services
         /// <exception cref="ResourceNotFoundException">["group"]</exception>
         /// <exception cref="ResourceForbiddenException">["not_group_member"]</exception>
 		Task<IList<DaoHistory>> GetGroupHistory(long userId, long groupId);
+        /// <summary>Gets the history for a user</summary>
+        Task<IList<DaoHistory>> GetHistory(long userId);
 
         /// <summary>Logs a whole or partial update of a spending</summary>
         Task LogSpendingUpdate(long userId, DaoSpending currentSpending, SpendingUpdate spendingUpdate);

@@ -39,6 +39,12 @@ namespace MShare_ASP.Services
                     history.GroupId.HasValue && groupId == history.GroupId.Value)
                 .ToListAsync();
         }
+        public async Task<IList<DaoHistory>> GetHistory(long userId)
+        {
+            return await Context.History
+                .Where(history => history.AffectedIds.Contains(userId))
+                .ToListAsync();
+        }
         public async Task LogAddMember(long userId, long groupId, long memberId)
         {
             await LogHistory(userId, groupId, new long[] { memberId }, DaoLogType.Type.ADD, DaoLogSubType.Type.MEMBER, null);
