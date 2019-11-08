@@ -69,7 +69,7 @@
     <string name="remove_member">Delete member</string>
     <string name="delete_group">Delete group</string>
     <string name="add_spending">Add spending</string>
-
+    <string name="are_you_sure_to_delete">Are you sure to delete?</string>
 
     <!-- SPENDING -->
     <string name="event_name">Event name</string>
@@ -170,7 +170,10 @@
 
     <string name="menu_logout">Logout</string>
     <string name="api_login_language_validate_410">Specified language is not supported by the server!</string>
+
     <string name="information_dialog_title">Information</string>
+    <string name="confirmation_needed">Confirmation needed!</string>
+
     <string name="spending_wrong_balance_sum">The whole amount must be distributed among the members of the spending group!</string>
     <string name="change_bank_account_label">Change Bank Account Number</string>
     <string name="bank_account_not_set">Bank Account Not Set Yet!</string>
