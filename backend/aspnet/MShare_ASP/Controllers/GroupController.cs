@@ -118,6 +118,20 @@ namespace MShare_ASP.Controllers
             return Ok();
         }
 
+        /// <summary>Deletes a group</summary>
+        /// <param name="groupId">GroupId to delete</param>
+        /// <response code="200">Successfully deleted group</response>
+        /// <response code="403">Forbidden: 'not_group_creator'</response>
+        /// <response code="404">Not found: 'group'</response>
+        /// <response code="500">Internal error: 'group_not_deleted'</response>
+        [HttpDelete]
+        [Route("delete/{groupId}")]
+        public async Task<ActionResult> Delete(long groupId)
+        {
+            await GroupService.DeleteGroup(GetCurrentUserID(), groupId);
+            return Ok();
+        }
+
         /// <summary>Gets users that match the filter</summary>
         /// <param name="filter">The filter term</param>
         /// <response code="200">Successfully returned filtered users</response>

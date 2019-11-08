@@ -30,5 +30,7 @@ namespace MShare_ASP.Services
 		Task LogRemoveSpending(long userId, long groupId, DaoSpending deletedSpending, HashSet<long> affectedUsers);
 		/// <summary>Logs a new group creation, should be called after a savechanges in transaction, becase it needs the ID of the added group</summary>
 		Task LogCreateGroup(long userId, DaoGroup daoGroup);
+        /// <summary>Logs a deletion of a group</summary>
+        Task LogDeleteGroup(long userId, DaoGroup group, HashSet<long> affectedUsers, DaoSettlement[] settlements, DaoSpending[] spendings);
     }
 }

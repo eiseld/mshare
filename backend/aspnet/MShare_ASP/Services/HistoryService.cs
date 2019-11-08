@@ -6,6 +6,7 @@ using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -95,6 +96,39 @@ namespace MShare_ASP.Services
 
             // Log
             await LogHistory(userId, newGroup.Id, new long[] { userId }, DaoLogType.Type.CREATE, DaoLogSubType.Type.GROUP, historyEntry);
+        }
+        public async Task LogDeleteGroup(long userId, DaoGroup group, HashSet<long> affectedUsers, DaoSettlement[] settlements, DaoSpending[] spendings)
+        {
+            dynamic historyEntry = new ExpandoObject();
+
+            // Name
+            historyEntry.Name = group.Name;
+
+            // Creator
+            historyEntry.CreatorId = group.CreatorUserId;
+
+            // Removed Spendings
+            historyEntry.RemovedSpendings = spendings.Select(x => new
+            {
+                SpendingName = x.Name,
+                MoneySpent = x.MoneyOwed,
+                Debtors = x.Debtors.Select(d => new
+                {
+                    DebtorId = d.DebtorUserId,
+                    Debt = d.Debt
+                })
+            }); ;
+
+            // Removed settlements
+            historyEntry.RemovedSettlements = settlements.Select(x => new
+            {
+                Amount = x.Amount,
+                From = x.From,
+                To = x.To
+            });
+
+            // Log
+            await LogHistory(userId, null, affectedUsers.ToArray(), DaoLogType.Type.DELETE, DaoLogSubType.Type.GROUP, historyEntry);
         }
         public async Task LogSettlement(long userId, DaoSettlement daoSettlement)
         {

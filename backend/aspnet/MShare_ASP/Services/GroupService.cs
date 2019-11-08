@@ -258,6 +258,38 @@ namespace MShare_ASP.Services
             }
         }
 
+        public async Task DeleteGroup(long userId, long groupId)
+        {
+            var daoGroup = await GetGroupOfUser(userId, groupId);
+
+            if (daoGroup.CreatorUserId != userId)
+                throw new ResourceForbiddenException("not_group_creator");
+
+            var affectedUsers = daoGroup.Members.Select(x => x.UserId).ToHashSet();
+
+            var settlements = Context.Settlements
+                .Where(x => x.GroupId == groupId)
+                .ToArray();
+
+            var spendings = Context.Spendings
+                .Where(x => x.GroupId == groupId)
+                .Include(x => x.Debtors)
+                .ToArray();
+
+            Context.Remove(daoGroup);
+
+            Context.RemoveRange(settlements);
+
+            var historyEntries = Context.History
+                .Where(x => x.GroupId == groupId);
+
+            Context.RemoveRange(historyEntries);
+
+            await History.LogDeleteGroup(userId, daoGroup, affectedUsers, settlements, spendings);
+
+            await Context.SaveChangesAsync();
+        }
+
         public async Task<IList<FilteredUserData>> GetFilteredUsers(string filterTerm)
         {
             return await Context.Users
