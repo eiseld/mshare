@@ -67,6 +67,7 @@
 
     <string name="add_member">Add member</string>
     <string name="remove_member">Delete member</string>
+    <string name="delete_group">Delete group</string>
     <string name="add_spending">Add spending</string>
 
 
@@ -124,6 +125,7 @@
 
     <string name="api_groups_create_group_200">Group successfully created!</string>
     <string name="api_groups_create_group_409">This group name is already in use!</string>
+    <string name="api_groups_delete_group_200">Group successfully deleted!</string>
 
     <string name="api_groups_settle_debt_200">Debt successfully settled!</string>
     <string name="api_groups_settle_debt_409">Error! This debt is already settled!</string>

@@ -9,6 +9,9 @@ import android.support.v7.widget.SearchView
 import android.view.*
 import elte.moneyshare.*
 import elte.moneyshare.entity.GroupDataParc
+import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.Adapter.GroupPagerAdapter
 import elte.moneyshare.view.Adapter.SearchResultsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
@@ -90,11 +93,13 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
         }
 
         val removeMemberItem = menu.findItem(R.id.removeMember)
+        val deleteGroupItem = menu.findItem(R.id.deleteGroup)
 
         groupId?.let {
             viewModel.getGroupData(it) { groupData, _ ->
                 if(SharedPreferences.userId == groupData?.creator?.id) {
                     removeMemberItem.isVisible = true
+                    deleteGroupItem.isVisible = true
                 }
             }
         }
@@ -126,6 +131,21 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
                 //TODO REPLACE TO ENUM KEY
                 (childFragmentManager.fragments[0] as MembersFragment).adapter.notifyDataSetChanged()
                 tabLayout.getTabAt(0)?.select()
+
+                return true
+            }
+            R.id.deleteGroup -> {
+                viewModel.deleteGroup(groupId!!) {
+                    response, error ->
+                        if(error == null){
+                            DialogManager.showInfoDialog(
+                                context?.getString(R.string.api_groups_delete_group_200), context
+                            )
+                            activity?.supportFragmentManager?.popBackStackImmediate()
+                        } else {
+                            DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS_DELETE, context), context)
+                        }
+                }
 
                 return true
             }

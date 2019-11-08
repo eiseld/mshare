@@ -66,6 +66,7 @@
 
     <string name="add_member">Tag meghívása</string>
     <string name="remove_member">Tag eltávolítása</string>
+    <string name="delete_group">Csoport törlése</string>
     <string name="add_spending">Költés megadása</string>
 
     <string name="event_name">Esemény neve</string>
@@ -125,6 +126,7 @@
 
     <string name="api_groups_create_group_200">Csoport létrehozása sikeres!</string>
     <string name="api_groups_create_group_409">EZ a csoportnév már használatban van!</string>
+    <string name="api_groups_delete_group_200">Csoport sikeresen törölve!</string>
 
     <string name="api_groups_settle_debt_200">Tartozás sikeresen rendezve!</string>
     <string name="api_groups_settle_debt_409">Hiba! Ez a tartozás már rendezve van!</string>
