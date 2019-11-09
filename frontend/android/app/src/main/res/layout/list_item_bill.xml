@@ -54,7 +54,7 @@
             android:id="@+id/billMembersRecyclerView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorSubBackground"
+            android:background="@color/colorBackground"
             android:backgroundTintMode="src_atop"
             android:paddingEnd="@dimen/padding_large"
             android:paddingStart="@dimen/padding_large"

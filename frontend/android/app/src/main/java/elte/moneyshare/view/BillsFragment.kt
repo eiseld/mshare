@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
 import elte.moneyshare.manager.DialogManager
@@ -36,12 +35,12 @@ class BillsFragment : Fragment() {
 
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
+            billsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
             groupId?.let { groupId ->
                 viewModel.getSpendings(groupId) { bills, error ->
                     if (bills != null) {
                         val adapter = BillsRecyclerViewAdapter(it, bills, groupId, viewModel)
-                        billsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         billsRecyclerView.adapter = adapter
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING,context), context)
@@ -49,6 +48,5 @@ class BillsFragment : Fragment() {
                 }
             }
         }
-
     }
 }

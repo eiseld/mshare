@@ -69,4 +69,12 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="gone" />
 
+    <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintTop_toBottomOf="@id/memberBankAccountTextView" />
+
 </android.support.constraint.ConstraintLayout>

@@ -24,7 +24,7 @@ services:
 #      - mysql_pr:/var/lib/mysql
 
   pr_aspnet:
-    container_name: pr_aspnet_${pr_version}
+    container_name: pr_aspnet
     build: ../../backend/aspnet/
     environment:
       ASPNETCORE_ENVIRONMENT: "Test"
@@ -33,12 +33,12 @@ services:
       - "8081"
 
   pr_proxy:
-    container_name: pr_proxy_${pr_version}
+    container_name: pr_proxy
     build: 
       context: '../../frontend/web'
       dockerfile: Dockerfile-apache-pr
       args:
-        ASP_CONTAINER_NAME: pr_aspnet_${pr_version}
+        ASP_CONTAINER_NAME: pr_aspnet
     depends_on:
       - pr_aspnet
     ports:

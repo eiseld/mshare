@@ -78,6 +78,7 @@ fun String?.convertErrorCodeToString(
         }
         "410" -> when(action)
         {
+            Action.AUTH_LOGIN -> context?.getString(R.string.api_login_language_validate_410).toString()
             Action.AUTH_REGISTER -> context?.getString(R.string.api_auth_validate_410).toString()
             Action.GROUPS_SETTLE -> context?.getString(R.string.api_groups_settle_debt_410).toString()
             Action.PROFILE_UPDATE -> context?.getString(R.string.api_profile_password_update_410).toString()

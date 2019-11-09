@@ -11,18 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import elte.moneyshare.*
-
 import elte.moneyshare.entity.Debtor
 import elte.moneyshare.entity.Member
 import elte.moneyshare.entity.NewSpending
 import elte.moneyshare.entity.SpendingUpdate
-import elte.moneyshare.invisible
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.Adapter.SelectMembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
-import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_add_spending.*
 
 class AddSpendingFragment : Fragment() {
@@ -94,38 +91,38 @@ class AddSpendingFragment : Fragment() {
         }
         nextButton.setOnClickListener {
             val selectedIds = (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds
-            members.removeAll { !selectedIds.contains(it.id) }
+            val membersSelected = members.filter { selectedIds.contains(it.id) } as ArrayList<Member>
 
             val validAll = !TextUtils.isEmpty(nameEditText.editableText.toString()) &&
                     !TextUtils.isEmpty(spendingEditText.editableText.toString()) &&
-                    !spendingEditText.editableText.toString().equals("0") &&
-                    members.size > 0
+                    spendingEditText.editableText.toString() != "0" &&
+                    membersSelected.size > 0
 
             if (TextUtils.isEmpty(nameEditText.editableText.toString())) {
                 nameEditText.error = context?.getString(R.string.cannot_be_empty)
             }
 
-            if (TextUtils.isEmpty(spendingEditText.editableText.toString()) || spendingEditText.editableText.toString().equals("0")) {
+            if (TextUtils.isEmpty(spendingEditText.editableText.toString()) || spendingEditText.editableText.toString() == "0") {
                 spendingEditText.error = context?.getString(R.string.must_be_bigger_than_0)
             }
 
-            if (members.size == 0) {
+            if (membersSelected.size == 0) {
                 Toast.makeText(context, getString(R.string.select_members_missing), Toast.LENGTH_SHORT).show()
             }
 
             if (validAll) {
                 val moneySpend = Integer.valueOf(spendingEditText.editableText.toString())
-                val debt = moneySpend.div(members.size)
-                val mod = moneySpend - (debt * members.size)
+                val debt = moneySpend.div(membersSelected.size)
+                val mod = moneySpend - (debt * membersSelected.size)
 
-                for (member in members) {
+                for (member in membersSelected) {
                     member.balance = debt
                 }
 
-                members[0].balance += mod
+                membersSelected[0].balance += mod
 
                 activity?.let {
-                    val adapter = SelectMembersRecyclerViewAdapter(it, members, true)
+                    val adapter = SelectMembersRecyclerViewAdapter(it, membersSelected, true)
                     selectMembersRecyclerView.layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     selectMembersRecyclerView.adapter = adapter
@@ -140,6 +137,17 @@ class AddSpendingFragment : Fragment() {
         addButton.setOnClickListener {
             val debtors: ArrayList<Debtor> = ArrayList()
             val members = (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedMembers
+
+            var sumSpending = 0
+            for(member in members) {
+                sumSpending += member.balance
+            }
+
+            val moneySpend = Integer.valueOf(spendingEditText.editableText.toString())
+            if(sumSpending != moneySpend) {
+                DialogManager.showInfoDialog(getString(R.string.spending_wrong_balance_sum), context)
+                return@setOnClickListener
+            }
 
             for (member in members) {
                 debtors.add(Debtor(
