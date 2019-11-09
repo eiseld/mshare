@@ -46,11 +46,11 @@ class MembersRecyclerViewAdapter(
         when {
             member.balance < 0 -> {
                 holder.memberBalanceTextView.text = String.format(context.getString(R.string.member_owe), abs(member.balance))
-                holder.memberBalanceTextView.setTextColor(context.getColor(R.color.colorHooverText))
+                holder.memberBalanceTextView.setTextColor(context.getColor(R.color.colorText))
             }
             member.balance > 0 -> {
                 holder.memberBalanceTextView.text = String.format(context.getString(R.string.member_owned), abs(member.balance))
-                holder.memberBalanceTextView.setTextColor(context.getColor(R.color.colorText))
+                holder.memberBalanceTextView.setTextColor(context.getColor(R.color.colorHooverText))
             }
             else -> {
                 holder.memberBalanceTextView.text = context.getString(R.string.group_settled_up)
