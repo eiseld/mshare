@@ -160,5 +160,5 @@
     <string name="doYouReallyWantToDeleteSpending">Do you really want to delete this spending?</string>
     <string name="spendingSuccessfullyDeleted">Spending successfully deleted!</string>
 
-    <string name="menu_logout">Logout</string>
+    <string name="menu_logout">Exit</string>
 </resources>

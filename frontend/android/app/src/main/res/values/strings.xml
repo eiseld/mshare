@@ -160,5 +160,5 @@
     <string name="doYouReallyWantToDeleteSpending">Tényleg törölni szeretnéd ezt a költést?</string>
     <string name="spendingSuccessfullyDeleted">Költés sikeresen törölve!</string>
 
-    <string name="menu_logout">Kijelentkezés</string>
+    <string name="menu_logout">Kilépés</string>
 </resources>
