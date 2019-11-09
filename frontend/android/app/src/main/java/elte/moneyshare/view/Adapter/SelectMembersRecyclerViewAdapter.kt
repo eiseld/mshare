@@ -1,21 +1,17 @@
 package elte.moneyshare.view.Adapter
 
 import android.content.Context
-import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import elte.moneyshare.R
 import elte.moneyshare.entity.Member
 import elte.moneyshare.view.viewholder.SelectMemberViewHolder
 import elte.moneyshare.visible
-import kotlinx.android.synthetic.main.list_item_select_member.view.*
 
 class SelectMembersRecyclerViewAdapter(private val context: Context, private val members: ArrayList<Member>, private val afterSelected: Boolean = false): RecyclerView.Adapter<SelectMemberViewHolder>() {
 
@@ -54,13 +50,9 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
             if (selectedIds.contains(member.id)) {
                 selectedIds.remove(member.id)
                 holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorBackground)
-                holder.memberRootLayout.untickedImageView.visibility = View.VISIBLE
-                holder.memberRootLayout.tickedImageView.visibility = View.GONE
             } else {
                 selectedIds.add(member.id)
                 holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorSubBackground)
-                holder.memberRootLayout.untickedImageView.visibility = View.GONE
-                holder.memberRootLayout.tickedImageView.visibility = View.VISIBLE
             }
         }
     }
@@ -68,9 +60,6 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
     private fun onBindViewHolderToSelected(holder: SelectMemberViewHolder, position: Int) {
         val member = members[position]
         holder.memberNameTextView.text = member.name
-
-        holder.tickedImageView.visibility = View.GONE
-        holder.untickedImageView.visibility = View.GONE
 
         holder.memberSpendingEditText.visible()
         holder.memberSpendingEditText.text = member.balance.toString()

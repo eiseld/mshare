@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
-import android.view.View
 import elte.moneyshare.FragmentDataKeys
-import elte.moneyshare.R
 import elte.moneyshare.view.BillsFragment
 import elte.moneyshare.view.MembersFragment
 

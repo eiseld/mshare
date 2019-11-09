@@ -1,20 +1,15 @@
 package elte.moneyshare.view
 
-
-import android.app.Notification
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.*
-import android.widget.ImageView
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
-import elte.moneyshare.view.Adapter.GroupPagerAdapter
 import elte.moneyshare.view.Adapter.GroupsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_groups.*
@@ -75,9 +70,6 @@ class GroupsFragment : Fragment() {
                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                 }
             }
-
-
-
         }
     }
 
