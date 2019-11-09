@@ -28,6 +28,10 @@ namespace MShare_ASP.Data
         [ForeignKey("CreatorUserId")]
         public virtual DaoUser CreatorUser { get; set; }
 
+        /// <summary>Weather this group has been deleted or not</summary>
+        [Column("deleted", TypeName = "bit")]
+        public bool Deleted { get; set; }
+
         /// <summary>All Users associted with this Group</summary>
         public IEnumerable<DaoUsersGroupsMap> Members { get; set; }
 

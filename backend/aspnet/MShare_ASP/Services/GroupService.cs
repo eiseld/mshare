@@ -104,6 +104,7 @@ namespace MShare_ASP.Services
         public async Task<IList<DaoGroup>> GetGroups()
         {
             return await Context.Groups
+                .Where(x => !x.Deleted)
                 .Include(x => x.Members).ThenInclude(x => x.User)
                 .Include(x => x.CreatorUser)
                 .ToListAsync();
@@ -114,6 +115,7 @@ namespace MShare_ASP.Services
         public async Task<IList<DaoGroup>> GetGroupsOfUser(long userId)
         {
             return await Context.Groups
+                .Where(x => !x.Deleted)
                 .Include(x => x.Members).ThenInclude(x => x.User)
                 .Include(x => x.CreatorUser)
                 .Where(x => x.Members.Any(y => y.UserId == userId))
@@ -123,6 +125,7 @@ namespace MShare_ASP.Services
         public async Task<DaoGroup> GetGroupOfUser(long userId, long groupId)
         {
             var daoGroup = await Context.Groups
+                .Where(x => !x.Deleted)
                 .Include(x => x.Members).ThenInclude(x => x.User)
                 .Include(x => x.CreatorUser)
                 .SingleOrDefaultAsync(x => x.Id == groupId);
@@ -227,7 +230,8 @@ namespace MShare_ASP.Services
                 {
                     var existingGroup = await Context.Groups
                         .SingleOrDefaultAsync(x => x.CreatorUserId == userId &&
-                            x.Name == newGroup.Name);
+                            x.Name == newGroup.Name &&
+                            !x.Deleted);
 
                     if (existingGroup != null)
                         throw new BusinessException("name_taken");
@@ -267,6 +271,8 @@ namespace MShare_ASP.Services
                 {
                     var daoGroup = await GetGroupOfUser(userId, groupId);
 
+                    daoGroup.Deleted = true;
+
                     if (daoGroup.CreatorUserId != userId)
                         throw new ResourceForbiddenException("not_group_creator");
 
@@ -281,14 +287,8 @@ namespace MShare_ASP.Services
                         .Include(x => x.Debtors)
                         .ToArray();
 
-                    Context.Remove(daoGroup);
-
-                    Context.RemoveRange(settlements);
-
                     var historyEntries = Context.History
                         .Where(x => x.GroupId == groupId);
-
-                    Context.RemoveRange(historyEntries);
 
                     await History.LogDeleteGroup(userId, daoGroup, affectedUsers, settlements, spendings);
 

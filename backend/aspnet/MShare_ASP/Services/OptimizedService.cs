@@ -134,7 +134,7 @@ namespace MShare_ASP.Services
         private async Task<DebtMatrix> LoadDebtMatrix(long groupId)
         {
             var daoGroup = await Context.Groups
-               .SingleOrDefaultAsync(x => x.Id == groupId);
+               .SingleOrDefaultAsync(x => x.Id == groupId && !x.Deleted);
 
             var userIds = daoGroup.Members.Select(x => x.UserId).ToArray();
 
@@ -157,7 +157,7 @@ namespace MShare_ASP.Services
             var daoGroup = await Context.Groups
                     .Include(x => x.Members).ThenInclude(x => x.User)
                     .Include(x => x.CreatorUser)
-                    .SingleOrDefaultAsync(x => x.Id == groupId);
+                    .SingleOrDefaultAsync(x => x.Id == groupId && !x.Deleted);
 
             var daoSpendings = await Context.Spendings
                .Include(x => x.Creditor)
@@ -205,7 +205,7 @@ namespace MShare_ASP.Services
 
         public async Task OptimizeForAllGroup()
         {
-            var groupIds = Context.Groups.Select(x => x.Id).ToList();
+            var groupIds = Context.Groups.Where(x => !x.Deleted).Select(x => x.Id).ToList();
 
             foreach (var groupId in groupIds)
             {
