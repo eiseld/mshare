@@ -29,7 +29,6 @@ class AddSpendingFragment : Fragment() {
     private var spendingId = -1
     private var isModify : Boolean = false
     private var members = ArrayList<Member>()
-    private var adapter = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
