@@ -29,6 +29,7 @@ class AddSpendingFragment : Fragment() {
     private var spendingId = -1
     private var isModify : Boolean = false
     private var members = ArrayList<Member>()
+    private var adapter = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +49,8 @@ class AddSpendingFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        var adapter: SelectMembersRecyclerViewAdapter? = null
+
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
 
@@ -55,7 +58,7 @@ class AddSpendingFragment : Fragment() {
                 viewModel.getMembersToSpending(groupId) { members, error ->
                     if (members != null) {
                         this.members = members
-                        val adapter = SelectMembersRecyclerViewAdapter(it, members)
+                        adapter = SelectMembersRecyclerViewAdapter(it, members)
                         selectMembersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         selectMembersRecyclerView.adapter = adapter
                         if(isModify)
@@ -71,7 +74,7 @@ class AddSpendingFragment : Fragment() {
                                         (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds = ArrayList(debtorIds)
                                         val selectedMembers = members.filter { it.id in debtorIds }
                                         (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedMembers = ArrayList(selectedMembers)
-                                        adapter.notifyDataSetChanged()
+                                        adapter?.notifyDataSetChanged()
                                     }
                                 }
                                 else
@@ -128,9 +131,27 @@ class AddSpendingFragment : Fragment() {
                     selectMembersRecyclerView.adapter = adapter
                 }
 
+                selectEveryoneButton.invisible()
+                selectNooneButton.invisible()
+
                 nextButton.invisible()
                 addButton.visible()
             }
+        }
+
+        selectEveryoneButton.setOnClickListener {
+            val selectedIds: ArrayList<Int> = ArrayList()
+            viewModel.currentGroupData?.members?.forEach {
+                selectedIds.add( it.id )
+            }
+            (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds = selectedIds
+            adapter?.notifyDataSetChanged()
+        }
+
+        selectNooneButton.setOnClickListener {
+            val selectedIds: ArrayList<Int> = ArrayList()
+            (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds = selectedIds
+            adapter?.notifyDataSetChanged()
         }
 
         //TODO REFACTOR after backend updated
