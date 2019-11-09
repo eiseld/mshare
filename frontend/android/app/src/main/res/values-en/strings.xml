@@ -30,7 +30,7 @@
 
     <!-- new password -->
     <string name="new_password">Create new password.</string>
-    <string name="confirm_password">Confirm password</string>
+    <string name="change_password">Change password</string>
     <string name="new_password_updated">New password updated!</string>
 
     <!-- Popup mesages -->
