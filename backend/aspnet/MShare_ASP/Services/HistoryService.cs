@@ -123,7 +123,7 @@ namespace MShare_ASP.Services
                     DebtorId = d.DebtorUserId,
                     Debt = d.Debt
                 })
-            }); ;
+            });
 
             // Removed settlements
             historyEntry.RemovedSettlements = settlements.Select(x => new

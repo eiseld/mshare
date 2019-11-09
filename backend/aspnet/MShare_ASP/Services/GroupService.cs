@@ -260,34 +260,79 @@ namespace MShare_ASP.Services
 
         public async Task DeleteGroup(long userId, long groupId)
         {
-            var daoGroup = await GetGroupOfUser(userId, groupId);
 
-            if (daoGroup.CreatorUserId != userId)
-                throw new ResourceForbiddenException("not_group_creator");
+            using (var transaction = Context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var daoGroup = await GetGroupOfUser(userId, groupId);
 
-            var affectedUsers = daoGroup.Members.Select(x => x.UserId).ToHashSet();
+                    if (daoGroup.CreatorUserId != userId)
+                        throw new ResourceForbiddenException("not_group_creator");
 
-            var settlements = Context.Settlements
-                .Where(x => x.GroupId == groupId)
-                .ToArray();
+                    var affectedUsers = daoGroup.Members.Select(x => x.UserId).ToHashSet();
 
-            var spendings = Context.Spendings
-                .Where(x => x.GroupId == groupId)
-                .Include(x => x.Debtors)
-                .ToArray();
+                    var settlements = Context.Settlements
+                        .Where(x => x.GroupId == groupId)
+                        .ToArray();
 
-            Context.Remove(daoGroup);
+                    var spendings = Context.Spendings
+                        .Where(x => x.GroupId == groupId)
+                        .Include(x => x.Debtors)
+                        .ToArray();
 
-            Context.RemoveRange(settlements);
+                    Context.Remove(daoGroup);
 
-            var historyEntries = Context.History
-                .Where(x => x.GroupId == groupId);
+                    Context.RemoveRange(settlements);
 
-            Context.RemoveRange(historyEntries);
+                    var historyEntries = Context.History
+                        .Where(x => x.GroupId == groupId);
 
-            await History.LogDeleteGroup(userId, daoGroup, affectedUsers, settlements, spendings);
+                    Context.RemoveRange(historyEntries);
 
-            await Context.SaveChangesAsync();
+                    await History.LogDeleteGroup(userId, daoGroup, affectedUsers, settlements, spendings);
+
+                    var deletor = await Context.Users.SingleAsync(x => x.Id == userId);
+
+                    foreach (var member in daoGroup.Members)
+                    {
+                        var lang = member.User.Lang;
+                        var name = member.User.DisplayName;
+                        var email = member.User.Email;
+                        var lastCredit = await GetDebtSum(member.UserId, groupId);
+                        var lastBalance = (lastCredit == 0 ? Localizer.GetString(lang, LocalizationResource.SETTLED) : lastCredit.ToString());
+
+                        var model = new InformationViewModel()
+                        {
+                            Title = Localizer.GetString(lang, LocalizationResource.EMAIL_GROUPDELETE_SUBJECT),
+                            PreHeader = Localizer.GetString(lang, LocalizationResource.EMAIL_GROUPDELETE_PREHEADER),
+                            Hero = Localizer.GetString(lang, LocalizationResource.EMAIL_GROUPDELETE_HERO),
+                            Greeting = Localizer.GetString(lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, name),
+
+                            Intro = Localizer.GetString(lang, LocalizationResource.EMAIL_GROUPDELETE_BODY_INTRO,
+                                    deletor.DisplayName,
+                                    daoGroup.Name,
+                                    lastBalance + " Ft"),
+
+                            EmailDisclaimer = Localizer.GetString(lang, LocalizationResource.EMAIL_GROUPDELETE_BODY_DISCLAIMER),
+                            Cheers = Localizer.GetString(lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
+                            MShareTeam = Localizer.GetString(lang, LocalizationResource.MSHARE_TEAM),
+                            SiteBaseUrl = $"{UriConf.URIForEndUsers}"
+                        };
+                        var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
+                        await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, name, email, Localizer.GetString(lang, LocalizationResource.EMAIL_GROUPDELETE_SUBJECT), htmlBody);
+                    }
+
+                    await Context.SaveChangesAsync();
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         public async Task<IList<FilteredUserData>> GetFilteredUsers(string filterTerm)
