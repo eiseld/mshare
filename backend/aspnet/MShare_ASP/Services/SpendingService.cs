@@ -18,6 +18,48 @@ namespace MShare_ASP.Services
         private IHistoryService HistoryService { get; }
 		private IOptimizedService OptimizedService { get; }
 
+        private class DateData
+        {
+            public string DateString { get; }
+            public bool IsFutureDate { get; }
+            public bool IsValidDate { get; }
+
+            public DateData(string dateInput)
+            {
+                if (dateInput == "")
+                {
+                    DateString = string.Format("{0:yyyy-MM-ddTHH:mm:ssZ}", DateTime.UtcNow);
+                    IsFutureDate = false;
+                    IsValidDate = true;
+                } else
+                {
+                    IsValidDate = DateTime.TryParse(dateInput, out DateTime dateTime);
+                    if (IsValidDate)
+                    {
+                        DateString = dateInput;
+                        IsFutureDate = dateTime > DateTime.UtcNow;
+                    }
+                }
+            }
+        }
+
+        private async Task UpdateFutureDates(long groupId)
+        {
+            var futureSpendings = await Context.Spendings
+              .Where(x => x.GroupId == groupId && x.IsFutureDate)
+              .ToListAsync();
+
+            foreach (var futureSpending in futureSpendings)
+            {
+                var dateTime = DateTime.Parse(futureSpending.Date);
+                if (dateTime.ToUniversalTime() <= DateTime.UtcNow)
+                {
+                    futureSpending.IsFutureDate = false;
+                }
+            }
+            await Context.SaveChangesAsync();
+        }
+
         public SpendingService(MshareDbContext context, IUserService userService, IGroupService groupService, IOptimizedService optimizedService, IHistoryService historyService)
         {
             Context = context;
@@ -45,7 +87,8 @@ namespace MShare_ASP.Services
                     Id = daoDebtor.DebtorUserId,
                     Name = daoDebtor.Debtor.DisplayName,
                     Debt = daoDebtor.Debt
-                }).ToList()
+                }).ToList(),
+                Date = daoSpending.Date
             };
         }
 
@@ -94,6 +137,9 @@ namespace MShare_ASP.Services
             //Security check
             await GroupService.GetGroupOfUser(userId, groupId);
 
+            await UpdateFutureDates(groupId);
+            await OptimizedService.OptimizeForGroup(groupId);
+
             return await Context.OptimizedDebt.Where(x => x.GroupId == groupId)
                 .Include(x => x.UserOwed)
                 .Include(x => x.UserOwes)
@@ -110,6 +156,11 @@ namespace MShare_ASP.Services
             if(newSpending.Debtors.Any(x => x.DebtorId == userId))
                 throw new BusinessException("self_debt");
 
+            var dateDate = new DateData(newSpending.Date);
+
+            if(!dateDate.IsValidDate)
+                throw new BusinessException("not_valid_date");
+
             using (var transaction = Context.Database.BeginTransaction())
             {
                 try
@@ -120,6 +171,8 @@ namespace MShare_ASP.Services
                         MoneyOwed = newSpending.MoneySpent,
                         CreditorUserId = userId,
                         GroupId = daoGroup.Id,
+                        Date = dateDate.DateString,
+                        IsFutureDate = dateDate.IsFutureDate,
                         Creditor = await UserService.GetUser(userId),
                         Group = daoGroup
                     };
@@ -132,7 +185,7 @@ namespace MShare_ASP.Services
                     }).ToList();
 
                     await Context.Spendings.AddAsync(spending);
-                    await OptimizedService.OptimizeForNewSpending(userId, newSpending);
+                    await OptimizedService.OptimizeForGroup(newSpending.GroupId);
 
                     await Context.SaveChangesAsync();
                     // Call log AFTER saving, so ID is present
@@ -168,29 +221,29 @@ namespace MShare_ASP.Services
             if (currentSpending.CreditorUserId != userId)
                 throw new ResourceForbiddenException("not_creditor");
 
-            var oldDebts = currentSpending.Debtors
-                .ToDictionary(debtor => debtor.DebtorUserId, debtor => debtor.Debt);
+            var dateDate = new DateData(spendingUpdate.Date);
 
-            var newDebts = spendingUpdate.Debtors
-                .ToDictionary(debtor => debtor.DebtorId, debtor => debtor.Debt);
+            if (!dateDate.IsValidDate)
+                throw new BusinessException("not_valid_date");
 
             await HistoryService.LogSpendingUpdate(userId, currentSpending, spendingUpdate);
 
             currentSpending.Name = spendingUpdate.Name;
             currentSpending.MoneyOwed = spendingUpdate.MoneySpent;
-			Context.Debtors.RemoveRange(currentSpending.Debtors);
+            currentSpending.Date = dateDate.DateString;
+            currentSpending.IsFutureDate = dateDate.IsFutureDate;
 
-			var debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
+
+            Context.Debtors.RemoveRange(currentSpending.Debtors);
+
+            currentSpending.Debtors = spendingUpdate.Debtors.Select(x => new DaoDebtor()
 			{
 				Spending = currentSpending,
 				DebtorUserId = x.DebtorId,
 				Debt = x.Debt
 			}).ToList();
-
-			currentSpending.Debtors = debtors.ToList();
-
-			await OptimizedService.OptimizeForUpdateSpending(spendingUpdate.GroupId, userId, oldDebts, newDebts);
-			await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
+            await OptimizedService.OptimizeForGroup(spendingUpdate.GroupId);
 		}
 
 		public async Task DeleteSpending(long userId, long spendingId, long groupId)
@@ -269,7 +322,7 @@ namespace MShare_ASP.Services
             };
 
             await Context.Settlements.AddAsync(settlement);
-            await OptimizedService.OptimizeForSettling(groupId, lenderId, debtorId);
+            await OptimizedService.OptimizeForGroup(groupId);
             await HistoryService.LogSettlement(userId, settlement);
 
             await Context.SaveChangesAsync();

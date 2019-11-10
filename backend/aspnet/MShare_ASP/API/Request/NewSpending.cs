@@ -31,6 +31,9 @@ namespace MShare_ASP.API.Request
 
         /// <summary>List of debtors, always specify this</summary>
         public Debtor[] Debtors { get; set; }
+
+        /// <summary>Date of the spending</summary>
+        public string Date { get; set; }
     }
 
     /// <summary>Validator object for NewSpending's Debtor subclass</summary>
@@ -69,20 +72,15 @@ namespace MShare_ASP.API.Request
             RuleForEach(x => x.Debtors)
                 .SetValidator(new NewSpending_DebtorValidator());
 
-            //RuleFor(x => x.Debtors)
-            //    // Specified debt must be validated so that remainder can be distributed between automatic debtors
-            //    .Must((args, d) => d.Sum(m => m.Debt ?? 0) <= args.MoneySpent - d.Count(x => !x.Debt.HasValue))
-            //        // Only check previous must if Debtors is not empty
-            //        .When(x => x.Debtors.Any() && !x.Debtors.All(d => d.Debt.HasValue))
-            //        .WithMessage("Sparsely specified debts sum is more than MoneySpent - count of unspecified");
-
             RuleFor(x => x.Debtors)
                 .NotEmpty()
-                // If we specify all debts it must equal exactly the MoneySpent
                 .Must((args, d) => d.Sum(m => m.Debt) == args.MoneySpent)
-                    // Only check previous must if all Debts are assigned
-                    //.When(x => x.Debtors.Any() && x.Debtors.All(d => d.Debt.HasValue))
                     .WithMessage("Fully specified debts sum is not equal to MoneySpent");
+
+            RuleFor(x => x.Date)
+                .Matches("\\b[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\\b")
+                .When(x => x.Date != "")
+                .NotNull();
         }
     }
 }
