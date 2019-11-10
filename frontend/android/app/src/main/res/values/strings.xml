@@ -151,6 +151,10 @@
     <string name="api_spending_update_200">Költés sikeresen frissítve!</string>
     <string name="api_spending_update_409">A költést nem lehetett frissíteni! Az egyik adós nem tagja a csoportnak!</string>
 
+    <string name="everyone">Mindenki</string>
+    <string name="none">Senki</string>
+
+    <!-- Common -->
     <string name="api_common_400">A kérés nem sikerült a szerver felé!</string>
     <string name="api_common_500">Belső hiba! Próbálkozz később!</string>
     <string name="api_error_common">Valami hiba történt! Próbálkozz később!</string>
@@ -173,6 +177,4 @@
     <string name="change_bank_account_label">Bankszámla szám módosítása</string>
     <string name="bank_account_not_set">Bankszámla szám még nincs beállítva!</string>
     <string name="member_added_to_group_successfully">Tag sikeresen hozzáadva a csoporthoz!</string>
-    <string name="everyone">Mindenki</string>
-    <string name="noone">Senki</string>
 </resources>

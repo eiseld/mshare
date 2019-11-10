@@ -150,6 +150,9 @@
     <string name="api_spending_update_200">Spending successfully updated!</string>
     <string name="api_spending_update_409">Spending cannot be updated! One of the debtors are not member of the group!</string>
 
+    <string name="everyone">Everyone</string>
+    <string name="none">None</string>
+
     <!-- Common -->
     <string name="api_common_400">Sending the request to the server failed!</string>
     <string name="api_common_500">Internal error! Try again later!</string>
@@ -173,6 +176,4 @@
     <string name="change_bank_account_label">Change Bank Account Number</string>
     <string name="bank_account_not_set">Bank Account Not Set Yet!</string>
     <string name="member_added_to_group_successfully">Member added to group successfully!</string>
-    <string name="everyone">Everyone</string>
-    <string name="noone">Noone</string>
 </resources>

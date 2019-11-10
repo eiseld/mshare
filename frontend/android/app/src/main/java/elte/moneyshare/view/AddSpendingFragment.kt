@@ -139,18 +139,22 @@ class AddSpendingFragment : Fragment() {
         }
 
         selectEveryoneButton.setOnClickListener {
-            val selectedIds: ArrayList<Int> = ArrayList()
-            viewModel.currentGroupData?.members?.forEach {
-                selectedIds.add( it.id )
+            (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).let{
+                val selectedIds: ArrayList<Int> = ArrayList()
+                viewModel.currentGroupData?.members?.forEach {
+                    selectedIds.add( it.id )
+                }
+                it.selectedIds = selectedIds
+                adapter?.notifyDataSetChanged()
             }
-            (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds = selectedIds
-            adapter?.notifyDataSetChanged()
         }
 
         selectNooneButton.setOnClickListener {
-            val selectedIds: ArrayList<Int> = ArrayList()
-            (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds = selectedIds
-            adapter?.notifyDataSetChanged()
+            (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).let {
+                val selectedIds: ArrayList<Int> = ArrayList()
+                it.selectedIds = selectedIds
+                adapter?.notifyDataSetChanged()
+            }
         }
 
         //TODO REFACTOR after backend updated

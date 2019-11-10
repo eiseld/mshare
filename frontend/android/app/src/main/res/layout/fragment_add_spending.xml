@@ -91,7 +91,7 @@
             android:id="@+id/selectNooneButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/noone"
+            android:text="@string/none"
             app:layout_constraintBottom_toTopOf="@id/selectMembersRecyclerView"
             app:layout_constraintLeft_toRightOf="@id/selectTextView"
             app:layout_constraintRight_toRightOf="parent"
