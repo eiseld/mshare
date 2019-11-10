@@ -7,8 +7,5 @@
             android:title="@string/add_member"
             android:visible="true"
             app:showAsAction="ifRoom" />
-    <item android:id="@+id/createGroup"
-          android:title="@string/create_group"
-          app:showAsAction="never"/>
 
 </menu>
