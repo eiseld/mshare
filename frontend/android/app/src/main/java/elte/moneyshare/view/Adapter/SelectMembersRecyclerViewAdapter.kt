@@ -1,13 +1,11 @@
 package elte.moneyshare.view.Adapter
 
 import android.content.Context
-import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import elte.moneyshare.R
