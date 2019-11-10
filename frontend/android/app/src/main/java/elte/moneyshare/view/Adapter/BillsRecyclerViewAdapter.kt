@@ -112,17 +112,15 @@ class BillsRecyclerViewAdapter(
                 DialogManager.showInfoDialog(context.getString(R.string.spendingSuccessfullyDeleted), context)
                 model.deleteSpending(bill.id, groupId) { response, error ->
                     if (error == null) {
-                        notifyItemRemoved(position)
                         bills.removeAt(position)
-                        (context as MainActivity).onBackPressed()
+                        notifyItemRemoved(position)
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING_DELETE,context), context)
                     }
                 }
             }
 
-            builder.setNeutralButton(context.getString(R.string.no)) { _, _ ->
-            }
+            builder.setNeutralButton(context.getString(R.string.no)) { _, _ -> }
             val dialog: AlertDialog = builder.create()
             dialog.show()
         }

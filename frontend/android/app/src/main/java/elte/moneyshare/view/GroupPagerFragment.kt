@@ -93,11 +93,10 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
 
         groupId?.let {
             viewModel.getGroupData(it) { groupData, _ ->
-                if(SharedPreferences.userId == groupData?.creator?.id) {
-                    removeMemberItem.isVisible = true
-                }
+                removeMemberItem.isVisible = SharedPreferences.userId == groupData?.creator?.id
             }
         }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -116,8 +115,20 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
                 return true
             }
             R.id.menuSearch -> {
-
-                return true
+                if(tabLayout.selectedTabPosition == 1) {
+                    val fragment = AddSpendingFragment()
+                    val args = Bundle()
+                    groupId?.let {
+                        args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
+                    }
+                    args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value, -1)
+                    fragment.arguments = args
+                    (context as MainActivity).supportFragmentManager?.beginTransaction()
+                        ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
+                    return true
+                } else {
+                    return true
+                }
             }
 
             R.id.removeMember -> {
@@ -157,10 +168,7 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
         }
 
-        groupName?.let {
-            activity?.actionBar?.title = it
-            toolbar?.setTitle(it)
-        }
+        groupName?.let { (activity as MainActivity).toolbar.title = it }
 
         if (tabs.isEmpty()) {
             context?.getString(R.string.members_tab)?.let { tabs.add(it) }

@@ -1,21 +1,17 @@
 package elte.moneyshare.view.Adapter
 
 import android.content.Context
-import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import elte.moneyshare.R
 import elte.moneyshare.entity.Member
 import elte.moneyshare.view.viewholder.SelectMemberViewHolder
 import elte.moneyshare.visible
-import kotlinx.android.synthetic.main.list_item_select_member.view.*
 
 class SelectMembersRecyclerViewAdapter(private val context: Context, private val members: ArrayList<Member>, private val afterSelected: Boolean = false): RecyclerView.Adapter<SelectMemberViewHolder>() {
 
@@ -68,7 +64,6 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
         holder.memberNameTextView.text = member.name
 
         holder.selectedMemberCheckBox.visibility = View.GONE
-
         holder.memberSpendingEditText.visible()
         holder.memberSpendingEditText.text = member.balance.toString()
 
