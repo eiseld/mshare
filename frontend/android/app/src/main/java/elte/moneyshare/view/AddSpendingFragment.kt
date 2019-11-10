@@ -48,8 +48,6 @@ class AddSpendingFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        var adapter: SelectMembersRecyclerViewAdapter? = null
-
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
 
@@ -57,7 +55,7 @@ class AddSpendingFragment : Fragment() {
                 viewModel.getMembersToSpending(groupId) { members, error ->
                     if (members != null) {
                         this.members = members
-                        adapter = SelectMembersRecyclerViewAdapter(it, members)
+                        val adapter = SelectMembersRecyclerViewAdapter(it, members)
                         selectMembersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         selectMembersRecyclerView.adapter = adapter
                         if(isModify)
@@ -145,7 +143,7 @@ class AddSpendingFragment : Fragment() {
                     selectedIds.add( it.id )
                 }
                 it.selectedIds = selectedIds
-                adapter?.notifyDataSetChanged()
+                it?.notifyDataSetChanged()
             }
         }
 
@@ -153,7 +151,7 @@ class AddSpendingFragment : Fragment() {
             (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).let {
                 val selectedIds: ArrayList<Int> = ArrayList()
                 it.selectedIds = selectedIds
-                adapter?.notifyDataSetChanged()
+                it?.notifyDataSetChanged()
             }
         }
 
