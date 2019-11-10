@@ -1,12 +1,9 @@
-using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
 using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -163,7 +160,7 @@ namespace MShare_ASP.Services
 
             var currentSpending = await Context.Spendings
                                                .Include(x => x.Debtors)
-                                              .SingleOrDefaultAsync(x => x.Id == spendingUpdate.Id);
+                                               .SingleOrDefaultAsync(x => x.Id == spendingUpdate.Id);
 
             if (currentSpending == null)
                 throw new ResourceGoneException("spending");

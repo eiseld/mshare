@@ -9,7 +9,6 @@ using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
@@ -24,11 +23,10 @@ namespace MShare_ASP.Services
         private IHistoryService History { get; }
         private IStringLocalizer<LocalizationResource> Localizer { get; }
 
-        private async Task<long> GetDebtSum(long userId, long groupId)
+        private async Task<long> GetGroupBalanceForUser(long userId, long groupId)
         {
-            var daoOptimizedDebts = await Context.OptimizedDebt.Where(x => x.GroupId == groupId)
-                .Include(x => x.UserOwed)
-                .Include(x => x.UserOwes)
+            var daoOptimizedDebts = await Context.OptimizedDebt
+                .Where(x => x.GroupId == groupId)
                 .ToListAsync();
 
             var credit = daoOptimizedDebts
@@ -63,17 +61,17 @@ namespace MShare_ASP.Services
                 {
                     Id = daoGroup.CreatorUserId,
                     Name = daoGroup.CreatorUser.DisplayName,
-                    Balance = await GetDebtSum(userId, daoGroup.Id),
+                    Balance = await GetGroupBalanceForUser(userId, daoGroup.Id),
                     BankAccountNumber = daoGroup.CreatorUser.BankAccountNumber ?? ""
                 },
                 Members = daoGroup.Members.Select(async daoUsersGroupsMap => new MemberData()
                 {
                     Id = daoUsersGroupsMap.UserId,
                     Name = daoUsersGroupsMap.User.DisplayName,
-                    Balance = await GetDebtSum(daoUsersGroupsMap.UserId, daoGroup.Id),
+                    Balance = await GetGroupBalanceForUser(daoUsersGroupsMap.UserId, daoGroup.Id),
                     BankAccountNumber = daoUsersGroupsMap.User.BankAccountNumber ?? ""
                 }).Select(x => x.Result).ToList(),
-                MyCurrentBalance = await GetDebtSum(userId, daoGroup.Id)
+                MyCurrentBalance = await GetGroupBalanceForUser(userId, daoGroup.Id)
             };
         }
 
@@ -90,7 +88,7 @@ namespace MShare_ASP.Services
                 Name = daoGroup.Name,
                 Creator = daoGroup.CreatorUser.DisplayName,
                 MemberCount = daoGroup.Members.Count(),
-                MyCurrentBalance = await GetDebtSum(userId, daoGroup.Id)
+                MyCurrentBalance = await GetGroupBalanceForUser(userId, daoGroup.Id)
             };
         }
 

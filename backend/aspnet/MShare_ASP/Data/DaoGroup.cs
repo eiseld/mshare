@@ -17,7 +17,7 @@ namespace MShare_ASP.Data
 
         /// <summary>Name of the group</summary>
         [Column("name")]
-        public String Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>Id of the creator of this Group</summary>
         [Column("creator_user_id")]
