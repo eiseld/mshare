@@ -50,9 +50,11 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
             if (selectedIds.contains(member.id)) {
                 selectedIds.remove(member.id)
                 holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorBackground)
+                holder.memberRootLayout.selectedMemberCheckBox.isChecked = false
             } else {
                 selectedIds.add(member.id)
                 holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorSubBackground)
+                holder.memberRootLayout.selectedMemberCheckBox.isChecked = true
             }
         }
     }
@@ -61,6 +63,7 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
         val member = members[position]
         holder.memberNameTextView.text = member.name
 
+        holder.selectedMemberCheckBox.visibility = View.GONE
         holder.memberSpendingEditText.visible()
         holder.memberSpendingEditText.text = member.balance.toString()
 
