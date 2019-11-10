@@ -166,7 +166,7 @@
     <string name="doYouReallyWantToDeleteSpending">Tényleg törölni szeretnéd ezt a költést?</string>
     <string name="spendingSuccessfullyDeleted">Költés sikeresen törölve!</string>
 
-    <string name="menu_logout">Kijelentkezés</string>
+    <string name="menu_logout">Kilépés</string>
     <string name="api_login_language_validate_410">A megadott nyelvet nem támogatja a szerver!</string>
     <string name="information_dialog_title">Információ</string>
     <string name="spending_wrong_balance_sum">A teljes összeget szét kell osztani a költési csoportban!</string>

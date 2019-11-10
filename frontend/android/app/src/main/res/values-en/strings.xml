@@ -166,7 +166,7 @@
     <string name="doYouReallyWantToDeleteSpending">Do you really want to delete this spending?</string>
     <string name="spendingSuccessfullyDeleted">Spending successfully deleted!</string>
 
-    <string name="menu_logout">Logout</string>
+    <string name="menu_logout">Exit</string>
     <string name="api_login_language_validate_410">Specified language is not supported by the server!</string>
     <string name="information_dialog_title">Information</string>
     <string name="spending_wrong_balance_sum">The whole amount must be distributed among the members of the spending group!</string>
