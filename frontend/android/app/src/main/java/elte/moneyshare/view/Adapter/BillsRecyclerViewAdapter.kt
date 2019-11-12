@@ -45,6 +45,7 @@ class BillsRecyclerViewAdapter(
     override fun onBindViewHolder(holder: BillViewHolder, position: Int) {
         val bill = bills[position]
         holder.billNameTextView.text = bill.name
+        holder.billDateTextView.text = bill.date
         holder.billMoneyTextView.text = String.format(context.getString(R.string.bill_money, bill.moneyOwed))
 
 

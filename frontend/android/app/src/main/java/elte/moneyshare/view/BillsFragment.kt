@@ -12,6 +12,7 @@ import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
+import elte.moneyshare.util.TimeExtensions
 import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.Adapter.BillsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
@@ -40,7 +41,16 @@ class BillsFragment : Fragment() {
             groupId?.let { groupId ->
                 viewModel.getSpendings(groupId) { bills, error ->
                     if (bills != null) {
-                        val adapter = BillsRecyclerViewAdapter(it, bills, groupId, viewModel)
+
+                        val orderedBills = bills.map { spendingData ->
+                            val calendar = TimeExtensions.convertToCalendar(spendingData.date)
+                            spendingData.date = TimeExtensions.formatDate(calendar)
+                            Pair(calendar, spendingData)
+                        }.sortedByDescending { pair -> pair.first }
+                        .map { pair -> pair.second }
+                        .toMutableList()
+
+                        val adapter = BillsRecyclerViewAdapter(it, orderedBills, groupId, viewModel)
                         billsRecyclerView.adapter = adapter
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING,context), context)
