@@ -7,11 +7,13 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import elte.moneyshare.R
 import elte.moneyshare.entity.Member
 import elte.moneyshare.view.viewholder.SelectMemberViewHolder
 import elte.moneyshare.visible
+import kotlinx.android.synthetic.main.list_item_select_member.view.*
 
 class SelectMembersRecyclerViewAdapter(private val context: Context, private val members: ArrayList<Member>, private val afterSelected: Boolean = false): RecyclerView.Adapter<SelectMemberViewHolder>() {
 
