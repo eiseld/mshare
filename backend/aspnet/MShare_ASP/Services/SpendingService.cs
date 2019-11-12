@@ -26,19 +26,11 @@ namespace MShare_ASP.Services
 
             public DateData(string dateInput)
             {
-                if (dateInput == "")
+                IsValidDate = DateTime.TryParse(dateInput, out DateTime dateTime);
+                if (IsValidDate)
                 {
-                    DateString = string.Format("{0:yyyy-MM-ddTHH:mm:ssZ}", DateTime.UtcNow);
-                    IsFutureDate = false;
-                    IsValidDate = true;
-                } else
-                {
-                    IsValidDate = DateTime.TryParse(dateInput, out DateTime dateTime);
-                    if (IsValidDate)
-                    {
-                        DateString = dateInput;
-                        IsFutureDate = dateTime > DateTime.UtcNow;
-                    }
+                    DateString = dateInput;
+                    IsFutureDate = dateTime > DateTime.UtcNow;
                 }
             }
         }

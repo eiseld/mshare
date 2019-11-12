@@ -91,9 +91,8 @@ namespace MShare_ASP.API.Request
                     .WithMessage("Fully specified debts sum is not equal to MoneySpent");
 
             RuleFor(x => x.Date)
-                .Matches("\\b[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\\b")
-                .When(x => x.Date != "")
-                .NotNull();
+                .NotNull()
+                .Matches("\\b[0-9]{4}-[0-9]{2}-[0-9]{2}\\b");
         }
     }
 }
