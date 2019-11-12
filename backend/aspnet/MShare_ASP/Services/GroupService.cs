@@ -90,7 +90,11 @@ namespace MShare_ASP.Services
                 Name = daoGroup.Name,
                 Creator = daoGroup.CreatorUser.DisplayName,
                 MemberCount = daoGroup.Members.Count(),
-                MyCurrentBalance = await GetDebtSum(userId, daoGroup.Id)
+                MyCurrentBalance = await GetDebtSum(userId, daoGroup.Id),
+                LastModified = Context.History
+                        .Where(x => x.GroupId.HasValue)
+                        .Where(x => x.GroupId == daoGroup.Id)
+                        .Max(x => x.Date)
             };
         }
 
