@@ -177,14 +177,14 @@ namespace MShare_ASP.Services
                     }).ToList();
 
                     await Context.Spendings.AddAsync(spending);
-                    await OptimizedService.OptimizeForGroup(newSpending.GroupId);
-
                     await Context.SaveChangesAsync();
+
+                    await OptimizedService.OptimizeForGroup(newSpending.GroupId);
+                    await Context.SaveChangesAsync();
+
                     // Call log AFTER saving, so ID is present
                     await HistoryService.LogNewSpending(userId, spending);
-
                     await Context.SaveChangesAsync();
-
 
                     transaction.Commit();
                 }
