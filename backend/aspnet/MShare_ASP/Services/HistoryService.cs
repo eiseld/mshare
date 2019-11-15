@@ -15,10 +15,12 @@ namespace MShare_ASP.Services
 {
     internal class HistoryService : IHistoryService
     {
+        private ITimeService TimeService { get; }
         private MshareDbContext Context { get; }
-        public HistoryService(MshareDbContext context)
+        public HistoryService(MshareDbContext context, ITimeService timeService)
         {
             Context = context;
+            TimeService = timeService;
         }
         public async Task<IList<DaoHistory>> GetGroupHistory(long userId, long groupId)
         {
@@ -233,7 +235,7 @@ namespace MShare_ASP.Services
             {
                 UserId = userId,
                 AffectedIds = affectedIds,
-                Date = DateTime.UtcNow,
+                Date = TimeService.UtcNow,
                 Type = type,
                 SubType = subType,
                 SerializedLog = serializedMessage,

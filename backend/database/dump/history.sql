@@ -27,7 +27,7 @@ CREATE TABLE `history` (
   `affected_ids` varchar(400) NOT NULL,
   `type` tinyint(3) unsigned NOT NULL,
   `subtype` tinyint(3) unsigned NOT NULL,
-  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `log` text,
   PRIMARY KEY (`id`),
   KEY `type_enum` (`type`),
