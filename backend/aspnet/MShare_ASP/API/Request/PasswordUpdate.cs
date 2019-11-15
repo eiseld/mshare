@@ -13,6 +13,9 @@ namespace MShare_ASP.API.Request
         /// <summary>Reset token</summary>
         public String Token { get; set; }
 
+        /// <summary>Reset token</summary>
+        public String OldPassword { get; set; }
+
         /// <summary>Unhashed password</summary>
         public String Password { get; set; }
     }
@@ -24,7 +27,8 @@ namespace MShare_ASP.API.Request
         public PasswordUpdateValidator()
         {
             RuleFor(x => x.Email)
-                .EmailAddress();
+                .EmailAddress().When(x => x.OldPassword != null)
+                .Null().When(x => x.OldPassword != null);
 
             RuleFor(x => x.Password)
                 .Must(x => x.Any(char.IsLower))
@@ -36,7 +40,12 @@ namespace MShare_ASP.API.Request
                 .MinimumLength(6);
 
             RuleFor(x => x.Token)
-                .Length(40);
+                .Length(40).When(x => x.OldPassword == null)
+                .Null().When(x => x.OldPassword != null);
+
+            RuleFor(x => x.OldPassword)
+                .NotNull().When(x => x.Token == null)
+                .Null().When(x => x.Token != null);
         }
     }
 }
