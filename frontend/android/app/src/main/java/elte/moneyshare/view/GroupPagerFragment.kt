@@ -93,10 +93,11 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
 
         groupId?.let {
             viewModel.getGroupData(it) { groupData, _ ->
-                removeMemberItem.isVisible = SharedPreferences.userId == groupData?.creator?.id
+                if(SharedPreferences.userId == groupData?.creator?.id) {
+                    removeMemberItem.isVisible = true
+                }
             }
         }
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -115,20 +116,8 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
                 return true
             }
             R.id.menuSearch -> {
-                if(tabLayout.selectedTabPosition == 1) {
-                    val fragment = AddSpendingFragment()
-                    val args = Bundle()
-                    groupId?.let {
-                        args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
-                    }
-                    args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value, -1)
-                    fragment.arguments = args
-                    (context as MainActivity).supportFragmentManager?.beginTransaction()
-                        ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
-                    return true
-                } else {
-                    return true
-                }
+
+                return true
             }
 
             R.id.removeMember -> {
