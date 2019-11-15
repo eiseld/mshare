@@ -77,7 +77,8 @@ namespace MShare_ASP.Services
                     {
                         Name = x.Spending.Name,
                         CreditorId = x.Spending.CreditorUserId,
-                        MoneyOwed = x.Debt // MoneyOwed = 0, because we removed this member's debt, so moneyowed 'was' the whole debt of this member
+                        MoneyOwed = x.Debt, // MoneyOwed = 0, because we removed this member's debt, so moneyowed 'was' the whole debt of this member
+                        Date = x.Spending.Date
                     }) : null
                 });
 
