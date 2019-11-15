@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using MShare_ASP.API.Response;
 using MShare_ASP.Services;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MShare_ASP.Controllers
@@ -131,15 +132,23 @@ namespace MShare_ASP.Controllers
 
         /// <summary>Gets the group history</summary>
         /// <param name="groupId">Id of the group</param>
+        /// <param name="startIndex">StartIndex of the return list (skip this many from the start)</param>
+        /// <param name="count">How many elements to return (0 for all of them)</param>
         /// <response code="200">Successfully returned group history</response>
         /// <response code="403">Forbidden: 'not_group_member'</response>
         /// <response code="404">Not found: 'group'</response>
         [HttpGet()]
-        [Route("{groupId}/history")]
-        public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory(long groupId)
+        [Route("{groupId}/history/{startIndex}/{count}")]
+        public async Task<ActionResult<IList<Data.DaoHistory>>> GetGroupHistory(long groupId, int startIndex, int count = 0)
         {
-            //TODO DaoHistory should not go out make response and converter function
             var groupHistory = await HistoryService.GetGroupHistory(GetCurrentUserID(), groupId);
+            var ordered = groupHistory.OrderByDescending(x => x.Date).Skip(startIndex);
+            if(count != 0)
+            {
+                ordered = ordered.Take(count).ToList();
+            }
+
+            groupHistory = ordered.ToList();
             return Ok(groupHistory);
         }
 

@@ -38,6 +38,7 @@ namespace MShare_ASP.Services
                 .Where(
                     history =>
                     history.GroupId.HasValue && groupId == history.GroupId.Value)
+                .Where(history => history.Type != DaoLogType.Type.CREATE || history.SubType != DaoLogSubType.Type.GROUP)
                 .ToListAsync();
         }
         public async Task LogAddMember(long userId, long groupId, long memberId)
