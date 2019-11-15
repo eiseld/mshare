@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
-    internal class OptimizedService : IOptimizedService
+    /// <summary> Implementation of IOptimizedService</summary>
+    public class OptimizedService : IOptimizedService
     {
         private MshareDbContext Context { get; }
 
@@ -39,7 +40,7 @@ namespace MShare_ASP.Services
             return deltaDebts;
         }
 
-        internal class DebtMatrix
+        public class DebtMatrix
         {
             public class OptimizedDebt
             {
@@ -81,6 +82,17 @@ namespace MShare_ASP.Services
             public void SetDebt(long debtorId, long creditorId, long amount)
             {
                 matrix[userIdToIndex[debtorId]][userIdToIndex[creditorId]] = amount;
+            }
+
+            public long GetBalance(long userId)
+            {
+                var userIndex = userIdToIndex[userId];
+                var debt = matrix[userIndex].Sum(x => x);
+                var credit = 0l;
+                for (int i = 0; i < matrix.Length; i++) {
+                    credit += matrix[i][userIdToIndex[userId]];
+                }
+                return credit - debt;
             }
 
             public void Optimize()

@@ -225,7 +225,7 @@ namespace MShare_ASP.Services
         public async Task CreateGroup(long userId, NewGroup newGroup)
         {
             using (var transaction = Context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
-            {   
+            {
                 try
                 {
                     var existingGroup = await Context.Groups
@@ -278,19 +278,21 @@ namespace MShare_ASP.Services
 
                     var affectedUsers = daoGroup.Members.Select(x => x.UserId).ToHashSet();
 
-                    var settlements = Context.Settlements
+
+                    var userIds = daoGroup.Members.Select(x => x.UserId).ToArray();
+
+                    OptimizedService.DebtMatrix debtMatrix = new OptimizedService.DebtMatrix(userIds);
+
+                    var optimizedDebts = await Context.OptimizedDebt
                         .Where(x => x.GroupId == groupId)
-                        .ToArray();
+                        .ToListAsync();
 
-                    var spendings = Context.Spendings
-                        .Where(x => x.GroupId == groupId)
-                        .Include(x => x.Debtors)
-                        .ToArray();
+                    foreach (var optimizedDebt in optimizedDebts)
+                    {
+                        debtMatrix.UpdateDebt(optimizedDebt.UserOwesId, optimizedDebt.UserOwedId, optimizedDebt.OweAmount);
+                    }
 
-                    var historyEntries = Context.History
-                        .Where(x => x.GroupId == groupId);
-
-                    await History.LogDeleteGroup(userId, daoGroup, affectedUsers, settlements, spendings);
+                    await History.LogDeleteGroup(userId, daoGroup, affectedUsers, debtMatrix.GetOptimizedDebts());
 
                     var deletor = await Context.Users.SingleAsync(x => x.Id == userId);
 
@@ -299,7 +301,7 @@ namespace MShare_ASP.Services
                         var lang = member.User.Lang;
                         var name = member.User.DisplayName;
                         var email = member.User.Email;
-                        var lastCredit = await GetDebtSum(member.UserId, groupId);
+                        var lastCredit = debtMatrix.GetBalance(member.UserId);
                         var lastBalance = (lastCredit == 0 ? Localizer.GetString(lang, LocalizationResource.SETTLED) : lastCredit.ToString());
 
                         var model = new InformationViewModel()
