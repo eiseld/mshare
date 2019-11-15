@@ -50,9 +50,7 @@ class MembersFragment : Fragment(), MembersRecyclerViewAdapter.MemberDeletedList
 
                         member = groupData.members.find { it.id == SharedPreferences.userId }
                         groupData.members.remove(member)
-
                         groupData.members.sortByDescending { it.balance }
-
                         groupDataStored = groupData
 
                         adapter = MembersRecyclerViewAdapter(it, groupData, viewModel, this)
@@ -81,11 +79,11 @@ class MembersFragment : Fragment(), MembersRecyclerViewAdapter.MemberDeletedList
     private fun setMyBalance(balance: Int) {
         when {
             balance < 0 -> {
-                myBalanceTextView?.text = String.format(getString(R.string.member_owned), abs(balance))
+                myBalanceTextView?.text = String.format(getString(R.string.member_owe), abs(balance))
                 myBalanceTextView?.setTextColor(myBalanceTextView.context.getColor(R.color.colorHooverText))
             }
             balance > 0 -> {
-                myBalanceTextView?.text = String.format(getString(R.string.member_owe), abs(balance))
+                myBalanceTextView?.text = String.format(getString(R.string.member_owned), abs(balance))
                 myBalanceTextView?.setTextColor(myBalanceTextView.context.getColor(R.color.colorText))
             }
             else -> myBalanceTextView?.text = getString(R.string.settled_up)
