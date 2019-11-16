@@ -159,6 +159,21 @@
   <data name="EMAIL_FORGOTPSW_SUBJECT" xml:space="preserve">
     <value>MShare - Password reset</value>
   </data>
+  <data name="EMAIL_GROUPDELETE_BODY_DISCLAIMER" xml:space="preserve">
+    <value>You are getting this email because you were in the deleted group.</value>
+  </data>
+  <data name="EMAIL_GROUPDELETE_BODY_INTRO" xml:space="preserve">
+    <value>{0} deleted a group called "{1}" which you were a part of. Your last balance was {2}.</value>
+  </data>
+  <data name="EMAIL_GROUPDELETE_HERO" xml:space="preserve">
+    <value>Deleted group</value>
+  </data>
+  <data name="EMAIL_GROUPDELETE_PREHEADER" xml:space="preserve">
+    <value>A group of yours has been deleted in MShare - MoneyShare application</value>
+  </data>
+  <data name="EMAIL_GROUPDELETE_SUBJECT" xml:space="preserve">
+    <value>MShare - group deleted</value>
+  </data>
   <data name="EMAIL_PASSWORDCHANGED_BODY_DISCLAIMER" xml:space="preserve">
     <value>If you did not change your password please check your account login information and your computer for viruses.</value>
   </data>
@@ -194,5 +209,8 @@
   </data>
   <data name="MSHARE_TEAM" xml:space="preserve">
     <value>MShare - MoneyShare team</value>
+  </data>
+  <data name="SETTLED" xml:space="preserve">
+    <value>Settled</value>
   </data>
 </root>

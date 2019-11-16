@@ -24,6 +24,7 @@ CREATE TABLE `groups` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `creator_user_id` bigint(20) unsigned NOT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT b'0',
   PRIMARY KEY (`id`),
   KEY `fk_group_creator_idx` (`creator_user_id`),
   CONSTRAINT `fk_group_creator` FOREIGN KEY (`creator_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE

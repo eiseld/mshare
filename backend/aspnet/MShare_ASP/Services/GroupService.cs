@@ -108,6 +108,7 @@ namespace MShare_ASP.Services
         public async Task<IList<DaoGroup>> GetGroups()
         {
             return await Context.Groups
+                .Where(x => !x.Deleted)
                 .Include(x => x.Members).ThenInclude(x => x.User)
                 .Include(x => x.CreatorUser)
                 .ToListAsync();
@@ -118,6 +119,7 @@ namespace MShare_ASP.Services
         public async Task<IList<DaoGroup>> GetGroupsOfUser(long userId)
         {
             return await Context.Groups
+                .Where(x => !x.Deleted)
                 .Include(x => x.Members).ThenInclude(x => x.User)
                 .Include(x => x.CreatorUser)
                 .Where(x => x.Members.Any(y => y.UserId == userId))
@@ -127,6 +129,7 @@ namespace MShare_ASP.Services
         public async Task<DaoGroup> GetGroupOfUser(long userId, long groupId)
         {
             var daoGroup = await Context.Groups
+                .Where(x => !x.Deleted)
                 .Include(x => x.Members).ThenInclude(x => x.User)
                 .Include(x => x.CreatorUser)
                 .SingleOrDefaultAsync(x => x.Id == groupId);
@@ -226,12 +229,13 @@ namespace MShare_ASP.Services
         public async Task CreateGroup(long userId, NewGroup newGroup)
         {
             using (var transaction = Context.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
-            {   
+            {
                 try
                 {
                     var existingGroup = await Context.Groups
                         .SingleOrDefaultAsync(x => x.CreatorUserId == userId &&
-                            x.Name == newGroup.Name);
+                            x.Name == newGroup.Name &&
+                            !x.Deleted);
 
                     if (existingGroup != null)
                         throw new BusinessException("name_taken");
@@ -252,6 +256,81 @@ namespace MShare_ASP.Services
 
                     if (await Context.SaveChangesAsync() != 1)
                         throw new DatabaseException("group_create_history_not_saved");
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+
+        public async Task DeleteGroup(long userId, long groupId)
+        {
+
+            using (var transaction = Context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var daoGroup = await GetGroupOfUser(userId, groupId);
+
+                    daoGroup.Deleted = true;
+
+                    if (daoGroup.CreatorUserId != userId)
+                        throw new ResourceForbiddenException("not_group_creator");
+
+                    var affectedUsers = daoGroup.Members.Select(x => x.UserId).ToHashSet();
+
+
+                    var userIds = daoGroup.Members.Select(x => x.UserId).ToArray();
+
+                    OptimizedService.DebtMatrix debtMatrix = new OptimizedService.DebtMatrix(userIds);
+
+                    var optimizedDebts = await Context.OptimizedDebt
+                        .Where(x => x.GroupId == groupId)
+                        .ToListAsync();
+
+                    foreach (var optimizedDebt in optimizedDebts)
+                    {
+                        debtMatrix.UpdateDebt(optimizedDebt.UserOwesId, optimizedDebt.UserOwedId, optimizedDebt.OweAmount);
+                    }
+
+                    await History.LogDeleteGroup(userId, daoGroup, affectedUsers, debtMatrix.GetOptimizedDebts());
+
+                    var deletor = await Context.Users.SingleAsync(x => x.Id == userId);
+
+                    foreach (var member in daoGroup.Members)
+                    {
+                        var lang = member.User.Lang;
+                        var name = member.User.DisplayName;
+                        var email = member.User.Email;
+                        var lastCredit = debtMatrix.GetBalance(member.UserId);
+                        var lastBalance = (lastCredit == 0 ? Localizer.GetString(lang, LocalizationResource.SETTLED) : lastCredit.ToString());
+
+                        var model = new InformationViewModel()
+                        {
+                            Title = Localizer.GetString(lang, LocalizationResource.EMAIL_GROUPDELETE_SUBJECT),
+                            PreHeader = Localizer.GetString(lang, LocalizationResource.EMAIL_GROUPDELETE_PREHEADER),
+                            Hero = Localizer.GetString(lang, LocalizationResource.EMAIL_GROUPDELETE_HERO),
+                            Greeting = Localizer.GetString(lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, name),
+
+                            Intro = Localizer.GetString(lang, LocalizationResource.EMAIL_GROUPDELETE_BODY_INTRO,
+                                    deletor.DisplayName,
+                                    daoGroup.Name,
+                                    lastBalance + " Ft"),
+
+                            EmailDisclaimer = Localizer.GetString(lang, LocalizationResource.EMAIL_GROUPDELETE_BODY_DISCLAIMER),
+                            Cheers = Localizer.GetString(lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
+                            MShareTeam = Localizer.GetString(lang, LocalizationResource.MSHARE_TEAM),
+                            SiteBaseUrl = $"{UriConf.URIForEndUsers}"
+                        };
+                        var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
+                        await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, name, email, Localizer.GetString(lang, LocalizationResource.EMAIL_GROUPDELETE_SUBJECT), htmlBody);
+                    }
+
+                    await Context.SaveChangesAsync();
+
                     transaction.Commit();
                 }
                 catch
