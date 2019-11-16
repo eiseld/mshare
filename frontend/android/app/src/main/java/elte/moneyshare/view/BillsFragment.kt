@@ -12,8 +12,9 @@ import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
-import elte.moneyshare.util.TimeExtensions
 import elte.moneyshare.util.convertErrorCodeToString
+import elte.moneyshare.util.convertToCalendar
+import elte.moneyshare.util.formatDate
 import elte.moneyshare.view.Adapter.BillsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_bills.*
@@ -43,8 +44,8 @@ class BillsFragment : Fragment() {
                     if (bills != null) {
 
                         val orderedBills = bills.map { spendingData ->
-                            val calendar = TimeExtensions.convertToCalendar(spendingData.date)
-                            spendingData.date = TimeExtensions.formatDate(calendar)
+                            val calendar = spendingData.date.convertToCalendar()
+                            spendingData.date = calendar.formatDate()
                             Pair(calendar, spendingData)
                         }.sortedByDescending { pair -> pair.first }
                         .map { pair -> pair.second }

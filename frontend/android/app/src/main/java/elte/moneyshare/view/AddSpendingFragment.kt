@@ -18,8 +18,10 @@ import elte.moneyshare.entity.NewSpending
 import elte.moneyshare.entity.SpendingUpdate
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
-import elte.moneyshare.util.TimeExtensions
 import elte.moneyshare.util.convertErrorCodeToString
+import elte.moneyshare.util.formatDate
+import elte.moneyshare.util.convertToCalendar
+import elte.moneyshare.util.convertToBackendFormat
 import elte.moneyshare.view.Adapter.SelectMembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_add_spending.*
@@ -36,7 +38,7 @@ class AddSpendingFragment : Fragment() {
 
     private val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, date ->
         calendar.set(year, month, date)
-        dateEditText.setText(TimeExtensions.formatDate(calendar))
+        dateEditText.setText(calendar.formatDate())
     }
 
     override fun onCreateView(
@@ -78,8 +80,8 @@ class AddSpendingFragment : Fragment() {
                                         nameEditText.setText(it.name)
 
                                         //Set Calendar
-                                        calendar = TimeExtensions.convertToCalendar(it.date)
-                                        dateEditText.setText(TimeExtensions.formatDate(calendar))
+                                        calendar = it.date.convertToCalendar()
+                                        dateEditText.setText(calendar.formatDate())
 
                                         val debtorIds = it.debtors.map { it.id }
                                         (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds = ArrayList(debtorIds)
@@ -92,7 +94,7 @@ class AddSpendingFragment : Fragment() {
                                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING, context), context)
                             }
                         } else {
-                            dateEditText.setText(TimeExtensions.formatDate(calendar))
+                            dateEditText.setText(calendar.formatDate())
                         }
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
@@ -101,7 +103,7 @@ class AddSpendingFragment : Fragment() {
             }
         }
 
-        dateEditText!!.setOnClickListener {
+        dateEditText?.setOnClickListener {
             DatePickerDialog(
                 activity,
                 dateSetListener,
@@ -189,7 +191,7 @@ class AddSpendingFragment : Fragment() {
                     moneySpent = Integer.valueOf(spendingEditText.editableText.toString()),
                     name = nameEditText.editableText.toString(),
                     debtors = debtors,
-                    date = TimeExtensions.convertToBackendFormat(calendar)
+                    date = calendar.convertToBackendFormat()
                 )
 
                 viewModel.postSpending(spending) { response, error ->
@@ -209,7 +211,7 @@ class AddSpendingFragment : Fragment() {
                     creditorUserId = SharedPreferences.userId,
                     moneySpent = Integer.valueOf(spendingEditText.editableText.toString()),
                     debtors = debtors,
-                    date = TimeExtensions.convertToBackendFormat(calendar)
+                    date = calendar.convertToBackendFormat()
                 )
 
                 viewModel.postSpendingUpdate(spending) { response, error ->
