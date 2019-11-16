@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MShare_ASP.API.Request;
 using MShare_ASP.Data;
 using MShare_ASP.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -174,7 +174,7 @@ namespace MShare_ASP.Services
             var daoSpendings = await Context.Spendings
                .Include(x => x.Creditor)
                .Include(x => x.Debtors).ThenInclude(x => x.Debtor)
-               .Where(x => x.GroupId == groupId)
+               .Where(x => x.GroupId == groupId && !x.IsFutureDate)
                .ToListAsync();
 
             var daoSettlements = Context.Settlements

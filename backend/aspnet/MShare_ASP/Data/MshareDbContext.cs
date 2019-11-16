@@ -57,6 +57,10 @@ namespace MShare_ASP.Data
 
             modelBuilder.Entity<DaoOptimizedDebt>()
                 .HasKey(o => new { o.GroupId, o.UserOwesId, o.UserOwedId });
+
+            modelBuilder.Entity<DaoSpending>()
+                .Property(p => p.IsFutureDate)
+                .HasColumnType("bit");
         }
     }
 }

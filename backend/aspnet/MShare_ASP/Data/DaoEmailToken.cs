@@ -25,7 +25,7 @@ namespace MShare_ASP.Data
 
         /// <summary>Primary key of the emailtoken</summary>
         [Column("token")]
-        public String Token { get; set; }
+        public string Token { get; set; }
 
         /// <summary>Date and time of expiration</summary>
         [Column("expiration_date")]

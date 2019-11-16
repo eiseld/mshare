@@ -6,5 +6,6 @@ data class SpendingUpdate (
     var id: Int,
     var creditorUserId : Int,
     var moneySpent: Int,
-    var debtors: ArrayList<Debtor>
+    var debtors: ArrayList<Debtor>,
+    var date: String
 )

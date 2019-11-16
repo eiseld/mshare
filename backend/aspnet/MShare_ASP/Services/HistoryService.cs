@@ -70,6 +70,7 @@ namespace MShare_ASP.Services
                 {
                     Name = x.Name,
                     MoneyOwed = x.MoneyOwed,
+                    Date = x.Date,
                     Debtors = x.Debtors.Select(d => new
                     {
                         DebtorId = d.DebtorUserId,
@@ -86,7 +87,8 @@ namespace MShare_ASP.Services
                     {
                         Name = x.Spending.Name,
                         CreditorId = x.Spending.CreditorUserId,
-                        MoneyOwed = x.Debt // MoneyOwed = 0, because we removed this member's debt, so moneyowed 'was' the whole debt of this member
+                        MoneyOwed = x.Debt, // MoneyOwed = 0, because we removed this member's debt, so moneyowed 'was' the whole debt of this member
+                        Date = x.Spending.Date
                     }) : null
                 });
 
@@ -154,6 +156,9 @@ namespace MShare_ASP.Services
             // Money
             historyEntry.Money = newSpending.MoneyOwed;
 
+            // Date
+            historyEntry.Date = newSpending.Date;
+
             // Debtors
             var debtors = newSpending.Debtors
                             .Select(x => new
@@ -182,6 +187,13 @@ namespace MShare_ASP.Services
             {
                 historyEntry.oldMoney = oldSpending.MoneyOwed;
                 historyEntry.newMoney = newSpending.MoneySpent;
+            }
+
+            //  Make date delta
+            if (oldSpending.Date != newSpending.Date)
+            {
+                historyEntry.oldDate = oldSpending.Date;
+                historyEntry.newDate = newSpending.Date;
             }
 
             // Record removed debts
@@ -243,7 +255,8 @@ namespace MShare_ASP.Services
 			{
 				Name = deletedSpending.Name,
 				MoneyOwed = deletedSpending.MoneyOwed,
-				Debtors = deletedSpending.Debtors.Select(d => new
+                Date = deletedSpending.Date,
+                Debtors = deletedSpending.Debtors.Select(d => new
 				{
 					DebtorId = d.DebtorUserId,
 					Debt = d.Debt
