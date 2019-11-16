@@ -15,6 +15,8 @@ namespace MShare_ASP.Services
         /// <exception cref="ResourceNotFoundException">["group"]</exception>
         /// <exception cref="ResourceForbiddenException">["not_group_member"]</exception>
 		Task<IList<DaoHistory>> GetGroupHistory(long userId, long groupId);
+        /// <summary>Gets the history for a user</summary>
+        Task<IList<DaoHistory>> GetHistory(long userId);
 
         /// <summary>Logs a whole or partial update of a spending</summary>
         Task LogSpendingUpdate(long userId, DaoSpending currentSpending, SpendingUpdate spendingUpdate);
@@ -26,9 +28,11 @@ namespace MShare_ASP.Services
         Task LogAddMember(long userId, long groupId, long memberId);
         /// <summary>Logs the removal of a member from a group and every modified entity that comes with it</summary>
         Task LogRemoveMember(long userId, long groupId, long memberId, HashSet<long> affectedUsers, DaoSettlement[] participatedSettlements, DaoSpending[] mySpendings, DaoDebtor[] myDebts);
-		/// <summary>Logs the removal of a spending from a group</summary>
-		Task LogRemoveSpending(long userId, long groupId, DaoSpending deletedSpending, HashSet<long> affectedUsers);
-		/// <summary>Logs a new group creation, should be called after a savechanges in transaction, becase it needs the ID of the added group</summary>
-		Task LogCreateGroup(long userId, DaoGroup daoGroup);
+        /// <summary>Logs the removal of a spending from a group</summary>
+        Task LogRemoveSpending(long userId, long groupId, DaoSpending deletedSpending, HashSet<long> affectedUsers);
+        /// <summary>Logs a new group creation, should be called after a savechanges in transaction, becase it needs the ID of the added group</summary>
+        Task LogCreateGroup(long userId, DaoGroup daoGroup);
+        /// <summary>Logs a deletion of a group</summary>
+        Task LogDeleteGroup(long userId, DaoGroup group, HashSet<long> affectedUsers, IList<OptimizedService.DebtMatrix.OptimizedDebt> debts);
     }
 }

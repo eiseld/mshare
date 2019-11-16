@@ -159,6 +159,21 @@
   <data name="EMAIL_FORGOTPSW_SUBJECT" xml:space="preserve">
     <value>MShare - Jelszó változtatás</value>
   </data>
+  <data name="EMAIL_GROUPDELETE_BODY_DISCLAIMER" xml:space="preserve">
+    <value>Azért kapod a levelet, mert kitöröltek egy csoportot, amelynek tagja voltál.</value>
+  </data>
+  <data name="EMAIL_GROUPDELETE_BODY_INTRO" xml:space="preserve">
+    <value>{0} kitörölte a "{1}" nevű csoportot, amelynek tagja voltál. Utolsó számlaegyenleged {2} volt.</value>
+  </data>
+  <data name="EMAIL_GROUPDELETE_HERO" xml:space="preserve">
+    <value>Törölt csoport</value>
+  </data>
+  <data name="EMAIL_GROUPDELETE_PREHEADER" xml:space="preserve">
+    <value>Egy csoportodat kitörölték az MShare - MoneyShare alkalmazásban.</value>
+  </data>
+  <data name="EMAIL_GROUPDELETE_SUBJECT" xml:space="preserve">
+    <value>MShare - Csoportod törölték</value>
+  </data>
   <data name="EMAIL_PASSWORDCHANGED_BODY_DISCLAIMER" xml:space="preserve">
     <value>Ha nem te változtattad meg a jelszavad, kérlek nézd át a felhasználód bejelentkezési információit, illetve futtass egy víruskeresést!</value>
   </data>
@@ -194,5 +209,8 @@
   </data>
   <data name="MSHARE_TEAM" xml:space="preserve">
     <value>MShare - MoneyShare csapata</value>
+  </data>
+  <data name="SETTLED" xml:space="preserve">
+    <value>Kiegyenlítve</value>
   </data>
 </root>

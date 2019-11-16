@@ -1,6 +1,5 @@
 package elte.moneyshare.view
 
-
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -39,7 +38,7 @@ class GroupsFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.createGroup -> {
+            R.id.addGroup -> {
                 activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, NewGroupFragment())?.addToBackStack(null)?.commit()
                 return true
             }

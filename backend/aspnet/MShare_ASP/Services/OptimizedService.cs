@@ -8,11 +8,39 @@ using System.Threading.Tasks;
 
 namespace MShare_ASP.Services
 {
-    internal class OptimizedService : IOptimizedService
+    /// <summary> Implementation of IOptimizedService</summary>
+    public class OptimizedService : IOptimizedService
     {
         private MshareDbContext Context { get; }
 
-        internal class DebtMatrix
+        private Dictionary<long, long> CalculateDeltaDebts(Dictionary<long, long> oldDebts, Dictionary<long, long> newDebts)
+        {
+            var deltaDebts = new Dictionary<long, long>();
+
+            foreach (var oldDebt in oldDebts)
+            {
+                var key = oldDebt.Key;
+                var oldValue = oldDebt.Value;
+                var newValue = newDebts.ContainsKey(key) ? newDebts[key] : 0;
+
+                deltaDebts[key] = newValue - oldValue;
+            }
+
+            foreach (var newDebt in newDebts)
+            {
+                var key = newDebt.Key;
+                var newValue = newDebt.Value;
+
+                if (!deltaDebts.ContainsKey(key))
+                {
+                    deltaDebts[key] = newValue;
+                }
+            }
+
+            return deltaDebts;
+        }
+
+        public class DebtMatrix
         {
             public class OptimizedDebt
             {
@@ -49,6 +77,22 @@ namespace MShare_ASP.Services
             public void UpdateDebt(long debtorId, long creditorId, long dAmount)
             {
                 matrix[userIdToIndex[debtorId]][userIdToIndex[creditorId]] += dAmount;
+            }
+
+            public void SetDebt(long debtorId, long creditorId, long amount)
+            {
+                matrix[userIdToIndex[debtorId]][userIdToIndex[creditorId]] = amount;
+            }
+
+            public long GetBalance(long userId)
+            {
+                var userIndex = userIdToIndex[userId];
+                var debt = matrix[userIndex].Sum(x => x);
+                var credit = 0l;
+                for (int i = 0; i < matrix.Length; i++) {
+                    credit += matrix[i][userIdToIndex[userId]];
+                }
+                return credit - debt;
             }
 
             public void Optimize()
@@ -99,12 +143,33 @@ namespace MShare_ASP.Services
             await Context.AddRangeAsync(daoOptimizedDebts);
         }
 
+        private async Task<DebtMatrix> LoadDebtMatrix(long groupId)
+        {
+            var daoGroup = await Context.Groups
+               .SingleOrDefaultAsync(x => x.Id == groupId && !x.Deleted);
+
+            var userIds = daoGroup.Members.Select(x => x.UserId).ToArray();
+
+            DebtMatrix debtMatrix = new DebtMatrix(userIds);
+
+            var optimizedDebts = await Context.OptimizedDebt
+                .Where(x => x.GroupId == groupId)
+                .ToListAsync();
+
+            foreach (var optimizedDebt in optimizedDebts)
+            {
+                debtMatrix.UpdateDebt(optimizedDebt.UserOwesId, optimizedDebt.UserOwedId, optimizedDebt.OweAmount);
+            }
+
+            return debtMatrix;
+        }
+
         private async Task OptimizeHelper(long groupId)
         {
             var daoGroup = await Context.Groups
                     .Include(x => x.Members).ThenInclude(x => x.User)
                     .Include(x => x.CreatorUser)
-                    .SingleOrDefaultAsync(x => x.Id == groupId);
+                    .SingleOrDefaultAsync(x => x.Id == groupId && !x.Deleted);
 
             var daoSpendings = await Context.Spendings
                .Include(x => x.Creditor)
@@ -152,7 +217,7 @@ namespace MShare_ASP.Services
 
         public async Task OptimizeForAllGroup()
         {
-            var groupIds = Context.Groups.Select(x => x.Id).ToList();
+            var groupIds = Context.Groups.Where(x => !x.Deleted).Select(x => x.Id).ToList();
 
             foreach (var groupId in groupIds)
             {
@@ -168,6 +233,41 @@ namespace MShare_ASP.Services
         {
             await OptimizeHelper(groupId);
             await Context.SaveChangesAsync();
+        }
+
+        public async Task OptimizeForNewSpending(long userId, NewSpending newSpending)
+        {
+            DebtMatrix debtMatrix = await LoadDebtMatrix(newSpending.GroupId);
+
+            foreach (var debtor in newSpending.Debtors)
+            {
+                debtMatrix.UpdateDebt(debtor.DebtorId, userId, debtor.Debt);
+            }
+
+            debtMatrix.Optimize();
+            await SaveDebtMatrix(newSpending.GroupId, debtMatrix);
+        }
+
+        public async Task OptimizeForUpdateSpending(long groupId, long creditorId, Dictionary<long, long> oldDebts, Dictionary<long, long> newDebts)
+        {
+            DebtMatrix debtMatrix = await LoadDebtMatrix(groupId);
+            Dictionary<long, long> deltaDebts = CalculateDeltaDebts(oldDebts, newDebts);
+
+            foreach (var deltaDebt in deltaDebts)
+            {
+                debtMatrix.UpdateDebt(deltaDebt.Key, creditorId, deltaDebt.Value);
+            }
+
+            debtMatrix.Optimize();
+            await SaveDebtMatrix(groupId, debtMatrix);
+        }
+
+        public async Task OptimizeForSettling(long groupId, long creditorId, long debtorId)
+        {
+            DebtMatrix debtMatrix = await LoadDebtMatrix(groupId);
+            debtMatrix.SetDebt(debtorId, creditorId, 0);
+            debtMatrix.Optimize();
+            await SaveDebtMatrix(groupId, debtMatrix);
         }
     }
 }

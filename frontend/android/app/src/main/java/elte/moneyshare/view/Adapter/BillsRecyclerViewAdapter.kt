@@ -3,9 +3,7 @@ package elte.moneyshare.view.Adapter
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -13,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
-import android.widget.Toast
 import elte.moneyshare.*
 import elte.moneyshare.entity.SpendingData
 import elte.moneyshare.manager.DialogManager
@@ -27,7 +24,7 @@ import elte.moneyshare.viewmodel.GroupViewModel
 class BillsRecyclerViewAdapter(
     private val context: Context,
     private val bills: MutableList<SpendingData>,
-    private val groupId : Int,
+    private val groupId: Int,
     private val model: GroupViewModel
 ) : RecyclerView.Adapter<BillViewHolder>() {
 
@@ -49,7 +46,7 @@ class BillsRecyclerViewAdapter(
         holder.billMoneyTextView.text = String.format(context.getString(R.string.bill_money, bill.moneyOwed))
 
 
-        if(bill.creditor.id == SharedPreferences.userId) {
+        if (bill.creditor.id == SharedPreferences.userId) {
             holder.removeBillImageButtonView.visibility = View.VISIBLE
         } else {
             holder.removeBillImageButtonView.visibility = View.GONE
@@ -61,7 +58,7 @@ class BillsRecyclerViewAdapter(
 
         holder.billRootConstraintLayout.setOnClickListener {
 
-            if (holder.billMembersRecyclerView?.alpha == 0f){
+            if (holder.billMembersRecyclerView?.alpha == 0f) {
                 holder.billMembersRecyclerView?.alpha = 1f
                 holder.billMembersRecyclerView?.visible()
 
@@ -106,69 +103,33 @@ class BillsRecyclerViewAdapter(
 
         holder.removeBillImageButtonView.setOnClickListener()
         {
-            val builder = AlertDialog.Builder(context)
-            builder.setMessage(context.getString(R.string.doYouReallyWantToDeleteSpending))
-
-            builder.setPositiveButton(context.getString(R.string.yes)) { dialog, which ->
-                DialogManager.showInfoDialog(context.getString(R.string.spendingSuccessfullyDeleted), context)
+            DialogManager.confirmationDialog(context.getString(R.string.doYouReallyWantToDeleteSpending), context) {
                 model.deleteSpending(bill.id, groupId) { response, error ->
                     if (error == null) {
                         bills.removeAt(position)
                         notifyItemRemoved(position)
+                        DialogManager.showInfoDialog(context.getString(R.string.spendingSuccessfullyDeleted), context)
                     } else {
-                        DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING_DELETE,context), context)
+                        DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING_DELETE, context), context)
                     }
                 }
             }
-
-            builder.setNeutralButton(context.getString(R.string.no)) { _, _ -> }
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
         }
-
     }
-    private fun showModifyDialog(id: Int){
-        // Late initialize an alert dialog object
-        lateinit var dialog:AlertDialog
 
-
-        // Initialize a new instance of alert dialog builder object
-        val builder = AlertDialog.Builder(context)
-
-        // Set a title for alert dialog
-        builder.setTitle(context.getString(R.string.modify_spending))
-
-        // Set a message for alert dialog
-        builder.setMessage(context.getString(R.string.confirm_spending_modification))
-
-
-        // On click listener for dialog buttons
-        val dialogClickListener = DialogInterface.OnClickListener{_,which ->
-            when(which){
-                DialogInterface.BUTTON_POSITIVE -> modifySpending(id)
-                DialogInterface.BUTTON_NEGATIVE -> Toast.makeText(context, context.getString(R.string.modify_cancelled), Toast.LENGTH_SHORT).show()
-            }
+    private fun showModifyDialog(id: Int) {
+        DialogManager.confirmationDialog(
+            message = context.getString(R.string.confirm_spending_modification),
+            title = context.getString(R.string.modify_spending),
+            context = context
+        ) {
+            val fragment = AddSpendingFragment()
+            val args = Bundle()
+            args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, groupId)
+            args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value, id)
+            fragment.arguments = args
+            (context as MainActivity).supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
         }
-        builder.setPositiveButton(context.getString(R.string.yes),dialogClickListener)
-
-        builder.setNegativeButton(context.getString(R.string.no),dialogClickListener)
-
-
-
-        dialog = builder.create()
-
-        dialog.show()
     }
-
-    private fun modifySpending(id: Int)
-    {
-        val fragment = AddSpendingFragment()
-        val args = Bundle()
-        args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, groupId)
-        args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value,id)
-        fragment.arguments = args
-        (context as MainActivity).supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
-    }
-
 }
