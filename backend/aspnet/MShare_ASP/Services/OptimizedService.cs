@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MShare_ASP.API.Request;
 using MShare_ASP.Data;
 using MShare_ASP.Utils;
 using System;
@@ -88,7 +89,7 @@ namespace MShare_ASP.Services
             {
                 var userIndex = userIdToIndex[userId];
                 var debt = matrix[userIndex].Sum(x => x);
-                var credit = 0l;
+                var credit = 0L;
                 for (int i = 0; i < matrix.Length; i++) {
                     credit += matrix[i][userIdToIndex[userId]];
                 }
