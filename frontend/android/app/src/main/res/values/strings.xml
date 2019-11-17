@@ -90,6 +90,8 @@
     <string name="modify_cancelled">Költés módosítás megszakítva</string>
     <string name="ok">Ok</string>
 
+    <string name="history_tab">Történet</string>
+
     <string name="on_failure_message">Hálózati hiba!</string>
     <string name="group_created">Csoport létrehozva!</string>
 

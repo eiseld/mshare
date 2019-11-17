@@ -81,7 +81,7 @@ class GroupPagerFragment : Fragment() {
                 groupId?.let {
                     args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
                 }
-                args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value, -1)
+                args.putInt(FragmentDataKeys.ADD_SPENDING_FRAGMENT.value, -1)
                 fragment.arguments = args
                 (context as MainActivity).supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
@@ -161,6 +161,7 @@ class GroupPagerFragment : Fragment() {
         if (tabs.isEmpty()) {
             context?.getString(R.string.members_tab)?.let { tabs.add(it) }
             context?.getString(R.string.bills_tab)?.let { tabs.add(it) }
+            context?.getString(R.string.history_tab)?.let { tabs.add(it) }
         }
         initViewPager()
 
@@ -170,7 +171,7 @@ class GroupPagerFragment : Fragment() {
         groupId?.let {
             pagerAdapter = GroupPagerAdapter(it, tabs, childFragmentManager)
             viewPager.adapter = pagerAdapter
-            viewPager.offscreenPageLimit = 1
+            viewPager.offscreenPageLimit = 2
             tabLayout.setupWithViewPager(viewPager)
             tabLayout.getTabAt(0)?.select()
         }

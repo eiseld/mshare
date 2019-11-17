@@ -115,4 +115,17 @@ class GroupViewModel : ViewModel() {
             }
         }
     }
+
+    fun getGroupHistory(
+        groupId: String,
+        startIndex: String,
+        count: String, completion: (filteredUsers: List<GroupHistoryEvent>?, error: String?) -> Unit) {
+        APIClient.getRepository().getGroupHistory(groupId, startIndex, count) {  groupHistory, error ->
+            if (error == null) {
+                completion(groupHistory, null)
+            } else {
+                completion(null, error)
+            }
+        }
+    }
 }

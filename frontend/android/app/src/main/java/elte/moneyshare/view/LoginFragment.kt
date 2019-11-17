@@ -52,6 +52,7 @@ class LoginFragment : Fragment() {
         }
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
+        //loginButton.enable()
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
@@ -72,27 +73,29 @@ class LoginFragment : Fragment() {
                 emailTextInputLayout.error = null
             }
             if(!err) {
-                viewModel.putLoginUser(email, password) { _, error ->
-                    if (error == null) {
-                        if (stayLoggedInCheckBox.isChecked) {
-                            SharedPreferences.stayLoggedIn = true
-                        }
+                //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
+                    viewModel.putLoginUser(email, password) { _, error ->
+                        if (error == null) {
+                            if (stayLoggedInCheckBox.isChecked) {
+                                SharedPreferences.stayLoggedIn = true
+                            }
 
-                        val intent = Intent(context, MainActivity::class.java)
-                        startActivity(intent)
-                        activity?.finish()
-                        //activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
-                    } else {
-                        DialogManager.showInfoDialog(
-                            error.convertErrorCodeToString(
-                                Action.AUTH_LOGIN,
-                                context
-                            ), context
-                        )
+                            val intent = Intent(context, MainActivity::class.java)
+                            startActivity(intent)
+                            activity?.finish()
+                            //activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
+                        } else {
+                            DialogManager.showInfoDialog(
+                                error.convertErrorCodeToString(
+                                    Action.AUTH_LOGIN,
+                                    context
+                                ), context
+                            )
+                        }
                     }
                 }
             }
-            }
+        }
 
         if (BuildConfig.FLAVOR == "local") {
             urlEditText.visible()
