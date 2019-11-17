@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
+import elte.moneyshare.entity.HistoryType
 import elte.moneyshare.viewmodel.GroupViewModel
+import kotlinx.android.synthetic.main.fragment_group_history.*
 
 class GroupHistoryFragment : Fragment() {
 
@@ -30,9 +32,13 @@ class GroupHistoryFragment : Fragment() {
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
 
-            groupId?.let { groupId ->
-            }
+            myNameTextView.text = HistoryType.UPDATE.toString(it)
 
+            groupId?.let { groupId ->
+                viewModel.getGroupHistory(groupId, 0, 0) { groupHistory, error ->
+
+                }
+            }
         }
     }
 }

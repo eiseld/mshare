@@ -50,7 +50,7 @@ interface APIDefinition {
     fun getSearchedUsers(@Path("filter") filter: String): Call<ArrayList<FilteredUserData>>
 
     @GET("Group/{groupId}/history/{startIndex}/{count}")
-    fun getGroupHistory(@Path("groupId") groupId: String, @Path("startIndex") startIndex: String, @Path("count") count: String): Call<List<GroupHistoryEvent>>
+    fun getGroupHistory(@Path("groupId") groupId: Int, @Path("startIndex") startIndex: Int, @Path("count") count: Int): Call<List<GroupHistoryEvent>>
 
     //PROFILE
     @GET("Profile/groups")

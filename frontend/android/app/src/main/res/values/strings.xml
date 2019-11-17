@@ -111,6 +111,14 @@
     <string name="add_member_button_label">Hozzáad</string>
     <string name="added_member_button_label">Hozzáadva</string>
 
+    <!-- region History -->
+    <string name="update">Módosítás</string>
+    <string name="create">Létrehozás</string>
+    <string name="delete">Törlés</string>
+    <string name="remove">Törlés</string>
+
+    <!-- endregion History -->
+
     <!-- API responses -->
 
     <!-- Authorization -->
@@ -198,5 +206,4 @@
     <string name="change_bank_account_label">Bankszámla szám módosítása</string>
     <string name="bank_account_not_set">Bankszámla szám még nincs beállítva!</string>
     <string name="member_added_to_group_successfully">Tag sikeresen hozzáadva a csoporthoz!</string>
-
 </resources>

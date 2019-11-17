@@ -238,9 +238,9 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
     }
 
     override fun getGroupHistory(
-        groupId: String,
-        startIndex: String,
-        count: String,
+        groupId: Int,
+        startIndex: Int,
+        count: Int,
         completion: (response: List<GroupHistoryEvent>?, error: String?) -> Unit
     ) {
         apiDefinition.getGroupHistory(groupId, startIndex, count).enqueue(object : Callback<List<GroupHistoryEvent>> {
