@@ -92,7 +92,9 @@ namespace MShare_ASP.Services
                 LastModified = Context.History
                         .Where(x => x.GroupId.HasValue)
                         .Where(x => x.GroupId == daoGroup.Id)
-                        .Max(x => x.Date)
+                        .Select(x => x.Date)
+                        .DefaultIfEmpty(default)
+                        .Max()
             };
         }
 
