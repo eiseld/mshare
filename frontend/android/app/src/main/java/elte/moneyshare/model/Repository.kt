@@ -115,25 +115,6 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    override fun postChangePassword(oldPassword: String, newPassword: String, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.postChangePassword(ChangePasswordData(oldPassword, newPassword)).enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                when (response?.code()) {
-                    in (200..300) -> {
-                        completion(response.code().toString(), null)
-                    }
-                    else -> {
-                        completion(null, response.code().toString())
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                completion(null, onFailureMessage)
-            }
-        })
-    }
-
     //GROUP
     override fun getGroupInfo(groupId: Int, completion: (response: GroupInfo?, error: String?) -> Unit) {
         apiDefinition.getGroupInfo(groupId).enqueue(object : Callback<GroupInfo> {

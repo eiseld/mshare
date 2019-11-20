@@ -12,6 +12,7 @@ import android.widget.Toast
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.ChangePasswordData
+import elte.moneyshare.entity.PasswordUpdate
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
@@ -133,11 +134,8 @@ class SettingsFragment : Fragment() {
         })
 
         passwordSaveButton.setOnClickListener {
-            viewModel.changePassword (
-                changePasswordData = ChangePasswordData(
-                    oldPasswordText.text.toString(),
-                    newPasswordText.text.toString()
-                )
+            viewModel.passwordUpdate (
+                passwordUpdate = PasswordUpdate("", "", oldPasswordText.text.toString(), newPasswordText.text.toString())
             ) { response, error ->
                 if (error == null) {
                     if(response == "200") {

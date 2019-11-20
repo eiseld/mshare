@@ -62,9 +62,6 @@ interface APIDefinition {
     @POST("profile/password/forgot")
     fun postForgotPassword(@Body email: ForgottenPasswordData): Call<ResponseBody>
 
-    @POST("profile/password/change")
-    fun postChangePassword(@Body changePasswordData: ChangePasswordData): Call<ResponseBody>
-
     @POST("Profile/password/update")
     fun postPasswordUpdate(@Body passwordUpdate: PasswordUpdate): Call<ResponseBody>
 

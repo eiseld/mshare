@@ -1,10 +1,7 @@
 package elte.moneyshare.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import elte.moneyshare.entity.BankAccountNumberUpdate
-import elte.moneyshare.entity.ChangePasswordData
-import elte.moneyshare.entity.NewGroup
-import elte.moneyshare.entity.UserData
+import elte.moneyshare.entity.*
 import elte.moneyshare.model.APIClient
 import okhttp3.ResponseBody
 
@@ -43,8 +40,8 @@ class ProfileViewModel : ViewModel() {
         }
     }
 
-    fun changePassword(changePasswordData: ChangePasswordData, completion: (response: String?, error: String?) -> Unit) {
-        APIClient.getRepository().postChangePassword(changePasswordData.oldPassword, changePasswordData.newPassword) { response, error ->
+    fun passwordUpdate(passwordUpdate: PasswordUpdate, completion: (response: String?, error: String?) -> Unit) {
+        APIClient.getRepository().postPasswordUpdate(passwordUpdate) { response, error ->
             if(error == null) {
                 completion(response, null)
             } else {
