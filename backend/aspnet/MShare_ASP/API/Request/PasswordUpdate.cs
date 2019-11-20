@@ -27,7 +27,7 @@ namespace MShare_ASP.API.Request
         public PasswordUpdateValidator()
         {
             RuleFor(x => x.Email)
-                .EmailAddress().When(x => x.OldPassword != null)
+                .EmailAddress().When(x => x.OldPassword == null)
                 .Null().When(x => x.OldPassword != null);
 
             RuleFor(x => x.Password)
