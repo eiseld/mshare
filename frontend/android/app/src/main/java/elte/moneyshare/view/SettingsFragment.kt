@@ -55,6 +55,11 @@ class SettingsFragment : Fragment() {
 
         fun passwordValidator(txt: String): String {
             var pwdError = ""
+
+            if(txt.isEmpty()) {
+                return pwdError
+            }
+
             val uppercaseRegex = """[A-Z]""".toRegex()
             val lowercaseRegex = """[a-z]""".toRegex()
             val numberRegex    = """[0-9]""".toRegex()
@@ -135,7 +140,7 @@ class SettingsFragment : Fragment() {
 
         passwordSaveButton.setOnClickListener {
             viewModel.passwordUpdate (
-                passwordUpdate = PasswordUpdate("", "", oldPasswordText.text.toString(), newPasswordText.text.toString())
+                passwordUpdate = PasswordUpdate(null, null, oldPasswordText.text.toString(), newPasswordText.text.toString())
             ) { response, error ->
                 if (error == null) {
                     if(response == "200") {
