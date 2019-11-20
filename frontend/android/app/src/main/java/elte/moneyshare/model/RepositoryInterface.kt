@@ -20,6 +20,8 @@ interface RepositoryInterface {
 
     fun postNewGroup(name: NewGroup, completion: (response: String?, error: String?) -> Unit)
 
+    fun deleteGroup(groupId: Int, completion: (response:String?, error: String?) -> Unit)
+
     fun deleteMember(groupId: Int, memberId : Int, completion: (response: String?, error: String?) -> Unit)
 
     fun postMember(groupId: Int, memberId : Int, completion: (response: String?, error: String?) -> Unit)

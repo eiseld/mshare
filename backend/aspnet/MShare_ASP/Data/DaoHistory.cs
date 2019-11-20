@@ -48,7 +48,7 @@ namespace MShare_ASP.Data
 
         /// <summary>Date of the history</summary>
         [Column("date")]
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
 
         /// <summary>Type of this history</summary>
         [EnumDataType(typeof(DaoLogType.Type))]

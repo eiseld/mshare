@@ -8,7 +8,7 @@ import elte.moneyshare.R
 enum class Action
 {
     AUTH_REGISTER, AUTH_VALIDATE, AUTH_LOGIN,
-    GROUPS, GROUPS_ADD_MEMBER, GROUPS_CREATE, GROUPS_SETTLE,
+    GROUPS, GROUPS_ADD_MEMBER, GROUPS_CREATE, GROUPS_DELETE, GROUPS_SETTLE,
     PROFILE, PROFILE_RESET,PROFILE_UPDATE, PROFILE_LANGUAGE,
     SPENDING, SPENDING_CREATE, SPENDING_UPDATE, SPENDING_DELETE, CHANGE_PASSWORD
 }
@@ -37,6 +37,7 @@ fun String?.convertErrorCodeToString(
             Action.GROUPS_ADD_MEMBER -> context?.getString(R.string.api_groups_add_member_200).toString()
             Action.GROUPS_CREATE -> context?.getString(R.string.api_groups_create_group_200).toString()
             Action.GROUPS_SETTLE -> context?.getString(R.string.api_groups_settle_debt_200).toString()
+            Action.GROUPS_DELETE -> context?.getString(R.string.api_groups_delete_group_200).toString()
             Action.PROFILE_RESET -> context?.getString(R.string.api_profile_password_reset_200).toString()
             Action.PROFILE_UPDATE -> context?.getString(R.string.api_profile_password_update_200).toString()
             Action.PROFILE_LANGUAGE -> context?.getString(R.string.api_profile_language_update_200).toString()

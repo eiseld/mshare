@@ -50,7 +50,7 @@ class MembersFragment : Fragment(), MembersRecyclerViewAdapter.MemberDeletedList
 
                         member = groupData.members.find { it.id == SharedPreferences.userId }
                         groupData.members.remove(member)
-
+                        groupData.members.sortByDescending { it.balance }
                         groupDataStored = groupData
 
                         adapter = MembersRecyclerViewAdapter(it, groupData, viewModel, this)

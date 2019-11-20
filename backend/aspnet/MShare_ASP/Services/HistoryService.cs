@@ -6,6 +6,7 @@ using MShare_ASP.Data;
 using MShare_ASP.Services.Exceptions;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -15,10 +16,12 @@ namespace MShare_ASP.Services
 {
     internal class HistoryService : IHistoryService
     {
+        private ITimeService TimeService { get; }
         private MshareDbContext Context { get; }
-        public HistoryService(MshareDbContext context)
+        public HistoryService(MshareDbContext context, ITimeService timeService)
         {
             Context = context;
+            TimeService = timeService;
         }
         public async Task<IList<DaoHistory>> GetGroupHistory(long userId, long groupId)
         {
@@ -36,6 +39,13 @@ namespace MShare_ASP.Services
                 .Where(
                     history =>
                     history.GroupId.HasValue && groupId == history.GroupId.Value)
+                .Where(history => history.Type != DaoLogType.Type.CREATE || history.SubType != DaoLogSubType.Type.GROUP)
+                .ToListAsync();
+        }
+        public async Task<IList<DaoHistory>> GetHistory(long userId)
+        {
+            return await Context.History
+                .Where(history => history.AffectedIds.Contains(userId))
                 .ToListAsync();
         }
         public async Task LogAddMember(long userId, long groupId, long memberId)
@@ -60,6 +70,7 @@ namespace MShare_ASP.Services
                 {
                     Name = x.Name,
                     MoneyOwed = x.MoneyOwed,
+                    Date = x.Date,
                     Debtors = x.Debtors.Select(d => new
                     {
                         DebtorId = d.DebtorUserId,
@@ -76,7 +87,8 @@ namespace MShare_ASP.Services
                     {
                         Name = x.Spending.Name,
                         CreditorId = x.Spending.CreditorUserId,
-                        MoneyOwed = x.Debt // MoneyOwed = 0, because we removed this member's debt, so moneyowed 'was' the whole debt of this member
+                        MoneyOwed = x.Debt, // MoneyOwed = 0, because we removed this member's debt, so moneyowed 'was' the whole debt of this member
+                        Date = x.Spending.Date
                     }) : null
                 });
 
@@ -95,6 +107,27 @@ namespace MShare_ASP.Services
 
             // Log
             await LogHistory(userId, newGroup.Id, new long[] { userId }, DaoLogType.Type.CREATE, DaoLogSubType.Type.GROUP, historyEntry);
+        }
+        public async Task LogDeleteGroup(long userId, DaoGroup group, HashSet<long> affectedUsers, IList<OptimizedService.DebtMatrix.OptimizedDebt> debts)
+        {
+            dynamic historyEntry = new ExpandoObject();
+
+            // Name
+            historyEntry.Name = group.Name;
+
+            // Creator
+            historyEntry.CreatorId = group.CreatorUserId;
+
+            // Removed Spendings
+            historyEntry.LastDebtMatrix = debts.Select(x => new
+            {
+                CreditorId = x.creditorId,
+                DebtorId = x.debtorId,
+                Amount = x.amount
+            });
+
+            // Log
+            await LogHistory(userId, null, affectedUsers.ToArray(), DaoLogType.Type.DELETE, DaoLogSubType.Type.GROUP, historyEntry);
         }
         public async Task LogSettlement(long userId, DaoSettlement daoSettlement)
         {
@@ -122,6 +155,9 @@ namespace MShare_ASP.Services
 
             // Money
             historyEntry.Money = newSpending.MoneyOwed;
+
+            // Date
+            historyEntry.Date = newSpending.Date;
 
             // Debtors
             var debtors = newSpending.Debtors
@@ -151,6 +187,13 @@ namespace MShare_ASP.Services
             {
                 historyEntry.oldMoney = oldSpending.MoneyOwed;
                 historyEntry.newMoney = newSpending.MoneySpent;
+            }
+
+            //  Make date delta
+            if (oldSpending.Date != newSpending.Date)
+            {
+                historyEntry.oldDate = oldSpending.Date;
+                historyEntry.newDate = newSpending.Date;
             }
 
             // Record removed debts
@@ -212,7 +255,8 @@ namespace MShare_ASP.Services
 			{
 				Name = deletedSpending.Name,
 				MoneyOwed = deletedSpending.MoneyOwed,
-				Debtors = deletedSpending.Debtors.Select(d => new
+                Date = deletedSpending.Date,
+                Debtors = deletedSpending.Debtors.Select(d => new
 				{
 					DebtorId = d.DebtorUserId,
 					Debt = d.Debt
@@ -233,7 +277,7 @@ namespace MShare_ASP.Services
             {
                 UserId = userId,
                 AffectedIds = affectedIds,
-                Date = DateTime.UtcNow,
+                Date = TimeService.UtcNow,
                 Type = type,
                 SubType = subType,
                 SerializedLog = serializedMessage,

@@ -31,13 +31,23 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
+            android:id="@+id/billDateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:layout_margin="8dp"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/billNameTextView"/>
+
+    <TextView
             android:id="@+id/billMoneyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="1000 Ft"
             android:layout_margin="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="64dp"
-            android:text="1000 Ft"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@id/removeBillImageButton"
             app:layout_constraintTop_toTopOf="parent" />
@@ -47,14 +57,14 @@
             style="@style/Divider"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/billNameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/billDateTextView"
             android:layout_marginTop="8dp"/>
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/billMembersRecyclerView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorSubBackground"
+            android:background="@color/colorBackground"
             android:backgroundTintMode="src_atop"
             android:paddingEnd="@dimen/padding_large"
             android:paddingStart="@dimen/padding_large"

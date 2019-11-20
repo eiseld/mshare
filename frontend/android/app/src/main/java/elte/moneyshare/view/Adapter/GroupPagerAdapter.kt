@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.view.BillsFragment
-import elte.moneyshare.view.GroupPagerFragment
 import elte.moneyshare.view.MembersFragment
 
 class GroupPagerAdapter(var groupId: Int, var tabs: List<String>, fragmentManager: FragmentManager?) : FragmentStatePagerAdapter(fragmentManager) {

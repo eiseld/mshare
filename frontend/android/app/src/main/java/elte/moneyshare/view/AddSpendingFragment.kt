@@ -1,6 +1,7 @@
 package elte.moneyshare.view
 
 
+import android.app.DatePickerDialog
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -11,19 +12,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import elte.moneyshare.*
-
 import elte.moneyshare.entity.Debtor
 import elte.moneyshare.entity.Member
 import elte.moneyshare.entity.NewSpending
 import elte.moneyshare.entity.SpendingUpdate
-import elte.moneyshare.invisible
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
+import elte.moneyshare.util.formatDate
+import elte.moneyshare.util.convertToCalendar
+import elte.moneyshare.util.convertToBackendFormat
 import elte.moneyshare.view.Adapter.SelectMembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
-import elte.moneyshare.viewmodel.GroupsViewModel
 import kotlinx.android.synthetic.main.fragment_add_spending.*
+import java.util.Calendar
 
 class AddSpendingFragment : Fragment() {
 
@@ -32,6 +34,12 @@ class AddSpendingFragment : Fragment() {
     private var spendingId = -1
     private var isModify : Boolean = false
     private var members = ArrayList<Member>()
+    private var calendar : Calendar = Calendar.getInstance()
+
+    private val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, date ->
+        calendar.set(year, month, date)
+        dateEditText.setText(calendar.formatDate())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,6 +78,11 @@ class AddSpendingFragment : Fragment() {
                                     spendingDataTemp?.let {
                                         spendingEditText.setText(it.moneyOwed.toString())
                                         nameEditText.setText(it.name)
+
+                                        //Set Calendar
+                                        calendar = it.date.convertToCalendar()
+                                        dateEditText.setText(calendar.formatDate())
+
                                         val debtorIds = it.debtors.map { it.id }
                                         (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds = ArrayList(debtorIds)
                                         val selectedMembers = members.filter { it.id in debtorIds }
@@ -80,6 +93,8 @@ class AddSpendingFragment : Fragment() {
                                 else
                                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING, context), context)
                             }
+                        } else {
+                            dateEditText.setText(calendar.formatDate())
                         }
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
@@ -88,44 +103,55 @@ class AddSpendingFragment : Fragment() {
             }
         }
 
+        dateEditText?.setOnClickListener {
+            DatePickerDialog(
+                activity,
+                dateSetListener,
+                // set DatePickerDialog to point to today's date when it loads up
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+
         if(isModify)
         {
             addButton.text = context?.getString(R.string.modify_spending)
         }
         nextButton.setOnClickListener {
             val selectedIds = (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds
-            members.removeAll { !selectedIds.contains(it.id) }
+            val membersSelected = members.filter { selectedIds.contains(it.id) } as ArrayList<Member>
 
             val validAll = !TextUtils.isEmpty(nameEditText.editableText.toString()) &&
                     !TextUtils.isEmpty(spendingEditText.editableText.toString()) &&
-                    !spendingEditText.editableText.toString().equals("0") &&
-                    members.size > 0
+                    spendingEditText.editableText.toString() != "0" &&
+                    membersSelected.size > 0
 
             if (TextUtils.isEmpty(nameEditText.editableText.toString())) {
                 nameEditText.error = context?.getString(R.string.cannot_be_empty)
             }
 
-            if (TextUtils.isEmpty(spendingEditText.editableText.toString()) || spendingEditText.editableText.toString().equals("0")) {
+            if (TextUtils.isEmpty(spendingEditText.editableText.toString()) || spendingEditText.editableText.toString() == "0") {
                 spendingEditText.error = context?.getString(R.string.must_be_bigger_than_0)
             }
 
-            if (members.size == 0) {
+            if (membersSelected.size == 0) {
                 Toast.makeText(context, getString(R.string.select_members_missing), Toast.LENGTH_SHORT).show()
             }
 
             if (validAll) {
                 val moneySpend = Integer.valueOf(spendingEditText.editableText.toString())
-                val debt = moneySpend.div(members.size)
-                val mod = moneySpend - (debt * members.size)
+                val debt = moneySpend.div(membersSelected.size)
+                val mod = moneySpend - (debt * membersSelected.size)
 
-                for (member in members) {
+                for (member in membersSelected) {
                     member.balance = debt
                 }
 
-                members[0].balance += mod
+                membersSelected[0].balance += mod
 
                 activity?.let {
-                    val adapter = SelectMembersRecyclerViewAdapter(it, members, true)
+                    val adapter = SelectMembersRecyclerViewAdapter(it, membersSelected, true)
                     selectMembersRecyclerView.layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     selectMembersRecyclerView.adapter = adapter
@@ -164,7 +190,8 @@ class AddSpendingFragment : Fragment() {
                     groupId = groupId!!,
                     moneySpent = Integer.valueOf(spendingEditText.editableText.toString()),
                     name = nameEditText.editableText.toString(),
-                    debtors = debtors
+                    debtors = debtors,
+                    date = calendar.convertToBackendFormat()
                 )
 
                 viewModel.postSpending(spending) { response, error ->
@@ -179,11 +206,12 @@ class AddSpendingFragment : Fragment() {
             {
                 val spending = SpendingUpdate(
                     groupId = groupId!!,
-                    moneySpent = Integer.valueOf(spendingEditText.editableText.toString()),
                     name = nameEditText.editableText.toString(),
-                    debtors = debtors,
                     id = spendingId,
-                    creditorUserId = SharedPreferences.userId
+                    creditorUserId = SharedPreferences.userId,
+                    moneySpent = Integer.valueOf(spendingEditText.editableText.toString()),
+                    debtors = debtors,
+                    date = calendar.convertToBackendFormat()
                 )
 
                 viewModel.postSpendingUpdate(spending) { response, error ->

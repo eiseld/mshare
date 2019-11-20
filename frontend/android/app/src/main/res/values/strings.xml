@@ -66,7 +66,9 @@
 
     <string name="add_member">Tag meghívása</string>
     <string name="remove_member">Tag eltávolítása</string>
+    <string name="delete_group">Csoport törlése</string>
     <string name="add_spending">Költés megadása</string>
+    <string name="are_you_sure_to_delete">Biztosan törli?</string>
 
     <string name="event_name">Esemény neve</string>
     <string name="spending">Költés</string>
@@ -125,6 +127,7 @@
 
     <string name="api_groups_create_group_200">Csoport létrehozása sikeres!</string>
     <string name="api_groups_create_group_409">EZ a csoportnév már használatban van!</string>
+    <string name="api_groups_delete_group_200">Csoport sikeresen törölve!</string>
 
     <string name="api_groups_settle_debt_200">Tartozás sikeresen rendezve!</string>
     <string name="api_groups_settle_debt_409">Hiba! Ez a tartozás már rendezve van!</string>
@@ -166,7 +169,7 @@
     <string name="doYouReallyWantToDeleteSpending">Tényleg törölni szeretnéd ezt a költést?</string>
     <string name="spendingSuccessfullyDeleted">Költés sikeresen törölve!</string>
 
-    <string name="menu_logout">Kijelentkezés</string>
+    <string name="menu_logout">Kilépés</string>
 
     <string name="changePasswordLabel">Jelszó módosítása</string>
     <string name="oldPasswordTextView">Régi jelszó</string>
@@ -176,7 +179,10 @@
     <string name="apiChangePassword403">Sikertelen jelszó módosítás! Rossz jelszót adott meg!</string>
 
     <string name="api_login_language_validate_410">A megadott nyelvet nem támogatja a szerver!</string>
+
     <string name="information_dialog_title">Információ</string>
+    <string name="confirmation_needed">Megerősítés szükséges!</string>
+
     <string name="spending_wrong_balance_sum">A teljes összeget szét kell osztani a költési csoportban!</string>
     <string name="change_bank_account_label">Bankszámla szám módosítása</string>
     <string name="bank_account_not_set">Bankszámla szám még nincs beállítva!</string>

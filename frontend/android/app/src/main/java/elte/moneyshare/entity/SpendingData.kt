@@ -6,5 +6,6 @@ data class SpendingData (
     var creditor : UserData,
     var creditorUserId : Int,
     var moneyOwed: Int,
-    var debtors: ArrayList<DebtorData>
+    var debtors: ArrayList<DebtorData>,
+    var date: String
 )

@@ -1,4 +1,6 @@
-﻿namespace MShare_ASP.API.Response
+﻿using System;
+
+namespace MShare_ASP.API.Response
 {
     /// <summary>Describes a group's minimal data</summary>
     public class GroupInfo
@@ -17,5 +19,8 @@
 
         /// <summary>User balance in the view of the group</summary>
         public long MyCurrentBalance { get; set; }
+
+        /// <summary>Last group change that affacted the user</summary>
+        public DateTime LastModified { get; set; }
     }
 }

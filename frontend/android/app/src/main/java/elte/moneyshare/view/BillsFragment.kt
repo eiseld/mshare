@@ -8,12 +8,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
+import elte.moneyshare.util.convertToCalendar
+import elte.moneyshare.util.formatDate
 import elte.moneyshare.view.Adapter.BillsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_bills.*
@@ -36,12 +37,21 @@ class BillsFragment : Fragment() {
 
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
+            billsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
             groupId?.let { groupId ->
                 viewModel.getSpendings(groupId) { bills, error ->
                     if (bills != null) {
-                        val adapter = BillsRecyclerViewAdapter(it, bills, groupId, viewModel)
-                        billsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+                        val orderedBills = bills.map { spendingData ->
+                            val calendar = spendingData.date.convertToCalendar()
+                            spendingData.date = calendar.formatDate()
+                            Pair(calendar, spendingData)
+                        }.sortedByDescending { pair -> pair.first }
+                        .map { pair -> pair.second }
+                        .toMutableList()
+
+                        val adapter = BillsRecyclerViewAdapter(it, orderedBills, groupId, viewModel)
                         billsRecyclerView.adapter = adapter
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING,context), context)
@@ -49,6 +59,5 @@ class BillsFragment : Fragment() {
                 }
             }
         }
-
     }
 }

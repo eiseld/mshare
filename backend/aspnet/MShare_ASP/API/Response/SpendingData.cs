@@ -22,5 +22,8 @@ namespace MShare_ASP.API.Response
 
         /// <summary>Debtors of this spending</summary>
         public IList<DebtorData> Debtors { get; set; }
+
+        /// <summary>Date of the spending</summary>
+        public string Date { get; set; }
     }
 }

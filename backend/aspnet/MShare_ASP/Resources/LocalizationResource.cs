@@ -89,6 +89,29 @@ namespace MShare_ASP
 
         /// <summary>Why one got the email (when their password has been changed)</summary>
         public static string EMAIL_PASSWORDCHANGED_BODY_DISCLAIMER { get; } = nameof(EMAIL_PASSWORDCHANGED_BODY_DISCLAIMER);
+        
+        /// <summary>Why you got the email (group deleted)</summary>
+        public static string EMAIL_GROUPDELETE_BODY_DISCLAIMER { get; } = nameof(EMAIL_GROUPDELETE_BODY_DISCLAIMER);
+
+        /// <summary>
+        /// Intro of group deletion email
+        /// {0}: deletor name
+        /// {1}: group name
+        /// {2}: last balance
+        /// </summary>
+        public static string EMAIL_GROUPDELETE_BODY_INTRO { get; } = nameof(EMAIL_GROUPDELETE_BODY_INTRO);
+
+        /// <summary>Hero of the email you get when a group of yours has been deleted</summary>
+        public static string EMAIL_GROUPDELETE_HERO { get; } = nameof(EMAIL_GROUPDELETE_HERO);
+
+        /// <summary>Preheader of group deletion email</summary>
+        public static string EMAIL_GROUPDELETE_PREHEADER { get; } = nameof(EMAIL_GROUPDELETE_PREHEADER);
+
+        /// <summary>Subject of the group deletion email</summary>
+        public static string EMAIL_GROUPDELETE_SUBJECT { get; } = nameof(EMAIL_GROUPDELETE_SUBJECT);
+
+        /// <summary>Settled (as in a balance is settled)</summary>
+        public static string SETTLED { get; } = nameof(SETTLED);
     }
 
     /// <summary>Extension class for IStringLocalizer</summary>
