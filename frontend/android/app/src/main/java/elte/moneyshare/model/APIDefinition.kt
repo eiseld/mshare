@@ -31,7 +31,7 @@ interface APIDefinition {
     @POST("Group/create")
     fun postNewGroup(@Body groupName : NewGroup) : Call<ResponseBody>
 
-    @DELETE("Group/delete/{groupId}")
+    @POST("Group/delete/{groupId}")
     fun deleteGroup(@Path("groupId") groupId: Int): Call<ResponseBody>
 
 //    @DELETE ("Group/{groupId}/members/remove/{memberId}")
