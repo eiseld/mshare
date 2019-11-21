@@ -85,7 +85,7 @@ class OptimizedDebtRecyclerViewAdapter(
                                 Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                             }
                         }
-                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, response.convertErrorCodeToString(Action.GROUPS_SETTLE, context), Toast.LENGTH_SHORT).show()
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                     }

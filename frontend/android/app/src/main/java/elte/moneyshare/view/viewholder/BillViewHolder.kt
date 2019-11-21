@@ -11,6 +11,7 @@ class BillViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var billRootConstraintLayout: ConstraintLayout = itemView.findViewById(R.id.billRootConstraintLayout)
     var billNameTextView: TextView = itemView.findViewById(R.id.billNameTextView)
+    var billDateTextView: TextView = itemView.findViewById(R.id.billDateTextView)
     var billMoneyTextView: TextView = itemView.findViewById(R.id.billMoneyTextView)
     var billMembersRecyclerView: RecyclerView = itemView.findViewById(R.id.billMembersRecyclerView)
     var removeBillImageButtonView: ImageButton = itemView.findViewById(R.id.removeBillImageButton)

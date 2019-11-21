@@ -18,12 +18,14 @@ namespace MShare_ASP.Controllers
     {
         private IGroupService GroupService { get; }
         private IUserService UserService { get; }
+        private IHistoryService HistoryService { get; }
 
         /// <summary>Initializes the ProfileController </summary>
-        public ProfileController(IGroupService groupService, IUserService userService)
+        public ProfileController(IGroupService groupService, IUserService userService, IHistoryService historyService)
         {
             GroupService = groupService;
             UserService = userService;
+            HistoryService = historyService;
         }
 
         /// <summary>Sends password reset email to the given email address</summary>
@@ -117,6 +119,18 @@ namespace MShare_ASP.Controllers
         {
             await UserService.UpdateLang(GetCurrentUserID(), newLanguage);
             return Ok();
+        }
+        /// <summary>Gets the history for user</summary>
+        /// <response code="200">Successfully returned group history</response>
+        /// <response code="403">Forbidden: 'not_group_member'</response>
+        /// <response code="404">Not found: 'group'</response>
+        [HttpGet()]
+        [Route("history")]
+        public async Task<ActionResult<IList<Data.DaoHistory>>> GetHistory()
+        {
+            //TODO DaoHistory should not go out make response and converter function
+            var groupHistory = await HistoryService.GetHistory(GetCurrentUserID());
+            return Ok(groupHistory);
         }
     }
 }

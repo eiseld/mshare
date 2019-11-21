@@ -30,6 +30,14 @@ namespace MShare_ASP.Data
         [Column("group_id")]
         public long GroupId { get; set; }
 
+        /// <summary>The associated date with the spending</summary>
+        [Column("date")]
+        public string Date { get; set; }
+
+        /// <summary>Is the associated date with the spending a future date</summary>
+        [Column("is_future_date")]
+        public bool IsFutureDate { get; set; }
+
         /// <summary>Creditor user</summary>
         [JsonIgnore]
         [ForeignKey("CreditorUserId")]

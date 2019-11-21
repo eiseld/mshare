@@ -13,6 +13,12 @@
             app:showAsAction="never" />
 
     <item
+            android:id="@+id/deleteGroup"
+            android:title="@string/delete_group"
+            android:visible="false"
+            app:showAsAction="never" />
+
+    <item
             android:id="@+id/myDebts"
             android:title="@string/my_debts"
             app:showAsAction="never" />

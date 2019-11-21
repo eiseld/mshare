@@ -16,15 +16,15 @@ namespace MShare_ASP.Data
 
         /// <summary>Email of the user</summary>
         [Column("email")]
-        public String Email { get; set; }
+        public string Email { get; set; }
 
         /// <summary>Hashed password of the user</summary>
         [Column("password")]
-        public String Password { get; set; }
+        public string Password { get; set; }
 
         /// <summary>Displayname (not unique!)</summary>
         [Column("display_name")]
-        public String DisplayName { get; set; }
+        public string DisplayName { get; set; }
 
         /// <summary>Date and time when the user was registered</summary>
         [Column("creation_date")]
@@ -40,7 +40,7 @@ namespace MShare_ASP.Data
 
         /// <summary>Bank account number of the user</summary>
         [Column("bank_account_number")]
-        public String BankAccountNumber { get; set; }
+        public string BankAccountNumber { get; set; }
 
         /// <summary>All groups associated with user</summary>
         public IEnumerable<DaoUsersGroupsMap> Groups { get; set; }
