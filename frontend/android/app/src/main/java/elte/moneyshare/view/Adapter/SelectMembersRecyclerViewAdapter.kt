@@ -58,8 +58,10 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
     private fun onBindViewHolderToSelect(holder: SelectMemberViewHolder, member: Member) {
         if (selectedIds.contains(member.id)) {
             holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorSubBackground)
+            holder.memberRootLayout.selectedMemberCheckBox.isChecked = true
         } else {
             holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorBackground)
+            holder.memberRootLayout.selectedMemberCheckBox.isChecked = false
         }
 
         holder.memberNameTextView.text = member.name

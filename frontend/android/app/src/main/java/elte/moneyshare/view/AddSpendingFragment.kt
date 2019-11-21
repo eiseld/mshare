@@ -158,7 +158,7 @@ class AddSpendingFragment : Fragment() {
                 }
 
                 selectEveryoneButton.invisible()
-                selectNooneButton.invisible()
+                selectNoneButton.invisible()
 
                 nextButton.invisible()
                 addButton.visible()
@@ -176,7 +176,7 @@ class AddSpendingFragment : Fragment() {
             }
         }
 
-        selectNooneButton.setOnClickListener {
+        selectNoneButton.setOnClickListener {
             (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).let {
                 val selectedIds: ArrayList<Int> = ArrayList()
                 it.selectedIds = selectedIds
