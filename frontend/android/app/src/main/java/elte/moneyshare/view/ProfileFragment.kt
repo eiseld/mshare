@@ -118,21 +118,40 @@ class ProfileFragment : Fragment() {
             return pwdError
         }
 
+        oldPasswordText.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(p0: Editable?) {
+                val oldPassword = oldPasswordText.text.toString()
+                val newPassword = newPasswordText.text.toString()
+                val newPasswordAgain = newPasswordAgainText.text.toString()
+                passwordSaveButton.isEnabled = (oldPassword.isNotEmpty() && passwordValidator(newPassword).isEmpty() && passwordValidator(newPasswordAgain).isEmpty())
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
         newPasswordText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                val txt = newPasswordText.text.toString()
-                val txtAgain = newPasswordAgainText.text.toString()
-                val pwdError = passwordValidator(txt)
+                val oldPassword = oldPasswordText.text.toString()
+                val newPassword = newPasswordText.text.toString()
+                val newPasswordAgain = newPasswordAgainText.text.toString()
+                val pwdError = passwordValidator(newPassword)
                 if (pwdError.length > 1) {
                     newPasswordText.error = pwdError
-                    passwordSaveButton.isClickable = false
-                } else if (txt != txtAgain) {
+                    passwordSaveButton.isEnabled = false
+                } else if (newPassword != newPasswordAgain) {
                     newPasswordText.error = context?.getString(R.string.password_not_matching)
-                    passwordSaveButton.isClickable = false
+                    passwordSaveButton.isEnabled = false
+                } else if (oldPassword.isEmpty()) {
+                    passwordSaveButton.isEnabled = false
                 } else {
                     newPasswordText.error = null
                     newPasswordAgainText.error = null
-                    passwordSaveButton.isClickable = true
+                    passwordSaveButton.isEnabled = true
                 }
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -144,23 +163,22 @@ class ProfileFragment : Fragment() {
 
         newPasswordAgainText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                val txt = newPasswordText.text.toString()
-                val txtAgain = newPasswordAgainText.text.toString()
-                val pwdError = passwordValidator(txtAgain)
-                if(pwdError.length>1)
-                {
+                val oldPassword = oldPasswordText.text.toString()
+                val newPassword = newPasswordText.text.toString()
+                val newPasswordAgain = newPasswordAgainText.text.toString()
+                val pwdError = passwordValidator(newPasswordAgain)
+                if(pwdError.length>1) {
                     newPasswordAgainText.error = pwdError
-                    passwordSaveButton.isClickable = false
-                }
-                else if(txt != txtAgain)
-                {
+                    passwordSaveButton.isEnabled = false
+                }  else if(newPassword != newPasswordAgain) {
                     newPasswordAgainText.error = context?.getString(R.string.password_not_matching)
-                    passwordSaveButton.isClickable = false
-                }
-                else {
+                    passwordSaveButton.isEnabled = false
+                } else if (oldPassword.isEmpty()) {
+                    passwordSaveButton.isEnabled = false
+                } else {
                     newPasswordText.error = null
                     newPasswordAgainText.error = null
-                    passwordSaveButton.isClickable = true
+                    passwordSaveButton.isEnabled = true
                 }
             }
 
