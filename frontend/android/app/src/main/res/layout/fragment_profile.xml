@@ -110,26 +110,23 @@
             android:id="@+id/newPasswordText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
             android:layout_marginEnd="8dp"
             android:ems="10"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/newPasswordTextView"
-            app:layout_constraintTop_toBottomOf="@id/changePasswordTextView" />
+            app:layout_constraintTop_toBottomOf="@id/oldPasswordText" />
 
     <EditText
             android:id="@+id/newPasswordAgainText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="88dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:ems="10"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/newPasswordAgainTextView"
-            app:layout_constraintTop_toBottomOf="@id/changePasswordTextView" />
+            app:layout_constraintStart_toEndOf="@id/newPasswordAgainTextView"
+            app:layout_constraintTop_toBottomOf="@id/newPasswordText" />
 
     <TextView
             android:id="@+id/oldPasswordTextView"
@@ -142,7 +139,6 @@
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/oldPasswordText"
             app:layout_constraintEnd_toStartOf="@id/oldPasswordText"
-            app:layout_constraintHorizontal_bias="0.123"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/changePasswordTextView" />
 
@@ -168,7 +164,6 @@
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/newPasswordText"
             app:layout_constraintEnd_toStartOf="@id/newPasswordText"
-            app:layout_constraintHorizontal_bias="0.107"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/changePasswordTextView" />
 
@@ -183,7 +178,6 @@
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/newPasswordAgainText"
             app:layout_constraintEnd_toStartOf="@id/newPasswordText"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/changePasswordTextView" />
 
