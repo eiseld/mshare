@@ -125,7 +125,7 @@ namespace MShare_ASP.Controllers
         /// <response code="403">Forbidden: 'not_group_creator'</response>
         /// <response code="404">Not found: 'group'</response>
         /// <response code="500">Internal error: 'group_not_deleted'</response>
-        [HttpDelete]
+        [HttpPost]
         [Route("delete/{groupId}")]
         public async Task<ActionResult> Delete(long groupId)
         {

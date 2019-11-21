@@ -39,16 +39,9 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
         }
     }
 
-    private fun onBindViewHolderToSelect(holder: SelectMemberViewHolder, member: Member) {
-        if (selectedIds.contains(member.id)) {
-            holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorSubBackground)
-        } else {
-            holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorBackground)
-        }
+    private fun createMemberSelectOnClickListener(holder : SelectMemberViewHolder, member : Member) : View.OnClickListener {
 
-        holder.memberNameTextView.text = member.name
-
-        holder.memberRootLayout.setOnClickListener {
+        return View.OnClickListener {  view->
             if (selectedIds.contains(member.id)) {
                 selectedIds.remove(member.id)
                 holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorBackground)
@@ -59,6 +52,21 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
                 holder.memberRootLayout.selectedMemberCheckBox.isChecked = true
             }
         }
+
+    }
+
+    private fun onBindViewHolderToSelect(holder: SelectMemberViewHolder, member: Member) {
+        if (selectedIds.contains(member.id)) {
+            holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorSubBackground)
+        } else {
+            holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorBackground)
+        }
+
+        holder.memberNameTextView.text = member.name
+
+        holder.memberRootLayout.setOnClickListener(createMemberSelectOnClickListener(holder, member))
+
+        holder.selectedMemberCheckBox.setOnClickListener(createMemberSelectOnClickListener(holder, member))
     }
 
     private fun onBindViewHolderToSelected(holder: SelectMemberViewHolder, position: Int) {
