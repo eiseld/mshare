@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.fragment_group.*
 
 class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberInvitedListener {
 
+    private var groupCreatorId: Int? = null
     private var groupId: Int? = null
     private var groupName: String? = null
     private lateinit var pagerAdapter: GroupPagerAdapter
@@ -45,26 +46,6 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
         super.onCreateOptionsMenu(menu, inflater)
 
         val item = menu.findItem(R.id.menuSearch)
-
-        tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                if(tab?.equals(tabLayout.getTabAt(0))!!) {
-
-                    groupId?.let {
-                        viewModel.getGroupData(it) { groupData, _ ->
-                            item.isVisible = SharedPreferences.userId == groupData?.creator?.id
-                        }
-                    }
-                } else {
-                    item.isVisible = true
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
-
         searchView = SearchView((context as MainActivity).supportActionBar!!.themedContext)
         MenuItemCompat.setShowAsAction(
             item,
@@ -113,21 +94,21 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
             }
         }
 
-        val removeMemberItem = menu.findItem(R.id.removeMember)
-        val deleteGroupItem = menu.findItem(R.id.deleteGroup)
-
-        groupId?.let {
-            viewModel.getGroupData(it) { groupData, _ ->
-                if (SharedPreferences.userId == groupData?.creator?.id) {
-                    removeMemberItem.isVisible = true
-                    deleteGroupItem.isVisible = true
-                    item.isVisible = true
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (tab == tabLayout.getTabAt(0)) {
+                    item.isVisible = SharedPreferences.userId == groupCreatorId
                 } else {
-                    item.isVisible = false
+                    item.isVisible = true
                 }
             }
-        }
 
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
+
+        item.isVisible = SharedPreferences.userId == groupCreatorId
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -209,8 +190,8 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
         searchView.clearFocus()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
@@ -224,6 +205,11 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
         }
         initViewPager()
 
+        groupId?.let {
+            viewModel.getGroupData(it) { groupData, _ ->
+                groupCreatorId = groupData?.creator?.id
+            }
+        }
     }
 
     fun initViewPager() {
