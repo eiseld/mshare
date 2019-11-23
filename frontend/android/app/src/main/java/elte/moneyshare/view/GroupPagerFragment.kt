@@ -2,11 +2,11 @@ package elte.moneyshare.view
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.*
 import elte.moneyshare.*
 import elte.moneyshare.entity.GroupDataParc
@@ -45,6 +45,26 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
         super.onCreateOptionsMenu(menu, inflater)
 
         val item = menu.findItem(R.id.menuSearch)
+
+        tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if(tab?.equals(tabLayout.getTabAt(0))!!) {
+
+                    groupId?.let {
+                        viewModel.getGroupData(it) { groupData, _ ->
+                            item.isVisible = SharedPreferences.userId == groupData?.creator?.id
+                        }
+                    }
+                } else {
+                    item.isVisible = true
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
+
         searchView = SearchView((context as MainActivity).supportActionBar!!.themedContext)
         MenuItemCompat.setShowAsAction(
             item,
@@ -103,7 +123,7 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
                     deleteGroupItem.isVisible = true
                     item.isVisible = true
                 } else {
-                    item.isVisible = true
+                    item.isVisible = false
                 }
             }
         }
@@ -126,6 +146,20 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
                 return true
             }
             R.id.menuSearch -> {
+
+                if(tabLayout.getTabAt(0)?.isSelected!!) {
+                    println("0000000000000000000000000")
+                } else if(tabLayout.getTabAt(1)?.isSelected!!) {
+                    val fragment = AddSpendingFragment()
+                    val args = Bundle()
+                    groupId?.let {
+                        args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
+                    }
+                    args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value, -1)
+                    fragment.arguments = args
+                    (context as MainActivity).supportFragmentManager?.beginTransaction()
+                        ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
+                }
 
                 return true
             }
@@ -189,6 +223,7 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
             context?.getString(R.string.bills_tab)?.let { tabs.add(it) }
         }
         initViewPager()
+
     }
 
     fun initViewPager() {
