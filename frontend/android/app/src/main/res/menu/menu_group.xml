@@ -25,6 +25,7 @@
             android:id="@+id/menuSearch"
             android:icon="@drawable/ic_add"
             android:title="@string/add_member"
+            android:visible="false"
             app:actionViewClass="android.support.v7.widget.SearchView"
             app:showAsAction="ifRoom|collapseActionView" />
 </menu>

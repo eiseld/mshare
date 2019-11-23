@@ -30,7 +30,7 @@
 
     <!-- new password -->
     <string name="new_password">Új jelszó megadása.</string>
-    <string name="confirm_password">Jelszó megerősítése</string>
+    <string name="change_password">Jelszó megváltoztatása</string>
     <string name="new_password_updated">Az új jelszó sikeresen frissítve!</string>
 
     <!-- Popup mesages -->
