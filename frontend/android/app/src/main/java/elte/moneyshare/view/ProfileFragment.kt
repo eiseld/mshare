@@ -124,7 +124,13 @@ class ProfileFragment : Fragment() {
                 val oldPassword = oldPasswordText.text.toString()
                 val newPassword = newPasswordText.text.toString()
                 val newPasswordAgain = newPasswordAgainText.text.toString()
-                passwordSaveButton.isEnabled = (oldPassword.isNotEmpty() && passwordValidator(newPassword).isEmpty() && passwordValidator(newPasswordAgain).isEmpty())
+                passwordSaveButton.isEnabled = (
+                    oldPassword.isNotEmpty() &&
+                    passwordValidator(newPassword).isEmpty()&&
+                    newPassword.isNotEmpty() &&
+                    passwordValidator(newPasswordAgain).isEmpty() &&
+                    newPasswordAgain.isNotEmpty()
+                )
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
