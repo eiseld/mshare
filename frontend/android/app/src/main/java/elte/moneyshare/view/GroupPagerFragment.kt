@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.*
 import elte.moneyshare.*
 import elte.moneyshare.entity.GroupDataParc
@@ -95,9 +96,13 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
             viewModel.getGroupData(it) { groupData, _ ->
                 if(SharedPreferences.userId == groupData?.creator?.id) {
                     removeMemberItem.isVisible = true
+                    item.isVisible = true
+                } else {
+                    item.isVisible = true
                 }
             }
         }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
