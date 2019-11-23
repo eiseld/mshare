@@ -1,19 +1,19 @@
 package elte.moneyshare.view.Adapter
 
 import android.content.Context
-import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import elte.moneyshare.R
 import elte.moneyshare.entity.Member
 import elte.moneyshare.view.viewholder.SelectMemberViewHolder
 import elte.moneyshare.visible
+import kotlinx.android.synthetic.main.list_item_select_member.view.*
 
 class SelectMembersRecyclerViewAdapter(private val context: Context, private val members: ArrayList<Member>, private val afterSelected: Boolean = false): RecyclerView.Adapter<SelectMemberViewHolder>() {
 
@@ -39,6 +39,22 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
         }
     }
 
+    private fun createMemberSelectOnClickListener(holder : SelectMemberViewHolder, member : Member) : View.OnClickListener {
+
+        return View.OnClickListener {  view->
+            if (selectedIds.contains(member.id)) {
+                selectedIds.remove(member.id)
+                holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorBackground)
+                holder.memberRootLayout.selectedMemberCheckBox.isChecked = false
+            } else {
+                selectedIds.add(member.id)
+                holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorSubBackground)
+                holder.memberRootLayout.selectedMemberCheckBox.isChecked = true
+            }
+        }
+
+    }
+
     private fun onBindViewHolderToSelect(holder: SelectMemberViewHolder, member: Member) {
         if (selectedIds.contains(member.id)) {
             holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorSubBackground)
@@ -48,21 +64,16 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
 
         holder.memberNameTextView.text = member.name
 
-        holder.memberRootLayout.setOnClickListener {
-            if (selectedIds.contains(member.id)) {
-                selectedIds.remove(member.id)
-                holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorBackground)
-            } else {
-                selectedIds.add(member.id)
-                holder.memberRootLayout.background = ContextCompat.getDrawable(context, R.color.colorSubBackground)
-            }
-        }
+        holder.memberRootLayout.setOnClickListener(createMemberSelectOnClickListener(holder, member))
+
+        holder.selectedMemberCheckBox.setOnClickListener(createMemberSelectOnClickListener(holder, member))
     }
 
     private fun onBindViewHolderToSelected(holder: SelectMemberViewHolder, position: Int) {
         val member = members[position]
         holder.memberNameTextView.text = member.name
 
+        holder.selectedMemberCheckBox.visibility = View.GONE
         holder.memberSpendingEditText.visible()
         holder.memberSpendingEditText.text = member.balance.toString()
 

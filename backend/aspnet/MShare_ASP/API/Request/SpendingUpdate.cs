@@ -37,6 +37,9 @@ namespace MShare_ASP.API.Request
 
         /// <summary>List of debtors, always specify this</summary>
         public Debtor[] Debtors { get; set; }
+
+        /// <summary>Date of the spending</summary>
+        public string Date { get; set; }
     }
 
     /// <summary>Validator object for SpendingUpdate's Debtor subclass</summary>
@@ -86,6 +89,10 @@ namespace MShare_ASP.API.Request
                 .NotEmpty()
                 .Must((args, d) => d.Sum(m => m.Debt) == args.MoneySpent)
                     .WithMessage("Fully specified debts sum is not equal to MoneySpent");
+
+            RuleFor(x => x.Date)
+                .NotNull()
+                .Matches("\\b[0-9]{4}-[0-9]{2}-[0-9]{2}\\b");
         }
     }
 }
