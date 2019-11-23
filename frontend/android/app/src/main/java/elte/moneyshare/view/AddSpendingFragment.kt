@@ -87,7 +87,7 @@ class AddSpendingFragment : Fragment() {
                                         (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds = ArrayList(debtorIds)
                                         val selectedMembers = members.filter { it.id in debtorIds }
                                         (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedMembers = ArrayList(selectedMembers)
-                                        adapter.notifyDataSetChanged()
+                                        adapter?.notifyDataSetChanged()
                                     }
                                 }
                                 else
@@ -157,8 +157,30 @@ class AddSpendingFragment : Fragment() {
                     selectMembersRecyclerView.adapter = adapter
                 }
 
+                selectEveryoneButton.invisible()
+                selectNoneButton.invisible()
+
                 nextButton.invisible()
                 addButton.visible()
+            }
+        }
+
+        selectEveryoneButton.setOnClickListener {
+            (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).let{
+                val selectedIds: ArrayList<Int> = ArrayList()
+                viewModel.currentGroupData?.members?.forEach {
+                    selectedIds.add( it.id )
+                }
+                it.selectedIds = selectedIds
+                it?.notifyDataSetChanged()
+            }
+        }
+
+        selectNoneButton.setOnClickListener {
+            (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).let {
+                val selectedIds: ArrayList<Int> = ArrayList()
+                it.selectedIds = selectedIds
+                it?.notifyDataSetChanged()
             }
         }
 

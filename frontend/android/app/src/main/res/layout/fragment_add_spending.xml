@@ -92,4 +92,24 @@
             android:layout_marginBottom="12dp"
             android:visibility="invisible"/>
 
+    <Button
+            android:id="@+id/selectEveryoneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/everyone"
+            app:layout_constraintBottom_toTopOf="@id/selectMembersRecyclerView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/selectTextView"
+            app:layout_constraintTop_toBottomOf="@id/spendingEditText" />
+
+    <Button
+            android:id="@+id/selectNoneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/none"
+            app:layout_constraintBottom_toTopOf="@id/selectMembersRecyclerView"
+            app:layout_constraintLeft_toRightOf="@id/selectTextView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spendingEditText" />
+
 </android.support.constraint.ConstraintLayout>
