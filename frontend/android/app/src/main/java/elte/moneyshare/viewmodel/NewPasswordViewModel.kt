@@ -11,6 +11,7 @@ class NewPasswordViewModel : ViewModel() {
         SharedPreferences.forgotPasswordEmail?.let {
             val passwordUpdate = PasswordUpdate(
                 password = newPassword,
+                oldPassword = null,
                 token = token,
                 email = it
             )

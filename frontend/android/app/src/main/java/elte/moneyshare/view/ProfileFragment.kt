@@ -8,8 +8,10 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import elte.moneyshare.*
 import elte.moneyshare.entity.BankAccountNumberUpdate
+import elte.moneyshare.entity.PasswordUpdate
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
@@ -81,6 +83,135 @@ class ProfileFragment : Fragment() {
             }
             viewModel.getProfile { userData, error ->
                 accountEditText?.setText(formatBankAccountNumber(userData?.bankAccountNumber))
+            }
+        }
+
+        fun passwordValidator(txt: String): String {
+            var pwdError = ""
+
+            if(txt.isEmpty()) {
+                return pwdError
+            }
+
+            val uppercaseRegex = """[A-Z]""".toRegex()
+            val lowercaseRegex = """[a-z]""".toRegex()
+            val numberRegex    = """[0-9]""".toRegex()
+            context?.let {
+                if(txt.length <6)
+                {
+                    pwdError = it.getString(R.string.minimum_characters).plus('\n')
+                }
+                if(!txt.contains(uppercaseRegex))
+                {
+                    pwdError = pwdError.plus(it.getString(R.string.uppercase_required).plus('\n'))
+                }
+                if(!txt.contains(lowercaseRegex))
+                {
+                    pwdError = pwdError.plus(it.getString(R.string.lowercase_required).plus('\n'))
+                }
+                if(!txt.contains(numberRegex))
+                {
+                    pwdError = pwdError.plus(it.getString(R.string.number_required).plus('\n'))
+                }
+            }
+
+            return pwdError
+        }
+
+        oldPasswordText.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(p0: Editable?) {
+                val oldPassword = oldPasswordText.text.toString()
+                val newPassword = newPasswordText.text.toString()
+                val newPasswordAgain = newPasswordAgainText.text.toString()
+                passwordSaveButton.isEnabled = (
+                    oldPassword.isNotEmpty() &&
+                    passwordValidator(newPassword).isEmpty()&&
+                    newPassword.isNotEmpty() &&
+                    passwordValidator(newPasswordAgain).isEmpty() &&
+                    newPasswordAgain.isNotEmpty()
+                )
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
+        newPasswordText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                val oldPassword = oldPasswordText.text.toString()
+                val newPassword = newPasswordText.text.toString()
+                val newPasswordAgain = newPasswordAgainText.text.toString()
+                val pwdError = passwordValidator(newPassword)
+                if (pwdError.length > 1) {
+                    newPasswordText.error = pwdError
+                    passwordSaveButton.isEnabled = false
+                } else if (newPassword != newPasswordAgain) {
+                    newPasswordText.error = context?.getString(R.string.password_not_matching)
+                    passwordSaveButton.isEnabled = false
+                } else if (oldPassword.isEmpty()) {
+                    passwordSaveButton.isEnabled = false
+                } else {
+                    newPasswordText.error = null
+                    newPasswordAgainText.error = null
+                    passwordSaveButton.isEnabled = true
+                }
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
+        newPasswordAgainText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                val oldPassword = oldPasswordText.text.toString()
+                val newPassword = newPasswordText.text.toString()
+                val newPasswordAgain = newPasswordAgainText.text.toString()
+                val pwdError = passwordValidator(newPasswordAgain)
+                if(pwdError.length>1) {
+                    newPasswordAgainText.error = pwdError
+                    passwordSaveButton.isEnabled = false
+                }  else if(newPassword != newPasswordAgain) {
+                    newPasswordAgainText.error = context?.getString(R.string.password_not_matching)
+                    passwordSaveButton.isEnabled = false
+                } else if (oldPassword.isEmpty()) {
+                    passwordSaveButton.isEnabled = false
+                } else {
+                    newPasswordText.error = null
+                    newPasswordAgainText.error = null
+                    passwordSaveButton.isEnabled = true
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
+        passwordSaveButton.setOnClickListener {
+            viewModel.passwordUpdate (
+                passwordUpdate = PasswordUpdate(null, null, oldPasswordText.text.toString(), newPasswordText.text.toString())
+            ) { response, error ->
+                if (error == null) {
+                    if(response == "200") {
+                        oldPasswordText.setText("")
+                        newPasswordText.setText("")
+                        newPasswordAgainText.setText("")
+                        Toast.makeText(context, context?.getString(R.string.passwordSuccessfullyChanged), Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.CHANGE_PASSWORD,context), context)
+                }
             }
         }
     }

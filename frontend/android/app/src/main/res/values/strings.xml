@@ -170,6 +170,14 @@
     <string name="spendingSuccessfullyDeleted">Költés sikeresen törölve!</string>
 
     <string name="menu_logout">Kilépés</string>
+
+    <string name="changePasswordLabel">Jelszó módosítása</string>
+    <string name="oldPasswordTextView">Régi jelszó</string>
+    <string name="newPasswordTextView">Új jelszó</string>
+    <string name="newPasswordAgainTextView">Új jelszó ismét</string>
+    <string name="passwordSuccessfullyChanged">Jelszó sikeresen megváltoztatva!</string>
+    <string name="apiChangePassword403">Sikertelen jelszó módosítás! Rossz jelszót adott meg!</string>
+
     <string name="api_login_language_validate_410">A megadott nyelvet nem támogatja a szerver!</string>
 
     <string name="information_dialog_title">Információ</string>
@@ -179,4 +187,5 @@
     <string name="change_bank_account_label">Bankszámla szám módosítása</string>
     <string name="bank_account_not_set">Bankszámla szám még nincs beállítva!</string>
     <string name="member_added_to_group_successfully">Tag sikeresen hozzáadva a csoporthoz!</string>
+
 </resources>

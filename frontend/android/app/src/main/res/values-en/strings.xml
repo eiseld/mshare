@@ -169,6 +169,14 @@
     <string name="spendingSuccessfullyDeleted">Spending successfully deleted!</string>
 
     <string name="menu_logout">Exit</string>
+
+    <string name="changePasswordLabel">Change Password</string>
+    <string name="oldPasswordTextView">Old Password</string>
+    <string name="newPasswordTextView">New Password</string>
+    <string name="newPasswordAgainTextView">New Password Again</string>
+    <string name="passwordSuccessfullyChanged">Password Successfully Changed!</string>
+    <string name="apiChangePassword403">Password change failed! Password is invalid!</string>
+
     <string name="api_login_language_validate_410">Specified language is not supported by the server!</string>
 
     <string name="information_dialog_title">Information</string>
@@ -178,4 +186,5 @@
     <string name="change_bank_account_label">Change Bank Account Number</string>
     <string name="bank_account_not_set">Bank Account Not Set Yet!</string>
     <string name="member_added_to_group_successfully">Member added to group successfully!</string>
+    
 </resources>

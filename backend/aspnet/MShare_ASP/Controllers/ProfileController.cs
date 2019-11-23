@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using MShare_ASP.API.Request;
 using MShare_ASP.API.Response;
 using MShare_ASP.Services;
+using MShare_ASP.Services.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,21 +41,35 @@ namespace MShare_ASP.Controllers
         {
             await UserService.SendForgotPasswordMail(forgotPasswordRequest.Email, forgotPasswordRequest.Lang);
             return Ok();
-        }
-
-        /// <summary>Set the given password for the user with the given email address if the reset token is still valid</summary>
-        /// <param name="passwordUpdate">Password update information</param>
-        /// <response code="200">Successfully updated password</response>
-        /// <response code="400">Possible request body validation failure</response>
-        /// <response code="404">Not found: 'user'</response>
-        /// <response code="410">Gone: 'token_invalid_or_expired'</response>
-        /// <response code="500">Internal error: 'password_not_saved', 'token_deletion_failed'</response>
-        [HttpPost]
+		}
+        
+		/// <summary>Set the given password for the user with the given email address if the reset token is still valid</summary>
+		/// <param name="passwordUpdate">Password update information</param>
+		/// <response code="200">Successfully updated password</response>
+		/// <response code="400">Possible request body validation failure</response>
+		/// <response code="404">Not found: 'user'</response>
+		/// <response code="410">Gone: 'token_invalid_or_expired'</response>
+		/// <response code="500">Internal error: 'password_not_saved', 'token_deletion_failed'</response>
+		[HttpPost]
         [Route("password/update")]
         [AllowAnonymous]
         public async Task<ActionResult> UpdatePassword([FromBody] API.Request.PasswordUpdate passwordUpdate)
         {
-            await UserService.UpdatePassword(passwordUpdate);
+            if(passwordUpdate.OldPassword == null)
+            {
+                await UserService.UpdatePassword(passwordUpdate);
+            }
+            else if(passwordUpdate.Token == null)
+            {
+                try
+                {
+                    await UserService.UpdatePassword(passwordUpdate, GetCurrentUserID());
+                }
+                catch (InvalidOperationException)
+                {
+                    throw new ResourceForbiddenException("Only use this if user is authenticated, otherwise supply a token.");
+                }
+            }
             return Ok();
         }
 

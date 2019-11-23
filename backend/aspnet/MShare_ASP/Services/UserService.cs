@@ -136,13 +136,45 @@ namespace MShare_ASP.Services
                     await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, daoUser.DisplayName, email, Localizer.GetString(lang, LocalizationResource.EMAIL_FORGOTPSW_SUBJECT), htmlBody);
 
                     transaction.Commit();
-                } catch
+                }
+                catch
                 {
                     transaction.Rollback();
                     // Eat all exceptions, User cannot know if this was successfull only for debug
 #if DEBUG
                     throw;
 #endif
+                }
+            }
+        }
+
+        public async Task UpdatePassword(PasswordUpdate passwordUpdate, long userId)
+        {
+            var daoUser = await GetUser(userId);
+
+            using (var transaction = Context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var previousPassword = daoUser.Password;
+                    var userSuppliedPreviousPassword = Hasher.GetHash(passwordUpdate.OldPassword);
+
+                    if (previousPassword != userSuppliedPreviousPassword)
+                        throw new ResourceForbiddenException("invalid_password");
+
+                    daoUser.Password = Hasher.GetHash(passwordUpdate.Password);
+
+                    if (previousPassword != daoUser.Password && await Context.SaveChangesAsync() != 1)
+                        throw new DatabaseException("password_not_saved");
+
+                    await SendPasswordUpdateEmail(daoUser);
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    throw;
                 }
             }
         }
@@ -174,28 +206,34 @@ namespace MShare_ASP.Services
                     if (await Context.SaveChangesAsync() != 1)
                         throw new DatabaseException("token_deletion_failed");
 
-                    var model = new InformationViewModel()
-                    {
-                        Title = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_SUBJECT),
-                        PreHeader = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_PREHEADER),
-                        Hero = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_HERO),
-                        Greeting = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, daoUser.DisplayName),
-                        Intro = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_BODY_INTRO),
-                        EmailDisclaimer = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_BODY_DISCLAIMER),
-                        Cheers = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
-                        MShareTeam = Localizer.GetString(daoUser.Lang, LocalizationResource.MSHARE_TEAM),
-                        SiteBaseUrl = $"{UriConf.URIForEndUsers}"
-                    };
-                    var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
-                    await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, daoUser.DisplayName, daoUser.Email, Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_SUBJECT), htmlBody);
+                    await SendPasswordUpdateEmail(daoUser);
 
                     transaction.Commit();
-                } catch
+                }
+                catch
                 {
                     transaction.Rollback();
                     throw;
                 }
             }
+        }
+
+        private async Task SendPasswordUpdateEmail(DaoUser daoUser)
+        {
+            var model = new InformationViewModel()
+            {
+                Title = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_SUBJECT),
+                PreHeader = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_PREHEADER),
+                Hero = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_HERO),
+                Greeting = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_GREETING, daoUser.DisplayName),
+                Intro = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_BODY_INTRO),
+                EmailDisclaimer = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_BODY_DISCLAIMER),
+                Cheers = Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_CASUAL_BODY_CHEERS),
+                MShareTeam = Localizer.GetString(daoUser.Lang, LocalizationResource.MSHARE_TEAM),
+                SiteBaseUrl = $"{UriConf.URIForEndUsers}"
+            };
+            var htmlBody = await Renderer.RenderViewToStringAsync($"/Views/Emails/Confirmation/InformationHtml.cshtml", model);
+            await EmailService.SendMailAsync(MimeKit.Text.TextFormat.Html, daoUser.DisplayName, daoUser.Email, Localizer.GetString(daoUser.Lang, LocalizationResource.EMAIL_PASSWORDCHANGED_SUBJECT), htmlBody);
         }
 
         public async Task UpdateLang(long userId, SetLang language)
@@ -220,5 +258,7 @@ namespace MShare_ASP.Services
             if (await Context.SaveChangesAsync() != 1)
                 throw new DatabaseException("account_number_update_failed");
         }
+
     }
+
 }
