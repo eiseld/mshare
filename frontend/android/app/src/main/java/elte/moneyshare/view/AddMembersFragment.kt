@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import elte.moneyshare.R
 import elte.moneyshare.entity.Member
+import elte.moneyshare.viewmodel.AddMembersViewModel
 
 class AddMembersFragment : Fragment() {
 
@@ -17,6 +19,7 @@ class AddMembersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        return inflater.inflate(R.layout.fragment_add_members, container, false)
 
     }
 
