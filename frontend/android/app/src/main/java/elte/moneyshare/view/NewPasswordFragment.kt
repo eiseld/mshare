@@ -120,7 +120,8 @@ class NewPasswordFragment : Fragment() {
             token?.let {
                 viewModel.putNewPassword(passwordEditText.text.toString(), it) { _, error ->
                     if (error == null) {
-                        context?.let { getString(R.string.new_password_updated).showToast(it) }
+                        DialogManager.showInfoDialog(getString(R.string.new_password_updated), context)
+                        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, LoginFragment())?.commit()
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.AUTH_LOGIN, context), context)
                     }

@@ -55,13 +55,14 @@ class ForgotPasswordFragment : Fragment() {
 
         forgottenPasswordButton.setOnClickListener {
             viewModel.putForgotPassword(emailEditText.text.toString()) { _, error ->
-                emailEditText.text.clear()
-                forgottenPasswordButton.isEnabled = false
                 if(error == null) {
                     DialogManager.showInfoDialog(getString(R.string.email_sent), context)
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, LoginFragment())?.commit()
                 } else {
                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.PROFILE_RESET,context), context)
                 }
+                emailEditText.text.clear()
+                forgottenPasswordButton.isEnabled = false
             }
         }
     }
