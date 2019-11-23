@@ -94,10 +94,14 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
             }
         }
 
+        val removeMemberItem = menu.findItem(R.id.removeMember)
+        val deleteGroupItem = menu.findItem(R.id.deleteGroup)
+
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab == tabLayout.getTabAt(0)) {
                     item.isVisible = SharedPreferences.userId == groupCreatorId
+                    removeMemberItem.isVisible = true
                 } else {
                     item.isVisible = true
                 }
@@ -109,6 +113,7 @@ class GroupPagerFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
         })
 
         item.isVisible = SharedPreferences.userId == groupCreatorId
+        deleteGroupItem.isVisible = SharedPreferences.userId == groupCreatorId
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
