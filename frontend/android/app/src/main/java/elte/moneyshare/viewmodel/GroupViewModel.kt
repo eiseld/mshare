@@ -134,15 +134,15 @@ class GroupViewModel : ViewModel() {
             if (error == null) {
                 val historyItems = ArrayList<HistoryItem>()
 
+                val members = currentGroupData?.members?.plus(currentGroupData?.creator)
                 groupHistory?.forEach { history ->
                     if (history.subType == HistorySubType.MEMBER && (history.type == HistoryType.ADD || history.type == HistoryType.REMOVE)) {
                         historyItems.add(
                             HistoryItem.AddOrRemoveMember(
                                 date = history.date.convertToCalendar().formatDate(),
-                                creator = currentGroupData?.members?.find { it.id == history.userId }?.name
-                                    ?: context.getString(R.string.former_member),
+                                creator = members?.find { it?.id == history.userId }?.name ?: context.getString(R.string.former_member),
                                 type = "${history.subType.toString(context)} ${history.type.toString(context)}",
-                                memberName = currentGroupData?.members?.find { it.id == history.affectedIds.firstOrNull() }?.name
+                                memberName = members?.find { it?.id == history.affectedIds.firstOrNull() }?.name
                                     ?: context.getString(R.string.former_member)
                             )
                         )
@@ -151,7 +151,7 @@ class GroupViewModel : ViewModel() {
                         historyItems.add(
                             HistoryItem.AddOrRemoveSpending(
                                 date = history.date.convertToCalendar().formatDate(),
-                                creator = currentGroupData?.members?.find { it.id == history.userId }?.name
+                                creator = members?.find { it?.id == history.userId }?.name
                                     ?: context.getString(R.string.former_member),
                                 type = "${history.subType.toString(context)} ${history.type.toString(context)}",
                                 spendingName = log.Name,
@@ -162,7 +162,7 @@ class GroupViewModel : ViewModel() {
                         /*historyItems.add(
                             HistoryItem.ModifySpending(
                                 date = history.date.convertToCalendar().formatDate(),
-                                creator = currentGroupData?.members?.find { it.id == history.userId }?.name ?: context.getString(R.string.former_member),
+                                creator = members?.find { it?.id == history.userId }?.name ?: context.getString(R.string.former_member),
                                 type = "${history.subType.toString(context)} ${history.type.toString(context)}",
 
                             )
@@ -172,12 +172,12 @@ class GroupViewModel : ViewModel() {
                         historyItems.add(
                             HistoryItem.SettleSpending(
                                 date = history.date.convertToCalendar().formatDate(),
-                                creator = currentGroupData?.members?.find { it.id == history.userId }?.name
+                                creator = members?.find { it?.id == history.userId }?.name
                                     ?: context.getString(R.string.former_member),
                                 type = "${history.subType.toString(context)} ${history.type.toString(context)}",
-                                settleFromName = currentGroupData?.members?.find { it.id == log.From }?.name
+                                settleFromName = members?.find { it?.id == log.From }?.name
                                     ?: context.getString(R.string.former_member),
-                                settleToName = currentGroupData?.members?.find { it.id == log.To }?.name
+                                settleToName = members?.find { it?.id == log.To }?.name
                                     ?: context.getString(R.string.former_member),
                                 settleValue = log.Money
                             )
