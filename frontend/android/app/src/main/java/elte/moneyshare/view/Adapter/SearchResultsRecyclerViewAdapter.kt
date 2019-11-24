@@ -13,6 +13,7 @@ import elte.moneyshare.entity.FilteredUserData
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
+import elte.moneyshare.view.AddMembersFragment
 import elte.moneyshare.view.GroupPagerFragment
 import elte.moneyshare.view.MainActivity
 import elte.moneyshare.view.viewholder.SearchResultViewHolder
@@ -56,20 +57,14 @@ class SearchResultsRecyclerViewAdapter(
         }
 
         holder.inviteButton.setOnClickListener {
+            holder.inviteButton.isEnabled = false
             memberInvitedListener.onInvited()
             model.postMember(groupId, filteredUser.id) { response, error ->
                 if (error == null) {
-                    val fragment = GroupPagerFragment()
-                    val args = Bundle()
-                    groupId?.let {
-                        args.putInt(FragmentDataKeys.GROUP_PAGER_FRAGMENT.value, it)
-                    }
-                    fragment.arguments = args
-                    (context as MainActivity).supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, fragment)
-                        ?.addToBackStack(null)?.commit()
-                    (context as MainActivity).onBackPressed()
+                    holder.inviteButton.text = context.getString(R.string.added_member_button_label)
                     Toast.makeText(context, context.getString(R.string.member_added_to_group_successfully), Toast.LENGTH_SHORT).show()
                 } else {
+                    holder.inviteButton.isEnabled = true
                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS_ADD_MEMBER, context), context)
                 }
             }
