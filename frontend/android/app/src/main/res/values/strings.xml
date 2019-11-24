@@ -6,6 +6,7 @@
     <string name="login">Belépés</string>
     <string name="forgotten_password">Elfelejtett jelszó</string>
     <string name="register">Regisztráció</string>
+    <string name="username_empty">Adjon meg egy felhasználónevet!</string>
     <string name="registration">Regisztráció</string>
     <string name="send_email">Email küldése</string>
     <string name="stay_logged_in">Maradjak bejelentkezve</string>
