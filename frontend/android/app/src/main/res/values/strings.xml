@@ -102,6 +102,9 @@
     <string name="save">Mentés</string>
     <string name="profile">Profil</string>
 
+    <string name="name_or_email">Név vagy Email cím</string>
+    <string name="add_member_button_label">Hozzáad</string>
+
     <!-- API responses -->
 
     <!-- Authorization -->

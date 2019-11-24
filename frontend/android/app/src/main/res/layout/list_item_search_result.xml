@@ -15,16 +15,18 @@
             android:padding="16dp"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/button"
+            app:layout_constraintEnd_toStartOf="@id/inviteButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-            android:id="@+id/button"
+            android:id="@+id/inviteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button"
+            android:text="@string/add_member_button_label"
+            app:layout_constraintBottom_toBottomOf="@id/nameEmailTextView"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:layout_editor_absoluteY="-1dp" />
+            app:layout_constraintStart_toEndOf="@id/nameEmailTextView"
+            app:layout_constraintTop_toTopOf="@id/nameEmailTextView" />
 
 </android.support.constraint.ConstraintLayout>

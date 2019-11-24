@@ -16,14 +16,15 @@ import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.GroupPagerFragment
 import elte.moneyshare.view.MainActivity
 import elte.moneyshare.view.viewholder.SearchResultViewHolder
+import elte.moneyshare.viewmodel.AddMembersViewModel
 import elte.moneyshare.viewmodel.GroupViewModel
 
 class SearchResultsRecyclerViewAdapter(
     private val context: Context,
-    private val filteredUsers: ArrayList<FilteredUserData>,
+    var filteredUsers: ArrayList<FilteredUserData>,
     private val groupId: Int,
     private val memberInvitedListener: MemberInvitedListener,
-    private val model: GroupViewModel
+    private val model: AddMembersViewModel
 ) : RecyclerView.Adapter<SearchResultViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
@@ -42,10 +43,13 @@ class SearchResultsRecyclerViewAdapter(
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
         val filteredUser = filteredUsers[position]
         Log.d("onBindViewHolder", "filteredUser = $filteredUser")
-        holder.nameEmailTextView.text =
-            String.format(context.getString(R.string.filtered_users), filteredUser.displayName, filteredUser.email)
+        holder.nameEmailTextView.text = String.format(context.getString(R.string.filtered_users), filteredUser.displayName, filteredUser.email)
 
-        holder.rootConstraintLayout.setOnClickListener {
+        if(model.currentGroupData?.members?.map {it.id}?.contains(filteredUser.id)!!) {
+            holder.inviteButton.isEnabled = false
+        }
+
+        holder.inviteButton.setOnClickListener {
             memberInvitedListener.onInvited()
             model.postMember(groupId, filteredUser.id) { response, error ->
                 if (error == null) {
