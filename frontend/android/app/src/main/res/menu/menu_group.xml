@@ -1,12 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/addGroup"
-            android:icon="@drawable/ic_add"
-            android:title="@string/add_member"
-            android:visible="true"
-            app:showAsAction="ifRoom" />
-
     <item android:id="@+id/addSpending"
           android:title="@string/add_spending"
           app:showAsAction="never"/>
@@ -14,6 +8,12 @@
     <item
             android:id="@+id/removeMember"
             android:title="@string/remove_member"
+            android:visible="false"
+            app:showAsAction="never" />
+
+    <item
+            android:id="@+id/deleteGroup"
+            android:title="@string/delete_group"
             android:visible="false"
             app:showAsAction="never" />
 

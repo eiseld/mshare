@@ -57,6 +57,12 @@ namespace MShare_ASP.Services
         /// <exception cref="DatabaseException">["group_not_created"]</exception>
         Task CreateGroup(long userId, NewGroup newGroup);
 
+        /// <summary>Deletes the group</summary>
+        /// <exception cref="ResourceNotFoundException">["group"]</exception>
+        /// <exception cref="ResourceForbiddenException">["not_group_creator"]</exception>
+        /// <exception cref="DatabaseException">["group_not_deleted"]</exception>
+        Task DeleteGroup(long userId, long groupId);
+
         /// <summary>Match username or email with filterTerm</summary>
 		Task<IList<FilteredUserData>> GetFilteredUsers(string filterTerm);
         

@@ -2,10 +2,14 @@ package elte.moneyshare.view
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.view.*
 import elte.moneyshare.*
 import elte.moneyshare.entity.GroupDataParc
+import elte.moneyshare.manager.DialogManager
+import elte.moneyshare.util.Action
+import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.Adapter.GroupPagerAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -13,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_group.*
 
 class GroupPagerFragment : Fragment() {
 
+    private var groupCreatorId: Int? = null
     private var groupId: Int? = null
     private var groupName: String? = null
     private lateinit var pagerAdapter: GroupPagerAdapter
@@ -36,13 +41,26 @@ class GroupPagerFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
 
         val removeMemberItem = menu.findItem(R.id.removeMember)
+        val deleteGroupItem = menu.findItem(R.id.deleteGroup)
+        val item = menu.findItem(R.id.menuSearch)
 
-        groupId?.let {
-            viewModel.getGroupData(it) { groupData, _ ->
-                removeMemberItem.isVisible = SharedPreferences.userId == groupData?.creator?.id
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (tab == tabLayout.getTabAt(0)) {
+                    item.isVisible = SharedPreferences.userId == groupCreatorId
+                    removeMemberItem.isVisible = true
+                } else {
+                    item.isVisible = true
+                }
             }
-        }
 
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
+
+        item.isVisible = SharedPreferences.userId == groupCreatorId
+        deleteGroupItem.isVisible = SharedPreferences.userId == groupCreatorId
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -72,10 +90,7 @@ class GroupPagerFragment : Fragment() {
                 } else if(tabLayout.getTabAt(1)?.isSelected!!) {
                     val fragment = AddSpendingFragment()
                     val args = Bundle()
-                    groupId?.let {
-                        args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
-                    }
-                    args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value, -1)
+                    groupId?.let { args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it) }
                     fragment.arguments = args
                     (context as MainActivity).supportFragmentManager?.beginTransaction()
                         ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
@@ -93,6 +108,21 @@ class GroupPagerFragment : Fragment() {
 
                 return true
             }
+            R.id.deleteGroup -> {
+                DialogManager.confirmationDialog(getString(R.string.are_you_sure_to_delete), context) {
+                    viewModel.deleteGroup(groupId!!) { response, error ->
+                        if (error == null) {
+                            DialogManager.showInfoDialog(
+                                context?.getString(R.string.api_groups_delete_group_200), context
+                            )
+                            activity?.supportFragmentManager?.popBackStackImmediate()
+                        } else {
+                            DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS_DELETE, context), context)
+                        }
+                    }
+                }
+                return true
+            }
             R.id.myDebts -> {
                 val fragment = DebtsFragment()
                 val args = Bundle()
@@ -100,8 +130,8 @@ class GroupPagerFragment : Fragment() {
                     args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it)
                 }
                 fragment.arguments = args
-                (context as MainActivity).supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
+                (context as MainActivity).supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, fragment)
+                    ?.addToBackStack(null)?.commit()
                 return true
             }
             else ->
@@ -116,16 +146,19 @@ class GroupPagerFragment : Fragment() {
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
         }
 
-        groupName?.let {
-            activity?.actionBar?.title = it
-            toolbar?.setTitle(it)
-        }
+        groupName?.let { (activity as MainActivity).toolbar.title = it }
 
         if (tabs.isEmpty()) {
             context?.getString(R.string.members_tab)?.let { tabs.add(it) }
             context?.getString(R.string.bills_tab)?.let { tabs.add(it) }
         }
         initViewPager()
+
+        groupId?.let {
+            viewModel.getGroupData(it) { groupData, _ ->
+                groupCreatorId = groupData?.creator?.id
+            }
+        }
     }
 
     fun initViewPager() {

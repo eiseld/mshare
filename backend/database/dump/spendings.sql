@@ -26,6 +26,8 @@ CREATE TABLE `spendings` (
   `money_owed` bigint(20) unsigned NOT NULL,
   `creditor_user_id` bigint(20) unsigned NOT NULL,
   `group_id` bigint(20) unsigned NOT NULL,
+  `date` varchar(10) NOT NULL,
+  `is_future_date` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_group_idx` (`group_id`),
   KEY `fk_creditor_idx` (`creditor_user_id`),

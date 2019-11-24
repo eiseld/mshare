@@ -115,8 +115,6 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-
-
     //GROUP
     override fun getGroupInfo(groupId: Int, completion: (response: GroupInfo?, error: String?) -> Unit) {
         apiDefinition.getGroupInfo(groupId).enqueue(object : Callback<GroupInfo> {
@@ -160,6 +158,25 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
 
     override fun postNewGroup(name: NewGroup , completion: (response: String?, error: String?) -> Unit) {
         apiDefinition.postNewGroup(name).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.code().toString(), null)
+                    }
+                    else -> {
+                        completion(null, response.code().toString())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
+    override fun deleteGroup(id: Int, completion: (response: String?, error: String?) -> Unit) {
+        apiDefinition.deleteGroup(id).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {

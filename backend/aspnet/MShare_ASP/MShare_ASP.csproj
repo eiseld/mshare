@@ -17,13 +17,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\img\mshare_logo_128.png" />
+    <Folder Include="wwwroot\img\" />
   </ItemGroup>
   
-  <ItemGroup>
-    <None Include="wwwroot\img\mshare_logo_128.png" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />

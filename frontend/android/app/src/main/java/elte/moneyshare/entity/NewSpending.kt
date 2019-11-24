@@ -4,5 +4,6 @@ data class NewSpending (
     var groupId: Int,
     var name: String,
     var moneySpent: Int,
-    var debtors: ArrayList<Debtor>
+    var debtors: ArrayList<Debtor>,
+    var date: String
 )

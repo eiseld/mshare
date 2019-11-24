@@ -17,7 +17,7 @@ namespace MShare_ASP.Data
 
         /// <summary>Name of the group</summary>
         [Column("name")]
-        public String Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>Id of the creator of this Group</summary>
         [Column("creator_user_id")]
@@ -27,6 +27,10 @@ namespace MShare_ASP.Data
         [JsonIgnore]
         [ForeignKey("CreatorUserId")]
         public virtual DaoUser CreatorUser { get; set; }
+
+        /// <summary>Weather this group has been deleted or not</summary>
+        [Column("deleted", TypeName = "bit")]
+        public bool Deleted { get; set; }
 
         /// <summary>All Users associted with this Group</summary>
         public IEnumerable<DaoUsersGroupsMap> Members { get; set; }

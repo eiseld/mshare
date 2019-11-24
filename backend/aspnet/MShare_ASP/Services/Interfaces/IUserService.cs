@@ -33,16 +33,22 @@ namespace MShare_ASP.Services
         /// <exception cref="ResourceNotFoundException">["user"] DEBUG ONLY</exception>
         Task SendForgotPasswordMail(string email, DaoLangTypes.Type lang);
 
-        /// <summary>Updates the password of the user</summary>
+        /// <summary>Updates the password based on a token</summary>
         /// <exception cref="DatabaseException">["password_not_saved", "token_deletion_failed"]</exception>
         /// <exception cref="ResourceGoneException">["token_invalid_or_expired"]</exception>
         /// <exception cref="ResourceNotFoundException">["user"]</exception>
         Task UpdatePassword(PasswordUpdate passwordUpdate);
 
-        /// <summary>Updates the user's language to a new one</summary>
-        /// <exception cref="DatabaseException">["lang_update_failed"]</exception>
-        /// <returns></returns>
-        Task UpdateLang(long userId, SetLang language);
+        /// <summary>Updates the password for a specific user</summary>
+        /// <exception cref="DatabaseException">["password_not_saved", "token_deletion_failed"]</exception>
+        /// <exception cref="ResourceGoneException">["token_invalid_or_expired"]</exception>
+        /// <exception cref="ResourceNotFoundException">["user"]</exception>
+        Task UpdatePassword(PasswordUpdate passwordUpdate, long userId);
+
+		/// <summary>Updates the user's language to a new one</summary>
+		/// <exception cref="DatabaseException">["lang_update_failed"]</exception>
+		/// <returns></returns>
+		Task UpdateLang(long userId, SetLang language);
 
         /// <summary>Updates the bank account number of the user</summary>
         /// <exception cref="DatabaseException">["account_number_update_failed"]</exception>
