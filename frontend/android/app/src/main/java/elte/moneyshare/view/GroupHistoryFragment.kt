@@ -3,12 +3,13 @@ package elte.moneyshare.view
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
-import elte.moneyshare.entity.HistoryType
+import elte.moneyshare.view.Adapter.GroupHistoryRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_group_history.*
 
@@ -32,11 +33,13 @@ class GroupHistoryFragment : Fragment() {
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
 
-            myNameTextView.text = HistoryType.UPDATE.toString(it)
-
             groupId?.let { groupId ->
-                viewModel.getGroupHistory(groupId, 0, 0) { groupHistory, error ->
-
+                viewModel.getGroupHistory(it, groupId, 0, 0) { historyItems, error ->
+                    historyItems?.let { items ->
+                        val adapter = GroupHistoryRecyclerViewAdapter(it, items)
+                        historyRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                        historyRecyclerView.adapter = adapter
+                    }
                 }
             }
         }

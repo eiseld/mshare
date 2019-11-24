@@ -112,10 +112,25 @@
     <string name="added_member_button_label">Hozzáadva</string>
 
     <!-- region History -->
-    <string name="update">Módosítás</string>
-    <string name="create">Létrehozás</string>
-    <string name="delete">Törlés</string>
-    <string name="remove">Törlés</string>
+    <string name="history_add">Hozzáadása</string>
+    <string name="history_update">Módosítása</string>
+    <string name="history_create">Létrehozása</string>
+    <string name="history_delete">Törlése</string>
+    <string name="history_remove">Eltávolítása</string>
+
+    <string name="history_spending">Költés</string>
+    <string name="history_member">Tag</string>
+    <string name="history_group">Csoport</string>
+    <string name="history_settlement">Kifizetés</string>
+    <string name="history_debt">Adósság</string>
+
+    <string name="creator">Létrehozó:</string>
+    <string name="former_member">Volt tag</string>
+    <string name="member_name">Tag neve:</string>
+    <string name="spending_name">Költés neve:</string>
+    <string name="spending_value">Költés összege:</string>
+    <string name="from">Kitől:</string>
+    <string name="to">Kinek:</string>
 
     <!-- endregion History -->
 

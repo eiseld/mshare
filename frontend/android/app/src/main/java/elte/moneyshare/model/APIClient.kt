@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import elte.moneyshare.BuildConfig
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
+import elte.moneyshare.util.EnumConverterFactory
 import okhttp3.Headers
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -41,6 +42,7 @@ object APIClient {
             .baseUrl(baseUrlValue)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(EnumConverterFactory())
             .build()
 
         apiDefinition = retrofit.create(APIDefinition::class.java)

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="116dp">
+
+    <TextView
+            android:id="@+id/typeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="4dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Tag hozzáadása" />
+
+    <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/typeTextView"
+            tools:text="2019.05.22" />
+
+    <TextView
+            android:id="@+id/fromNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@+id/typeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/typeTextView"
+            android:text="@string/from" />
+
+    <TextView
+            android:id="@+id/fromNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            app:layout_constraintStart_toEndOf="@+id/fromNameLabel"
+            app:layout_constraintTop_toTopOf="@+id/fromNameLabel"
+            tools:text="Mr Bela" />
+
+    <TextView
+            android:id="@+id/toNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@+id/fromNameLabel"
+            app:layout_constraintTop_toBottomOf="@+id/fromNameLabel"
+            android:text="@string/to" />
+
+    <TextView
+            android:id="@+id/toNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            app:layout_constraintStart_toEndOf="@+id/toNameLabel"
+            app:layout_constraintTop_toTopOf="@+id/toNameLabel"
+            tools:text="Mr Bela" />
+
+
+    <TextView
+            android:id="@+id/spendingValueLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@+id/typeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/toNameLabel"
+            android:text="@string/spending_value" />
+
+    <TextView
+            android:id="@+id/spendingValueTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            app:layout_constraintStart_toEndOf="@+id/spendingValueLabel"
+            app:layout_constraintTop_toTopOf="@+id/spendingValueLabel"
+            tools:text="Mr Bela" />
+
+    <TextView
+            android:id="@+id/creatorLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/creator"
+            app:layout_constraintStart_toStartOf="@+id/typeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/spendingValueLabel" />
+
+    <TextView
+            android:id="@+id/creatorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            app:layout_constraintStart_toEndOf="@+id/creatorLabel"
+            app:layout_constraintTop_toTopOf="@+id/creatorLabel"
+            tools:text="Mr Test 1" />
+
+</android.support.constraint.ConstraintLayout>
