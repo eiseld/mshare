@@ -43,10 +43,16 @@ class SearchResultsRecyclerViewAdapter(
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
         val filteredUser = filteredUsers[position]
         Log.d("onBindViewHolder", "filteredUser = $filteredUser")
-        holder.nameEmailTextView.text = String.format(context.getString(R.string.filtered_users), filteredUser.displayName, filteredUser.email)
+        holder.nameTextView.text = filteredUser.displayName
+        holder.emailTextView.text = filteredUser.email
 
         if(model.currentGroupData?.members?.map {it.id}?.contains(filteredUser.id)!!) {
+            println(filteredUser.id)
             holder.inviteButton.isEnabled = false
+            holder.inviteButton.setText(R.string.added_member_button_label)
+        } else {
+            holder.inviteButton.isEnabled = true
+            holder.inviteButton.setText(R.string.add_member_button_label)
         }
 
         holder.inviteButton.setOnClickListener {

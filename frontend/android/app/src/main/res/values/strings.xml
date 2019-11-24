@@ -104,6 +104,7 @@
 
     <string name="name_or_email">Név vagy Email cím</string>
     <string name="add_member_button_label">Hozzáad</string>
+    <string name="added_member_button_label">Hozzáadva</string>
 
     <!-- API responses -->
 

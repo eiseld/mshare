@@ -10,6 +10,7 @@ import elte.moneyshare.R
 class SearchResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var rootConstraintLayout: ConstraintLayout = itemView.findViewById(R.id.rootConstraintLayout)
-    var nameEmailTextView: TextView = itemView.findViewById(R.id.nameEmailTextView)
+    var nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
+    var emailTextView: TextView = itemView.findViewById(R.id.emailTextView)
     var inviteButton: Button = itemView.findViewById(R.id.inviteButton)
 }

@@ -102,6 +102,8 @@
     <string name="profile">Profile</string>
 
     <string name="name_or_email">Name or Email address</string>
+    <string name="add_member_button_label">Add</string>
+    <string name="added_member_button_label">Added</string>
 
     <!-- API responses -->
 
@@ -175,5 +177,4 @@
     <string name="change_bank_account_label">Change Bank Account Number</string>
     <string name="bank_account_not_set">Bank Account Not Set Yet!</string>
     <string name="member_added_to_group_successfully">Member added to group successfully!</string>
-    <string name="add_member_button_label">Add</string>
 </resources>
