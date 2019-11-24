@@ -81,7 +81,6 @@
     <string name="max_spending_limit">Max megmaradt összeg %1$d Ft</string>
 
     <string name="my_debts">Saját tartozásaim</string>
-    <string name="filtered_users">%1$s - %2$s</string>
     <string name="select_members_missing">Jelöljön ki tagokat</string>
 
     <string name="modify_spending">Költés módosítása</string>

@@ -86,7 +86,6 @@
     <string name="modify_cancelled">Spending modification cancelled</string>
     <string name="ok">Ok</string>
 
-    <string name="filtered_users">%1$s - %2$s</string>
     <string name="on_failure_message">Connection error!</string>
     <string name="group_created">Group successfully created!</string>
 

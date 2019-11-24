@@ -59,8 +59,13 @@ class GroupPagerFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-        item.isVisible = SharedPreferences.userId == groupCreatorId
-        deleteGroupItem.isVisible = SharedPreferences.userId == groupCreatorId
+        groupId?.let {
+            viewModel.getGroupData(it) { groupData, _ ->
+                groupCreatorId = groupData?.creator?.id
+                item.isVisible = SharedPreferences.userId == groupCreatorId
+                deleteGroupItem.isVisible = SharedPreferences.userId == groupCreatorId
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -154,11 +159,6 @@ class GroupPagerFragment : Fragment() {
         }
         initViewPager()
 
-        groupId?.let {
-            viewModel.getGroupData(it) { groupData, _ ->
-                groupCreatorId = groupData?.creator?.id
-            }
-        }
     }
 
     fun initViewPager() {
