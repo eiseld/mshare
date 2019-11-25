@@ -67,8 +67,8 @@ class BillsRecyclerViewAdapter(
                 val openedHeight = holder.billMembersRecyclerView.measuredHeight ?: 0
                 val valueAnimatorHeight = ValueAnimator.ofInt(1, openedHeight).setDuration(animationDuration)
                 valueAnimatorHeight.addUpdateListener { animation ->
-                    holder.billMembersRecyclerView.layoutParams?.height = animation.animatedValue as Int
-                    holder.billMembersRecyclerView.requestLayout()
+                    holder.billMembersRecyclerView?.layoutParams?.height = animation.animatedValue as Int
+                    holder.billMembersRecyclerView?.requestLayout()
                 }
                 val animatorSet = AnimatorSet()
                 animatorSet.play(valueAnimatorHeight)
@@ -84,8 +84,8 @@ class BillsRecyclerViewAdapter(
                     holder.billMembersRecyclerView?.requestLayout()
 
                     if (animation.animatedValue == 1) {
-                        holder.billMembersRecyclerView.alpha = 0f
-                        holder.billMembersRecyclerView.gone()
+                        holder.billMembersRecyclerView?.alpha = 0f
+                        holder.billMembersRecyclerView?.gone()
                     }
                 }
 

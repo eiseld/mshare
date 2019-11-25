@@ -40,8 +40,8 @@ class DebtsFragment : Fragment() {
                 viewModel.getOptimizedDebtData(groupId) { groupData, error ->
                     if (groupData != null) {
                         val adapter = OptimizedDebtRecyclerViewAdapter(it, groupData, viewModel, groupId)
-                        debtsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                        debtsRecyclerView.adapter = adapter
+                        debtsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                        debtsRecyclerView?.adapter = adapter
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                     }
