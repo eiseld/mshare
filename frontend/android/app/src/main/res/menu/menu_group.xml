@@ -22,7 +22,7 @@
           app:showAsAction="never"/>
 
     <item
-            android:id="@+id/menuSearch"
+            android:id="@+id/menuAdd"
             android:icon="@drawable/ic_add"
             android:title="@string/add_member"
             android:visible="false"

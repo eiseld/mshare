@@ -46,7 +46,7 @@ class AddSpendingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         groupId = arguments?.getInt(FragmentDataKeys.MEMBERS_FRAGMENT.value)
-        var spendingIdTemp = arguments?.getInt(FragmentDataKeys.BILLS_FRAGMENT.value)
+        var spendingIdTemp = arguments?.getInt(FragmentDataKeys.ADD_SPENDING_FRAGMENT.value)
         if(spendingIdTemp != null && spendingIdTemp != -1)
         {
             isModify = true

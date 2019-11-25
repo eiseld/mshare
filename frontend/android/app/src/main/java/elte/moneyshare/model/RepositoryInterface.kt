@@ -30,6 +30,8 @@ interface RepositoryInterface {
 
     fun getSearchedUsers(filter: String, completion: (response: ArrayList<FilteredUserData>?, error: String?) -> Unit)
 
+    fun getGroupHistory(groupId: Int, startIndex: Int, count: Int, completion: (response: List<GroupHistoryEvent>?, error: String?) -> Unit)
+
     //PROFILE
     fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit)
 

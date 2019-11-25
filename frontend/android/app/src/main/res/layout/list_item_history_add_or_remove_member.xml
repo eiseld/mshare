@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="78dp">
+
+    <TextView
+            android:id="@+id/typeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="4dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Tag hozzáadása" />
+
+    <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/typeTextView"
+            tools:text="2019.05.22" />
+
+    <TextView
+            android:id="@+id/affectedMemberLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@+id/typeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/typeTextView"
+            android:text="@string/member_name" />
+
+    <TextView
+            android:id="@+id/affectedMemberTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            app:layout_constraintStart_toEndOf="@+id/affectedMemberLabel"
+            app:layout_constraintTop_toTopOf="@+id/affectedMemberLabel"
+            tools:text="Mr Bela" />
+
+    <TextView
+            android:id="@+id/creatorLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/creator"
+            app:layout_constraintStart_toStartOf="@+id/typeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/affectedMemberLabel" />
+
+    <TextView
+            android:id="@+id/creatorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            app:layout_constraintStart_toEndOf="@+id/creatorLabel"
+            app:layout_constraintTop_toTopOf="@+id/creatorLabel"
+            tools:text="Mr Test 1" />
+
+    <include layout="@layout/inc_divider" />
+
+</android.support.constraint.ConstraintLayout>

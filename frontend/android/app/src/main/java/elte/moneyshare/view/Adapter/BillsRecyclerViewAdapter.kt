@@ -126,7 +126,7 @@ class BillsRecyclerViewAdapter(
             val fragment = AddSpendingFragment()
             val args = Bundle()
             args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, groupId)
-            args.putInt(FragmentDataKeys.BILLS_FRAGMENT.value, id)
+            args.putInt(FragmentDataKeys.ADD_SPENDING_FRAGMENT.value, id)
             fragment.arguments = args
             (context as MainActivity).supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()

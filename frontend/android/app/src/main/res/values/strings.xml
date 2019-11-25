@@ -45,7 +45,6 @@
 
     <string name="settle">Rendez</string>
 
-
     <!-- GROUPS -->
     <string name="create_group">Csoport létrehozása</string>
     <string name="group_name">Csoport neve</string>
@@ -90,6 +89,8 @@
     <string name="modify_cancelled">Költés módosítás megszakítva</string>
     <string name="ok">Ok</string>
 
+    <string name="history_tab">Történet</string>
+
     <string name="on_failure_message">Hálózati hiba!</string>
     <string name="group_created">Csoport létrehozva!</string>
 
@@ -108,6 +109,33 @@
     <string name="name_or_email">Név vagy Email cím</string>
     <string name="add_member_button_label">Hozzáad</string>
     <string name="added_member_button_label">Hozzáadva</string>
+
+    <!-- region History -->
+    <string name="history_add">Hozzáadása</string>
+    <string name="history_update">Módosítása</string>
+    <string name="history_create">Létrehozása</string>
+    <string name="history_delete">Törlése</string>
+    <string name="history_remove">Eltávolítása</string>
+
+    <string name="history_spending">Költés</string>
+    <string name="history_member">Tag</string>
+    <string name="history_group">Csoport</string>
+    <string name="history_settlement">Kifizetés</string>
+    <string name="history_debt">Adósság</string>
+
+    <string name="creator">Létrehozó:</string>
+    <string name="former_member">Volt tag</string>
+    <string name="member_name">Tag neve:</string>
+    <string name="spending_name">Költés neve:</string>
+    <string name="spending_value">Költés összege:</string>
+    <string name="from">Kitől:</string>
+    <string name="to">Kinek:</string>
+
+    <string name="history_spending_name_modify">Költés neve: %1$s -> %2$s</string>
+    <string name="history_spending_money_modify">Költés összege: %1$d -> %2$d</string>
+    <string name="history_spending_date_modify">Költés dátuma: %1$s -> %2$s</string>
+
+    <!-- endregion History -->
 
     <!-- API responses -->
 
@@ -196,5 +224,4 @@
     <string name="change_bank_account_label">Bankszámla szám módosítása</string>
     <string name="bank_account_not_set">Bankszámla szám még nincs beállítva!</string>
     <string name="member_added_to_group_successfully">Tag sikeresen hozzáadva a csoporthoz!</string>
-
 </resources>

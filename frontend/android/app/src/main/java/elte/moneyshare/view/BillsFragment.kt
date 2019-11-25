@@ -28,7 +28,7 @@ class BillsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        groupId = arguments?.getInt(FragmentDataKeys.MEMBERS_FRAGMENT.value)
+        groupId = arguments?.getInt(FragmentDataKeys.BILLS_FRAGMENT.value)
         return inflater.inflate(R.layout.fragment_bills, container, false)
     }
 

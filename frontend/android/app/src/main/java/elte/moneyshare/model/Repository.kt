@@ -10,7 +10,7 @@ import retrofit2.Response
 
 class Repository(private val apiDefinition: APIDefinition, private val onFailureMessage: String) : RepositoryInterface {
 
-    //AUTH
+    //region AUTH
     override fun putLoginUser(loginCred: LoginCred, completion: (response: String?, error: String?) -> Unit) {
         apiDefinition.putLoginUser(loginCred).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
@@ -19,7 +19,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
                         SharedPreferences.isUserLoggedIn = true
                         SharedPreferences.accessToken = response?.body()?.token ?: ""
                         SharedPreferences.email = loginCred.email
-                        getUserId({ response, error ->})
+                        getUserId({ response, error -> })
                         completion(response.code().toString(), null)
                     }
                     else -> {
@@ -53,7 +53,10 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    override fun postRegisterUser(registrationData: RegistrationData, completion: (response: String?, error: String?) -> Unit) {
+    override fun postRegisterUser(
+        registrationData: RegistrationData,
+        completion: (response: String?, error: String?) -> Unit
+    ) {
         apiDefinition.postRegisterUser(registrationData).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response.code()) {
@@ -110,12 +113,14 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-               completion(null, onFailureMessage)
+                completion(null, onFailureMessage)
             }
         })
     }
 
-    //GROUP
+    //endregion
+
+    //region GROUP
     override fun getGroupInfo(groupId: Int, completion: (response: GroupInfo?, error: String?) -> Unit) {
         apiDefinition.getGroupInfo(groupId).enqueue(object : Callback<GroupInfo> {
             override fun onResponse(call: Call<GroupInfo>, response: Response<GroupInfo>) {
@@ -156,7 +161,7 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    override fun postNewGroup(name: NewGroup , completion: (response: String?, error: String?) -> Unit) {
+    override fun postNewGroup(name: NewGroup, completion: (response: String?, error: String?) -> Unit) {
         apiDefinition.postNewGroup(name).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
@@ -232,8 +237,33 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
+    override fun getGroupHistory(
+        groupId: Int,
+        startIndex: Int,
+        count: Int,
+        completion: (response: List<GroupHistoryEvent>?, error: String?) -> Unit
+    ) {
+        apiDefinition.getGroupHistory(groupId, startIndex, count).enqueue(object : Callback<List<GroupHistoryEvent>> {
+            override fun onResponse(call: Call<List<GroupHistoryEvent>>, response: Response<List<GroupHistoryEvent>>) {
+                when (response?.code()) {
+                    in (200..300) -> {
+                        completion(response.body(), null)
+                    }
+                    else -> {
+                        completion(null, response.code().toString())
+                    }
+                }
+            }
 
-    //PROFILE
+            override fun onFailure(call: Call<List<GroupHistoryEvent>>, t: Throwable) {
+                completion(null, onFailureMessage)
+            }
+        })
+    }
+
+    //endregion
+
+    //region PROFILE
     override fun getProfileGroups(completion: (response: ArrayList<GroupInfo>?, error: String?) -> Unit) {
         apiDefinition.getProfileGroups().enqueue(object : Callback<ArrayList<GroupInfo>> {
             override fun onResponse(call: Call<ArrayList<GroupInfo>>, response: Response<ArrayList<GroupInfo>>) {
@@ -274,7 +304,10 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    override fun updateProfile(bankAccountNumberUpdate: BankAccountNumberUpdate, completion: (response: String?, error: String?) -> Unit) {
+    override fun updateProfile(
+        bankAccountNumberUpdate: BankAccountNumberUpdate,
+        completion: (response: String?, error: String?) -> Unit
+    ) {
         apiDefinition.postBankAccountNumber(bankAccountNumberUpdate).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
@@ -293,7 +326,10 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    override fun postPasswordUpdate(passwordUpdate: PasswordUpdate, completion: (response: String?, error: String?) -> Unit) {
+    override fun postPasswordUpdate(
+        passwordUpdate: PasswordUpdate,
+        completion: (response: String?, error: String?) -> Unit
+    ) {
         apiDefinition.postPasswordUpdate(passwordUpdate).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
@@ -330,8 +366,9 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
             }
         })
     }
+    //endregion
 
-    //SPENDING
+    //region SPENDING
     override fun getSpendings(groupId: Int, completion: (response: ArrayList<SpendingData>?, error: String?) -> Unit) {
         apiDefinition.getSpendings(groupId).enqueue(object : Callback<ArrayList<SpendingData>> {
             override fun onResponse(call: Call<ArrayList<SpendingData>>, response: Response<ArrayList<SpendingData>>) {
@@ -371,7 +408,11 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    override fun deleteSpending(spendingId: Int, groupId: Int, completion: (response: String?, error: String?) -> Unit) {
+    override fun deleteSpending(
+        spendingId: Int,
+        groupId: Int,
+        completion: (response: String?, error: String?) -> Unit
+    ) {
         apiDefinition.deleteSpending(spendingId, groupId).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
@@ -390,7 +431,10 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    override fun postSpendingUpdate(spendingUpdate: SpendingUpdate, completion: (response: String?, error: String?) -> Unit) {
+    override fun postSpendingUpdate(
+        spendingUpdate: SpendingUpdate,
+        completion: (response: String?, error: String?) -> Unit
+    ) {
         apiDefinition.postSpendingUpdate(spendingUpdate).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
@@ -409,7 +453,10 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    override fun getOptimizedDebt(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit) {
+    override fun getOptimizedDebt(
+        groupId: Int,
+        completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit
+    ) {
         apiDefinition.getOptimizedDebt(groupId).enqueue(object : Callback<ArrayList<OptimizedDebtData>> {
             override fun onResponse(call: Call<ArrayList<OptimizedDebtData>>, response: Response<ArrayList<OptimizedDebtData>>) {
                 when (response?.code()) {
@@ -429,8 +476,13 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    override fun putDebitEqualization(groupId: Int, ownId: Int,selectedMember: Int, completion: (response: String?, error: String?) -> Unit) {
-        apiDefinition.putDebitEqualization(groupId,ownId,selectedMember).enqueue(object : Callback<ResponseBody> {
+    override fun putDebitEqualization(
+        groupId: Int,
+        ownId: Int,
+        selectedMember: Int,
+        completion: (response: String?, error: String?) -> Unit
+    ) {
+        apiDefinition.putDebitEqualization(groupId, ownId, selectedMember).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 when (response?.code()) {
                     in (200..300) -> {
@@ -448,9 +500,15 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
         })
     }
 
-    override fun getSearchedUsers(filter: String, completion: (response: ArrayList<FilteredUserData>?, error: String?) -> Unit) {
+    override fun getSearchedUsers(
+        filter: String,
+        completion: (response: ArrayList<FilteredUserData>?, error: String?) -> Unit
+    ) {
         apiDefinition.getSearchedUsers(filter).enqueue(object : Callback<ArrayList<FilteredUserData>> {
-            override fun onResponse(call: Call<ArrayList<FilteredUserData>>, response: Response<ArrayList<FilteredUserData>>) {
+            override fun onResponse(
+                call: Call<ArrayList<FilteredUserData>>,
+                response: Response<ArrayList<FilteredUserData>>
+            ) {
                 when (response?.code()) {
                     in (200..300) -> {
                         val filteredUsers = response.body()
@@ -467,9 +525,9 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
             }
         })
     }
+    //endregion
 
-
-    //TEST METHODS
+    //region TEST METHODS
     override fun getGroups(completion: (response: ArrayList<Group>?, error: String?) -> Unit) {
         apiDefinition.getGroups().enqueue(object : Callback<ArrayList<Group>> {
             override fun onResponse(call: Call<ArrayList<Group>>, response: Response<ArrayList<Group>>) {
@@ -509,4 +567,6 @@ class Repository(private val apiDefinition: APIDefinition, private val onFailure
             }
         })
     }
+
+    //endregion
 }

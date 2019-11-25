@@ -1,9 +1,14 @@
 package elte.moneyshare.viewmodel
 
 import android.arch.lifecycle.ViewModel
+import android.content.Context
+import com.google.gson.Gson
+import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.*
 import elte.moneyshare.model.APIClient
+import elte.moneyshare.util.convertToCalendar
+import elte.moneyshare.util.formatDate
 
 class GroupViewModel : ViewModel() {
 
@@ -111,8 +116,128 @@ class GroupViewModel : ViewModel() {
             if (groupData != null) {
                 completion(groupData, null)
             } else {
-                completion(null , error)
+                completion(null, error)
             }
         }
+    }
+
+    data class LogAddRemoveSpending(val Name: String, val Money: Int)
+    data class LogSettleSpending(val From: Int, val To: Int, val Money: Int)
+    data class LogSettleUpdate(
+        val oldMoney: Int, val newMoney: Int,
+        val oldName: String, val newName: String,
+        val oldDate: String, val newDate: String
+    )
+
+    fun getGroupHistory(
+        context: Context,
+        groupId: Int,
+        startIndex: Int,
+        count: Int, completion: (groupHistory: List<HistoryItem>?, error: String?) -> Unit
+    ) {
+        APIClient.getRepository().getGroupHistory(groupId, startIndex, count) { groupHistory, error ->
+            if (error == null) {
+                val historyItems = ArrayList<HistoryItem>()
+
+                val members = currentGroupData?.members?.plus(currentGroupData?.creator)
+                groupHistory?.forEach { history ->
+                    if (history.subType == HistorySubType.MEMBER && (history.type == HistoryType.ADD || history.type == HistoryType.REMOVE)) {
+                        historyItems.add(
+                            HistoryItem.AddOrRemoveMember(
+                                date = history.date.convertToCalendar().formatDate(),
+                                creator = members?.find { it?.id == history.userId }?.name ?: context.getString(R.string.former_member),
+                                type = "${history.subType.toString(context)} ${history.type.toString(context)}",
+                                memberName = members?.find { it?.id == history.affectedIds.firstOrNull() }?.name
+                                    ?: context.getString(R.string.former_member)
+                            )
+                        )
+                    } else if (history.subType == HistorySubType.SPENDING && (history.type == HistoryType.CREATE || history.type == HistoryType.DELETE)) {
+                        val log = Gson().fromJson(history.serializedLog, LogAddRemoveSpending::class.java)
+                        historyItems.add(
+                            HistoryItem.AddOrRemoveSpending(
+                                date = history.date.convertToCalendar().formatDate(),
+                                creator = members?.find { it?.id == history.userId }?.name
+                                    ?: context.getString(R.string.former_member),
+                                type = "${history.subType.toString(context)} ${history.type.toString(context)}",
+                                spendingName = log.Name,
+                                spendingValue = log.Money
+                            )
+                        )
+                    } else if (history.subType == HistorySubType.SPENDING && (history.type == HistoryType.UPDATE)) {
+                        val log = Gson().fromJson(history.serializedLog, LogSettleUpdate::class.java)
+                        historyItems.add(
+                            HistoryItem.ModifySpending(
+                                date = history.date.convertToCalendar().formatDate(),
+                                creator = members?.find { it?.id == history.userId }?.name ?: context.getString(R.string.former_member),
+                                type = "${history.subType.toString(context)} ${history.type.toString(context)}",
+                                moneyOld = log.oldMoney,
+                                moneyNew = log.newMoney,
+                                nameOld = log.oldName,
+                                nameNew = log.newName,
+                                dateOld = log.oldDate,
+                                dateNew = log.newDate
+                            )
+                        )
+                    } else if (history.subType == HistorySubType.SETTLEMENT && (history.type == HistoryType.CREATE)) {
+                        val log = Gson().fromJson(history.serializedLog, LogSettleSpending::class.java)
+                        historyItems.add(
+                            HistoryItem.SettleSpending(
+                                date = history.date.convertToCalendar().formatDate(),
+                                creator = members?.find { it?.id == history.userId }?.name
+                                    ?: context.getString(R.string.former_member),
+                                type = "${history.subType.toString(context)} ${history.type.toString(context)}",
+                                settleFromName = members?.find { it?.id == log.From }?.name
+                                    ?: context.getString(R.string.former_member),
+                                settleToName = members?.find { it?.id == log.To }?.name
+                                    ?: context.getString(R.string.former_member),
+                                settleValue = log.Money
+                            )
+                        )
+                    }
+                }
+                completion(historyItems, null)
+            } else {
+                completion(null, error)
+            }
+        }
+    }
+
+    sealed class HistoryItem(open val date: String, open val creator: String, open val type: String) {
+
+        data class AddOrRemoveMember(
+            override val date: String,
+            override val creator: String,
+            override val type: String,
+            val memberName: String
+        ) : HistoryItem(date, creator, type)
+
+        data class AddOrRemoveSpending(
+            override val date: String,
+            override val creator: String,
+            override val type: String,
+            val spendingName: String,
+            val spendingValue: Int
+        ) : HistoryItem(date, creator, type)
+
+        data class ModifySpending(
+            override val date: String,
+            override val creator: String,
+            override val type: String,
+            val moneyOld: Int?,
+            val moneyNew: Int?,
+            val nameOld: String?,
+            val nameNew: String?,
+            val dateOld: String?,
+            val dateNew: String?
+        ) : HistoryItem(date, creator, type)
+
+        data class SettleSpending(
+            override val date: String,
+            override val creator: String,
+            override val type: String,
+            val settleFromName: String,
+            val settleToName: String,
+            val settleValue: Int
+        ) : HistoryItem(date, creator, type)
     }
 }

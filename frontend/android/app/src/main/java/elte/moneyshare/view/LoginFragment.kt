@@ -25,8 +25,7 @@ class LoginFragment : Fragment() {
     fun passwordValidator(txt: String): String {
         var pwdError = ""
         context?.let {
-            if(txt.length <6)
-            {
+            if (txt.length < 6) {
                 pwdError = it.getString(R.string.minimum_characters).plus('\n')
             }
         }
@@ -44,14 +43,14 @@ class LoginFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if(SharedPreferences.stayLoggedIn)
-        {
+        if (SharedPreferences.stayLoggedIn) {
             val intent = Intent(context, MainActivity::class.java)
             startActivity(intent)
             activity?.finish()
         }
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
+        //loginButton.enable()
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
@@ -60,18 +59,17 @@ class LoginFragment : Fragment() {
             if (pwdError.length > 1) {
                 passwordTextInputLayout.error = pwdError
                 err = true
-            }
-            else {
+            } else {
                 passwordTextInputLayout.error = null
             }
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 emailTextInputLayout.error = context?.getString(R.string.email_not_correct)
                 err = true
-            }
-            else {
+            } else {
                 emailTextInputLayout.error = null
             }
-            if(!err) {
+            if (!err) {
+                //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
                 viewModel.putLoginUser(email, password) { _, error ->
                     if (error == null) {
                         if (stayLoggedInCheckBox.isChecked) {
@@ -92,7 +90,8 @@ class LoginFragment : Fragment() {
                     }
                 }
             }
-            }
+        }
+
 
         if (BuildConfig.FLAVOR == "local") {
             urlEditText.visible()
