@@ -15,16 +15,16 @@ import elte.moneyshare.entity.FilteredUserData
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
-import elte.moneyshare.view.Adapter.SearchResultsRecyclerViewAdapter
+import elte.moneyshare.view.Adapter.AddMembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.AddMembersViewModel
 import kotlinx.android.synthetic.main.fragment_add_members.*
 
-class AddMembersFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberInvitedListener {
+class AddMembersFragment : Fragment(), AddMembersRecyclerViewAdapter.MemberInvitedListener {
     override fun onInvited() {
     }
 
     private lateinit var viewModel: AddMembersViewModel
-    lateinit var adapter : SearchResultsRecyclerViewAdapter
+    lateinit var adapter : AddMembersRecyclerViewAdapter
     private var groupId: Int? = null
 
     override fun onCreateView(
@@ -46,8 +46,8 @@ class AddMembersFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
                 viewModel.getGroupData(groupId) { groupData, error ->
                     if (groupData != null) {
                         var arrayList: ArrayList<FilteredUserData> = ArrayList()
-                        adapter = SearchResultsRecyclerViewAdapter(context!!, arrayList, groupId!!, this@AddMembersFragment, viewModel)
-                        searchResultsRecycleView.adapter = adapter
+                        adapter = AddMembersRecyclerViewAdapter(it, arrayList, groupId, this@AddMembersFragment, viewModel)
+                        addMembersRecycleView.adapter = adapter
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                     }
@@ -55,13 +55,12 @@ class AddMembersFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
             }
         }
 
-        searchResultsRecycleView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        addMembersRecycleView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         nameOrEmailEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                var newText = nameOrEmailEditText.text.toString()
-                if (newText.length > 3) {
-                    viewModel.getSearchedUsers(newText) { filteredUsers, error ->
+                if (nameOrEmailEditText.text.toString().length > 3) {
+                    viewModel.getSearchedUsers(nameOrEmailEditText.text.toString()) { filteredUsers, error ->
                         if (filteredUsers != null) {
                             adapter.filteredUsers = filteredUsers!!
                             adapter.notifyDataSetChanged()

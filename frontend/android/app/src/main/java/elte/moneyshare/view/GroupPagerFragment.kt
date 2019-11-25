@@ -62,7 +62,7 @@ class GroupPagerFragment : Fragment() {
         groupId?.let {
             viewModel.getGroupData(it) { groupData, error ->
                 if (groupData != null) {
-                    groupCreatorId = groupData?.creator?.id
+                    groupCreatorId = groupData.creator.id
                     item.isVisible = SharedPreferences.userId == groupCreatorId
                     deleteGroupItem.isVisible = SharedPreferences.userId == groupCreatorId
                     removeMemberItem.isVisible = SharedPreferences.userId == groupCreatorId

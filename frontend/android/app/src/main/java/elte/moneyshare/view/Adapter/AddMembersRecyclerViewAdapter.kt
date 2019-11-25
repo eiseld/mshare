@@ -20,7 +20,7 @@ import elte.moneyshare.view.viewholder.SearchResultViewHolder
 import elte.moneyshare.viewmodel.AddMembersViewModel
 import elte.moneyshare.viewmodel.GroupViewModel
 
-class SearchResultsRecyclerViewAdapter(
+class AddMembersRecyclerViewAdapter(
     private val context: Context,
     var filteredUsers: ArrayList<FilteredUserData>,
     private val groupId: Int,
