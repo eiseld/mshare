@@ -24,7 +24,6 @@ class AddMembersRecyclerViewAdapter(
     private val context: Context,
     var filteredUsers: ArrayList<FilteredUserData>,
     private val groupId: Int,
-    private val memberInvitedListener: MemberInvitedListener,
     private val model: AddMembersViewModel
 ) : RecyclerView.Adapter<SearchResultViewHolder>() {
 
@@ -57,7 +56,6 @@ class AddMembersRecyclerViewAdapter(
 
         holder.inviteButton.setOnClickListener {
             holder.inviteButton.isEnabled = false
-            memberInvitedListener.onInvited()
             model.postMember(groupId, filteredUser.id) { response, error ->
                 if (error == null) {
                     holder.inviteButton.text = context.getString(R.string.added_member_button_label)

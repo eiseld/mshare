@@ -19,9 +19,7 @@ import elte.moneyshare.view.Adapter.AddMembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.AddMembersViewModel
 import kotlinx.android.synthetic.main.fragment_add_members.*
 
-class AddMembersFragment : Fragment(), AddMembersRecyclerViewAdapter.MemberInvitedListener {
-    override fun onInvited() {
-    }
+class AddMembersFragment : Fragment() {
 
     private lateinit var viewModel: AddMembersViewModel
     lateinit var adapter : AddMembersRecyclerViewAdapter
@@ -46,7 +44,7 @@ class AddMembersFragment : Fragment(), AddMembersRecyclerViewAdapter.MemberInvit
                 viewModel.getGroupData(groupId) { groupData, error ->
                     if (groupData != null) {
                         var arrayList: ArrayList<FilteredUserData> = ArrayList()
-                        adapter = AddMembersRecyclerViewAdapter(it, arrayList, groupId, this@AddMembersFragment, viewModel)
+                        adapter = AddMembersRecyclerViewAdapter(it, arrayList, groupId, viewModel)
                         addMembersRecycleView.adapter = adapter
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
