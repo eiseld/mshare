@@ -32,34 +32,22 @@ class ForgotPasswordFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this).get(ForgotPasswordViewModel::class.java)
 
-        emailEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                val email = emailEditText.text.toString()
-                var emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                if(!emailValid)
-                {
-                    emailEditText.error = context?.getString(R.string.email_not_correct)
-                    forgottenPasswordButton.isEnabled = false
-                } else {
-                    emailEditText.error = null
-                    forgottenPasswordButton.isEnabled = true
-                }
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-        })
-
         forgottenPasswordButton.setOnClickListener {
-            viewModel.putForgotPassword(emailEditText.text.toString()) { _, error ->
-                if(error == null) {
-                    DialogManager.showInfoDialog(getString(R.string.email_sent), context)
-                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, LoginFragment())?.commit()
-                } else {
-                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.PROFILE_RESET,context), context)
+            val email = emailEditText.text.toString()
+            var emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
+            if(!emailValid)
+            {
+                emailEditText.error = context?.getString(R.string.email_not_correct)
+            } else {
+                emailEditText.error = null
+                viewModel.putForgotPassword(emailEditText.text.toString()) { _, error ->
+                    emailEditText.text.clear()
+                    forgottenPasswordButton.isEnabled = false
+                    if(error == null) {
+                        DialogManager.showInfoDialog(getString(R.string.email_sent), context)
+                    } else {
+                        DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.PROFILE_RESET,context), context)
+                    }
                 }
                 emailEditText.text.clear()
                 forgottenPasswordButton.isEnabled = false

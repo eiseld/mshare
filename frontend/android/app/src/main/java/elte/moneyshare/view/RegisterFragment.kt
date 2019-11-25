@@ -60,11 +60,6 @@ class RegisterFragment : Fragment() {
         return pwdError
     }
 
-    fun checkValidity() {
-        if(displayNameCorrect && emailCorrect && passwordCorrect ) {
-            registerButton.isEnabled = true
-        }
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -72,152 +67,68 @@ class RegisterFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
 
         registerButton.setOnClickListener {
-            viewModel.postRegisterUser(
-                registrationData = RegistrationData(
-                    emailEditText.text.toString(),
-                    passwordEditText.text.toString(),
-                    displayNameEditText.text.toString()
-                )
-            ) { response, error ->
-                if (error == null) {
-                    if(response == "201") {
-                        DialogManager.showInfoDialog(
-                            context?.getString(R.string.successful_registration), context
-                        )
-                        activity?.supportFragmentManager?.beginTransaction()
-                            ?.replace(R.id.frame_container, LoginFragment())?.commit()
+
+            var err = false
+            if(displayNameEditText.text.isEmpty()) {
+                err = true
+                displayNameEditText.error =context?.getString(R.string.username_empty)
+            }
+            else
+            {
+                displayNameEditText.error = null
+            }
+            val txt = passwordEditText.text.toString()
+            val txtAgain = passwordAgainEditText.text.toString()
+            val pwdError = passwordValidator(txt)
+            if (pwdError.length > 1) {
+                passwordAgainTextInputLayout.error = pwdError
+                err = true
+            } else if (txt != txtAgain) {
+                passwordAgainTextInputLayout.error = context?.getString(R.string.password_not_matching)
+                err = true
+            } else {
+                passwordAgainTextInputLayout.error = null
+            }
+            val email = emailEditText.text.toString()
+            val emailAgain = emailAgainEditText.text.toString()
+            var emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
+            if(!emailValid) {
+                emailEditText.error = context?.getString(R.string.email_not_correct)
+                err = true
+            } else if(email != emailAgain) {
+                emailEditText.error = context?.getString(R.string.email_not_matching)
+                err = true
+            } else {
+                emailEditText.error = null
+                emailAgainEditText.error = null
+            }
+            if(!err)
+            {
+                viewModel.postRegisterUser(
+                    registrationData = RegistrationData(
+                        emailEditText.text.toString(),
+                        passwordEditText.text.toString(),
+                        displayNameEditText.text.toString()
+                    )
+                ) { response, error ->
+                    if (error == null) {
+                        if(response == "201") {
+                            DialogManager.showInfoDialog(
+                                context?.getString(R.string.successful_registration), context
+                            )
+                            activity?.supportFragmentManager?.beginTransaction()
+                                ?.replace(R.id.frame_container, LoginFragment())?.commit()
+                        }
+                        else {
+                            Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.AUTH_REGISTER,context), context)
                     }
-                    else {
-                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.AUTH_REGISTER,context), context)
                 }
             }
         }
 
-        displayNameEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                if(displayNameEditText.text.isEmpty()) {
-                    displayNameCorrect = false
-                } else {
-                    displayNameCorrect = true
-                    checkValidity()
-                }
-            }
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-        })
-
-        passwordEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                val txt = passwordEditText.text.toString()
-                val txtAgain = passwordAgainEditText.text.toString()
-                val pwdError = passwordValidator(txt)
-                if (pwdError.length > 1) {
-                    passwordEditText.error = pwdError
-                    passwordCorrect = false
-                } else if (txt != txtAgain) {
-                    passwordEditText.error = context?.getString(R.string.password_not_matching)
-                    passwordCorrect = false
-                } else {
-                    passwordEditText.error = null
-                    passwordAgainEditText.error = null
-                    passwordCorrect = true
-                }
-                checkValidity()
-            }
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-        })
-
-        passwordAgainEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                val txt = passwordEditText.text.toString()
-                val txtAgain = passwordAgainEditText.text.toString()
-                val pwdError = passwordValidator(txtAgain)
-                if(pwdError.length > 1) {
-                    passwordAgainEditText.error = pwdError
-                    passwordCorrect = false
-                } else if(txt != txtAgain) {
-                    passwordAgainEditText.error = context?.getString(R.string.password_not_matching)
-                    passwordCorrect = false
-                } else {
-                    passwordEditText.error = null
-                    passwordAgainEditText.error = null
-                    passwordCorrect = true
-                }
-                checkValidity()
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-        })
-
-        emailEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                val email = emailEditText.text.toString()
-                val emailAgain = emailAgainEditText.text.toString()
-                var emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                if(!emailValid) {
-                    emailEditText.error = context?.getString(R.string.email_not_correct)
-                    emailCorrect = false
-                } else if(email != emailAgain) {
-                    emailEditText.error = context?.getString(R.string.email_not_matching)
-                    emailCorrect = false
-                } else {
-                    emailEditText.error = null
-                    emailAgainEditText.error = null
-                    emailCorrect = true
-                }
-                checkValidity()
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-        })
-
-        emailAgainEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                val email = emailEditText.text.toString()
-                val emailAgain = emailAgainEditText.text.toString()
-                var emailValid = Patterns.EMAIL_ADDRESS.matcher(emailAgain).matches()
-                if(!emailValid)
-                {
-                    emailAgainEditText.error = context?.getString(R.string.email_not_correct)
-                    emailCorrect = false
-                }
-                else if(email != emailAgain)
-                {
-                    emailAgainEditText.error = context?.getString(R.string.email_not_matching)
-                    emailCorrect = false
-                }
-                else {
-                    emailEditText.error = null
-                    emailAgainEditText.error = null
-                    emailCorrect = true
-                }
-                checkValidity()
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-        })
     }
 }

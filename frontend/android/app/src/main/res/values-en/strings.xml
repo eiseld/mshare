@@ -15,6 +15,7 @@
     <string name="password">Password</string>
     <string name="password_again">Password again</string>
     <string name="email">Email address</string>
+    <string name="username_empty">Enter a user name!</string>
     <string name="emailAgain">Email address again</string>
     <string name="back">Back</string>
     <string name="minimum_characters">Minimum length is 6</string>

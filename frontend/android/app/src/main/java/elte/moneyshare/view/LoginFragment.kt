@@ -52,68 +52,48 @@ class LoginFragment : Fragment() {
         }
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
-        emailEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                val email = emailEditText.text.toString()
-                val password = passwordEditText.text.toString()
-                var emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                if(!emailValid)
-                {
-                    emailEditText.error = context?.getString(R.string.email_not_correct)
-                    loginButton.isEnabled = false
-                } else if (passwordValidator(password).isEmpty()){
-                    emailEditText.error = null
-                    loginButton.isEnabled = true
-                }
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-        })
-
-        passwordEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                val txt = passwordEditText.text.toString()
-                val email = emailEditText.text.toString()
-                val pwdError = passwordValidator(txt)
-                if (pwdError.length > 1) {
-                    passwordEditText.error = pwdError
-                    loginButton.isEnabled = false
-                } else if (Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-                    passwordEditText.error = null
-                    loginButton.isEnabled = true
-                }
-            }
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-        })
-
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
+            var err = false
             //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
-            viewModel.putLoginUser(email, password) { _, error ->
-                if (error == null) {
-                    if(stayLoggedInCheckBox.isChecked)
-                    {
-                        SharedPreferences.stayLoggedIn = true
-                    }
+            val pwdError = passwordValidator(password)
+            if (pwdError.length > 1) {
+                passwordTextInputLayout.error = pwdError
+                err = true
+            }
+            else {
+                passwordTextInputLayout.error = null
+            }
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                emailTextInputLayout.error = context?.getString(R.string.email_not_correct)
+                err = true
+            }
+            else {
+                emailTextInputLayout.error = null
+            }
+            if(!err) {
+                viewModel.putLoginUser(email, password) { _, error ->
+                    if (error == null) {
+                        if (stayLoggedInCheckBox.isChecked) {
+                            SharedPreferences.stayLoggedIn = true
+                        }
 
-                    val intent = Intent(context, MainActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
-                    //activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
-                } else {
-                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.AUTH_LOGIN, context), context)
+                        val intent = Intent(context, MainActivity::class.java)
+                        startActivity(intent)
+                        activity?.finish()
+                        //activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
+                    } else {
+                        DialogManager.showInfoDialog(
+                            error.convertErrorCodeToString(
+                                Action.AUTH_LOGIN,
+                                context
+                            ), context
+                        )
+                    }
                 }
             }
-        }
+            }
 
         if (BuildConfig.FLAVOR == "local") {
             urlEditText.visible()
