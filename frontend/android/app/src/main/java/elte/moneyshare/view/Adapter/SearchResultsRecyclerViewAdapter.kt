@@ -48,7 +48,6 @@ class SearchResultsRecyclerViewAdapter(
         holder.emailTextView.text = filteredUser.email
 
         if(model.currentGroupData?.members?.map {it.id}?.contains(filteredUser.id)!!) {
-            println(filteredUser.id)
             holder.inviteButton.isEnabled = false
             holder.inviteButton.setText(R.string.added_member_button_label)
         } else {

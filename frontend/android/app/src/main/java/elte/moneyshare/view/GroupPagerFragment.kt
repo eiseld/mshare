@@ -48,7 +48,7 @@ class GroupPagerFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab == tabLayout.getTabAt(0)) {
                     item.isVisible = SharedPreferences.userId == groupCreatorId
-                    removeMemberItem.isVisible = true
+                    removeMemberItem.isVisible = SharedPreferences.userId == groupCreatorId
                 } else {
                     item.isVisible = true
                 }
@@ -60,10 +60,15 @@ class GroupPagerFragment : Fragment() {
         })
 
         groupId?.let {
-            viewModel.getGroupData(it) { groupData, _ ->
-                groupCreatorId = groupData?.creator?.id
-                item.isVisible = SharedPreferences.userId == groupCreatorId
-                deleteGroupItem.isVisible = SharedPreferences.userId == groupCreatorId
+            viewModel.getGroupData(it) { groupData, error ->
+                if (groupData != null) {
+                    groupCreatorId = groupData?.creator?.id
+                    item.isVisible = SharedPreferences.userId == groupCreatorId
+                    deleteGroupItem.isVisible = SharedPreferences.userId == groupCreatorId
+                    removeMemberItem.isVisible = SharedPreferences.userId == groupCreatorId
+                } else {
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
+                }
             }
         }
     }

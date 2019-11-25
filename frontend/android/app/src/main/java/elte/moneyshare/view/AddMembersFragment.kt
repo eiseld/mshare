@@ -62,10 +62,12 @@ class AddMembersFragment : Fragment(), SearchResultsRecyclerViewAdapter.MemberIn
                 var newText = nameOrEmailEditText.text.toString()
                 if (newText.length > 3) {
                     viewModel.getSearchedUsers(newText) { filteredUsers, error ->
-
-                        adapter.filteredUsers = filteredUsers!!
-                        adapter.notifyDataSetChanged()
-
+                        if (filteredUsers != null) {
+                            adapter.filteredUsers = filteredUsers!!
+                            adapter.notifyDataSetChanged()
+                        } else {
+                            DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
+                        }
                     }
                 }
             }
