@@ -17,15 +17,12 @@ import elte.moneyshare.entity.Member
 import elte.moneyshare.entity.NewSpending
 import elte.moneyshare.entity.SpendingUpdate
 import elte.moneyshare.manager.DialogManager
-import elte.moneyshare.util.Action
-import elte.moneyshare.util.convertErrorCodeToString
-import elte.moneyshare.util.formatDate
-import elte.moneyshare.util.convertToCalendar
-import elte.moneyshare.util.convertToBackendFormat
+import elte.moneyshare.util.*
 import elte.moneyshare.view.Adapter.SelectMembersRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupViewModel
 import kotlinx.android.synthetic.main.fragment_add_spending.*
-import java.util.Calendar
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AddSpendingFragment : Fragment() {
 
@@ -67,8 +64,8 @@ class AddSpendingFragment : Fragment() {
                     if (members != null) {
                         this.members = members
                         val adapter = SelectMembersRecyclerViewAdapter(it, members)
-                        selectMembersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                        selectMembersRecyclerView.adapter = adapter
+                        selectMembersRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                        selectMembersRecyclerView?.adapter = adapter
                         if(isModify)
                         {
                             viewModel.getSpendings(groupId) { spendings, error ->
@@ -84,9 +81,11 @@ class AddSpendingFragment : Fragment() {
                                         dateEditText.setText(calendar.formatDate())
 
                                         val debtorIds = it.debtors.map { it.id }
-                                        (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedIds = ArrayList(debtorIds)
+                                        (selectMembersRecyclerView?.adapter as SelectMembersRecyclerViewAdapter).selectedIds =
+                                            ArrayList(debtorIds)
                                         val selectedMembers = members.filter { it.id in debtorIds }
-                                        (selectMembersRecyclerView.adapter as SelectMembersRecyclerViewAdapter).selectedMembers = ArrayList(selectedMembers)
+                                        (selectMembersRecyclerView?.adapter as SelectMembersRecyclerViewAdapter).selectedMembers =
+                                            ArrayList(selectedMembers)
                                         adapter?.notifyDataSetChanged()
                                     }
                                 }
@@ -152,9 +151,9 @@ class AddSpendingFragment : Fragment() {
 
                 activity?.let {
                     val adapter = SelectMembersRecyclerViewAdapter(it, membersSelected, true)
-                    selectMembersRecyclerView.layoutManager =
+                    selectMembersRecyclerView?.layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                    selectMembersRecyclerView.adapter = adapter
+                    selectMembersRecyclerView?.adapter = adapter
                 }
 
                 selectEveryoneButton.invisible()

@@ -37,8 +37,8 @@ class GroupHistoryFragment : Fragment() {
                 viewModel.getGroupHistory(it, groupId, 0, 0) { historyItems, error ->
                     historyItems?.let { items ->
                         val adapter = GroupHistoryRecyclerViewAdapter(it, items)
-                        historyRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                        historyRecyclerView.adapter = adapter
+                        historyRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                        historyRecyclerView?.adapter = adapter
                     }
                 }
             }

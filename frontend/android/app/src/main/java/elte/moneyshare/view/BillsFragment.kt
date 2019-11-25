@@ -37,7 +37,7 @@ class BillsFragment : Fragment() {
 
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
-            billsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            billsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
             groupId?.let { groupId ->
                 viewModel.getSpendings(groupId) { bills, error ->

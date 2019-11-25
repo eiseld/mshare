@@ -59,8 +59,8 @@ class MembersFragment : Fragment(), MembersRecyclerViewAdapter.MemberDeletedList
                             setMyBalance(member.balance)
                         }
 
-                        membersRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                        membersRecyclerView.adapter = adapter
+                        membersRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                        membersRecyclerView?.adapter = adapter
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                     }
