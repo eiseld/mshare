@@ -25,8 +25,7 @@ class LoginFragment : Fragment() {
     fun passwordValidator(txt: String): String {
         var pwdError = ""
         context?.let {
-            if(txt.length <6)
-            {
+            if (txt.length < 6) {
                 pwdError = it.getString(R.string.minimum_characters).plus('\n')
             }
         }
@@ -44,8 +43,7 @@ class LoginFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if(SharedPreferences.stayLoggedIn)
-        {
+        if (SharedPreferences.stayLoggedIn) {
             val intent = Intent(context, MainActivity::class.java)
             startActivity(intent)
             activity?.finish()
@@ -61,41 +59,39 @@ class LoginFragment : Fragment() {
             if (pwdError.length > 1) {
                 passwordTextInputLayout.error = pwdError
                 err = true
-            }
-            else {
+            } else {
                 passwordTextInputLayout.error = null
             }
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 emailTextInputLayout.error = context?.getString(R.string.email_not_correct)
                 err = true
-            }
-            else {
+            } else {
                 emailTextInputLayout.error = null
             }
-            if(!err) {
+            if (!err) {
                 //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
-                    viewModel.putLoginUser(email, password) { _, error ->
-                        if (error == null) {
-                            if (stayLoggedInCheckBox.isChecked) {
-                                SharedPreferences.stayLoggedIn = true
-                            }
-
-                            val intent = Intent(context, MainActivity::class.java)
-                            startActivity(intent)
-                            activity?.finish()
-                            //activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
-                        } else {
-                            DialogManager.showInfoDialog(
-                                error.convertErrorCodeToString(
-                                    Action.AUTH_LOGIN,
-                                    context
-                                ), context
-                            )
+                viewModel.putLoginUser(email, password) { _, error ->
+                    if (error == null) {
+                        if (stayLoggedInCheckBox.isChecked) {
+                            SharedPreferences.stayLoggedIn = true
                         }
+
+                        val intent = Intent(context, MainActivity::class.java)
+                        startActivity(intent)
+                        activity?.finish()
+                        //activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, GroupsFragment())?.commit()
+                    } else {
+                        DialogManager.showInfoDialog(
+                            error.convertErrorCodeToString(
+                                Action.AUTH_LOGIN,
+                                context
+                            ), context
+                        )
                     }
                 }
             }
         }
+
 
         if (BuildConfig.FLAVOR == "local") {
             urlEditText.visible()
