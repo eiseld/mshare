@@ -49,6 +49,8 @@ class ForgotPasswordFragment : Fragment() {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.PROFILE_RESET,context), context)
                     }
                 }
+                emailEditText.text.clear()
+                forgottenPasswordButton.isEnabled = false
             }
         }
     }

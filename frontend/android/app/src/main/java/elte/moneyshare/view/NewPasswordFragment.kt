@@ -22,6 +22,9 @@ import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_new_password.*
 import kotlinx.android.synthetic.main.fragment_new_password.passwordEditText
 import kotlinx.android.synthetic.main.fragment_new_password.passwordTextInputLayout
+import kotlinx.android.synthetic.main.fragment_new_password.passwordAgainEditText
+import kotlinx.android.synthetic.main.fragment_new_password.passwordEditText
+import kotlinx.android.synthetic.main.fragment_register.*
 
 class NewPasswordFragment : Fragment() {
 
@@ -61,6 +64,33 @@ class NewPasswordFragment : Fragment() {
     ): View? {
         token = arguments?.getString(FragmentDataKeys.NEW_PASSWORD_TOKEN.value)
         return inflater.inflate(R.layout.fragment_new_password, container, false)
+    }
+
+    fun passwordValidator(txt: String): String {
+        var pwdError = ""
+        val uppercaseRegex = """[A-Z]""".toRegex()
+        val lowercaseRegex = """[a-z]""".toRegex()
+        val numberRegex    = """[0-9]""".toRegex()
+        context?.let {
+            if(txt.length <6)
+            {
+                pwdError = it.getString(R.string.minimum_characters).plus('\n')
+            }
+            if(!txt.contains(uppercaseRegex))
+            {
+                pwdError = pwdError.plus(it.getString(R.string.uppercase_required).plus('\n'))
+            }
+            if(!txt.contains(lowercaseRegex))
+            {
+                pwdError = pwdError.plus(it.getString(R.string.lowercase_required).plus('\n'))
+            }
+            if(!txt.contains(numberRegex))
+            {
+                pwdError = pwdError.plus(it.getString(R.string.number_required).plus('\n'))
+            }
+        }
+
+        return pwdError
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

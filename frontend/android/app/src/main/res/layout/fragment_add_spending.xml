@@ -34,12 +34,27 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"/>
 
+    <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/dateEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="xxxx.xx.xx."
+            app:layout_constraintTop_toBottomOf="@+id/spendingEditText"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="textNoSuggestions"/>
+
     <TextView
             android:id="@+id/selectTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@+id/spendingEditText"
+            app:layout_constraintTop_toBottomOf="@+id/dateEditText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="12dp"
@@ -76,5 +91,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="12dp"
             android:visibility="invisible"/>
+
+    <Button
+            android:id="@+id/selectEveryoneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/everyone"
+            app:layout_constraintBottom_toTopOf="@id/selectMembersRecyclerView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/selectTextView"
+            app:layout_constraintTop_toBottomOf="@id/spendingEditText" />
+
+    <Button
+            android:id="@+id/selectNoneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/none"
+            app:layout_constraintBottom_toTopOf="@id/selectMembersRecyclerView"
+            app:layout_constraintLeft_toRightOf="@id/selectTextView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spendingEditText" />
 
 </android.support.constraint.ConstraintLayout>

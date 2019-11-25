@@ -31,7 +31,7 @@
 
     <!-- new password -->
     <string name="new_password">Create new password.</string>
-    <string name="confirm_password">Confirm password</string>
+    <string name="change_password">Change password</string>
     <string name="new_password_updated">New password updated!</string>
 
     <!-- Popup mesages -->
@@ -68,8 +68,9 @@
 
     <string name="add_member">Add member</string>
     <string name="remove_member">Delete member</string>
+    <string name="delete_group">Delete group</string>
     <string name="add_spending">Add spending</string>
-
+    <string name="are_you_sure_to_delete">Are you sure to delete?</string>
 
     <!-- SPENDING -->
     <string name="event_name">Event name</string>
@@ -125,6 +126,7 @@
 
     <string name="api_groups_create_group_200">Group successfully created!</string>
     <string name="api_groups_create_group_409">This group name is already in use!</string>
+    <string name="api_groups_delete_group_200">Group successfully deleted!</string>
 
     <string name="api_groups_settle_debt_200">Debt successfully settled!</string>
     <string name="api_groups_settle_debt_409">Error! This debt is already settled!</string>
@@ -151,6 +153,9 @@
     <string name="api_spending_update_200">Spending successfully updated!</string>
     <string name="api_spending_update_409">Spending cannot be updated! One of the debtors are not member of the group!</string>
 
+    <string name="everyone">Everyone</string>
+    <string name="none">None</string>
+
     <!-- Common -->
     <string name="api_common_400">Sending the request to the server failed!</string>
     <string name="api_common_500">Internal error! Try again later!</string>
@@ -167,11 +172,23 @@
     <string name="doYouReallyWantToDeleteSpending">Do you really want to delete this spending?</string>
     <string name="spendingSuccessfullyDeleted">Spending successfully deleted!</string>
 
-    <string name="menu_logout">Logout</string>
+    <string name="menu_logout">Exit</string>
+
+    <string name="changePasswordLabel">Change Password</string>
+    <string name="oldPasswordTextView">Old Password</string>
+    <string name="newPasswordTextView">New Password</string>
+    <string name="newPasswordAgainTextView">New Password Again</string>
+    <string name="passwordSuccessfullyChanged">Password Successfully Changed!</string>
+    <string name="apiChangePassword403">Password change failed! Password is invalid!</string>
+
     <string name="api_login_language_validate_410">Specified language is not supported by the server!</string>
+
     <string name="information_dialog_title">Information</string>
+    <string name="confirmation_needed">Confirmation needed!</string>
+
     <string name="spending_wrong_balance_sum">The whole amount must be distributed among the members of the spending group!</string>
     <string name="change_bank_account_label">Change Bank Account Number</string>
     <string name="bank_account_not_set">Bank Account Not Set Yet!</string>
     <string name="member_added_to_group_successfully">Member added to group successfully!</string>
+    
 </resources>
