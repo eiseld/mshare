@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="94dp">
+        android:layout_height="98dp">
 
     <TextView
             android:id="@+id/typeTextView"
@@ -79,5 +79,7 @@
             app:layout_constraintStart_toEndOf="@+id/creatorLabel"
             app:layout_constraintTop_toTopOf="@+id/creatorLabel"
             tools:text="Mr Test 1" />
+
+    <include layout="@layout/inc_divider" />
 
 </android.support.constraint.ConstraintLayout>
