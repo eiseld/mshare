@@ -56,7 +56,6 @@ class LoginFragment : Fragment() {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
             var err = false
-            //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
             val pwdError = passwordValidator(password)
             if (pwdError.length > 1) {
                 passwordTextInputLayout.error = pwdError
