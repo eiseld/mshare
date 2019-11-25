@@ -87,7 +87,6 @@
     <string name="modify_cancelled">Spending modification cancelled</string>
     <string name="ok">Ok</string>
 
-    <string name="filtered_users">%1$s - %2$s</string>
     <string name="on_failure_message">Connection error!</string>
     <string name="group_created">Group successfully created!</string>
 
@@ -102,6 +101,10 @@
     <string name="modify">modify</string>
     <string name="save">Save</string>
     <string name="profile">Profile</string>
+
+    <string name="name_or_email">Name or Email address</string>
+    <string name="add_member_button_label">Add</string>
+    <string name="added_member_button_label">Added</string>
 
     <!-- API responses -->
 

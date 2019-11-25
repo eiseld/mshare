@@ -82,7 +82,6 @@
     <string name="max_spending_limit">Max megmaradt összeg %1$d Ft</string>
 
     <string name="my_debts">Saját tartozásaim</string>
-    <string name="filtered_users">%1$s - %2$s</string>
     <string name="select_members_missing">Jelöljön ki tagokat</string>
 
     <string name="modify_spending">Költés módosítása</string>
@@ -104,6 +103,10 @@
     <string name="modify">módosítás</string>
     <string name="save">Mentés</string>
     <string name="profile">Profil</string>
+
+    <string name="name_or_email">Név vagy Email cím</string>
+    <string name="add_member_button_label">Hozzáad</string>
+    <string name="added_member_button_label">Hozzáadva</string>
 
     <!-- API responses -->
 

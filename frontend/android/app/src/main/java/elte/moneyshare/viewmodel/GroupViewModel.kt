@@ -86,16 +86,6 @@ class GroupViewModel : ViewModel() {
         }
     }
 
-    fun postMember(groupId: Int, memberId: Int, completion: (response: String?, error: String?) -> Unit) {
-        APIClient.getRepository().postMember(groupId, memberId) { response, error ->
-            if (response != null) {
-                completion(response, null)
-            } else {
-                completion(null, error)
-            }
-        }
-    }
-
     fun getOptimizedDebtData(groupId: Int, completion: (response: ArrayList<OptimizedDebtData>?, error: String?) -> Unit) {
         APIClient.getRepository().getOptimizedDebt(groupId) { debtData, error ->
             if (debtData != null) {
@@ -122,16 +112,6 @@ class GroupViewModel : ViewModel() {
                 completion(groupData, null)
             } else {
                 completion(null , error)
-            }
-        }
-    }
-
-    fun getSearchedUsers(filter: String, completion: (filteredUsers: ArrayList<FilteredUserData>?, error: String?) -> Unit) {
-        APIClient.getRepository().getSearchedUsers(filter) { filteredUsers, error ->
-            if (error == null) {
-                completion(filteredUsers, null)
-            } else {
-                completion(null, error)
             }
         }
     }
