@@ -74,7 +74,8 @@
 
     <!-- SPENDING -->
     <string name="event_name">Event name</string>
-    <string name="spending">Spending</string>
+    <string name="spending">Spending (HUF)</string>
+    <string name="currency">Ft</string>
     <string name="add">Add</string>
     <string name="select_members">Select members</string>
     <string name="next">Next</string>

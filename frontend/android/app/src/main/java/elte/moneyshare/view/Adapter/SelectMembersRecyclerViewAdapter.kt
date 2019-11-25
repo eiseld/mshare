@@ -77,7 +77,9 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
 
         holder.selectedMemberCheckBox.visibility = View.GONE
         holder.memberSpendingEditText.visible()
+        holder.currencyTextView.visible()
         holder.memberSpendingEditText.text = member.balance.toString()
+
 
         holder.memberSpendingEditText.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(editable: Editable?) {

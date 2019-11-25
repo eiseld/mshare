@@ -72,7 +72,8 @@
     <string name="are_you_sure_to_delete">Biztosan törli?</string>
 
     <string name="event_name">Esemény neve</string>
-    <string name="spending">Költés</string>
+    <string name="spending">Költés (HUF)</string>
+    <string name="currency">Ft</string>
     <string name="add">Hozzáadás</string>
     <string name="select_members">Tagok kiválasztása</string>
     <string name="my_balance">Egyenlegem:</string>
