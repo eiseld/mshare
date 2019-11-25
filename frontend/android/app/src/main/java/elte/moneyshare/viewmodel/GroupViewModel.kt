@@ -123,6 +123,11 @@ class GroupViewModel : ViewModel() {
 
     data class LogAddRemoveSpending(val Name: String, val Money: Int)
     data class LogSettleSpending(val From: Int, val To: Int, val Money: Int)
+    data class LogSettleUpdate(
+        val oldMoney: Int, val newMoney: Int,
+        val oldName: String, val newName: String,
+        val oldDate: String, val newDate: String
+    )
 
     fun getGroupHistory(
         context: Context,
@@ -159,14 +164,20 @@ class GroupViewModel : ViewModel() {
                             )
                         )
                     } else if (history.subType == HistorySubType.SPENDING && (history.type == HistoryType.UPDATE)) {
-                        /*historyItems.add(
+                        val log = Gson().fromJson(history.serializedLog, LogSettleUpdate::class.java)
+                        historyItems.add(
                             HistoryItem.ModifySpending(
                                 date = history.date.convertToCalendar().formatDate(),
                                 creator = members?.find { it?.id == history.userId }?.name ?: context.getString(R.string.former_member),
                                 type = "${history.subType.toString(context)} ${history.type.toString(context)}",
-
+                                moneyOld = log.oldMoney,
+                                moneyNew = log.newMoney,
+                                nameOld = log.oldName,
+                                nameNew = log.newName,
+                                dateOld = log.oldDate,
+                                dateNew = log.newDate
                             )
-                        )*/
+                        )
                     } else if (history.subType == HistorySubType.SETTLEMENT && (history.type == HistoryType.CREATE)) {
                         val log = Gson().fromJson(history.serializedLog, LogSettleSpending::class.java)
                         historyItems.add(
@@ -212,11 +223,12 @@ class GroupViewModel : ViewModel() {
             override val date: String,
             override val creator: String,
             override val type: String,
-            val spendingValueOld: Int,
-            val spendingValueNew: Int,
-            val split: String,
-            val spendingNameOld: String,
-            val spendingNameNew: String
+            val moneyOld: Int?,
+            val moneyNew: Int?,
+            val nameOld: String?,
+            val nameNew: String?,
+            val dateOld: String?,
+            val dateNew: String?
         ) : HistoryItem(date, creator, type)
 
         data class SettleSpending(

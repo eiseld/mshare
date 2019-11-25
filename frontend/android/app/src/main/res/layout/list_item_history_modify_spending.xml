@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="98dp">
+        android:layout_height="wrap_content">
 
     <TextView
             android:id="@+id/typeTextView"
@@ -27,40 +27,31 @@
             tools:text="2019.05.22" />
 
     <TextView
-            android:id="@+id/spendingNameLabel"
+            android:id="@+id/spendingNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             app:layout_constraintStart_toStartOf="@+id/typeTextView"
             app:layout_constraintTop_toBottomOf="@+id/typeTextView"
-            android:text="@string/spending_name" />
+            android:text="@string/history_spending_name_modify" />
 
     <TextView
-            android:id="@+id/spendingNameTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            app:layout_constraintStart_toEndOf="@+id/spendingNameLabel"
-            app:layout_constraintTop_toTopOf="@+id/spendingNameLabel"
-            tools:text="Mr Bela" />
-
-    <TextView
-            android:id="@+id/spendingValueLabel"
+            android:id="@+id/spendingValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             app:layout_constraintStart_toStartOf="@+id/typeTextView"
-            app:layout_constraintTop_toBottomOf="@+id/spendingNameLabel"
-            android:text="@string/spending_value" />
+            app:layout_constraintTop_toBottomOf="@+id/spendingNameTextView"
+            android:text="@string/history_spending_money_modify" />
 
     <TextView
-            android:id="@+id/spendingValueTextView"
-            android:layout_width="0dp"
+            android:id="@+id/spendingDateTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            app:layout_constraintStart_toEndOf="@+id/spendingValueLabel"
-            app:layout_constraintTop_toTopOf="@+id/spendingValueLabel"
-            tools:text="Mr Bela" />
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@+id/typeTextView"
+            app:layout_constraintTop_toBottomOf="@+id/spendingValueTextView"
+            android:text="@string/history_spending_date_modify" />
 
     <TextView
             android:id="@+id/creatorLabel"
@@ -69,13 +60,14 @@
             android:layout_marginTop="4dp"
             android:text="@string/creator"
             app:layout_constraintStart_toStartOf="@+id/typeTextView"
-            app:layout_constraintTop_toBottomOf="@+id/spendingValueLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/spendingDateTextView" />
 
     <TextView
             android:id="@+id/creatorTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:paddingBottom="4dp"
             app:layout_constraintStart_toEndOf="@+id/creatorLabel"
             app:layout_constraintTop_toTopOf="@+id/creatorLabel"
             tools:text="Mr Test 1" />

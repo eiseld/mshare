@@ -64,7 +64,7 @@ enum class HistorySubType {
     fun toString(context: Context): String {
         val stringId = when (this) {
             SPENDING -> {
-                R.string.spending
+                R.string.history_spending
             }
             SETTLEMENT -> {
                 R.string.history_settlement

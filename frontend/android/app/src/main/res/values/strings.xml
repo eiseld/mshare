@@ -45,7 +45,6 @@
 
     <string name="settle">Rendez</string>
 
-
     <!-- GROUPS -->
     <string name="create_group">Csoport létrehozása</string>
     <string name="group_name">Csoport neve</string>
@@ -131,6 +130,10 @@
     <string name="spending_value">Költés összege:</string>
     <string name="from">Kitől:</string>
     <string name="to">Kinek:</string>
+
+    <string name="history_spending_name_modify">Költés neve: %1$s -> %2$s</string>
+    <string name="history_spending_money_modify">Költés összege: %1$d -> %2$d</string>
+    <string name="history_spending_date_modify">Költés dátuma: %1$s -> %2$s</string>
 
     <!-- endregion History -->
 
