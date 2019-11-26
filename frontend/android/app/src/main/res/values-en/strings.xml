@@ -61,8 +61,8 @@
     <string name="members_tab">Members</string>
     <string name="bills_tab">Bills</string>
 
-    <string name="member_owned">- %1$d Ft</string>
-    <string name="member_owe">+ %1$d Ft</string>
+    <string name="member_owned">+ %1$d Ft</string>
+    <string name="member_owe">- %1$d Ft</string>
 
     <string name="bill_money">%1$d Ft</string>
 
