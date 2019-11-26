@@ -121,7 +121,7 @@ class GroupViewModel : ViewModel() {
         }
     }
 
-    data class LogAddRemoveSpending(val Name: String, val Money: Int)
+    data class LogAddRemoveSpending(val Name: String, val Money: Int?, val MoneyOwed: Int?)
     data class LogSettleSpending(val From: Int, val To: Int, val Money: Int)
     data class LogSettleUpdate(
         val oldMoney: Int, val newMoney: Int,
@@ -136,8 +136,7 @@ class GroupViewModel : ViewModel() {
         count: Int, completion: (groupHistory: List<HistoryItem>?, error: String?) -> Unit
     ) {
         APIClient.getRepository().getGroupHistory(groupId, startIndex, count) { groupHistory, error ->
-            // @todo: fix history display before removing "false &&"
-            if (false && error == null) {
+            if (error == null) {
                 val historyItems = ArrayList<HistoryItem>()
 
                 val members = currentGroupData?.members?.plus(currentGroupData?.creator)
@@ -161,7 +160,7 @@ class GroupViewModel : ViewModel() {
                                     ?: context.getString(R.string.former_member),
                                 type = "${history.subType.toString(context)} ${history.type.toString(context)}",
                                 spendingName = log.Name,
-                                spendingValue = log.Money
+                                spendingValue = if (history.type == HistoryType.CREATE) log?.Money ?: 0 else log?.MoneyOwed ?: 0
                             )
                         )
                     } else if (history.subType == HistorySubType.SPENDING && (history.type == HistoryType.UPDATE)) {
