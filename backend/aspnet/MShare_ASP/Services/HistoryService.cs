@@ -263,7 +263,7 @@ namespace MShare_ASP.Services
 				})
 			};
 
-			await LogHistory(userId, groupId, affectedUsers.ToArray(), DaoLogType.Type.REMOVE, DaoLogSubType.Type.MEMBER, historyEntry);
+			await LogHistory(userId, groupId, affectedUsers.ToArray(), DaoLogType.Type.DELETE, DaoLogSubType.Type.SPENDING, historyEntry);
 		}
 
 		public async Task LogHistory(long userId, long? groupId, long[] affectedIds, DaoLogType.Type type, DaoLogSubType.Type subType, object data)
