@@ -136,7 +136,8 @@ class GroupViewModel : ViewModel() {
         count: Int, completion: (groupHistory: List<HistoryItem>?, error: String?) -> Unit
     ) {
         APIClient.getRepository().getGroupHistory(groupId, startIndex, count) { groupHistory, error ->
-            if (error == null) {
+            // @todo: fix history display before removing "false &&"
+            if (false && error == null) {
                 val historyItems = ArrayList<HistoryItem>()
 
                 val members = currentGroupData?.members?.plus(currentGroupData?.creator)
