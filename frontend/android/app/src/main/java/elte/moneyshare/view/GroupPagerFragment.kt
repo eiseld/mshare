@@ -105,6 +105,7 @@ class GroupPagerFragment : Fragment() {
                     val fragment = AddSpendingFragment()
                     val args = Bundle()
                     groupId?.let { args.putInt(FragmentDataKeys.MEMBERS_FRAGMENT.value, it) }
+                    args.putInt(FragmentDataKeys.ADD_SPENDING_FRAGMENT.value, -1)
                     fragment.arguments = args
                     (context as MainActivity).supportFragmentManager?.beginTransaction()
                         ?.replace(R.id.frame_container, fragment)?.addToBackStack(null)?.commit()
