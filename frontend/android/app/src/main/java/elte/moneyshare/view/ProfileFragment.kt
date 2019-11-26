@@ -45,7 +45,7 @@ class ProfileFragment : Fragment() {
             viewModel.getProfile { userData, error ->
                 accountEditText?.setText(userData?.bankAccountNumber)
                 storedBankAccountNumber = accountEditText.text.toString()
-                modifyButton.gone()
+                modifyButton.visibility = View.INVISIBLE
                 saveButton.visible()
                 saveButton.disable()
             }
