@@ -95,10 +95,12 @@ class BillsRecyclerViewAdapter(
                 animatorSet.start()
             }
         }
-        holder.billRootConstraintLayout.setOnLongClickListener {
-            val id = bills[position].id
-            showModifyDialog(id)
-            return@setOnLongClickListener true
+        if (bills[position].creditorUserId == SharedPreferences.userId) {
+            holder.billRootConstraintLayout.setOnLongClickListener {
+                val id = bills[position].id
+                showModifyDialog(id)
+                return@setOnLongClickListener true
+            }
         }
 
         holder.removeBillImageButtonView.setOnClickListener()
