@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
+import elte.moneyshare.entity.GroupInfo
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
@@ -34,12 +35,37 @@ class GroupsFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
+        if(SharedPreferences.isGroupsOrderedByName)
+        {
+            menu.findItem(R.id.change_order).title = context?.getString(R.string.order_by_date)
+        }
+        else
+        {
+            menu.findItem(R.id.change_order).title = context?.getString(R.string.order_by_name)
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.addGroup -> {
                 activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, NewGroupFragment())?.addToBackStack(null)?.commit()
+                return true
+            }
+            R.id.change_order ->
+            {
+                if(SharedPreferences.isGroupsOrderedByName)
+                {
+                    item.title = context?.getString(R.string.order_by_date)
+                    SharedPreferences.isGroupsOrderedByName = false
+                    getGroups()
+                }
+                else
+                {
+                    item.title = context?.getString(R.string.order_by_name)
+                    SharedPreferences.isGroupsOrderedByName = true
+                    getGroups()
+                }
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -53,7 +79,12 @@ class GroupsFragment : Fragment() {
 
             viewModel.getProfileGroups { groupsInfo, error ->
                 if (groupsInfo != null) {
-                    val adapter = GroupsRecyclerViewAdapter(it, groupsInfo)
+                    var sortedList : List<GroupInfo>
+                    if(SharedPreferences.isGroupsOrderedByName)
+                        sortedList = groupsInfo.sortedWith(compareBy({ it.name }))
+                    else
+                        sortedList = groupsInfo.sortedWith(compareBy({ it.lastModified }))
+                    val adapter = GroupsRecyclerViewAdapter(it, sortedList)
                     groupsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     groupsRecyclerView?.adapter = adapter
                 } else {

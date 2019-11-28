@@ -58,6 +58,8 @@
     <string name="my_balance">My balance: </string>
     <string name="my_debts">My debts</string>
 
+    <string name="order_by_name">Order by name</string>
+    <string name="order_by_date">Order by activity</string>
     <string name="members_tab">Members</string>
     <string name="bills_tab">Bills</string>
 

@@ -12,6 +12,7 @@ object SharedPreferences {
     private val ACCESS_TOKEN = "access_token"
     private val USER_LOGGED_IN = "user_logged_in"
     private val STAY_LOGGED_IN = "stay_logged_in"
+    private val ORDER_GROUP_BY_NAME = "order_group_by_name"
 
     private val USER_ID = "user_id"
     private val USER_NAME = "user_name"
@@ -99,12 +100,12 @@ object SharedPreferences {
             }
         }
 
-    var isDeleteMemberEnabled : Boolean
-        get() = sharedPreferences.getBoolean(DELETE_MEMBER_ENABLED, false)
+    var isGroupsOrderedByName : Boolean
+        get() = sharedPreferences.getBoolean(ORDER_GROUP_BY_NAME, false)
         set(enabled)
         {
             with(sharedPreferences.edit()){
-                putBoolean(DELETE_MEMBER_ENABLED,enabled)
+                putBoolean(ORDER_GROUP_BY_NAME,enabled)
                 apply()
             }
         }
