@@ -62,13 +62,21 @@ class NewPasswordFragment : Fragment() {
 
         confirmPasswordButton.setOnClickListener {
             val password = passwordEditText.text.toString()
+            val passwordAgain = passwordAgainEditText.text.toString()
             var err = false
             val pwdError = passwordValidator(password)
             if (pwdError.length > 1) {
                 passwordTextInputLayout.error = pwdError
+                passwordAgainTextInputLayout.error = null
+                err = true
+            }
+            else if (password != passwordAgain){
+                passwordAgainTextInputLayout.error = context?.getString(R.string.password_not_matching)
+                passwordTextInputLayout.error = null
                 err = true
             }
             else {
+                passwordAgainTextInputLayout.error = null
                 passwordTextInputLayout.error = null
             }
             if(!err)
@@ -77,6 +85,8 @@ class NewPasswordFragment : Fragment() {
                     viewModel.putNewPassword(passwordEditText.text.toString(), it) { _, error ->
                         if (error == null) {
                             context?.let { getString(R.string.new_password_updated).showToast(it) }
+                            activity?.supportFragmentManager?.popBackStackImmediate()
+                            token = null
                         } else {
                             DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.AUTH_LOGIN, context), context)
                         }
