@@ -121,7 +121,9 @@ class GroupViewModel : ViewModel() {
         }
     }
 
-    data class LogAddRemoveSpending(val Name: String, val Money: Int?, val MoneyOwed: Int?)
+    data class LogAddSpending(val Name: String, val Money: Int)
+    data class LogRemoveSpendingInner(val Name: String, val MoneyOwed: Int)
+    data class LogRemoveSpending(val DeletedSpending: LogRemoveSpendingInner)
     data class LogSettleSpending(val From: Int, val To: Int, val Money: Int)
     data class LogSettleUpdate(
         val oldMoney: Int, val newMoney: Int,
@@ -151,8 +153,8 @@ class GroupViewModel : ViewModel() {
                                     ?: context.getString(R.string.former_member)
                             )
                         )
-                    } else if (history.subType == HistorySubType.SPENDING && (history.type == HistoryType.CREATE || history.type == HistoryType.DELETE)) {
-                        val log = Gson().fromJson(history.serializedLog, LogAddRemoveSpending::class.java)
+                    } else if (history.subType == HistorySubType.SPENDING && history.type == HistoryType.CREATE) {
+                        val log = Gson().fromJson(history.serializedLog, LogAddSpending::class.java)
                         historyItems.add(
                             HistoryItem.AddOrRemoveSpending(
                                 date = history.date.convertToCalendar().formatDate(),
@@ -160,7 +162,19 @@ class GroupViewModel : ViewModel() {
                                     ?: context.getString(R.string.former_member),
                                 type = "${history.subType.toString(context)} ${history.type.toString(context)}",
                                 spendingName = log.Name,
-                                spendingValue = if (history.type == HistoryType.CREATE) log?.Money ?: 0 else log?.MoneyOwed ?: 0
+                                spendingValue = log.Money
+                            )
+                        )
+                    } else if (history.subType == HistorySubType.SPENDING && history.type == HistoryType.DELETE) {
+                        val log = Gson().fromJson(history.serializedLog, LogRemoveSpending::class.java)
+                        historyItems.add(
+                            HistoryItem.AddOrRemoveSpending(
+                                date = history.date.convertToCalendar().formatDate(),
+                                creator = members?.find { it?.id == history.userId }?.name
+                                    ?: context.getString(R.string.former_member),
+                                type = "${history.subType.toString(context)} ${history.type.toString(context)}",
+                                spendingName = log.DeletedSpending.Name,
+                                spendingValue = log.DeletedSpending.MoneyOwed
                             )
                         )
                     } else if (history.subType == HistorySubType.SPENDING && (history.type == HistoryType.UPDATE)) {
