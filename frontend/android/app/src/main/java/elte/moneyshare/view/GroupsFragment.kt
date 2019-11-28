@@ -35,7 +35,7 @@ class GroupsFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
-        if(!SharedPreferences.isGroupsOrderedByName)
+        if(SharedPreferences.isGroupsOrderedByName)
         {
             menu.findItem(R.id.change_order).title = context?.getString(R.string.order_by_date)
         }
