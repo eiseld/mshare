@@ -226,4 +226,5 @@
     <string name="change_bank_account_label">Bankszámla szám módosítása</string>
     <string name="bank_account_not_set">Bankszámla szám még nincs beállítva!</string>
     <string name="member_added_to_group_successfully">Tag sikeresen hozzáadva a csoporthoz!</string>
+    <string name="no_group_instruction">Jelenleg nincsenek csoportjaid, készíts egy újat a jobb felső sarokban található ikont megnyomva, vagy kérj meghívást barátaidtól.</string>
 </resources>

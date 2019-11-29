@@ -225,4 +225,5 @@
     <string name="change_bank_account_label">Change Bank Account Number</string>
     <string name="bank_account_not_set">Bank Account Not Set Yet!</string>
     <string name="member_added_to_group_successfully">Member added to group successfully!</string>
+    <string name="no_group_instruction">Currently there are no groups, create a new one with the button of the right upper corner, or ask invitation from your friends.</string>
 </resources>
