@@ -30,10 +30,6 @@ class AddMembersRecyclerViewAdapter(
         return filteredUsers.size
     }
 
-    interface MemberInvitedListener {
-        fun onInvited()
-    }
-
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
         val filteredUser = filteredUsers[position]
         Log.d("onBindViewHolder", "filteredUser = $filteredUser")

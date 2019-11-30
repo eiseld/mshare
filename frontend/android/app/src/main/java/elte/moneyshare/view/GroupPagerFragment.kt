@@ -93,7 +93,6 @@ class GroupPagerFragment : Fragment() {
                 return true
             }
             R.id.menuAdd -> {
-
                 if(tabLayout.getTabAt(0)?.isSelected!!) {
                     val fragment = AddMembersFragment()
                     val args = Bundle()
@@ -118,9 +117,8 @@ class GroupPagerFragment : Fragment() {
                 viewModel.isDeleteMemberEnabled = !viewModel.isDeleteMemberEnabled
 
                 //TODO REPLACE TO ENUM KEY
-                (childFragmentManager.fragments[0] as MembersFragment).adapter.notifyDataSetChanged()
+                (childFragmentManager.fragments.first { it is MembersFragment } as MembersFragment).adapter?.notifyDataSetChanged()
                 tabLayout.getTabAt(0)?.select()
-
                 return true
             }
             R.id.deleteGroup -> {
