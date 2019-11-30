@@ -52,7 +52,7 @@ class BillsFragment : Fragment() {
                         .toMutableList()
 
                         val adapter = BillsRecyclerViewAdapter(it, orderedBills, groupId, viewModel)
-                        billsRecyclerView.adapter = adapter
+                        billsRecyclerView?.adapter = adapter
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.SPENDING,context), context)
                     }

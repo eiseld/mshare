@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +18,7 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
 
     var selectedIds: ArrayList<Int> = ArrayList()
     var selectedMembers: ArrayList<Member> = ArrayList(members)
-    private var maxSpending = selectedMembers.sumBy { it.balance }
+    var maxSpending = selectedMembers.sumBy { it.balance }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectMemberViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_select_member, parent, false)
@@ -83,8 +82,8 @@ class SelectMembersRecyclerViewAdapter(private val context: Context, private val
 
         holder.memberSpendingEditText.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(editable: Editable?) {
-                if (!TextUtils.isEmpty(editable.toString())) {
-                    val spending = Integer.valueOf(editable.toString())
+                if (editable.toString().isNotEmpty()) {
+                    val spending = editable.toString().toInt()
                     var maxMod = maxSpending - selectedMembers.filter { it.id != member.id }.sumBy { it.balance }
 
                     if ((spending - member.balance) > maxMod) {
