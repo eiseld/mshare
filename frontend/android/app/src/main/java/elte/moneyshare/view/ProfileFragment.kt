@@ -57,6 +57,7 @@ class ProfileFragment : Fragment() {
                 saveButton.isEnabled =
                     accountEditText.text.length == 24 && accountEditText.text.matches("^\\d+$".toRegex()) && accountEditText.text.toString() != storedBankAccountNumber
             }
+
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
@@ -68,49 +69,37 @@ class ProfileFragment : Fragment() {
             val accountNumber = accountEditText.text.toString()
 
             viewModel.updateProfile(BankAccountNumberUpdate(SharedPreferences.userId, accountNumber)) { response, error ->
-                if(error == null) {
-                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.frame_container, ProfileFragment())?.commit()
+                if (error == null) {
+                    accountEditText?.disable()
                     modifyButton.visibility = View.VISIBLE
                     saveButton.visibility = View.GONE
                 } else {
-                    DialogManager.showInfoDialog(
-                        error.convertErrorCodeToString(
-                            Action.PROFILE_UPDATE,
-                            context
-                        ), context
-                    )
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.PROFILE_UPDATE, context), context)
                 }
-            }
-            viewModel.getProfile { userData, error ->
-                accountEditText?.setText(formatBankAccountNumber(userData?.bankAccountNumber))
             }
         }
 
         fun passwordValidator(txt: String): String {
             var pwdError = ""
 
-            if(txt.isEmpty()) {
+            if (txt.isEmpty()) {
                 return pwdError
             }
 
             val uppercaseRegex = """[A-Z]""".toRegex()
             val lowercaseRegex = """[a-z]""".toRegex()
-            val numberRegex    = """[0-9]""".toRegex()
+            val numberRegex = """[0-9]""".toRegex()
             context?.let {
-                if(txt.length <6)
-                {
+                if (txt.length < 6) {
                     pwdError = it.getString(R.string.minimum_characters).plus('\n')
                 }
-                if(!txt.contains(uppercaseRegex))
-                {
+                if (!txt.contains(uppercaseRegex)) {
                     pwdError = pwdError.plus(it.getString(R.string.uppercase_required).plus('\n'))
                 }
-                if(!txt.contains(lowercaseRegex))
-                {
+                if (!txt.contains(lowercaseRegex)) {
                     pwdError = pwdError.plus(it.getString(R.string.lowercase_required).plus('\n'))
                 }
-                if(!txt.contains(numberRegex))
-                {
+                if (!txt.contains(numberRegex)) {
                     pwdError = pwdError.plus(it.getString(R.string.number_required).plus('\n'))
                 }
             }
@@ -125,12 +114,12 @@ class ProfileFragment : Fragment() {
                 val newPassword = newPasswordText.text.toString()
                 val newPasswordAgain = newPasswordAgainText.text.toString()
                 passwordSaveButton.isEnabled = (
-                    oldPassword.isNotEmpty() &&
-                    passwordValidator(newPassword).isEmpty()&&
-                    newPassword.isNotEmpty() &&
-                    passwordValidator(newPasswordAgain).isEmpty() &&
-                    newPasswordAgain.isNotEmpty()
-                )
+                        oldPassword.isNotEmpty() &&
+                                passwordValidator(newPassword).isEmpty() &&
+                                newPassword.isNotEmpty() &&
+                                passwordValidator(newPasswordAgain).isEmpty() &&
+                                newPasswordAgain.isNotEmpty()
+                        )
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -160,6 +149,7 @@ class ProfileFragment : Fragment() {
                     passwordSaveButton.isEnabled = true
                 }
             }
+
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
@@ -173,10 +163,10 @@ class ProfileFragment : Fragment() {
                 val newPassword = newPasswordText.text.toString()
                 val newPasswordAgain = newPasswordAgainText.text.toString()
                 val pwdError = passwordValidator(newPasswordAgain)
-                if(pwdError.length>1) {
+                if (pwdError.length > 1) {
                     newPasswordAgainText.error = pwdError
                     passwordSaveButton.isEnabled = false
-                }  else if(newPassword != newPasswordAgain) {
+                } else if (newPassword != newPasswordAgain) {
                     newPasswordAgainText.error = context?.getString(R.string.password_not_matching)
                     passwordSaveButton.isEnabled = false
                 } else if (oldPassword.isEmpty()) {
@@ -196,27 +186,26 @@ class ProfileFragment : Fragment() {
         })
 
         passwordSaveButton.setOnClickListener {
-            viewModel.passwordUpdate (
+            viewModel.passwordUpdate(
                 passwordUpdate = PasswordUpdate(null, null, oldPasswordText.text.toString(), newPasswordText.text.toString())
             ) { response, error ->
                 if (error == null) {
-                    if(response == "200") {
+                    if (response == "200") {
                         oldPasswordText.setText("")
                         newPasswordText.setText("")
                         newPasswordAgainText.setText("")
                         Toast.makeText(context, context?.getString(R.string.passwordSuccessfullyChanged), Toast.LENGTH_SHORT).show()
-                    }
-                    else {
+                    } else {
                         Toast.makeText(context, response, Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.CHANGE_PASSWORD,context), context)
+                    DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.CHANGE_PASSWORD, context), context)
                 }
             }
         }
     }
 
-    private fun formatBankAccountNumber(bankAccountNumber: String?) : String {
+    private fun formatBankAccountNumber(bankAccountNumber: String?): String {
         if (!((bankAccountNumber.isNullOrEmpty())))
             return bankAccountNumber.substring(0, 8) + "-" + bankAccountNumber.substring(8, 16) + "-" + bankAccountNumber.substring(16, 24)
         else
