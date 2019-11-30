@@ -15,6 +15,7 @@ import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.Adapter.GroupsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupsViewModel
 import elte.moneyshare.visible
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_groups.*
 
 class GroupsFragment : Fragment() {
@@ -110,6 +111,7 @@ class GroupsFragment : Fragment() {
     //livedata would be better to observe changes on data
     override fun onResume() {
         super.onResume()
+        (activity as MainActivity).toolbar.title = getString(R.string.groups)
         getGroups()
     }
 

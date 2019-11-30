@@ -1,24 +1,18 @@
 package elte.moneyshare.view.Adapter
 
 import android.content.Context
-import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
-import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
 import elte.moneyshare.entity.FilteredUserData
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
-import elte.moneyshare.view.AddMembersFragment
-import elte.moneyshare.view.GroupPagerFragment
-import elte.moneyshare.view.MainActivity
 import elte.moneyshare.view.viewholder.SearchResultViewHolder
 import elte.moneyshare.viewmodel.AddMembersViewModel
-import elte.moneyshare.viewmodel.GroupViewModel
 
 class AddMembersRecyclerViewAdapter(
     private val context: Context,
@@ -28,7 +22,7 @@ class AddMembersRecyclerViewAdapter(
 ) : RecyclerView.Adapter<SearchResultViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_search_result, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_add_member, parent, false)
         return SearchResultViewHolder(itemView)
     }
 

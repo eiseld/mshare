@@ -16,6 +16,7 @@ import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.viewmodel.ProfileViewModel
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
@@ -214,4 +215,8 @@ class ProfileFragment : Fragment() {
             return ""
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).toolbar.title = getString(R.string.profile)
+    }
 }

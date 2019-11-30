@@ -11,6 +11,17 @@
             android:layout_height="wrap_content"
             tools:context=".view.AddSpendingFragment">
 
+        <TextView
+                android:id="@+id/addSpendingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/add_spending"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/nameEditText"
                 android:layout_width="match_parent"
@@ -22,7 +33,7 @@
                 android:maxLines="1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/addSpendingTextView" />
 
         <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/spendingEditText"
@@ -89,7 +100,10 @@
                 android:id="@+id/selectMembersRecyclerView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="4dp"
                 android:nestedScrollingEnabled="false"
                 app:layout_constraintBottom_toTopOf="@+id/addButton"
                 app:layout_constraintEnd_toEndOf="parent"
