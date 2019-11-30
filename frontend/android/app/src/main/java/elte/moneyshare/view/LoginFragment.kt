@@ -51,8 +51,8 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         //loginButton.enable()
-        emailEditText.setText("test1@test.hu")
-        passwordEditText.setText("default")
+        //emailEditText.setText("test1@test.hu")
+        //passwordEditText.setText("default")
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
