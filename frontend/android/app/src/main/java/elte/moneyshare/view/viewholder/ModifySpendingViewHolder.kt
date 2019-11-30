@@ -20,10 +20,12 @@ class ModifySpendingViewHolder(itemView: View) : BaseViewHolder<GroupViewModel.H
                 spendingNameTextView.text = context.getString(R.string.history_spending_name_modify, item.nameOld, item.nameNew)
             } ?: spendingNameTextView.gone()
 
-            item.moneyOld?.let {
+            if (item.moneyOld != item.moneyNew && item.moneyOld != null && item.moneyNew != null) {
                 spendingValueTextView.visible()
                 spendingValueTextView.text = context.getString(R.string.history_spending_money_modify, item.moneyOld, item.moneyNew)
-            } ?: spendingValueTextView.gone()
+            } else {
+                spendingValueTextView.gone()
+            }
 
             item.dateOld?.let {
                 spendingDateTextView.visible()

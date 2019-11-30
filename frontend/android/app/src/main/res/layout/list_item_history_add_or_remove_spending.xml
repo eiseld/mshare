@@ -60,7 +60,7 @@
             android:layout_marginStart="4dp"
             app:layout_constraintStart_toEndOf="@+id/spendingValueLabel"
             app:layout_constraintTop_toTopOf="@+id/spendingValueLabel"
-            tools:text="Mr Bela" />
+            tools:text="500 ft" />
 
     <TextView
             android:id="@+id/creatorLabel"

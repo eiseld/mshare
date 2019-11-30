@@ -31,6 +31,4 @@
             android:layout_marginRight="12dp"
             tools:listitem="@layout/list_item_optdebt"/>
 
-
-
 </android.support.constraint.ConstraintLayout>

@@ -134,7 +134,7 @@
     <string name="to">Kinek:</string>
 
     <string name="history_spending_name_modify">Költés neve: %1$s -> %2$s</string>
-    <string name="history_spending_money_modify">Költés összege: %1$d -> %2$d</string>
+    <string name="history_spending_money_modify">Költés összege: %1$d Ft -> %2$d Ft</string>
     <string name="history_spending_date_modify">Költés dátuma: %1$s -> %2$s</string>
 
     <!-- endregion History -->
