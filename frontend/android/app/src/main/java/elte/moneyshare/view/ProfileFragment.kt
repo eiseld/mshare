@@ -186,6 +186,7 @@ class ProfileFragment : Fragment() {
         })
 
         passwordSaveButton.setOnClickListener {
+            passwordSaveButton.disable()
             viewModel.passwordUpdate(
                 passwordUpdate = PasswordUpdate(null, null, oldPasswordText.text.toString(), newPasswordText.text.toString())
             ) { response, error ->
@@ -201,6 +202,7 @@ class ProfileFragment : Fragment() {
                 } else {
                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.CHANGE_PASSWORD, context), context)
                 }
+                passwordSaveButton.enable()
             }
         }
     }
