@@ -51,6 +51,8 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         //loginButton.enable()
+        //emailEditText.setText("test1@test.hu")
+        //passwordEditText.setText("default")
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
@@ -69,7 +71,6 @@ class LoginFragment : Fragment() {
                 emailTextInputLayout.error = null
             }
             if (!err) {
-                //viewModel.putLoginUser("test1@test.hu", "default") { response, error ->
                 viewModel.putLoginUser(email, password) { _, error ->
                     if (error == null) {
                         if (stayLoggedInCheckBox.isChecked) {

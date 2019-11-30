@@ -1,115 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".view.AddSpendingFragment">
+        android:layout_height="match_parent">
 
-    <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/nameEditText"
+    <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/event_name"
-            android:maxLines="1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"/>
+            tools:context=".view.AddSpendingFragment">
 
-    <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/spendingEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
-            android:hint="@string/spending"
-            app:layout_constraintTop_toBottomOf="@+id/nameEditText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"/>
+        <TextView
+                android:id="@+id/addSpendingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/add_spending"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.AppCompatEditText
-            android:id="@+id/dateEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="xxxx.xx.xx."
-            app:layout_constraintTop_toBottomOf="@+id/spendingEditText"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:clickable="true"
-            android:focusable="false"
-            android:inputType="textNoSuggestions"/>
+        <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/nameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:hint="@string/event_name"
+                android:maxLines="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addSpendingTextView" />
 
-    <TextView
-            android:id="@+id/selectTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@+id/dateEditText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp"
-            android:text="@string/select_members"/>
+        <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/spendingEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:hint="@string/spending"
+                android:inputType="numberDecimal"
+                android:maxLength="8"
+                android:maxLines="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nameEditText" />
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/selectMembersRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/selectTextView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/addButton"
-            android:layout_margin="12dp"/>
+        <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/dateEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:clickable="true"
+                android:focusable="false"
+                android:inputType="textNoSuggestions"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spendingEditText"
+                tools:text="xxxx.xx.xx." />
 
-    <Button
-            android:id="@+id/nextButton"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="@string/next"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="12dp"
-            android:visibility="visible"/>
+        <TextView
+                android:id="@+id/selectTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/select_members"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dateEditText" />
 
-    <Button
-            android:id="@+id/addButton"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:text="@string/add"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="12dp"
-            android:visibility="invisible"/>
+        <Button
+                android:id="@+id/selectEveryoneButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/everyone"
+                app:layout_constraintBottom_toTopOf="@id/selectMembersRecyclerView"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/selectTextView"
+                app:layout_constraintTop_toBottomOf="@id/spendingEditText" />
 
-    <Button
-            android:id="@+id/selectEveryoneButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/everyone"
-            app:layout_constraintBottom_toTopOf="@id/selectMembersRecyclerView"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/selectTextView"
-            app:layout_constraintTop_toBottomOf="@id/spendingEditText" />
+        <Button
+                android:id="@+id/selectNoneButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/none"
+                app:layout_constraintBottom_toTopOf="@id/selectMembersRecyclerView"
+                app:layout_constraintLeft_toRightOf="@id/selectTextView"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spendingEditText" />
 
-    <Button
-            android:id="@+id/selectNoneButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/none"
-            app:layout_constraintBottom_toTopOf="@id/selectMembersRecyclerView"
-            app:layout_constraintLeft_toRightOf="@id/selectTextView"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spendingEditText" />
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/selectMembersRecyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="4dp"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintBottom_toTopOf="@+id/addButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/selectTextView"
+                tools:itemCount="20"
+                tools:listitem="@layout/list_item_select_member" />
 
-</android.support.constraint.ConstraintLayout>
+        <Button
+                android:id="@+id/nextButton"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="@string/next"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+                android:id="@+id/addButton"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="@string/add"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
+import elte.moneyshare.SharedPreferences
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
@@ -36,12 +37,16 @@ class DebtsFragment : Fragment() {
         activity?.let {
             viewModel = ViewModelProviders.of(it).get(GroupViewModel::class.java)
 
+            debtsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
             groupId?.let { groupId ->
                 viewModel.getOptimizedDebtData(groupId) { groupData, error ->
                     if (groupData != null) {
-                        val adapter = OptimizedDebtRecyclerViewAdapter(it, groupData, viewModel, groupId)
-                        debtsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                        debtsRecyclerView?.adapter = adapter
+                        SharedPreferences.userId?.let { currentUserId ->
+                            val filteredData = groupData.filter { it.debtor.id == currentUserId || it.creditor.id == currentUserId }
+                            val adapter = OptimizedDebtRecyclerViewAdapter(it, filteredData, viewModel, groupId)
+                            debtsRecyclerView?.adapter = adapter
+                        }
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                     }

@@ -8,11 +8,14 @@ import android.view.*
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.GroupInfo
+import elte.moneyshare.gone
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
 import elte.moneyshare.view.Adapter.GroupsRecyclerViewAdapter
 import elte.moneyshare.viewmodel.GroupsViewModel
+import elte.moneyshare.visible
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_groups.*
 
 class GroupsFragment : Fragment() {
@@ -79,14 +82,19 @@ class GroupsFragment : Fragment() {
 
             viewModel.getProfileGroups { groupsInfo, error ->
                 if (groupsInfo != null) {
-                    var sortedList : List<GroupInfo>
-                    if(SharedPreferences.isGroupsOrderedByName)
-                        sortedList = groupsInfo.sortedWith(compareBy({ it.name }))
-                    else
-                        sortedList = groupsInfo.sortedWith(compareBy({ it.lastModified }))
-                    val adapter = GroupsRecyclerViewAdapter(it, sortedList)
-                    groupsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                    groupsRecyclerView?.adapter = adapter
+                    if (groupsInfo.isNotEmpty()) {
+                        createGroupTextView.gone()
+                        var sortedList: List<GroupInfo>
+                        if (SharedPreferences.isGroupsOrderedByName)
+                            sortedList = groupsInfo.sortedWith(compareBy({ it.name }))
+                        else
+                            sortedList = groupsInfo.sortedWith(compareBy({ it.lastModified }))
+                        val adapter = GroupsRecyclerViewAdapter(it, sortedList)
+                        groupsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                        groupsRecyclerView?.adapter = adapter
+                    } else {
+                        createGroupTextView.visible()
+                    }
                 } else {
                     if(SharedPreferences.stayLoggedIn)
                     {
@@ -103,6 +111,7 @@ class GroupsFragment : Fragment() {
     //livedata would be better to observe changes on data
     override fun onResume() {
         super.onResume()
+        (activity as MainActivity).toolbar.title = getString(R.string.groups)
         getGroups()
     }
 

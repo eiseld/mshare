@@ -1,59 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/debtRootLayout"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/debtRootLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="56dp"
+        android:background="@color/colorBackground">
 
     <TextView
             android:id="@+id/debtNameTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:textStyle="bold"
+            android:layout_height="0dp"
             android:layout_margin="6dp"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            tools:text="Name" />
 
     <TextView
             android:id="@+id/debtOwnerTextView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="(owner)"
+            android:layout_height="0dp"
             android:layout_margin="6dp"
-            app:layout_constraintStart_toEndOf="@id/debtNameTextView"
-            app:layout_constraintEnd_toStartOf="@id/debtBalanceTextView"
-            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="gone"/>
+            app:layout_constraintEnd_toStartOf="@id/debtBalanceTextView"
+            app:layout_constraintStart_toEndOf="@id/debtNameTextView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="(owner)" />
 
     <TextView
             android:id="@+id/debtBalanceTextView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="end"
-            android:text="Balance"
+            android:layout_height="0dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center_vertical|end"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/solveDebitImageButton"
             app:layout_constraintStart_toEndOf="@id/debtNameTextView"
             app:layout_constraintTop_toTopOf="parent"
-            tools:gravity="right" />
+            tools:text="Balance" />
 
     <Button
             android:id="@+id/solveDebitImageButton"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@string/settle"
+            android:visibility="gone"
+            android:layout_margin="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:gravity="center"
-            android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            tools:visibility="visible" />
 
+    <include layout="@layout/inc_divider" />
 
 </android.support.constraint.ConstraintLayout>

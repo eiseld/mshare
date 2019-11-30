@@ -20,7 +20,7 @@ import elte.moneyshare.visible
 
 class OptimizedDebtRecyclerViewAdapter(
     private val context: Context,
-    private var debtDataList: ArrayList<OptimizedDebtData>,
+    private var debtDataList: List<OptimizedDebtData>,
     private val Model: GroupViewModel,
     private val groupId: Int
 ) : RecyclerView.Adapter<OptimizedDebtViewHolder>() {
@@ -37,11 +37,11 @@ class OptimizedDebtRecyclerViewAdapter(
     override fun onBindViewHolder(holder: OptimizedDebtViewHolder, position: Int) {
         val debt = debtDataList[position]
         holder.debtBalanceTextView.text = debt.optimisedDebtAmount.toString()
+        holder.debtNameTextView.text = debt.debtor.name
+
         if (debt.debtor.id == SharedPreferences.userId) {
-            holder.debtNameTextView.text = debt.debtor.name
             holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owe_to_member), debt.optimisedDebtAmount)
         } else if (debt.creditor.id == SharedPreferences.userId) {
-            holder.debtNameTextView.text = debt.debtor.name
             holder.debtBalanceTextView.text = String.format(context.getString(R.string.group_owned_by_member), debt.optimisedDebtAmount)
         } else {
             holder.debtRootLayout.visibility = View.GONE
@@ -53,8 +53,7 @@ class OptimizedDebtRecyclerViewAdapter(
             holder.debitButton.gone()
         }
 
-        holder.debitButton.setOnClickListener()
-        {
+        holder.debitButton.setOnClickListener() {
             val builder = AlertDialog.Builder(context)
             builder.setTitle(context.getString(R.string.popup_title))
             if (debt.creditor.id == SharedPreferences.userId) {
@@ -73,7 +72,6 @@ class OptimizedDebtRecyclerViewAdapter(
                 builder.setMessage(msg)
             }
 
-            //TODO NOTIFYITEMREMOVED
             builder.setPositiveButton(context.getString(R.string.yes)) { dialog, which ->
                 Model.doDebitEqualization(groupId, debt.debtor.id, debt.creditor.id) { response, error ->
                     if (error == null) {
@@ -95,7 +93,6 @@ class OptimizedDebtRecyclerViewAdapter(
             }
             val dialog: AlertDialog = builder.create()
             dialog.show()
-
         }
     }
 }
