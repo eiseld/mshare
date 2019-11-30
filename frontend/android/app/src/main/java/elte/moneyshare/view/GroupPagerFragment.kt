@@ -9,7 +9,6 @@ import elte.moneyshare.FragmentDataKeys
 import elte.moneyshare.R
 import elte.moneyshare.SharedPreferences
 import elte.moneyshare.entity.GroupDataParc
-import elte.moneyshare.entity.Member
 import elte.moneyshare.manager.DialogManager
 import elte.moneyshare.util.Action
 import elte.moneyshare.util.convertErrorCodeToString
@@ -94,7 +93,6 @@ class GroupPagerFragment : Fragment() {
                 return true
             }
             R.id.menuAdd -> {
-
                 if(tabLayout.getTabAt(0)?.isSelected!!) {
                     val fragment = AddMembersFragment()
                     val args = Bundle()
@@ -119,16 +117,8 @@ class GroupPagerFragment : Fragment() {
                 viewModel.isDeleteMemberEnabled = !viewModel.isDeleteMemberEnabled
 
                 //TODO REPLACE TO ENUM KEY
-                for (c in childFragmentManager.fragments)
-                {
-                    if(c is MembersFragment)
-                    {
-                        (c as MembersFragment).adapter.notifyDataSetChanged()
-                    }
-                }
-                //(childFragmentManager.fragments[((childFragmentManager.fragments.size/3)-1)*3] as MembersFragment).adapter.notifyDataSetChanged()
+                (childFragmentManager.fragments.first { it is MembersFragment } as MembersFragment).adapter?.notifyDataSetChanged()
                 tabLayout.getTabAt(0)?.select()
-
                 return true
             }
             R.id.deleteGroup -> {

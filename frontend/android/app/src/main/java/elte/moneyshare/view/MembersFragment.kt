@@ -25,7 +25,7 @@ class MembersFragment : Fragment(), MembersRecyclerViewAdapter.MemberDeletedList
 
     private lateinit var viewModel: GroupViewModel
     private lateinit var groupDataStored : GroupData
-    lateinit var adapter : MembersRecyclerViewAdapter
+    var adapter: MembersRecyclerViewAdapter? = null
     private var groupId: Int? = null
 
     override fun onCreateView(
@@ -53,14 +53,13 @@ class MembersFragment : Fragment(), MembersRecyclerViewAdapter.MemberDeletedList
                         groupData.members.sortByDescending { it.balance }
                         groupDataStored = groupData
 
-                        adapter = MembersRecyclerViewAdapter(it, groupData, viewModel, this)
                         member?.let { member ->
                             myNameTextView?.text = member.name
                             setMyBalance(member.balance)
                         }
 
                         membersRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                        membersRecyclerView?.adapter = adapter
+                        membersRecyclerView?.adapter = MembersRecyclerViewAdapter(it, groupData, viewModel, this)
                     } else {
                         DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                     }
