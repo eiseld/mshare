@@ -117,7 +117,7 @@ class GroupPagerFragment : Fragment() {
                 viewModel.isDeleteMemberEnabled = !viewModel.isDeleteMemberEnabled
 
                 //TODO REPLACE TO ENUM KEY
-                (childFragmentManager.fragments.first { it is MembersFragment } as MembersFragment).adapter?.notifyDataSetChanged()
+                childFragmentManager.fragments.filterIsInstance<MembersFragment>().map { it.adapter?.notifyDataSetChanged() }
                 tabLayout.getTabAt(0)?.select()
                 return true
             }

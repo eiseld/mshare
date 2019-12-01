@@ -69,7 +69,7 @@
     <string name="bill_money">%1$d Ft</string>
 
     <string name="add_member">Add member</string>
-    <string name="remove_member">Delete member</string>
+    <string name="remove_member">Remove member</string>
     <string name="delete_group">Delete group</string>
     <string name="add_spending">Add spending</string>
     <string name="are_you_sure_to_delete">Are you sure to delete?</string>
