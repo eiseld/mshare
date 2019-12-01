@@ -66,14 +66,24 @@ class GroupPagerFragment : Fragment() {
         groupId?.let {
             viewModel.getGroupData(it) { groupData, error ->
                 if (groupData != null) {
-                    groupCreatorId = groupData.creator.id
-                    menuAddItem.isVisible = SharedPreferences.userId == groupCreatorId
-                    deleteGroupItem.isVisible = SharedPreferences.userId == groupCreatorId
-                    removeMemberItem.isVisible = SharedPreferences.userId == groupCreatorId
+                    if (groupCreatorId == null) {
+                        groupCreatorId = groupData.creator.id
+                        menuAddItem.isVisible = SharedPreferences.userId == groupCreatorId
+                        deleteGroupItem.isVisible = SharedPreferences.userId == groupCreatorId
+                        removeMemberItem.isVisible = SharedPreferences.userId == groupCreatorId
+                    }
                 } else {
                     DialogManager.showInfoDialog(error.convertErrorCodeToString(Action.GROUPS,context), context)
                 }
             }
+        }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+        tabLayout?.selectedTabPosition?.let {
+            tabLayout?.getTabAt(if (it == 0) 1 else 0)?.select()
+            tabLayout?.getTabAt(it)?.select()
         }
     }
 
