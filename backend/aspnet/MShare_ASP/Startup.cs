@@ -60,7 +60,7 @@ namespace MShare_ASP
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
                 {
-                    Title = "MShare API",
+                    Title = "MShare API - PR Demo",
                     Version = "v1",
                     Description = "API for use from Web and Android",
                 });
