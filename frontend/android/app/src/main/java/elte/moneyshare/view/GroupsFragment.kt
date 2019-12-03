@@ -25,6 +25,7 @@ class GroupsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
     }
 
     override fun onCreateView(
@@ -46,7 +47,18 @@ class GroupsFragment : Fragment() {
         {
             menu.findItem(R.id.change_order).title = context?.getString(R.string.order_by_name)
         }
+        
+    }
 
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        if(SharedPreferences.isGroupsOrderedByName)
+        {
+            menu?.findItem(R.id.change_order)?.title = context?.getString(R.string.order_by_date)
+        }
+        else
+        {
+            menu?.findItem(R.id.change_order)?.title = context?.getString(R.string.order_by_name)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -88,7 +100,10 @@ class GroupsFragment : Fragment() {
                         if (SharedPreferences.isGroupsOrderedByName)
                             sortedList = groupsInfo.sortedWith(compareBy({ it.name }))
                         else
+                        {
                             sortedList = groupsInfo.sortedWith(compareBy({ it.lastModified }))
+                            sortedList = sortedList.reversed()
+                        }
                         val adapter = GroupsRecyclerViewAdapter(it, sortedList)
                         groupsRecyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                         groupsRecyclerView?.adapter = adapter

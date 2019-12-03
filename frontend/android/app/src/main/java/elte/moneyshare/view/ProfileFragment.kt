@@ -137,16 +137,16 @@ class ProfileFragment : Fragment() {
                 val newPasswordAgain = newPasswordAgainText.text.toString()
                 val pwdError = passwordValidator(newPassword)
                 if (pwdError.length > 1) {
-                    newPasswordText.error = pwdError
+                    newPasswordTextInputLayout.error = pwdError
                     passwordSaveButton.isEnabled = false
                 } else if (newPassword != newPasswordAgain) {
-                    newPasswordText.error = context?.getString(R.string.password_not_matching)
+                    newPasswordTextInputLayout.error = context?.getString(R.string.password_not_matching)
                     passwordSaveButton.isEnabled = false
                 } else if (oldPassword.isEmpty()) {
                     passwordSaveButton.isEnabled = false
                 } else {
-                    newPasswordText.error = null
-                    newPasswordAgainText.error = null
+                    newPasswordTextInputLayout.error = null
+                    newPasswordAgainTextInputLayout.error = null
                     passwordSaveButton.isEnabled = true
                 }
             }
@@ -165,16 +165,16 @@ class ProfileFragment : Fragment() {
                 val newPasswordAgain = newPasswordAgainText.text.toString()
                 val pwdError = passwordValidator(newPasswordAgain)
                 if (pwdError.length > 1) {
-                    newPasswordAgainText.error = pwdError
+                    newPasswordAgainTextInputLayout.error = pwdError
                     passwordSaveButton.isEnabled = false
                 } else if (newPassword != newPasswordAgain) {
-                    newPasswordAgainText.error = context?.getString(R.string.password_not_matching)
+                    newPasswordAgainTextInputLayout.error = context?.getString(R.string.password_not_matching)
                     passwordSaveButton.isEnabled = false
                 } else if (oldPassword.isEmpty()) {
                     passwordSaveButton.isEnabled = false
                 } else {
-                    newPasswordText.error = null
-                    newPasswordAgainText.error = null
+                    newPasswordTextInputLayout.error = null
+                    newPasswordAgainTextInputLayout.error = null
                     passwordSaveButton.isEnabled = true
                 }
             }

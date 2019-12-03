@@ -71,36 +71,37 @@ class RegisterFragment : Fragment() {
             var err = false
             if(displayNameEditText.text.isEmpty()) {
                 err = true
-                displayNameEditText.error =context?.getString(R.string.username_empty)
+                displayNameTextInputLayout.error =context?.getString(R.string.username_empty)
             }
             else
             {
-                displayNameEditText.error = null
+                displayNameTextInputLayout.error = null
             }
             val txt = passwordEditText.text.toString()
             val txtAgain = passwordAgainEditText.text.toString()
             val pwdError = passwordValidator(txt)
             if (pwdError.length > 1) {
-                passwordAgainTextInputLayout.error = pwdError
+                passwordTextInputLayout.error = pwdError
                 err = true
             } else if (txt != txtAgain) {
                 passwordAgainTextInputLayout.error = context?.getString(R.string.password_not_matching)
                 err = true
             } else {
                 passwordAgainTextInputLayout.error = null
+                passwordTextInputLayout.error = null
             }
             val email = emailEditText.text.toString()
             val emailAgain = emailAgainEditText.text.toString()
             var emailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
             if(!emailValid) {
-                emailEditText.error = context?.getString(R.string.email_not_correct)
+                emailTextInputLayout.error = context?.getString(R.string.email_not_correct)
                 err = true
             } else if(email != emailAgain) {
-                emailEditText.error = context?.getString(R.string.email_not_matching)
+                emailAgainTextInputLayout.error = context?.getString(R.string.email_not_matching)
                 err = true
             } else {
-                emailEditText.error = null
-                emailAgainEditText.error = null
+                emailTextInputLayout.error = null
+                emailAgainTextInputLayout.error = null
             }
             if(!err)
             {
